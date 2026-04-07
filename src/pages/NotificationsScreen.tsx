@@ -2,18 +2,40 @@ import { ArrowLeft, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { formatDistanceToNow } from "date-fns";
 
-const mockNotifications = [
-  { id: "1", icon: "❤️", message: "Raj P. liked your post", time: "2m ago", read: false },
-  { id: "2", icon: "💬", message: "Priya M. commented: \"So cute! 🥰\"", time: "15m ago", read: false },
-  { id: "3", icon: "👥", message: "Amit S. started following you", time: "1h ago", read: false },
-  { id: "4", icon: "🔔", message: "New reply on your forum post: \"Best diet plan...\"", time: "3h ago", read: true },
-  { id: "5", icon: "❤️", message: "Neha K. liked your post", time: "5h ago", read: true },
-  { id: "6", icon: "💬", message: "Raj P. replied to your comment", time: "1d ago", read: true },
-];
+const typeIcons: Record<string, string> = {
+  like: "❤️", comment: "💬", follow: "👥", forum_reply: "🔔", mention: "📢",
+};
 
 const NotificationsScreen = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { data: notifications = [], isLoading } = useQuery({
+    queryKey: ["notifications", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("notifications")
+        .select("*, profiles!notifications_actor_id_fkey(full_name, avatar_url)")
+        .eq("recipient_id", user!.id)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      return data || [];
+    },
+  });
+
+  const markAllRead = useMutation({
+    mutationFn: async () => {
+      await supabase.from("notifications").update({ is_read: true }).eq("recipient_id", user!.id).eq("is_read", false);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+  });
 
   return (
     <MobileLayout>
@@ -25,23 +47,35 @@ const NotificationsScreen = () => {
             </button>
             <h1 className="text-xl font-heading font-bold">Notifications</h1>
           </div>
-          <Button variant="ghost" size="sm" className="text-primary text-xs">
+          <Button variant="ghost" size="sm" className="text-primary text-xs" onClick={() => markAllRead.mutate()}>
             <Check className="w-3 h-3 mr-1" /> Mark all read
           </Button>
         </header>
 
-        <div className="px-4 space-y-1">
-          {mockNotifications.map((n) => (
-            <div key={n.id} className={`flex items-start gap-3 p-3 rounded-xl transition-colors ${!n.read ? "bg-primary/5" : ""}`}>
-              <span className="text-xl mt-0.5">{n.icon}</span>
-              <div className="flex-1 min-w-0">
-                <p className={`text-sm ${!n.read ? "font-semibold" : "text-text-mid"}`}>{n.message}</p>
-                <p className="text-xs text-text-muted mt-0.5">{n.time}</p>
+        {isLoading ? (
+          <div className="px-4 space-y-2">{[1, 2, 3].map((i) => <div key={i} className="h-16 bg-muted/30 rounded-xl animate-pulse" />)}</div>
+        ) : notifications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <span className="text-5xl mb-4">🔔</span>
+            <h3 className="font-heading font-bold text-lg">No notifications</h3>
+            <p className="text-sm text-text-muted mt-1">You're all caught up!</p>
+          </div>
+        ) : (
+          <div className="px-4 space-y-1">
+            {notifications.map((n: any) => (
+              <div key={n.id} className={`flex items-start gap-3 p-3 rounded-xl transition-colors ${!n.is_read ? "bg-primary/5" : ""}`}>
+                <span className="text-xl mt-0.5">{typeIcons[n.type] || "🔔"}</span>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm ${!n.is_read ? "font-semibold" : "text-text-mid"}`}>
+                    {n.message || `${n.profiles?.full_name || "Someone"} ${n.type === "like" ? "liked your post" : n.type === "comment" ? "commented on your post" : n.type === "follow" ? "started following you" : "interacted"}`}
+                  </p>
+                  <p className="text-xs text-text-muted mt-0.5">{formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}</p>
+                </div>
+                {!n.is_read && <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />}
               </div>
-              {!n.read && <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </MobileLayout>
   );
