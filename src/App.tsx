@@ -1,22 +1,32 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import AuthScreen from "./pages/AuthScreen";
+import FeedScreen from "./pages/FeedScreen";
+import ForumScreen from "./pages/ForumScreen";
+import HealthScreen from "./pages/HealthScreen";
+import LearnScreen from "./pages/LearnScreen";
+import ProfileScreen from "./pages/ProfileScreen";
+import NotificationsScreen from "./pages/NotificationsScreen";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+          <Route path="/auth" element={<AuthScreen />} />
+          <Route path="/feed" element={<FeedScreen />} />
+          <Route path="/forum" element={<ForumScreen />} />
+          <Route path="/health" element={<HealthScreen />} />
+          <Route path="/learn" element={<LearnScreen />} />
+          <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/notifications" element={<NotificationsScreen />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
