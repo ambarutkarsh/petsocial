@@ -72,4 +72,12 @@
   .paw-container {
     @apply max-w-[430px] mx-auto min-h-screen bg-background relative;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
