@@ -6,7 +6,7 @@ import { Upload, ArrowLeft, ArrowRight, Loader2, Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
-  petTypes, breedsByType, petTypeEmoji,
+  petTypes, breedsByType, petTypeEmoji, indianStates,
   getPasswordStrength, validateStep1, validateStep2,
 } from "@/lib/registrationData";
 
@@ -23,8 +23,16 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [pinCode, setPinCode] = useState("");
   const [password, setPassword] = useState("");
   const [touched1, setTouched1] = useState<Record<string, boolean>>({});
+
+  // Email duplicate check
+  const [emailChecking, setEmailChecking] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
 
   // Step 2
   const [selectedPetType, setSelectedPetType] = useState("");
@@ -59,7 +67,8 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
   // Validations
   const step1Fields = { fullName, email, mobile, password };
   const step1Errors = validateStep1(step1Fields);
-  const step1Valid = Object.keys(step1Errors).length === 0;
+  const pinCodeError = pinCode && !/^\d{6}$/.test(pinCode) ? "PIN code must be exactly 6 digits" : "";
+  const step1Valid = Object.keys(step1Errors).length === 0 && !emailExists && !pinCodeError;
 
   const step2Fields = { selectedPetType, petName, breed: effectiveBreed, age, gender };
   const step2Errors = validateStep2(step2Fields);
@@ -70,6 +79,26 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
 
   const touch1 = (field: string) => setTouched1((p) => ({ ...p, [field]: true }));
   const touch2 = (field: string) => setTouched2((p) => ({ ...p, [field]: true }));
+
+  // Email duplicate check
+  const checkEmailExists = async (emailVal: string) => {
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return;
+    setEmailChecking(true);
+    setEmailExists(false);
+    setEmailChecked(false);
+    try {
+      const { data } = await supabase.from("profiles").select("id").eq("email", emailVal).maybeSingle();
+      if (data) {
+        setEmailExists(true);
+      } else {
+        setEmailChecked(true);
+      }
+    } catch {
+      setEmailChecked(true);
+    } finally {
+      setEmailChecking(false);
+    }
+  };
 
   const handleContinueStep2 = () => {
     if (!selectedPetType) {
@@ -100,7 +129,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
           body: JSON.stringify({ type: "species", species: value }),
         }
       );
-      if (!res.ok) { setSpeciesValid(true); return; } // fail open
+      if (!res.ok) { setSpeciesValid(true); return; }
       const data = await res.json();
       if (data.result === "YES") {
         setSpeciesValid(true);
@@ -109,7 +138,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
         setSpeciesError(`'${value}' doesn't appear to be a valid pet species or breed. Please check your spelling or choose a different type.`);
       }
     } catch {
-      setSpeciesValid(true); // fail open
+      setSpeciesValid(true);
     } finally {
       setSpeciesValidating(false);
     }
@@ -150,12 +179,11 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
           setPetPhotoValid(true);
         } else {
           setPetPhotoValid(false);
-          setPetPhotoError("This doesn't look like a pet photo. Please upload a clear photo of your pet.");
-          setPetPhoto(null);
-          setPetPhotoPreview(null);
+          setPetPhotoError("Pet not found in the image. Please try again.");
+          // FIX 2: Keep preview visible, do NOT clear photo/preview
         }
       } catch {
-        setPetPhotoValid(true); // fail open
+        setPetPhotoValid(true);
       } finally {
         setPetPhotoValidating(false);
       }
@@ -163,15 +191,29 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
     reader.readAsDataURL(file);
   };
 
+  const handleRetryPhoto = () => {
+    setPetPhoto(null);
+    setPetPhotoPreview(null);
+    setPetPhotoError("");
+    setPetPhotoValid(false);
+    // Trigger file picker via a hidden input
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".jpg,.jpeg,.png";
+    input.onchange = (e) => {
+      const f = (e.target as HTMLInputElement).files?.[0];
+      if (f) handlePetPhotoSelect(f);
+    };
+    input.click();
+  };
+
   const handleSignUp = async () => {
     setSubmitting(true);
     try {
-      // Check if user is already authenticated (Google sign-in case)
       const { data: { user: existingUser } } = await supabase.auth.getUser();
       let userId = existingUser?.id;
 
       if (!userId) {
-        // Email/password signup
         if (!fullName || !email || !password) {
           toast.error("Please fill in name, email and password");
           setSubmitting(false);
@@ -187,8 +229,14 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
         });
         if (error) { toast.error(error.message); setSubmitting(false); return; }
         userId = data.user?.id;
-        if (userId && mobile) {
-          await supabase.from("profiles").update({ phone: mobile }).eq("id", userId);
+        if (userId) {
+          await supabase.from("profiles").update({
+            phone: mobile || null,
+            city: city || null,
+            state: state || null,
+            pin_code: pinCode || null,
+            email: email || null,
+          }).eq("id", userId);
         }
       }
 
@@ -285,16 +333,45 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                 onChange={(e) => setFullName(e.target.value)} className="h-12 rounded-xl bg-muted/50 border-0" />
               {touched1.fullName && step1Errors.fullName && <p className="text-xs text-destructive mt-1">{step1Errors.fullName}</p>}
             </div>
-            <div>
-              <Input type="email" placeholder="Email" value={email} onBlur={() => touch1("email")}
-                onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl bg-muted/50 border-0" />
+            <div className="relative">
+              <Input type="email" placeholder="Email" value={email}
+                onBlur={() => { touch1("email"); checkEmailExists(email); }}
+                onChange={(e) => { setEmail(e.target.value); setEmailExists(false); setEmailChecked(false); }}
+                className="h-12 rounded-xl bg-muted/50 border-0 pr-10" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {emailChecking && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
+                {emailChecked && !emailExists && <Check className="w-4 h-4 text-green-500" />}
+                {emailExists && <X className="w-4 h-4 text-destructive" />}
+              </div>
               {touched1.email && step1Errors.email && <p className="text-xs text-destructive mt-1">{step1Errors.email}</p>}
+              {emailExists && (
+                <div className="mt-1">
+                  <p className="text-xs text-destructive">You're already registered with this email. Please login instead.</p>
+                  <button onClick={() => onBackToLogin?.()} className="text-xs text-primary font-semibold hover:underline mt-0.5">Go to Login</button>
+                </div>
+              )}
             </div>
             <div>
               <Input type="tel" placeholder="Mobile number (10 digits)" value={mobile} onBlur={() => touch1("mobile")}
                 onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))} className="h-12 rounded-xl bg-muted/50 border-0" />
               {touched1.mobile && step1Errors.mobile && <p className="text-xs text-destructive mt-1">{step1Errors.mobile}</p>}
             </div>
+
+            {/* City, State, PIN */}
+            <Input placeholder="City (optional)" value={city}
+              onChange={(e) => setCity(e.target.value)} className="h-12 rounded-xl bg-muted/50 border-0" />
+            <select value={state} onChange={(e) => setState(e.target.value)}
+              className="w-full h-12 rounded-xl bg-muted/50 border-0 px-4 font-body text-sm text-foreground">
+              <option value="">State (optional)</option>
+              {indianStates.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+            <div>
+              <Input placeholder="PIN Code (optional)" value={pinCode}
+                onChange={(e) => setPinCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="h-12 rounded-xl bg-muted/50 border-0" />
+              {pinCodeError && <p className="text-xs text-destructive mt-1">{pinCodeError}</p>}
+            </div>
+
             <div>
               <Input type="password" placeholder="Password" value={password} onBlur={() => touch1("password")}
                 onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl bg-muted/50 border-0" />
@@ -318,7 +395,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
             </div>
 
             <Button onClick={() => { setTouched1({ fullName: true, email: true, mobile: true, password: true }); if (step1Valid) setStep(1); }}
-              className="w-full" size="lg" disabled={!step1Valid}>
+              className="w-full" size="lg" disabled={!step1Valid || emailChecking}>
               Continue <ArrowRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
@@ -443,29 +520,44 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                     onChange={(e) => handlePetPhotoSelect(e.target.files?.[0] || null)} />
                 </label>
               ) : (
-                <div className="flex items-start gap-4">
-                  <div className={`relative w-[100px] h-[100px] rounded-xl overflow-hidden border-2 ${
-                    petPhotoValid ? "border-green-500" : petPhotoError ? "border-destructive" : "border-muted"
-                  }`}>
-                    <img src={petPhotoPreview} alt="Pet" className="w-full h-full object-cover" />
-                    {petPhotoValidating && (
-                      <div className="absolute inset-0 bg-background/70 flex flex-col items-center justify-center">
-                        <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                        <span className="text-[10px] font-medium text-primary mt-1">Verifying...</span>
+                <div>
+                  <div className="flex items-start gap-4">
+                    <div className={`relative w-[100px] h-[100px] rounded-xl overflow-hidden border-2 ${
+                      petPhotoValid ? "border-green-500" : petPhotoError ? "border-[#DC2626]" : "border-muted"
+                    }`}>
+                      <img src={petPhotoPreview} alt="Pet" className="w-full h-full object-cover" />
+                      {petPhotoValidating && (
+                        <div className="absolute inset-0 bg-background/70 flex flex-col items-center justify-center">
+                          <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                          <span className="text-[10px] font-medium text-primary mt-1">Verifying...</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      {petPhotoValid && <p className="text-sm text-green-600 font-medium">✓ Pet detected</p>}
+                      {petPhotoValid && !petPhotoValidating && (
+                        <label className="text-sm text-primary font-medium cursor-pointer hover:underline block mt-1">
+                          Change photo
+                          <input type="file" accept=".jpg,.jpeg,.png" className="hidden"
+                            onChange={(e) => handlePetPhotoSelect(e.target.files?.[0] || null)} />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* FIX 2: Error banner below thumbnail */}
+                  {petPhotoError && !petPhotoValidating && (
+                    <div className="mt-3">
+                      <div className="flex items-center gap-2 bg-[#FEE2E2] text-[#DC2626] rounded-lg px-3.5 py-2.5 text-[13px]">
+                        <span>❌</span>
+                        <span>{petPhotoError}</span>
                       </div>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    {petPhotoValid && <p className="text-sm text-green-600 font-medium">✓ Pet detected</p>}
-                    {petPhotoError && <p className="text-sm text-destructive">{petPhotoError}</p>}
-                    {!petPhotoValidating && !petPhotoValid && (
-                      <label className="text-sm text-primary font-medium cursor-pointer hover:underline">
-                        Change photo
-                        <input type="file" accept=".jpg,.jpeg,.png" className="hidden"
-                          onChange={(e) => handlePetPhotoSelect(e.target.files?.[0] || null)} />
-                      </label>
-                    )}
-                  </div>
+                      <button onClick={handleRetryPhoto}
+                        className="text-sm text-primary font-medium underline mt-2">
+                        Choose different photo
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

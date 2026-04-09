@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
 const statusIcons: Record<string, string> = { done: "✅", upcoming: "⏳", overdue: "❌" };
@@ -16,6 +17,7 @@ const statusColors: Record<string, string> = {
 
 const HealthScreen = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: pets = [] } = useQuery({
     queryKey: ["my-pets", user?.id],
@@ -72,10 +74,9 @@ const HealthScreen = () => {
       <div className="pb-20">
         <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center justify-between">
           <h1 className="text-xl font-heading font-bold"><span className="text-primary">Paw</span>Health</h1>
-          <Button size="icon" variant="ghost" className="text-primary"><Plus className="w-5 h-5" /></Button>
+          <Button size="icon" variant="ghost" className="text-primary" onClick={() => navigate("/health/log")}><Plus className="w-5 h-5" /></Button>
         </header>
 
-        {/* Pet selector */}
         {activePet ? (
           <div className="px-4 mb-4">
             <div className="paw-card p-4 flex items-center gap-3">
