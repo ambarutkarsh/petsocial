@@ -425,6 +425,7 @@ export type Database = {
         Row: {
           age_years: number | null
           avatar_emoji: string | null
+          avatar_url: string | null
           created_at: string | null
           date_of_birth: string | null
           gender: string | null
@@ -440,6 +441,7 @@ export type Database = {
         Insert: {
           age_years?: number | null
           avatar_emoji?: string | null
+          avatar_url?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           gender?: string | null
@@ -455,6 +457,7 @@ export type Database = {
         Update: {
           age_years?: number | null
           avatar_emoji?: string | null
+          avatar_url?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           gender?: string | null
