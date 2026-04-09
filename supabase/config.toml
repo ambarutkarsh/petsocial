@@ -1,1 +1,4 @@
 project_id = "plyonactsujycdmyskou"
+
+[functions.validate-pet]
+verify_jwt = false
