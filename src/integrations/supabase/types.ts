@@ -50,6 +50,60 @@ export type Database = {
           },
         ]
       }
+      food_logs: {
+        Row: {
+          created_at: string | null
+          food_name: string | null
+          id: string
+          log_date: string | null
+          meal_type: string | null
+          notes: string | null
+          owner_id: string | null
+          pet_id: string | null
+          quantity: number | null
+          unit: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          food_name?: string | null
+          id?: string
+          log_date?: string | null
+          meal_type?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          pet_id?: string | null
+          quantity?: number | null
+          unit?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          food_name?: string | null
+          id?: string
+          log_date?: string | null
+          meal_type?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          pet_id?: string | null
+          quantity?: number | null
+          unit?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_logs_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "food_logs_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       forum_replies: {
         Row: {
           content: string
@@ -638,7 +692,9 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          city: string | null
           created_at: string | null
+          email: string | null
           follower_count: number | null
           following_count: number | null
           full_name: string | null
@@ -646,14 +702,18 @@ export type Database = {
           location: string | null
           pet_parent_since: number | null
           phone: string | null
+          pin_code: string | null
           post_count: number | null
+          state: string | null
           updated_at: string | null
           username: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          city?: string | null
           created_at?: string | null
+          email?: string | null
           follower_count?: number | null
           following_count?: number | null
           full_name?: string | null
@@ -661,14 +721,18 @@ export type Database = {
           location?: string | null
           pet_parent_since?: number | null
           phone?: string | null
+          pin_code?: string | null
           post_count?: number | null
+          state?: string | null
           updated_at?: string | null
           username?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          city?: string | null
           created_at?: string | null
+          email?: string | null
           follower_count?: number | null
           following_count?: number | null
           full_name?: string | null
@@ -676,7 +740,9 @@ export type Database = {
           location?: string | null
           pet_parent_since?: number | null
           phone?: string | null
+          pin_code?: string | null
           post_count?: number | null
+          state?: string | null
           updated_at?: string | null
           username?: string | null
         }
