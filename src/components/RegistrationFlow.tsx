@@ -230,15 +230,13 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
         if (error) { toast.error(error.message); setSubmitting(false); return; }
         userId = data.user?.id;
         if (userId) {
-          const profileUpdate: Record<string, any> = {};
-          if (mobile) profileUpdate.phone = mobile;
-          if (city) profileUpdate.city = city;
-          if (state) profileUpdate.state = state;
-          if (pinCode) profileUpdate.pin_code = pinCode;
-          if (email) profileUpdate.email = email;
-          if (Object.keys(profileUpdate).length > 0) {
-            await supabase.from("profiles").update(profileUpdate).eq("id", userId);
-          }
+          await supabase.from("profiles").update({
+            phone: mobile || null,
+            city: city || null,
+            state: state || null,
+            pin_code: pinCode || null,
+            email: email || null,
+          }).eq("id", userId);
         }
       }
 
