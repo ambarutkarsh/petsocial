@@ -53,6 +53,8 @@ const ProfileScreen = () => {
     navigate("/auth");
   };
 
+  const locationText = [profile?.city, profile?.state].filter(Boolean).join(", ");
+
   return (
     <MobileLayout>
       <div className="pb-20">
@@ -71,7 +73,7 @@ const ProfileScreen = () => {
           </div>
           <h2 className="text-xl font-heading font-bold mt-2">{profile?.full_name || "Loading…"}</h2>
           <div className="flex items-center gap-3 text-xs text-text-muted mt-1">
-            {profile?.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {profile.location}</span>}
+            {locationText && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {locationText}</span>}
             <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
           </div>
         </div>
