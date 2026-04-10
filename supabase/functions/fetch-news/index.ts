@@ -18,7 +18,7 @@ serve(async (req) => {
     }
 
     const { state } = await req.json();
-    const query = `pets animals veterinary ${state || "India"} India`;
+    const query = `(pets OR dogs OR cats OR animals OR veterinary) AND (${state || "India"})`;
     const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=20&apiKey=${NEWS_API_KEY}`;
 
     const res = await fetch(url);
