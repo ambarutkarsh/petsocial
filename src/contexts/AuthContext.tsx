@@ -7,6 +7,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  isNewGoogleUser: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signOut: async () => {},
+  isNewGoogleUser: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -21,12 +23,29 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isNewGoogleUser, setIsNewGoogleUser] = useState(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (event, session) => {
         setSession(session);
         setLoading(false);
+
+        if (event === "SIGNED_IN" && session?.user) {
+          // Check if new Google user
+          const provider = session.user.app_metadata?.provider;
+          if (provider === "google") {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("full_name, phone")
+              .eq("id", session.user.id)
+              .single();
+
+            if (!profile?.phone && (!profile?.full_name || profile.full_name === "PawSocial User" || profile.full_name?.includes("_"))) {
+              setIsNewGoogleUser(true);
+            }
+          }
+        }
       }
     );
 
@@ -40,10 +59,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    setIsNewGoogleUser(false);
   };
 
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signOut }}>
+    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signOut, isNewGoogleUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,6 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import MobileLayout from "@/components/MobileLayout";
+import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
+import { trackEvent } from "@/lib/analytics";
 
 const PublicProfileScreen = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -13,11 +16,13 @@ const PublicProfileScreen = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const isOwnProfile = user?.id === userId;
+  const [showUpload, setShowUpload] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ["public-profile", userId],
     enabled: !!userId,
     queryFn: async () => {
+      trackEvent("profile_viewed_other", { user_id: userId });
       const { data } = await supabase.from("profiles").select("*").eq("id", userId!).single();
       return data;
     },
@@ -57,6 +62,7 @@ const PublicProfileScreen = () => {
         await supabase.from("follows").delete().eq("follower_id", user.id).eq("following_id", userId);
       } else {
         await supabase.from("follows").insert({ follower_id: user.id, following_id: userId });
+        trackEvent("follow_user", { user_id: userId });
       }
     },
     onSuccess: () => {
@@ -75,12 +81,11 @@ const PublicProfileScreen = () => {
     return supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
   };
 
-  const primaryPet = pets.find((p: any) => p.is_primary) || pets[0];
   const locationText = [profile?.city, profile?.state].filter(Boolean).join(", ");
 
   return (
     <MobileLayout>
-      <div className="min-h-screen pb-4">
+      <div className="min-h-screen pb-20">
         {/* Header */}
         <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center justify-between border-b border-border">
           <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-[10px] bg-surface-alt flex items-center justify-center">
@@ -202,6 +207,9 @@ const PublicProfileScreen = () => {
           )}
         </div>
       </div>
+
+      <BottomNav onPostClick={() => setShowUpload(true)} />
+      <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
     </MobileLayout>
   );
 };

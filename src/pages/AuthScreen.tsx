@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { ChevronLeft, Loader2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 const petEmojis = ["🐕", "🐈", "🐠", "🦜", "🐇"];
 const features = ["📸 Share moments", "💬 Discuss & help", "🏥 Track health", "📚 Pet knowledge"];
@@ -16,7 +17,7 @@ type SheetView = "login" | "forgotPassword" | "resetSent";
 
 const AuthScreen = () => {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, isNewGoogleUser } = useAuth();
   const [showRegistration, setShowRegistration] = useState(false);
   const [registrationStep, setRegistrationStep] = useState(0);
   const [email, setEmail] = useState("");
@@ -29,17 +30,29 @@ const AuthScreen = () => {
 
   useEffect(() => {
     if (loading || !user) return;
+
+    if (isNewGoogleUser) {
+      navigate("/complete-registration", { replace: true });
+      return;
+    }
+
     const checkProfile = async () => {
-      const { data } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
-      if (!data?.full_name) {
-        setRegistrationStep(1);
-        setShowRegistration(true);
+      const { data } = await supabase.from("profiles").select("full_name, phone").eq("id", user.id).single();
+      if (!data?.full_name || data.full_name === "PawSocial User") {
+        // Check if Google user needing registration
+        const provider = user.app_metadata?.provider;
+        if (provider === "google") {
+          navigate("/complete-registration", { replace: true });
+        } else {
+          setRegistrationStep(1);
+          setShowRegistration(true);
+        }
       } else {
         navigate("/feed", { replace: true });
       }
     };
     checkProfile();
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, isNewGoogleUser]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,10 +61,12 @@ const AuthScreen = () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
+    trackEvent("login_success");
     navigate("/feed");
   };
 
   const handleGoogleSignIn = async () => {
+    trackEvent("google_login_click");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: "https://petosauras.com/feed" },
@@ -70,7 +85,6 @@ const AuthScreen = () => {
       redirectTo: window.location.origin + "/reset-password",
     });
     setResetSubmitting(false);
-    // Always show success to prevent email enumeration
     setSheetView("resetSent");
   };
 
@@ -92,14 +106,7 @@ const AuthScreen = () => {
         <div className="absolute bottom-[200px] left-[50%] w-[180px] h-[180px] rounded-full bg-accent/10 blur-3xl" />
 
         <div className="flex-1 flex flex-col items-center justify-center pt-16 pb-6 px-6 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center mb-4 shadow-petosauras-lg">
-            <span className="text-4xl">🦕</span>
-          </div>
-          <h1 className="text-3xl font-heading font-extrabold tracking-tight">
-            <span className="text-primary" style={{ fontSize: "1.1em" }}>P</span>
-            <span className="text-primary">etosauras</span>
-          </h1>
-          <p className="text-muted-foreground mt-2 text-center text-[15px]">Your pet's world, all in one place 🦕</p>
+          <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 80, objectFit: "contain", marginBottom: 12 }} />
           <div className="flex gap-3 mt-6">
             {petEmojis.map((emoji, i) => (
               <div key={i} className="w-12 h-12 rounded-full bg-card border-2 border-border-strong shadow-petosauras flex items-center justify-center text-xl animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -151,7 +158,7 @@ const AuthScreen = () => {
               </form>
               <p className="text-center text-sm text-muted-foreground mt-4 font-body">
                 New here?{" "}
-                <button onClick={() => { setRegistrationStep(0); setShowRegistration(true); }} className="text-primary font-bold hover:underline">
+                <button onClick={() => { setRegistrationStep(0); setShowRegistration(true); trackEvent("signup_started"); }} className="text-primary font-bold hover:underline">
                   Join Petosauras
                 </button>
               </p>
