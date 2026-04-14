@@ -1,5 +1,4 @@
-import { Settings, MapPin, Calendar, Grid3X3, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Pencil, MapPin, Calendar, Grid3X3, LogOut } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import { useQuery } from "@tanstack/react-query";
@@ -58,41 +57,41 @@ const ProfileScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <div className="h-[155px] bg-gradient-to-r from-primary via-accent to-secondary relative">
-          <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1">
-            <Settings className="w-3.5 h-3.5" /> Edit Profile
+        <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #9B7EC8 50%, #FF8C66 100%)" }}>
+          <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
+            <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
           </button>
-          <button onClick={handleSignOut} className="absolute top-4 left-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1">
-            <LogOut className="w-3.5 h-3.5" /> Sign Out
+          <button onClick={handleSignOut} className="absolute top-4 left-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
+            <LogOut className="w-3.5 h-3.5" strokeWidth={1.8} /> Sign Out
           </button>
         </div>
 
         <div className="px-4 -mt-10 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-4 border-card flex items-center justify-center text-2xl font-bold text-primary shadow-paw">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-light to-primary border-4 border-card flex items-center justify-center text-2xl font-heading font-extrabold text-primary-foreground shadow-petosauras">
             {getInitials(profile?.full_name)}
           </div>
           <h2 className="text-xl font-heading font-bold mt-2">{profile?.full_name || "Loading…"}</h2>
-          <div className="flex items-center gap-3 text-xs text-text-muted mt-1">
-            {locationText && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {locationText}</span>}
-            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 font-body">
+            {locationText && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" strokeWidth={1.8} /> {locationText}</span>}
+            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" strokeWidth={1.8} /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
           </div>
         </div>
 
         <div className="px-4 mt-4">
           <div className="flex items-center justify-around paw-card p-3">
             <div className="text-center">
-              <p className="text-lg font-heading font-bold">{profile?.post_count || 0}</p>
-              <p className="text-xs text-text-muted">Posts</p>
+              <p className="text-lg font-heading font-extrabold text-primary">{profile?.post_count || 0}</p>
+              <p className="text-xs text-muted-foreground font-body">Posts</p>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
-              <p className="text-lg font-heading font-bold">{profile?.follower_count || 0}</p>
-              <p className="text-xs text-text-muted">Followers</p>
+              <p className="text-lg font-heading font-extrabold text-primary">{profile?.follower_count || 0}</p>
+              <p className="text-xs text-muted-foreground font-body">Followers</p>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
-              <p className="text-lg font-heading font-bold">{profile?.following_count || 0}</p>
-              <p className="text-xs text-text-muted">Following</p>
+              <p className="text-lg font-heading font-extrabold text-primary">{profile?.following_count || 0}</p>
+              <p className="text-xs text-muted-foreground font-body">Following</p>
             </div>
           </div>
         </div>
@@ -100,10 +99,10 @@ const ProfileScreen = () => {
         {primaryPet && (
           <div className="px-4 mt-4">
             <div className="paw-card p-4 flex items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl">{primaryPet.avatar_emoji || "🐾"}</div>
+              <div className="w-14 h-14 rounded-[14px] bg-primary-light flex items-center justify-center text-3xl">{primaryPet.avatar_emoji || "🐾"}</div>
               <div className="flex-1">
                 <h3 className="font-heading font-bold">{primaryPet.name}</h3>
-                <p className="text-xs text-text-muted">{primaryPet.species || primaryPet.pet_type} • {primaryPet.age_years ? `${primaryPet.age_years} yrs` : ""} • {primaryPet.gender || ""}</p>
+                <p className="text-xs text-muted-foreground font-body">{primaryPet.species || primaryPet.pet_type} • {primaryPet.age_years ? `${primaryPet.age_years} yrs` : ""} • {primaryPet.gender || ""}</p>
               </div>
             </div>
           </div>
@@ -111,16 +110,16 @@ const ProfileScreen = () => {
 
         <div className="px-4 mt-4">
           <div className="flex items-center gap-2 mb-3">
-            <Grid3X3 className="w-4 h-4 text-text-mid" />
-            <span className="text-sm font-semibold">Posts</span>
+            <Grid3X3 className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
+            <span className="text-sm font-heading font-bold">Posts</span>
           </div>
           {userPosts.length === 0 ? (
             <div className="text-center py-10">
               <span className="text-4xl">📸</span>
-              <p className="text-sm text-text-muted mt-2">No posts yet</p>
+              <p className="text-sm text-muted-foreground mt-2 font-body">No posts yet</p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 gap-1 rounded-xl overflow-hidden">
+            <div className="grid grid-cols-3 gap-1 rounded-[22px] overflow-hidden">
               {userPosts.map((post: any) => (
                 <div key={post.id} className="aspect-square">
                   <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />

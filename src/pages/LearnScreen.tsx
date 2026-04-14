@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { Search, Clock, ExternalLink } from "lucide-react";
+import { Search, Clock, BookOpen, Newspaper } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 const categories = ["All", "🐕 Canine", "🐈 Feline", "🐠 Aquatic", "🦜 Avian", "🐇 Small Pets", "General"];
+
+const categoryBgColors: Record<string, string> = {
+  Canine: "bg-primary-light",
+  Feline: "bg-secondary-light",
+  Aquatic: "bg-[#E8F4FF]",
+  Avian: "bg-accent-light",
+  General: "bg-muted",
+};
 
 const LearnScreen = () => {
   const [tab, setTab] = useState<"knowledge" | "news">("knowledge");
@@ -16,7 +24,7 @@ const LearnScreen = () => {
     queryFn: async () => {
       let query = supabase.from("knowledge_articles").select("*").eq("is_published", true).order("created_at", { ascending: false });
       if (activeCategory !== "All") {
-        const cat = activeCategory.replace(/^[^\s]+\s/, ""); // Remove emoji prefix
+        const cat = activeCategory.replace(/^[^\s]+\s/, "");
         query = query.eq("category", cat);
       }
       const { data } = await query;
@@ -27,18 +35,21 @@ const LearnScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center justify-between">
-          <h1 className="text-xl font-heading font-bold"><span className="text-primary">Paw</span>Learn</h1>
-          <button className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center text-text-mid"><Search className="w-5 h-5" /></button>
+        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
+          <h1 className="text-xl font-heading font-extrabold">
+            <span className="text-primary">🦕 </span>
+            <span className="text-primary">Learn</span>
+          </h1>
+          <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors"><Search className="w-5 h-5" strokeWidth={1.8} /></button>
         </header>
 
-        <div className="px-4 mb-4">
+        <div className="px-4 mb-4 mt-3">
           <div className="flex bg-muted rounded-full p-1">
-            <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-semibold rounded-full transition-colors ${tab === "knowledge" ? "bg-card shadow-paw text-foreground" : "text-text-muted"}`}>
-              📚 Knowledge Base
+            <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
+              <BookOpen className="w-4 h-4" strokeWidth={1.8} /> Knowledge Base
             </button>
-            <button onClick={() => setTab("news")} className={`flex-1 py-2 text-sm font-semibold rounded-full transition-colors ${tab === "news" ? "bg-card shadow-paw text-foreground" : "text-text-muted"}`}>
-              📰 Pet News
+            <button onClick={() => setTab("news")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "news" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
+              <Newspaper className="w-4 h-4" strokeWidth={1.8} /> Pet News
             </button>
           </div>
         </div>
@@ -47,7 +58,7 @@ const LearnScreen = () => {
           <>
             <div className="px-4 flex gap-2 overflow-x-auto no-scrollbar mb-4">
               {categories.map((c) => (
-                <button key={c} onClick={() => setActiveCategory(c)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${activeCategory === c ? "bg-primary text-primary-foreground" : "bg-muted text-text-mid"}`}>
+                <button key={c} onClick={() => setActiveCategory(c)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-body font-bold transition-colors ${activeCategory === c ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                   {c}
                 </button>
               ))}
@@ -58,22 +69,25 @@ const LearnScreen = () => {
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <span className="text-5xl mb-4">📚</span>
                 <h3 className="font-heading font-bold text-lg">No articles yet</h3>
-                <p className="text-sm text-text-muted mt-1">Knowledge base articles will appear here</p>
+                <p className="text-sm text-muted-foreground mt-1 font-body">Knowledge base articles will appear here</p>
               </div>
             ) : (
               <div className="px-4 space-y-3">
-                {articles.map((a: any) => (
-                  <div key={a.id} className="paw-card p-4 flex gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl shrink-0">{a.emoji || "🐾"}</div>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-muted text-text-mid">{a.category}</span>
-                      <h3 className="text-sm font-semibold mt-1 line-clamp-2">{a.title}</h3>
-                      <p className="text-xs text-text-muted mt-1 flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {a.read_time_minutes || 5} min read
-                      </p>
+                {articles.map((a: any, idx: number) => {
+                  const catKey = a.category || "General";
+                  return (
+                    <div key={a.id} className="paw-card p-4 flex gap-3 animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+                      <div className={`w-12 h-12 rounded-[14px] ${categoryBgColors[catKey] || "bg-muted"} flex items-center justify-center text-2xl shrink-0 p-3`}>{a.emoji || "🐾"}</div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-[10px] font-body font-bold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{a.category}</span>
+                        <h3 className="text-sm font-heading font-bold mt-1 line-clamp-2">{a.title}</h3>
+                        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1 font-body">
+                          <Clock className="w-3 h-3" strokeWidth={1.8} /> {a.read_time_minutes || 5} min read
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>
@@ -82,14 +96,14 @@ const LearnScreen = () => {
         {tab === "news" && (
           <>
             <div className="px-4 mb-4">
-              <div className="paw-card p-3 flex items-center gap-2 bg-secondary/5">
+              <div className="paw-card p-3 flex items-center gap-2 bg-primary-light">
                 <span className="text-lg">🤖</span>
-                <p className="text-xs text-text-mid">AI-curated from Times of India, NDTV, The Hindu + local sources</p>
+                <p className="text-xs text-muted-foreground font-body">AI-curated from Times of India, NDTV, The Hindu + local sources</p>
               </div>
             </div>
             <div className="px-4 text-center py-16">
               <span className="text-4xl">📰</span>
-              <p className="text-sm text-text-muted mt-2">Pet news feed coming soon — add a News API key to enable</p>
+              <p className="text-sm text-muted-foreground mt-2 font-body">Pet news feed coming soon — add a News API key to enable</p>
             </div>
           </>
         )}
