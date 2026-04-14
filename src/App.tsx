@@ -13,6 +13,10 @@ import LearnScreen from "./pages/LearnScreen";
 import ProfileScreen from "./pages/ProfileScreen";
 import NotificationsScreen from "./pages/NotificationsScreen";
 import ResetPasswordScreen from "./pages/ResetPasswordScreen";
+import VetNearMeScreen from "./pages/VetNearMeScreen";
+import PetDigiLockerScreen from "./pages/PetDigiLockerScreen";
+import BudgetCalculatorScreen from "./pages/BudgetCalculatorScreen";
+import OrderNowScreen from "./pages/OrderNowScreen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +35,10 @@ const App = () => (
             <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
             <Route path="/health" element={<ProtectedRoute><HealthScreen /></ProtectedRoute>} />
             <Route path="/health/log" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
+            <Route path="/health/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
+            <Route path="/health/digilocker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
+            <Route path="/health/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
+            <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
             <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
