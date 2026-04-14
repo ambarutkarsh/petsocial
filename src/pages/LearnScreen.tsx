@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Clock, BookOpen, Newspaper } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -18,6 +19,7 @@ const categoryBgColors: Record<string, string> = {
 const LearnScreen = () => {
   const [tab, setTab] = useState<"knowledge" | "news">("knowledge");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [showUpload, setShowUpload] = useState(false);
 
   const { data: articles = [], isLoading } = useQuery({
     queryKey: ["knowledge-articles", activeCategory],
@@ -108,7 +110,8 @@ const LearnScreen = () => {
           </>
         )}
       </div>
-      <BottomNav />
+      <BottomNav onPostClick={() => setShowUpload(true)} />
+      <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
     </MobileLayout>
   );
 };
