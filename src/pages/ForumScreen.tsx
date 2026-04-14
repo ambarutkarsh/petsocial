@@ -84,20 +84,11 @@ const ForumScreen = () => {
     queryKey: ["pet-news", profile?.state],
     enabled: activeFilter === "Pet News" && !!profile?.state,
     queryFn: async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-news`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ state: profile?.state }),
-        }
-      );
-      if (!res.ok) throw new Error("Failed to fetch news");
-      const data = await res.json();
-      return data.articles || [];
+      const { data, error } = await supabase.functions.invoke("fetch-news", {
+        body: { state: profile?.state },
+      });
+      if (error) throw new Error("Failed to fetch news");
+      return data?.articles || [];
     },
   });
 
