@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus } from "lucide-react";
+import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, MoreVertical, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
