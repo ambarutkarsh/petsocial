@@ -284,6 +284,18 @@ const FeedScreen = () => {
                         {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                       </p>
                     </div>
+                    {post.user_id === user?.id && (
+                      <button
+                        onClick={() => {
+                          if (confirm("Delete this post? This cannot be undone.")) {
+                            deletePostMutation.mutate(post.id);
+                          }
+                        }}
+                        className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" strokeWidth={1.8} />
+                      </button>
+                    )}
                   </div>
                   <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
                     <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
