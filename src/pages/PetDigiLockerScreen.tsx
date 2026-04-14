@@ -1,10 +1,11 @@
 import { useState, useRef, useMemo } from "react";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, FileText, Trash2, Download, Eye as EyeIcon, Upload, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,14 +16,28 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const mealIcons: Record<string, string> = { Breakfast: "🌅", Lunch: "☀️", Dinner: "🌙", Snack: "🍪" };
+
+const documentCategories = [
+  { value: "vaccination_card", label: "📋 Vaccination Card" },
+  { value: "hospital_bill", label: "🏥 Hospital Bill" },
+  { value: "pet_shop_bill", label: "🧾 Pet Shop Bill" },
+  { value: "prescription", label: "💊 Prescription / Medicines" },
+  { value: "lab_report", label: "🩺 Lab Report / Test Results" },
+  { value: "insurance", label: "📄 Insurance Document" },
+  { value: "other", label: "📝 Other" },
+];
+
+const categoryLabels: Record<string, string> = Object.fromEntries(documentCategories.map(c => [c.value, c.label]));
 
 const PetDigiLockerScreen = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docFileInputRef = useRef<HTMLInputElement>(null);
 
   // Pet selector
   const { data: pets = [] } = useQuery({
@@ -63,12 +78,12 @@ const PetDigiLockerScreen = () => {
     },
   });
 
-  // Pet records (vaccination card)
-  const { data: vaccCard } = useQuery({
-    queryKey: ["vacc-card", activePet?.id], enabled: !!activePet,
+  // All pet records (documents)
+  const { data: allRecords = [] } = useQuery({
+    queryKey: ["pet-records", activePet?.id], enabled: !!activePet,
     queryFn: async () => {
-      const { data } = await supabase.from("pet_records").select("*").eq("pet_id", activePet!.id).eq("record_type", "vaccination_card").order("created_at", { ascending: false }).limit(1);
-      return data?.[0] || null;
+      const { data } = await supabase.from("pet_records").select("*").eq("pet_id", activePet!.id).order("document_date", { ascending: false });
+      return data || [];
     },
   });
 
@@ -107,6 +122,18 @@ const PetDigiLockerScreen = () => {
 
   const [uploading, setUploading] = useState(false);
 
+  // Document upload states
+  const [showDocUpload, setShowDocUpload] = useState(false);
+  const [docCategory, setDocCategory] = useState("");
+  const [docDate, setDocDate] = useState<Date>(new Date());
+  const [docName, setDocName] = useState("");
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docFileError, setDocFileError] = useState("");
+  const [docUploading, setDocUploading] = useState(false);
+
+  // Accordion state for document categories
+  const [expandedCats, setExpandedCats] = useState<string[]>([]);
+
   const petAge = useMemo(() => {
     if (!activePet?.date_of_birth) return activePet?.age_years ? `${activePet.age_years} years` : "Unknown";
     const dob = new Date(activePet.date_of_birth);
@@ -134,6 +161,17 @@ const PetDigiLockerScreen = () => {
       idealMax: idealWeight?.max || 0,
     }));
   }, [weightLogs, idealWeight]);
+
+  // Group documents by category
+  const groupedDocs = useMemo(() => {
+    const groups: Record<string, any[]> = {};
+    for (const rec of allRecords as any[]) {
+      const cat = rec.record_type || "other";
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(rec);
+    }
+    return groups;
+  }, [allRecords]);
 
   const saveWeight = async () => {
     if (!weightVal || !activePet) return;
@@ -169,11 +207,77 @@ const PetDigiLockerScreen = () => {
     const path = `${user!.id}/${activePet.id}/vaccination_card_${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage.from("pet-records").upload(path, file);
     if (upErr) { toast.error("Upload failed"); setUploading(false); return; }
-    const { error: dbErr } = await supabase.from("pet_records").insert({ pet_id: activePet.id, owner_id: user!.id, record_type: "vaccination_card", file_url: path, file_name: file.name });
+    const fileSizeKb = Math.round(file.size / 1024);
+    const { error: dbErr } = await supabase.from("pet_records").insert({ pet_id: activePet.id, owner_id: user!.id, record_type: "vaccination_card", file_url: path, file_name: file.name, file_size_kb: fileSizeKb, document_date: format(new Date(), "yyyy-MM-dd") });
     if (dbErr) { toast.error("Failed to save record"); setUploading(false); return; }
     toast.success("Vaccination card uploaded!");
     setUploading(false);
-    qc.invalidateQueries({ queryKey: ["vacc-card"] });
+    qc.invalidateQueries({ queryKey: ["pet-records"] });
+  };
+
+  const handleDocFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 500 * 1024) {
+      setDocFileError(`File too large (${Math.round(file.size / 1024)} KB). Maximum size is 500KB. Please compress and try again.`);
+      setDocFile(null);
+      return;
+    }
+    setDocFileError("");
+    setDocFile(file);
+  };
+
+  const saveDocument = async () => {
+    if (!docFile || !docCategory || !activePet) return;
+    setDocUploading(true);
+    const ext = docFile.name.split(".").pop();
+    const dateStr = format(docDate, "yyyy-MM-dd");
+    const path = `${user!.id}/${activePet.id}/${docCategory}/${dateStr}/${docFile.name}`;
+    const { error: upErr } = await supabase.storage.from("pet-records").upload(path, docFile);
+    if (upErr) { toast.error("Upload failed"); setDocUploading(false); return; }
+    const fileSizeKb = Math.round(docFile.size / 1024);
+    const { error: dbErr } = await supabase.from("pet_records").insert({
+      pet_id: activePet.id,
+      owner_id: user!.id,
+      record_type: docCategory,
+      file_url: path,
+      file_name: docFile.name,
+      file_size_kb: fileSizeKb,
+      document_date: dateStr,
+      notes: docName || null,
+    });
+    if (dbErr) { toast.error("Failed to save record"); setDocUploading(false); return; }
+    toast.success("Document uploaded!");
+    trackEvent("digilocker_document_uploaded", { category: docCategory });
+    setDocUploading(false);
+    setShowDocUpload(false);
+    setDocFile(null); setDocCategory(""); setDocName(""); setDocFileError("");
+    qc.invalidateQueries({ queryKey: ["pet-records"] });
+  };
+
+  const handleDeleteRecord = async (record: any) => {
+    if (!confirm("Delete this document?")) return;
+    await supabase.storage.from("pet-records").remove([record.file_url]);
+    await supabase.from("pet_records").delete().eq("id", record.id);
+    toast.success("Document deleted");
+    qc.invalidateQueries({ queryKey: ["pet-records"] });
+  };
+
+  const handleViewRecord = async (record: any) => {
+    const { data } = await supabase.storage.from("pet-records").createSignedUrl(record.file_url, 3600);
+    if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+  };
+
+  const toggleCat = (cat: string) => {
+    setExpandedCats(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
+  };
+
+  const getFileIcon = (fileName: string) => {
+    if (!fileName) return "📄";
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    if (ext === "pdf") return "📕";
+    if (["jpg", "jpeg", "png", "webp"].includes(ext || "")) return "🖼️";
+    return "📄";
   };
 
   const vaccChips = ["Rabies", "DA2PP", "Leptospirosis", "Bordetella", "FVRCP", "FeLV", "Deworming"];
@@ -231,12 +335,12 @@ const PetDigiLockerScreen = () => {
             <TabsList className="w-full">
               <TabsTrigger value="health" className="flex-1 text-xs">📊 Health Log</TabsTrigger>
               <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vaccines</TabsTrigger>
+              <TabsTrigger value="documents" className="flex-1 text-xs">📁 Documents</TabsTrigger>
               <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
             </TabsList>
 
             {/* TAB 1: HEALTH LOG */}
             <TabsContent value="health" className="space-y-4 mt-3">
-              {/* Basic Info */}
               <div className="paw-card p-4">
                 <h3 className="font-heading font-semibold text-sm mb-2">Basic Info</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
@@ -256,7 +360,6 @@ const PetDigiLockerScreen = () => {
                     <Plus className="w-3 h-3 mr-1" />Log Weight
                   </Button>
                 </div>
-
                 {showWeightForm && (
                   <div className="space-y-2 mb-3 p-3 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-2">
@@ -271,7 +374,6 @@ const PetDigiLockerScreen = () => {
                     <Button size="sm" className="w-full h-8" onClick={saveWeight}>Save</Button>
                   </div>
                 )}
-
                 {chartData.length > 1 && (
                   <ResponsiveContainer width="100%" height={150}>
                     <LineChart data={chartData}>
@@ -283,8 +385,6 @@ const PetDigiLockerScreen = () => {
                     </LineChart>
                   </ResponsiveContainer>
                 )}
-
-                {/* Ideal Weight */}
                 {idealWeight && (
                   <div className="mt-3 p-3 bg-muted/30 rounded-lg border border-border/50">
                     <p className="text-xs font-semibold">Ideal weight for {activePet.name}</p>
@@ -308,7 +408,6 @@ const PetDigiLockerScreen = () => {
                     <Plus className="w-3 h-3 mr-1" />Log Food
                   </Button>
                 </div>
-
                 {showFoodForm && (
                   <div className="space-y-2 mb-3 p-3 bg-muted/50 rounded-lg">
                     <div className="flex gap-1 flex-wrap">
@@ -327,7 +426,6 @@ const PetDigiLockerScreen = () => {
                     <Button size="sm" className="w-full h-8" onClick={saveFood}>Save</Button>
                   </div>
                 )}
-
                 {(foodLogs as any[]).length > 0 ? (
                   <div className="space-y-1.5">
                     {(foodLogs as any[]).map((f: any) => (
@@ -404,17 +502,18 @@ const PetDigiLockerScreen = () => {
                 </div>
               )}
 
-              {/* Vaccination Card */}
+              {/* Vaccination Card Upload */}
               <div className="paw-card p-4">
                 <h3 className="font-heading font-semibold text-sm mb-2">Vaccination Card</h3>
-                {vaccCard ? (
+                {(allRecords as any[]).filter((r: any) => r.record_type === "vaccination_card").length > 0 ? (
                   <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">📄 {vaccCard.file_name || "Uploaded file"}</p>
-                    <p className="text-[10px] text-muted-foreground">Uploaded: {vaccCard.created_at ? format(new Date(vaccCard.created_at), "MMM d, yyyy") : ""}</p>
-                    <Button variant="outline" size="sm" className="text-xs" onClick={async () => {
-                      const { data } = await supabase.storage.from("pet-records").createSignedUrl(vaccCard.file_url, 3600);
-                      if (data?.signedUrl) window.open(data.signedUrl, "_blank");
-                    }}>View / Download</Button>
+                    {(allRecords as any[]).filter((r: any) => r.record_type === "vaccination_card").slice(0, 1).map((r: any) => (
+                      <div key={r.id}>
+                        <p className="text-xs text-muted-foreground">📄 {r.file_name || "Uploaded file"}</p>
+                        <p className="text-[10px] text-muted-foreground">Uploaded: {r.created_at ? format(new Date(r.created_at), "MMM d, yyyy") : ""}</p>
+                        <Button variant="outline" size="sm" className="text-xs mt-1" onClick={() => handleViewRecord(r)}>View / Download</Button>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <div>
@@ -429,7 +528,112 @@ const PetDigiLockerScreen = () => {
               </div>
             </TabsContent>
 
-            {/* TAB 3: GROWTH */}
+            {/* TAB 3: DOCUMENTS */}
+            <TabsContent value="documents" className="space-y-4 mt-3">
+              <Button onClick={() => setShowDocUpload(true)} className="w-full">
+                <Upload className="w-4 h-4 mr-2" /> Upload Document
+              </Button>
+
+              {/* Document upload modal */}
+              {showDocUpload && (
+                <div className="paw-card p-4 space-y-3">
+                  <h3 className="font-heading font-semibold text-sm">Upload Document</h3>
+                  
+                  <div>
+                    <label className="text-xs font-body font-bold text-muted-foreground mb-1 block">Document Category *</label>
+                    <Select value={docCategory} onValueChange={setDocCategory}>
+                      <SelectTrigger className="rounded-[16px] bg-surface-alt border-[1.5px] border-border">
+                        <SelectValue placeholder="Select category..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {documentCategories.map((c) => (
+                          <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-body font-bold text-muted-foreground mb-1 block">Document Date *</label>
+                    <DatePick date={docDate} onSelect={setDocDate} />
+                  </div>
+
+                  <Input placeholder="e.g. Rabies vaccine - Dr. Mehta (optional)" value={docName} onChange={(e) => setDocName(e.target.value)} className="text-sm" />
+
+                  <div>
+                    <button onClick={() => docFileInputRef.current?.click()}
+                      className="w-full border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
+                      <Upload className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground">PDF, JPG, PNG · Max 500KB</p>
+                    </button>
+                    <input ref={docFileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={handleDocFileSelect} />
+                    {docFile && !docFileError && (
+                      <p className="text-xs text-secondary mt-1 font-body">✅ Selected: {docFile.name} ({Math.round(docFile.size / 1024)} KB)</p>
+                    )}
+                    {docFileError && (
+                      <p className="text-xs text-destructive mt-1 font-body">❌ {docFileError}</p>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1" onClick={() => { setShowDocUpload(false); setDocFile(null); setDocFileError(""); }}>Cancel</Button>
+                    <Button className="flex-1" disabled={!docFile || !docCategory || !!docFileError || docUploading} onClick={saveDocument}>
+                      {docUploading ? "Uploading..." : "Save Document"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Grouped document list */}
+              {Object.keys(groupedDocs).length === 0 && !showDocUpload ? (
+                <div className="text-center py-10">
+                  <span className="text-4xl block mb-2">📁</span>
+                  <p className="text-sm text-muted-foreground font-body">No documents uploaded yet</p>
+                  <p className="text-xs text-muted-foreground mt-1 font-body">Upload vaccination cards, bills, prescriptions & more</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {documentCategories.map((cat) => {
+                    const docs = groupedDocs[cat.value] || [];
+                    if (docs.length === 0) return null;
+                    const isExpanded = expandedCats.includes(cat.value);
+                    return (
+                      <div key={cat.value} className="paw-card overflow-hidden">
+                        <button onClick={() => toggleCat(cat.value)} className="w-full flex items-center justify-between p-3">
+                          <span className="text-sm font-heading font-semibold">{cat.label} ({docs.length})</span>
+                          {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                        </button>
+                        {isExpanded && (
+                          <div className="px-3 pb-3 space-y-2">
+                            {docs.map((doc: any) => (
+                              <div key={doc.id} className="flex items-start gap-3 p-2 bg-muted/30 rounded-lg">
+                                <span className="text-lg mt-0.5">{getFileIcon(doc.file_name)}</span>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-semibold truncate">{doc.notes || doc.file_name || "Document"}</p>
+                                  <p className="text-[10px] text-muted-foreground">
+                                    {doc.document_date ? format(new Date(doc.document_date), "dd MMM yyyy") : ""} · {doc.file_size_kb || "?"} KB · {doc.file_name?.split(".").pop()?.toUpperCase()}
+                                  </p>
+                                </div>
+                                <div className="flex gap-1 shrink-0">
+                                  <button onClick={() => handleViewRecord(doc)} className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" title="View">
+                                    <EyeIcon className="w-3.5 h-3.5 text-primary" />
+                                  </button>
+                                  <button onClick={() => handleDeleteRecord(doc)} className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center" title="Delete">
+                                    <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </TabsContent>
+
+            {/* TAB 4: GROWTH */}
             <TabsContent value="growth" className="space-y-4 mt-3">
               {growthData.length > 1 ? (
                 <div className="paw-card p-4">
