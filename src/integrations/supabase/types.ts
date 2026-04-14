@@ -609,10 +609,48 @@ export type Database = {
           },
         ]
       }
+      pet_facts: {
+        Row: {
+          emoji: string | null
+          expires_at: string | null
+          fact: string
+          generated_at: string | null
+          id: string
+          image_url: string | null
+          pet_type: string | null
+          pexels_url: string | null
+          photographer: string | null
+        }
+        Insert: {
+          emoji?: string | null
+          expires_at?: string | null
+          fact: string
+          generated_at?: string | null
+          id?: string
+          image_url?: string | null
+          pet_type?: string | null
+          pexels_url?: string | null
+          photographer?: string | null
+        }
+        Update: {
+          emoji?: string | null
+          expires_at?: string | null
+          fact?: string
+          generated_at?: string | null
+          id?: string
+          image_url?: string | null
+          pet_type?: string | null
+          pexels_url?: string | null
+          photographer?: string | null
+        }
+        Relationships: []
+      }
       pet_records: {
         Row: {
           created_at: string | null
+          document_date: string | null
           file_name: string | null
+          file_size_kb: number | null
           file_url: string
           id: string
           notes: string | null
@@ -622,7 +660,9 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          document_date?: string | null
           file_name?: string | null
+          file_size_kb?: number | null
           file_url: string
           id?: string
           notes?: string | null
@@ -632,7 +672,9 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          document_date?: string | null
           file_name?: string | null
+          file_size_kb?: number | null
           file_url?: string
           id?: string
           notes?: string | null
@@ -913,6 +955,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           city: string | null
+          community_default_tab: string | null
           created_at: string | null
           email: string | null
           follower_count: number | null
@@ -932,6 +975,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
+          community_default_tab?: string | null
           created_at?: string | null
           email?: string | null
           follower_count?: number | null
@@ -951,6 +995,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           city?: string | null
+          community_default_tab?: string | null
           created_at?: string | null
           email?: string | null
           follower_count?: number | null
