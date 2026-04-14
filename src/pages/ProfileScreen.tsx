@@ -124,6 +124,7 @@ const ProfileScreen = () => {
     <MobileLayout>
       <div className="pb-20">
         <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #9B7EC8 50%, #FF8C66 100%)" }}>
+          <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
           <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
             <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
           </button>
