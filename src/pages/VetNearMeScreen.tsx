@@ -8,19 +8,12 @@ import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { trackEvent } from "@/lib/analytics";
 
 interface VetClinic {
-  name: string;
-  address: string;
-  phone: string;
-  rating: number;
-  user_ratings_total: number;
-  reviews: any[];
-  is_open: boolean;
-  place_id: string;
-  distance_km: number;
-  lat: number;
-  lng: number;
+  name: string; address: string; phone: string; rating: number;
+  user_ratings_total: number; reviews: any[]; is_open: boolean;
+  place_id: string; distance_km: number; lat: number; lng: number;
 }
 
 const VetNearMeScreen = () => {
@@ -33,29 +26,35 @@ const VetNearMeScreen = () => {
   const [searched, setSearched] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [staticMapUrl, setStaticMapUrl] = useState("");
-  const [searchLat, setSearchLat] = useState(0);
-  const [searchLng, setSearchLng] = useState(0);
+  const [apiNotConfigured, setApiNotConfigured] = useState(false);
 
   const fetchVets = async (body: any) => {
     setLoading(true);
     setError("");
     setSearched(true);
+    setApiNotConfigured(false);
     try {
       const { data, error: fnError } = await supabase.functions.invoke("fetch-nearby-vets", { body });
       if (fnError) throw fnError;
-      if (data?.error) throw new Error(data.error);
+      if (data?.error) {
+        if (data.error.includes("not configured") || data.error.includes("API key")) {
+          setApiNotConfigured(true);
+          return;
+        }
+        throw new Error(data.error);
+      }
       setResults(data.clinics || []);
       if (data.staticMapUrl) setStaticMapUrl(data.staticMapUrl);
-      if (data.lat) { setSearchLat(data.lat); setSearchLng(data.lng); }
     } catch (e: any) {
-      setError(e.message || "Unable to fetch results. Please check your connection and try again.");
+      setError(e.message || "Unable to fetch results. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleGeolocate = () => {
-    if (!navigator.geolocation) { toast.error("Geolocation not supported"); return; }
+    if (!navigator.geolocation) { toast.error("Geolocation not supported"); setMode("search"); return; }
+    trackEvent("vet_search_initiated", { search_type: "gps" });
     navigator.geolocation.getCurrentPosition(
       (pos) => fetchVets({ lat: pos.coords.latitude, lng: pos.coords.longitude, radius: 5000 }),
       () => { setError("Location access denied. Please search by PIN code or city instead."); setMode("search"); }
@@ -64,7 +63,13 @@ const VetNearMeScreen = () => {
 
   const handleSearch = () => {
     if (!query.trim()) return;
+    trackEvent("vet_search_initiated", { search_type: "manual" });
     fetchVets({ query: query.trim() });
+  };
+
+  const openGoogleMapsFallback = () => {
+    const searchQuery = query.trim() || "my location";
+    window.open(`https://www.google.com/maps/search/veterinary+clinic+near+${encodeURIComponent(searchQuery)}+India`, "_blank");
   };
 
   return (
@@ -82,16 +87,15 @@ const VetNearMeScreen = () => {
           )}
         </header>
 
-        {/* Mode toggle */}
         <div className="flex gap-2 my-4">
-          <button
-            onClick={() => setMode("location")}
-            className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "location" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-          >📍 Use My Location</button>
-          <button
-            onClick={() => setMode("search")}
-            className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "search" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-          >🔍 Search by PIN / City</button>
+          <button onClick={() => setMode("location")}
+            className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "location" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+            📍 Use My Location
+          </button>
+          <button onClick={() => setMode("search")}
+            className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "search" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+            🔍 Search by PIN / City
+          </button>
         </div>
 
         {mode === "location" ? (
@@ -100,15 +104,30 @@ const VetNearMeScreen = () => {
           </Button>
         ) : (
           <div className="flex gap-2 mb-4">
-            <Input placeholder="Enter PIN code or city name (e.g. 600001 or Chennai)" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSearch()} />
+            <Input placeholder="Enter PIN code or city name" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSearch()} />
             <Button onClick={handleSearch} disabled={loading}><Search className="w-4 h-4" /></Button>
           </div>
         )}
 
-        {error && (
+        {apiNotConfigured && (
+          <div className="text-center py-8 paw-card p-6">
+            <span className="text-4xl block mb-3">🔧</span>
+            <p className="text-sm text-muted-foreground mb-3">Google Maps API is not configured yet. Vet search will be available soon.</p>
+            <Button variant="outline" onClick={openGoogleMapsFallback}>
+              <ExternalLink className="w-4 h-4 mr-1" /> Search on Google Maps →
+            </Button>
+          </div>
+        )}
+
+        {error && !apiNotConfigured && (
           <div className="text-center py-8">
             <p className="text-sm text-destructive mb-3">{error}</p>
-            <Button variant="outline" size="sm" onClick={() => { setError(""); setSearched(false); }}>Try Again</Button>
+            <div className="flex gap-2 justify-center">
+              <Button variant="outline" size="sm" onClick={() => { setError(""); setSearched(false); }}>Try Again</Button>
+              <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
+                <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+              </Button>
+            </div>
           </div>
         )}
 
@@ -116,21 +135,19 @@ const VetNearMeScreen = () => {
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="paw-card p-4 space-y-2">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-5 w-3/4" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-1/2" />
               </div>
             ))}
           </div>
         )}
 
-        {!loading && !error && showMap && staticMapUrl && (
+        {!loading && !error && !apiNotConfigured && showMap && staticMapUrl && (
           <div className="mb-4 rounded-xl overflow-hidden border border-border">
             <img src={staticMapUrl} alt="Map view" className="w-full" />
           </div>
         )}
 
-        {!loading && !error && results.length > 0 && (
+        {!loading && !error && !apiNotConfigured && results.length > 0 && (
           <div className="space-y-3">
             {results.map((clinic) => (
               <div key={clinic.place_id} className="paw-card p-4">
@@ -151,11 +168,8 @@ const VetNearMeScreen = () => {
                   </span>
                   {clinic.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{clinic.phone}</span>}
                 </div>
-
                 <Collapsible>
-                  <CollapsibleTrigger className="text-xs text-primary font-medium mt-2 block">
-                    Tap to see reviews ▼
-                  </CollapsibleTrigger>
+                  <CollapsibleTrigger className="text-xs text-primary font-medium mt-2 block">Tap to see reviews ▼</CollapsibleTrigger>
                   <CollapsibleContent className="mt-2 space-y-2">
                     {clinic.reviews?.length > 0 ? clinic.reviews.slice(0, 3).map((r: any, i: number) => (
                       <div key={i} className="bg-muted/50 rounded-lg p-2.5">
@@ -166,17 +180,13 @@ const VetNearMeScreen = () => {
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.text}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{r.relative_time_description}</p>
                       </div>
                     )) : <p className="text-xs text-muted-foreground">No reviews available</p>}
                   </CollapsibleContent>
                 </Collapsible>
-
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.name)}&query_place_id=${clinic.place_id}`}
+                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.name)}&query_place_id=${clinic.place_id}`}
                   target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-primary font-medium mt-2"
-                >
+                  className="inline-flex items-center gap-1 text-xs text-primary font-medium mt-2">
                   Open in Google Maps <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -184,10 +194,13 @@ const VetNearMeScreen = () => {
           </div>
         )}
 
-        {!loading && !error && searched && results.length === 0 && (
+        {!loading && !error && !apiNotConfigured && searched && results.length === 0 && (
           <div className="text-center py-12">
             <span className="text-4xl block mb-3">🔍</span>
-            <p className="text-sm text-muted-foreground">No veterinary clinics found nearby. Try expanding your search radius.</p>
+            <p className="text-sm text-muted-foreground mb-3">No veterinary clinics found within 5km. Try searching by city name instead.</p>
+            <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
+              <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+            </Button>
           </div>
         )}
       </div>

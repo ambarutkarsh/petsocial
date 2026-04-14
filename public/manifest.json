@@ -1,0 +1,12 @@
+{
+  "name": "Petosauras",
+  "short_name": "Petosauras",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FEFAF5",
+  "theme_color": "#7B5EA7",
+  "icons": [
+    { "src": "/petosauras-logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/petosauras-logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

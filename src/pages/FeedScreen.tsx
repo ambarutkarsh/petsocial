@@ -12,6 +12,7 @@ import StoryCreator from "@/components/StoryCreator";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 
 const FeedScreen = () => {
   const [showUpload, setShowUpload] = useState(false);
@@ -78,19 +79,27 @@ const FeedScreen = () => {
       const isLiked = likedPostIds.includes(postId);
       if (isLiked) {
         await supabase.from("post_likes").delete().eq("post_id", postId).eq("user_id", user!.id);
+        trackEvent("post_unliked");
       } else {
         await supabase.from("post_likes").insert({ post_id: postId, user_id: user!.id });
+        trackEvent("post_liked", { post_id: postId });
       }
     },
     onMutate: async (postId) => {
       await queryClient.cancelQueries({ queryKey: ["my-likes"] });
-      const prev = queryClient.getQueryData<string[]>(["my-likes", user?.id]) || [];
-      const isLiked = prev.includes(postId);
-      queryClient.setQueryData(["my-likes", user?.id], isLiked ? prev.filter((id) => id !== postId) : [...prev, postId]);
-      return { prev };
+      await queryClient.cancelQueries({ queryKey: ["feed-posts"] });
+      const prevLikes = queryClient.getQueryData<string[]>(["my-likes", user?.id]) || [];
+      const prevPosts = queryClient.getQueryData<any[]>(["feed-posts"]) || [];
+      const isLiked = prevLikes.includes(postId);
+      queryClient.setQueryData(["my-likes", user?.id], isLiked ? prevLikes.filter((id) => id !== postId) : [...prevLikes, postId]);
+      queryClient.setQueryData(["feed-posts"], prevPosts.map(p =>
+        p.id === postId ? { ...p, like_count: (p.like_count || 0) + (isLiked ? -1 : 1) } : p
+      ));
+      return { prevLikes, prevPosts };
     },
     onError: (_err, _postId, context) => {
-      queryClient.setQueryData(["my-likes", user?.id], context?.prev);
+      queryClient.setQueryData(["my-likes", user?.id], context?.prevLikes);
+      queryClient.setQueryData(["feed-posts"], context?.prevPosts);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
@@ -105,6 +114,7 @@ const FeedScreen = () => {
         await supabase.from("saved_posts").delete().eq("post_id", postId).eq("user_id", user!.id);
       } else {
         await supabase.from("saved_posts").insert({ post_id: postId, user_id: user!.id });
+        trackEvent("post_saved");
       }
     },
     onMutate: async (postId) => {
@@ -137,6 +147,7 @@ const FeedScreen = () => {
   };
 
   const sharePost = async (post: any) => {
+    trackEvent("post_shared");
     const shareUrl = `${window.location.origin}/post/${post.id}`;
     const profile = post.profiles;
     if (navigator.share) {
@@ -154,6 +165,7 @@ const FeedScreen = () => {
   };
 
   const handleStoryTap = (idx: number) => {
+    trackEvent("story_viewed");
     setStoryStartIndex(idx);
     setShowStoryViewer(true);
   };
@@ -163,11 +175,7 @@ const FeedScreen = () => {
       <div className="pb-20">
         {/* Header */}
         <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
-          <h1 className="text-xl font-heading font-extrabold tracking-tight">
-            <span className="text-primary">🦕 </span>
-            <span className="text-primary" style={{ fontSize: "1.1em" }}>P</span>
-            <span className="text-primary">etosauras</span>
-          </h1>
+          <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
           <div className="flex gap-2">
             <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors">
               <Search className="w-5 h-5" strokeWidth={1.8} />
@@ -242,7 +250,11 @@ const FeedScreen = () => {
                       onClick={() => navigate(`/profile/${post.user_id}`)}
                       className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground cursor-pointer"
                     >
-                      {getInitials(profile?.full_name)}
+                      {profile?.avatar_url ? (
+                        <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      ) : (
+                        getInitials(profile?.full_name)
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p
@@ -274,11 +286,11 @@ const FeedScreen = () => {
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
                           <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
-                          <span className="text-sm font-body font-medium">{post.like_count || 0}</span>
+                          <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>{post.like_count || 0}</span>
                         </button>
-                        <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
+                        <button onClick={() => { setCommentPostId(post.id); trackEvent("comment_submitted", { post_id: post.id }); }} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
                           <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
-                          <span className="text-sm font-body font-medium">{post.comment_count || 0}</span>
+                          <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
                         </button>
                         <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
                       </div>

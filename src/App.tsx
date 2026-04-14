@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -19,9 +19,20 @@ import VetNearMeScreen from "./pages/VetNearMeScreen";
 import PetDigiLockerScreen from "./pages/PetDigiLockerScreen";
 import BudgetCalculatorScreen from "./pages/BudgetCalculatorScreen";
 import OrderNowScreen from "./pages/OrderNowScreen";
+import CompleteRegistrationScreen from "./pages/CompleteRegistrationScreen";
 import NotFound from "./pages/NotFound";
+import { useEffect } from "react";
+import { trackPageView } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
+
+const PageTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -29,12 +40,15 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <PageTracker />
           <Routes>
             <Route path="/" element={<Navigate to="/feed" replace />} />
             <Route path="/auth" element={<AuthScreen />} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
+            <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
             <Route path="/feed" element={<ProtectedRoute><FeedScreen /></ProtectedRoute>} />
             <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
+            <Route path="/community" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
             <Route path="/health" element={<ProtectedRoute><HealthScreen /></ProtectedRoute>} />
             <Route path="/health/log" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
             <Route path="/health/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />

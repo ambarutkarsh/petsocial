@@ -9,8 +9,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { petTypes, breedsByType } from "@/lib/registrationData";
+import { petTypes, breedsByType, indianStates } from "@/lib/registrationData";
+import { citiesByState } from "@/lib/indianCities";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { trackEvent } from "@/lib/analytics";
 
 interface BudgetResult {
   food: { monthly_cost: number; details: string; frequency: string };
@@ -45,6 +47,7 @@ const BudgetCalculatorScreen = () => {
   const [step, setStep] = useState(1);
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [customCity, setCustomCity] = useState("");
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
   const [isNewPet, setIsNewPet] = useState(false);
   const [newPetType, setNewPetType] = useState("");
@@ -56,15 +59,19 @@ const BudgetCalculatorScreen = () => {
   const [breeders, setBreeders] = useState<any[]>([]);
   const [loadingBreeders, setLoadingBreeders] = useState(false);
 
-  const savedLocation = profile?.city && profile?.state ? `${profile.city}, ${profile.state}` : null;
-  const effectiveCity = city || profile?.city || "";
-  const effectiveState = state || profile?.state || "";
+  const savedState = profile?.state;
+  const savedCity = profile?.city;
+  const hasAutoLocation = !!savedState;
+
+  const effectiveState = state || savedState || "";
+  const effectiveCity = (city === "Other" ? customCity : city) || savedCity || "";
+
+  const availableCities = citiesByState[effectiveState] || [];
 
   const selectedPet = pets.find((p: any) => p.id === selectedPetId);
   const petType = selectedPet?.pet_type || newPetType;
   const breed = selectedPet?.species || newBreed;
   const petName = selectedPet?.name || newBreed || newPetType;
-
   const breeds = useMemo(() => breedsByType[newPetType] || [], [newPetType]);
 
   const findBreeders = async () => {
@@ -79,6 +86,7 @@ const BudgetCalculatorScreen = () => {
 
   const calculate = async () => {
     setCalculating(true);
+    trackEvent("budget_calculated", { pet_type: petType, budget_tier: budgetTier, city: effectiveCity });
     try {
       const { data, error } = await supabase.functions.invoke("calculate-budget", {
         body: { breed, pet_type: petType, city: effectiveCity, state: effectiveState, budget_tier: budgetTier },
@@ -96,23 +104,23 @@ const BudgetCalculatorScreen = () => {
     if (!result) return;
     setSaving(true);
     const { error } = await supabase.from("budget_estimates").insert({
-      user_id: user!.id,
-      pet_id: selectedPetId,
-      pet_type: petType,
-      breed,
-      city: effectiveCity,
-      budget_tier: budgetTier,
-      food_monthly: result.food.monthly_cost,
-      health_monthly: result.health.monthly_cost,
-      ownership_monthly: result.ownership.monthly_cost,
-      grooming_monthly: result.grooming.monthly_cost,
-      total_monthly: result.total_monthly,
-      total_annual: result.total_annual,
+      user_id: user!.id, pet_id: selectedPetId, pet_type: petType, breed,
+      city: effectiveCity, budget_tier: budgetTier,
+      food_monthly: result.food.monthly_cost, health_monthly: result.health.monthly_cost,
+      ownership_monthly: result.ownership.monthly_cost, grooming_monthly: result.grooming.monthly_cost,
+      total_monthly: result.total_monthly, total_annual: result.total_annual,
       details_json: result as any,
     });
     setSaving(false);
     if (error) { toast.error("Failed to save"); return; }
     toast.success("Estimate saved!");
+  };
+
+  const saveLocation = async () => {
+    if (!user || !effectiveState) return;
+    await supabase.from("profiles").update({ state: effectiveState, city: effectiveCity }).eq("id", user.id);
+    toast.success("Location saved!");
+    setStep(2);
   };
 
   const tiers = [
@@ -142,19 +150,44 @@ const BudgetCalculatorScreen = () => {
         {step === 1 && (
           <div className="space-y-4 mt-4">
             <h2 className="font-heading font-semibold">📍 Your Location</h2>
-            {savedLocation ? (
+            {hasAutoLocation ? (
               <div className="paw-card p-4">
-                <p className="text-sm">Using your saved location: <span className="font-semibold">{savedLocation}</span></p>
-                <button className="text-xs text-primary mt-1" onClick={() => { setCity(""); setState(""); }}>Change</button>
+                <p className="text-sm">📍 Using: <span className="font-semibold">{savedCity}, {savedState}</span></p>
+                <button className="text-xs text-primary mt-1 font-bold" onClick={() => { setState(""); setCity(""); }}>Change</button>
+                <Button className="w-full mt-3" onClick={() => setStep(2)}>Continue</Button>
               </div>
-            ) : null}
-            {!savedLocation && (
-              <div className="space-y-2">
-                <Input placeholder="Enter your city" value={city} onChange={(e) => setCity(e.target.value)} />
-                <Input placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs font-bold text-muted-foreground mb-1 block">Select your state *</label>
+                  <select value={state} onChange={(e) => { setState(e.target.value); setCity(""); setCustomCity(""); }}
+                    className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+                    <option value="">Select your state</option>
+                    {indianStates.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                {state && (
+                  <div>
+                    <label className="text-xs font-bold text-muted-foreground mb-1 block">Select your city *</label>
+                    {availableCities.length > 0 ? (
+                      <select value={city} onChange={(e) => setCity(e.target.value)}
+                        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+                        <option value="">Select your city</option>
+                        {availableCities.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    ) : (
+                      <Input placeholder="Enter your city name" value={customCity} onChange={(e) => setCustomCity(e.target.value)} />
+                    )}
+                    {city === "Other" && (
+                      <Input placeholder="Enter city name" value={customCity} onChange={(e) => setCustomCity(e.target.value)} className="mt-2" />
+                    )}
+                  </div>
+                )}
+                <Button className="w-full" onClick={saveLocation} disabled={!effectiveState || !effectiveCity}>
+                  Use this location
+                </Button>
               </div>
             )}
-            <Button className="w-full" onClick={() => setStep(2)} disabled={!effectiveCity}>Continue</Button>
           </div>
         )}
 
@@ -252,7 +285,6 @@ const BudgetCalculatorScreen = () => {
               <h2 className="font-heading font-semibold text-base">Monthly Budget for {petName} in {effectiveCity}</h2>
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary capitalize">{budgetTier}</span>
             </div>
-
             <div className="space-y-2">
               {sections.map((s) => (
                 <Collapsible key={s.label}>
@@ -269,26 +301,22 @@ const BudgetCalculatorScreen = () => {
                 </Collapsible>
               ))}
             </div>
-
             <div className="paw-card p-4 text-center">
               <p className="text-sm font-semibold">Total Monthly Budget</p>
               <p className="text-2xl font-heading font-bold text-primary">₹{result.total_monthly.toLocaleString()}/month</p>
               <p className="text-xs text-muted-foreground mt-1">Annual estimate: ₹{result.total_annual.toLocaleString()}/year</p>
             </div>
-
             {result.notes && (
               <div className="rounded-lg bg-amber-50 border border-amber-200 p-3">
                 <p className="text-xs text-amber-800">{result.notes}</p>
               </div>
             )}
-
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={() => setStep(4)}>Recalculate</Button>
               <Button className="flex-1" onClick={saveEstimate} disabled={saving}>{saving ? "Saving..." : "Save Estimate"}</Button>
             </div>
-
             <p className="text-[10px] text-muted-foreground text-center">
-              💡 These are AI-generated estimates based on average costs. Actual prices vary by brand, vet, and location. Always verify locally.
+              💡 These are AI-generated estimates. Actual prices vary by brand, vet, and location.
             </p>
           </div>
         )}
