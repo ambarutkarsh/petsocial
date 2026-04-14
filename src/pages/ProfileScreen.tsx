@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
