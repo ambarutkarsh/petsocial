@@ -882,6 +882,7 @@ export type Database = {
           created_at: string | null
           hashtags: string[] | null
           id: string
+          is_seed_post: boolean | null
           like_count: number | null
           location: string | null
           media_type: string | null
@@ -899,6 +900,7 @@ export type Database = {
           created_at?: string | null
           hashtags?: string[] | null
           id?: string
+          is_seed_post?: boolean | null
           like_count?: number | null
           location?: string | null
           media_type?: string | null
@@ -916,6 +918,7 @@ export type Database = {
           created_at?: string | null
           hashtags?: string[] | null
           id?: string
+          is_seed_post?: boolean | null
           like_count?: number | null
           location?: string | null
           media_type?: string | null
@@ -962,6 +965,7 @@ export type Database = {
           following_count: number | null
           full_name: string | null
           id: string
+          is_seed_user: boolean | null
           location: string | null
           pet_parent_since: number | null
           phone: string | null
@@ -982,6 +986,7 @@ export type Database = {
           following_count?: number | null
           full_name?: string | null
           id: string
+          is_seed_user?: boolean | null
           location?: string | null
           pet_parent_since?: number | null
           phone?: string | null
@@ -1002,6 +1007,7 @@ export type Database = {
           following_count?: number | null
           full_name?: string | null
           id?: string
+          is_seed_user?: boolean | null
           location?: string | null
           pet_parent_since?: number | null
           phone?: string | null
