@@ -136,6 +136,22 @@ const FeedScreen = () => {
     },
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId: string) => {
+      await supabase.from("post_comments").delete().eq("post_id", postId);
+      await supabase.from("post_likes").delete().eq("post_id", postId);
+      await supabase.from("saved_posts").delete().eq("post_id", postId);
+      await supabase.from("posts").delete().eq("id", postId).eq("user_id", user!.id);
+      trackEvent("post_deleted", { post_id: postId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["my-likes"] });
+      queryClient.invalidateQueries({ queryKey: ["my-saves"] });
+      toast.success("Post deleted 🗑️");
+    },
+    onError: () => toast.error("Failed to delete post"),
+  });
   const getInitials = (name: string | null) => {
     if (!name) return "?";
     return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
