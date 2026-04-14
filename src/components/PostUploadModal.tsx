@@ -35,14 +35,36 @@ const PostUploadModal = ({ open, onClose }: Props) => {
 
   if (!open) return null;
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
       const url = URL.createObjectURL(file);
       setImagePreview(url);
       setValidationStatus("checking");
-      setTimeout(() => setValidationStatus("valid"), 1200);
+
+      try {
+        const reader = new FileReader();
+        const dataUrl = await new Promise<string>((resolve) => {
+          reader.onload = (ev) => resolve(ev.target?.result as string);
+          reader.readAsDataURL(file);
+        });
+        const base64 = dataUrl.split(",")[1];
+        const { data, error } = await supabase.functions.invoke("validate-pet", {
+          body: { type: "photo", imageBase64: base64, mimeType: file.type },
+        });
+        if (error) {
+          setValidationStatus("valid"); // fail open on network error
+          return;
+        }
+        if (data?.result === "YES") {
+          setValidationStatus("valid");
+        } else {
+          setValidationStatus("invalid");
+        }
+      } catch {
+        setValidationStatus("valid"); // fail open
+      }
     }
   };
 
@@ -74,7 +96,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
       caption,
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
       pet_id: selectedPetId || null,
-      ai_validated: true,
+      ai_validated: false,
     });
 
     setPosting(false);
