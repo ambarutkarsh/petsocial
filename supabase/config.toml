@@ -2,3 +2,18 @@ project_id = "plyonactsujycdmyskou"
 
 [functions.validate-pet]
 verify_jwt = false
+
+[functions.fetch-news]
+verify_jwt = false
+
+[functions.fetch-nearby-vets]
+verify_jwt = false
+
+[functions.fetch-nearby-breeders]
+verify_jwt = false
+
+[functions.calculate-ideal-weight]
+verify_jwt = false
+
+[functions.calculate-budget]
+verify_jwt = false
