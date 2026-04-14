@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings } from "lucide-react";
+import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -256,10 +256,25 @@ const ProfileScreen = () => {
               ) : (
                 <div className="grid grid-cols-3 gap-1 rounded-[22px] overflow-hidden">
                   {userPosts.map((post: any) => (
-                    <div key={post.id} className="aspect-square">
+                    <div key={post.id} className="aspect-square relative group">
                       <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      <button
+                        onClick={async () => {
+                          if (!confirm("Delete this post? This cannot be undone.")) return;
+                          await supabase.from("post_comments").delete().eq("post_id", post.id);
+                          await supabase.from("post_likes").delete().eq("post_id", post.id);
+                          await supabase.from("saved_posts").delete().eq("post_id", post.id);
+                          await supabase.from("posts").delete().eq("id", post.id).eq("user_id", user!.id);
+                          queryClient.invalidateQueries({ queryKey: ["user-posts"] });
+                          queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+                          toast.success("Post deleted 🗑️");
+                        }}
+                        className="absolute top-1 right-1 w-7 h-7 rounded-full bg-foreground/50 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                  ))}
+                  ))
                 </div>
               )}
             </>
