@@ -71,7 +71,7 @@ const AuthScreen = () => {
     });
     setResetSubmitting(false);
     if (error) {
-      setResetError("No account found with this email address.");
+      setResetError("If this email is registered, you'll receive a reset link.");
       return;
     }
     setSheetView("resetSent");

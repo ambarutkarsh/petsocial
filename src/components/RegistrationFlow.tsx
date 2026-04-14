@@ -80,24 +80,12 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
   const touch1 = (field: string) => setTouched1((p) => ({ ...p, [field]: true }));
   const touch2 = (field: string) => setTouched2((p) => ({ ...p, [field]: true }));
 
-  // Email duplicate check
+  // Email format check only — duplicate detection happens at signUp time
   const checkEmailExists = async (emailVal: string) => {
     if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return;
-    setEmailChecking(true);
+    setEmailChecking(false);
     setEmailExists(false);
-    setEmailChecked(false);
-    try {
-      const { data } = await supabase.from("profiles").select("id").eq("email", emailVal).maybeSingle();
-      if (data) {
-        setEmailExists(true);
-      } else {
-        setEmailChecked(true);
-      }
-    } catch {
-      setEmailChecked(true);
-    } finally {
-      setEmailChecking(false);
-    }
+    setEmailChecked(true);
   };
 
   const handleContinueStep2 = () => {
