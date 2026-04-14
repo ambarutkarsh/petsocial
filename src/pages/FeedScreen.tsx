@@ -6,11 +6,19 @@ import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
+import CommentSheet from "@/components/CommentSheet";
+import StoryViewer from "@/components/StoryViewer";
+import StoryCreator from "@/components/StoryCreator";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const FeedScreen = () => {
   const [showUpload, setShowUpload] = useState(false);
+  const [commentPostId, setCommentPostId] = useState<string | null>(null);
+  const [showStoryViewer, setShowStoryViewer] = useState(false);
+  const [storyStartIndex, setStoryStartIndex] = useState(0);
+  const [showStoryCreator, setShowStoryCreator] = useState(false);
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -56,6 +64,15 @@ const FeedScreen = () => {
     },
   });
 
+  const { data: viewedStoryIds = [] } = useQuery({
+    queryKey: ["viewed-stories", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("story_views").select("story_id").eq("viewer_id", user!.id);
+      return (data || []).map((v) => v.story_id);
+    },
+  });
+
   const toggleLikeMutation = useMutation({
     mutationFn: async (postId: string) => {
       const isLiked = likedPostIds.includes(postId);
@@ -97,6 +114,10 @@ const FeedScreen = () => {
       queryClient.setQueryData(["my-saves", user?.id], isSaved ? prev.filter((id) => id !== postId) : [...prev, postId]);
       return { prev };
     },
+    onSuccess: (_data, postId) => {
+      const wasSaved = !savedPostIds.includes(postId);
+      toast.success(wasSaved ? "Saved 🔖" : "Removed from saved", { duration: 1500 });
+    },
     onError: (_err, _postId, context) => {
       queryClient.setQueryData(["my-saves", user?.id], context?.prev);
     },
@@ -113,6 +134,28 @@ const FeedScreen = () => {
   const getMediaUrl = (path: string) => {
     if (path.startsWith("http")) return path;
     return supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
+  };
+
+  const sharePost = async (post: any) => {
+    const shareUrl = `${window.location.origin}/post/${post.id}`;
+    const profile = post.profiles;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${profile?.full_name}'s pet on Petosauras`,
+          text: post.caption || "Check out this pet post on Petosauras!",
+          url: shareUrl,
+        });
+      } catch {}
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copied to clipboard! 📋");
+    }
+  };
+
+  const handleStoryTap = (idx: number) => {
+    setStoryStartIndex(idx);
+    setShowStoryViewer(true);
   };
 
   return (
@@ -138,24 +181,27 @@ const FeedScreen = () => {
 
         {/* Stories */}
         <div className="px-5 py-3.5 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
-          <div className="flex flex-col items-center gap-1 shrink-0">
+          <div className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => setShowStoryCreator(true)}>
             <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
               <Plus className="w-6 h-6 text-primary" strokeWidth={1.8} />
             </div>
-            <span className="text-[10px] font-body font-semibold text-muted-foreground">Add</span>
+            <span className="text-[10px] font-body font-semibold text-muted-foreground">Your Story</span>
           </div>
-          {stories.map((s: any) => (
-            <div key={s.id} className="flex flex-col items-center gap-1 shrink-0">
-              <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: "linear-gradient(135deg, #7B5EA7, #FF8C66)" }}>
-                <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-2xl">
-                  {s.pets?.avatar_emoji || "🐾"}
+          {stories.map((s: any, idx: number) => {
+            const isViewed = viewedStoryIds.includes(s.id);
+            return (
+              <div key={s.id} className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => handleStoryTap(idx)}>
+                <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: isViewed ? "#ccc" : "linear-gradient(135deg, #7B5EA7, #FF8C66)" }}>
+                  <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-2xl">
+                    {s.pets?.avatar_emoji || "🐾"}
+                  </div>
                 </div>
+                <span className="text-[10px] font-body font-semibold text-muted-foreground truncate w-16 text-center">
+                  {s.pets?.name || s.profiles?.full_name?.split(" ")[0] || "Pet"}
+                </span>
               </div>
-              <span className="text-[10px] font-body font-semibold text-muted-foreground truncate w-16 text-center">
-                {s.pets?.name || s.profiles?.full_name?.split(" ")[0] || "Pet"}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Posts */}
@@ -192,11 +238,19 @@ const FeedScreen = () => {
               return (
                 <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
                   <div className="flex items-center gap-3 p-3.5">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground">
+                    <div
+                      onClick={() => navigate(`/profile/${post.user_id}`)}
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground cursor-pointer"
+                    >
                       {getInitials(profile?.full_name)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-heading font-bold truncate">{profile?.full_name || "User"}</p>
+                      <p
+                        onClick={() => navigate(`/profile/${post.user_id}`)}
+                        className="text-sm font-heading font-bold truncate cursor-pointer hover:text-primary transition-colors"
+                      >
+                        {profile?.full_name || "User"}
+                      </p>
                       <p className="text-xs text-muted-foreground font-body">
                         {pet?.name && `${pet.name} • ${pet.pet_type} • `}
                         {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
@@ -222,18 +276,18 @@ const FeedScreen = () => {
                           <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
                           <span className="text-sm font-body font-medium">{post.like_count || 0}</span>
                         </button>
-                        <button className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
+                        <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
                           <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
                           <span className="text-sm font-body font-medium">{post.comment_count || 0}</span>
                         </button>
-                        <button className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
+                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
                       </div>
                       <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
                         <Bookmark className="w-5 h-5" strokeWidth={1.8} fill={isSaved ? "hsl(var(--primary))" : "none"} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
                       </button>
                     </div>
                     <p className="text-sm font-body">
-                      <span className="font-heading font-bold">@{profile?.username || "user"}</span>{" "}
+                      <span className="font-heading font-bold cursor-pointer" onClick={() => navigate(`/profile/${post.user_id}`)}>@{profile?.username || "user"}</span>{" "}
                       <span className="text-muted-foreground">{post.caption}</span>
                     </p>
                   </div>
@@ -246,6 +300,11 @@ const FeedScreen = () => {
 
       <BottomNav onPostClick={() => setShowUpload(true)} />
       <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
+      <CommentSheet postId={commentPostId || ""} open={!!commentPostId} onClose={() => setCommentPostId(null)} />
+      {showStoryViewer && stories.length > 0 && (
+        <StoryViewer stories={stories} initialIndex={storyStartIndex} onClose={() => { setShowStoryViewer(false); queryClient.invalidateQueries({ queryKey: ["viewed-stories"] }); }} />
+      )}
+      <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
     </MobileLayout>
   );
 };

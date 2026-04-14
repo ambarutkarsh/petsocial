@@ -1,14 +1,27 @@
-import { Pencil, MapPin, Calendar, Grid3X3, LogOut } from "lucide-react";
+import { useState } from "react";
+import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import { useQuery } from "@tanstack/react-query";
+import PostUploadModal from "@/components/PostUploadModal";
+import AddPetSheet from "@/components/AddPetSheet";
+import EditAddressSheet from "@/components/EditAddressSheet";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ProfileScreen = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [showUpload, setShowUpload] = useState(false);
+  const [showAddPet, setShowAddPet] = useState(false);
+  const [showEditAddress, setShowEditAddress] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [activeTab, setActiveTab] = useState<"posts" | "saved">("posts");
+  const [mediaFilter, setMediaFilter] = useState<"all" | "image" | "video">("all");
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -19,21 +32,36 @@ const ProfileScreen = () => {
     },
   });
 
-  const { data: primaryPet } = useQuery({
-    queryKey: ["primary-pet", user?.id],
+  const { data: allPets = [] } = useQuery({
+    queryKey: ["all-pets", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id).eq("is_primary", true).limit(1);
-      return data?.[0] || null;
+      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id);
+      return data || [];
     },
   });
 
   const { data: userPosts = [] } = useQuery({
-    queryKey: ["user-posts", user?.id],
+    queryKey: ["user-posts", user?.id, mediaFilter],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("posts").select("id, media_url").eq("user_id", user!.id).order("created_at", { ascending: false });
+      let query = supabase.from("posts").select("id, media_url, media_type").eq("user_id", user!.id).order("created_at", { ascending: false });
+      if (mediaFilter !== "all") query = query.eq("media_type", mediaFilter);
+      const { data } = await query;
       return data || [];
+    },
+  });
+
+  const { data: savedPosts = [] } = useQuery({
+    queryKey: ["saved-posts-profile", user?.id],
+    enabled: !!user && activeTab === "saved",
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("saved_posts")
+        .select("post_id, posts!saved_posts_post_id_fkey(id, media_url, media_type)")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      return (data || []).map((s: any) => s.posts).filter(Boolean);
     },
   });
 
@@ -52,7 +80,29 @@ const ProfileScreen = () => {
     navigate("/auth");
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    const path = `${user.id}/avatar.jpg`;
+    const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (uploadError) { toast.error("Upload failed"); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    await supabase.from("profiles").update({ avatar_url: data.publicUrl + "?t=" + Date.now() }).eq("id", user.id);
+    queryClient.invalidateQueries({ queryKey: ["profile"] });
+    toast.success("Profile photo updated! 🦕");
+  };
+
+  const handleSaveName = async () => {
+    if (!user || newName.trim().length < 2) { toast.error("Name must be at least 2 characters"); return; }
+    if (newName.trim().length > 40) { toast.error("Name must be under 40 characters"); return; }
+    await supabase.from("profiles").update({ full_name: newName.trim() }).eq("id", user.id);
+    queryClient.invalidateQueries({ queryKey: ["profile"] });
+    setEditingName(false);
+    toast.success("Name updated!");
+  };
+
   const locationText = [profile?.city, profile?.state].filter(Boolean).join(", ");
+  const primaryPet = allPets.find((p: any) => p.is_primary) || allPets[0];
 
   return (
     <MobileLayout>
@@ -67,14 +117,55 @@ const ProfileScreen = () => {
         </div>
 
         <div className="px-4 -mt-10 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-light to-primary border-4 border-card flex items-center justify-center text-2xl font-heading font-extrabold text-primary-foreground shadow-petosauras">
-            {getInitials(profile?.full_name)}
+          <div className="relative w-20 h-20">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="w-20 h-20 rounded-full border-4 border-card object-cover shadow-petosauras" />
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-light to-primary border-4 border-card flex items-center justify-center text-2xl font-heading font-extrabold text-primary-foreground shadow-petosauras">
+                {getInitials(profile?.full_name)}
+              </div>
+            )}
+            <label className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary flex items-center justify-center cursor-pointer shadow-petosauras">
+              <Camera className="w-3.5 h-3.5 text-primary-foreground" />
+              <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+            </label>
           </div>
-          <h2 className="text-xl font-heading font-bold mt-2">{profile?.full_name || "Loading…"}</h2>
+
+          {/* Display name with edit */}
+          <div className="flex items-center gap-2 mt-2">
+            {editingName ? (
+              <div className="flex items-center gap-1.5">
+                <input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="text-xl font-heading font-bold bg-transparent border-b-2 border-primary outline-none w-[180px]"
+                  maxLength={40}
+                  autoFocus
+                />
+                <button onClick={handleSaveName} className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+                  <Check className="w-3.5 h-3.5 text-primary-foreground" />
+                </button>
+                <button onClick={() => setEditingName(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
+                  <X className="w-3.5 h-3.5 text-muted-foreground" />
+                </button>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-xl font-heading font-bold">{profile?.full_name || "Loading…"}</h2>
+                <button onClick={() => { setNewName(profile?.full_name || ""); setEditingName(true); }}>
+                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                </button>
+              </>
+            )}
+          </div>
+
           <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 font-body">
             {locationText && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" strokeWidth={1.8} /> {locationText}</span>}
             <span className="flex items-center gap-1"><Calendar className="w-3 h-3" strokeWidth={1.8} /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
           </div>
+          <button onClick={() => setShowEditAddress(true)} className="text-xs text-primary font-heading font-bold mt-1">
+            📍 Edit Address
+          </button>
         </div>
 
         <div className="px-4 mt-4">
@@ -96,40 +187,100 @@ const ProfileScreen = () => {
           </div>
         </div>
 
-        {primaryPet && (
-          <div className="px-4 mt-4">
-            <div className="paw-card p-4 flex items-center gap-3">
-              <div className="w-14 h-14 rounded-[14px] bg-primary-light flex items-center justify-center text-3xl">{primaryPet.avatar_emoji || "🐾"}</div>
-              <div className="flex-1">
-                <h3 className="font-heading font-bold">{primaryPet.name}</h3>
-                <p className="text-xs text-muted-foreground font-body">{primaryPet.species || primaryPet.pet_type} • {primaryPet.age_years ? `${primaryPet.age_years} yrs` : ""} • {primaryPet.gender || ""}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
+        {/* Pets */}
         <div className="px-4 mt-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Grid3X3 className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
-            <span className="text-sm font-heading font-bold">Posts</span>
-          </div>
-          {userPosts.length === 0 ? (
-            <div className="text-center py-10">
-              <span className="text-4xl">📸</span>
-              <p className="text-sm text-muted-foreground mt-2 font-body">No posts yet</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-3 gap-1 rounded-[22px] overflow-hidden">
-              {userPosts.map((post: any) => (
-                <div key={post.id} className="aspect-square">
-                  <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            {allPets.map((pet: any) => (
+              <div key={pet.id} className="paw-card p-3 flex items-center gap-2 shrink-0 min-w-[140px]">
+                <span className="text-2xl">{pet.avatar_emoji || "🐾"}</span>
+                <div>
+                  <p className="text-sm font-heading font-bold">{pet.name}</p>
+                  <p className="text-[11px] text-muted-foreground font-body">{pet.species || pet.pet_type}</p>
                 </div>
-              ))}
-            </div>
+                {pet.is_primary && (
+                  <span className="text-[9px] bg-primary-light text-primary px-1.5 py-0.5 rounded-full font-bold ml-auto">Primary</span>
+                )}
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setShowAddPet(true)} className="mt-2 px-4 py-2 rounded-full border-2 border-primary text-primary text-sm font-heading font-bold flex items-center gap-1">
+            <Plus className="w-4 h-4" /> Add Pet
+          </button>
+        </div>
+
+        {/* Posts/Saved tabs */}
+        <div className="px-4 mt-4">
+          <div className="flex border-b border-border mb-3">
+            <button onClick={() => setActiveTab("posts")} className={`flex-1 pb-2 text-sm font-heading font-bold flex items-center justify-center gap-1 transition-colors ${activeTab === "posts" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}>
+              <Grid3X3 className="w-4 h-4" strokeWidth={1.8} /> My Posts
+            </button>
+            <button onClick={() => setActiveTab("saved")} className={`flex-1 pb-2 text-sm font-heading font-bold flex items-center justify-center gap-1 transition-colors ${activeTab === "saved" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}>
+              <Bookmark className="w-4 h-4" strokeWidth={1.8} /> Saved
+            </button>
+          </div>
+
+          {activeTab === "posts" && (
+            <>
+              <div className="flex gap-2 mb-3">
+                {(["all", "image", "video"] as const).map((f) => (
+                  <button key={f} onClick={() => setMediaFilter(f)}
+                    className={`px-3 py-1 rounded-full text-xs font-body font-bold transition-colors ${
+                      mediaFilter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    }`}>
+                    {f === "all" ? "All" : f === "image" ? "Photos" : "Videos"}
+                  </button>
+                ))}
+              </div>
+              {userPosts.length === 0 ? (
+                <div className="text-center py-10">
+                  <span className="text-4xl">📸</span>
+                  <p className="text-sm text-muted-foreground mt-2 font-body">No posts yet</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1 rounded-[22px] overflow-hidden">
+                  {userPosts.map((post: any) => (
+                    <div key={post.id} className="aspect-square">
+                      <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {activeTab === "saved" && (
+            <>
+              {savedPosts.length === 0 ? (
+                <div className="text-center py-10">
+                  <span className="text-4xl">🔖</span>
+                  <p className="text-sm text-muted-foreground mt-2 font-body">No saved posts yet</p>
+                  <p className="text-xs text-muted-foreground mt-1 font-body">Tap the bookmark icon on any post to save it</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1 rounded-[22px] overflow-hidden">
+                  {savedPosts.map((post: any) => (
+                    <div key={post.id} className="aspect-square relative">
+                      <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      <Bookmark className="absolute top-1 right-1 w-4 h-4 text-primary" fill="hsl(var(--primary))" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
-      <BottomNav />
+
+      <BottomNav onPostClick={() => setShowUpload(true)} />
+      <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
+      <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
+      <EditAddressSheet
+        open={showEditAddress}
+        onClose={() => setShowEditAddress(false)}
+        currentCity={profile?.city}
+        currentState={profile?.state}
+        currentPin={profile?.pin_code}
+      />
     </MobileLayout>
   );
 };

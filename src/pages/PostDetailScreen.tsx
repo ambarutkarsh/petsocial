@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, Heart, MessageCircle } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
-import { Helmet } from "react-helmet-async";
+
 
 const PostDetailScreen = () => {
   const { postId } = useParams<{ postId: string }>();
