@@ -35,6 +35,8 @@ const ProfileScreen = () => {
   const [newName, setNewName] = useState("");
   const [activeTab, setActiveTab] = useState<"posts" | "saved">("posts");
   const [mediaFilter, setMediaFilter] = useState<"all" | "image" | "video">("all");
+  const [showDefaultTabPref, setShowDefaultTabPref] = useState(false);
+  const [selectedDefaultTab, setSelectedDefaultTab] = useState("");
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
