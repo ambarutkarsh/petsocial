@@ -54,9 +54,9 @@ const AuthScreen = () => {
   const handleGoogleSignIn = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin + "/feed" },
+      options: { redirectTo: "https://petosauras.com/feed" },
     });
-    if (error) toast.error(error.message);
+    if (error) toast.error("Google sign-in failed. Please try again.");
   };
 
   const handleForgotPassword = async () => {
