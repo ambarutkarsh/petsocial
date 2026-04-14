@@ -11,6 +11,8 @@ import HealthScreen from "./pages/HealthScreen";
 import HealthLogScreen from "./pages/HealthLogScreen";
 import LearnScreen from "./pages/LearnScreen";
 import ProfileScreen from "./pages/ProfileScreen";
+import PublicProfileScreen from "./pages/PublicProfileScreen";
+import PostDetailScreen from "./pages/PostDetailScreen";
 import NotificationsScreen from "./pages/NotificationsScreen";
 import ResetPasswordScreen from "./pages/ResetPasswordScreen";
 import VetNearMeScreen from "./pages/VetNearMeScreen";
@@ -41,6 +43,8 @@ const App = () => (
             <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
             <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
+            <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfileScreen /></ProtectedRoute>} />
+            <Route path="/post/:postId" element={<PostDetailScreen />} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

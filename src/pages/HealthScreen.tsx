@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
 import { ChevronRight } from "lucide-react";
 
 const healthCards = [
@@ -12,6 +14,7 @@ const healthCards = [
 
 const HealthScreen = () => {
   const navigate = useNavigate();
+  const [showUpload, setShowUpload] = useState(false);
 
   return (
     <MobileLayout>
@@ -38,7 +41,8 @@ const HealthScreen = () => {
           ))}
         </div>
       </div>
-      <BottomNav />
+      <BottomNav onPostClick={() => setShowUpload(true)} />
+      <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
     </MobileLayout>
   );
 };
