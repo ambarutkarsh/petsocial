@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Share2, Bookmark, Plus } from "lucide-react";
+import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -118,37 +118,40 @@ const FeedScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center justify-between">
-          <h1 className="text-xl font-heading font-bold">
-            <span className="text-primary">Paw</span>Social
+        {/* Header */}
+        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
+          <h1 className="text-xl font-heading font-extrabold tracking-tight">
+            <span className="text-primary">🦕 </span>
+            <span className="text-primary" style={{ fontSize: "1.1em" }}>P</span>
+            <span className="text-primary">etosauras</span>
           </h1>
           <div className="flex gap-2">
-            <button className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center text-text-mid hover:bg-muted transition-colors">
-              <Search className="w-5 h-5" />
+            <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors">
+              <Search className="w-5 h-5" strokeWidth={1.8} />
             </button>
-            <button onClick={() => navigate("/notifications")} className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center text-text-mid hover:bg-muted transition-colors relative">
-              <Bell className="w-5 h-5" />
+            <button onClick={() => navigate("/notifications")} className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors relative">
+              <Bell className="w-5 h-5" strokeWidth={1.8} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
             </button>
           </div>
         </header>
 
         {/* Stories */}
-        <div className="px-4 py-2 flex gap-3 overflow-x-auto no-scrollbar">
+        <div className="px-5 py-3.5 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
           <div className="flex flex-col items-center gap-1 shrink-0">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary/5">
-              <Plus className="w-6 h-6 text-primary" />
+            <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
+              <Plus className="w-6 h-6 text-primary" strokeWidth={1.8} />
             </div>
-            <span className="text-[10px] font-medium text-text-mid">Add</span>
+            <span className="text-[10px] font-body font-semibold text-muted-foreground">Add</span>
           </div>
           {stories.map((s: any) => (
             <div key={s.id} className="flex flex-col items-center gap-1 shrink-0">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent p-[3px]">
-                <div className="w-full h-full rounded-full bg-card flex items-center justify-center text-2xl">
+              <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: "linear-gradient(135deg, #7B5EA7, #FF8C66)" }}>
+                <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-2xl">
                   {s.pets?.avatar_emoji || "🐾"}
                 </div>
               </div>
-              <span className="text-[10px] font-medium text-text-mid truncate w-16 text-center">
+              <span className="text-[10px] font-body font-semibold text-muted-foreground truncate w-16 text-center">
                 {s.pets?.name || s.profiles?.full_name?.split(" ")[0] || "Pet"}
               </span>
             </div>
@@ -167,70 +170,71 @@ const FeedScreen = () => {
                     <div className="h-2 bg-muted rounded w-1/2" />
                   </div>
                 </div>
-                <div className="aspect-square bg-muted rounded-xl" />
+                <div className="aspect-square bg-muted rounded-[22px]" />
               </div>
             ))}
           </div>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-            <span className="text-5xl mb-4">📸</span>
+            <span className="text-6xl mb-4">🦕</span>
             <h3 className="font-heading font-bold text-lg">No posts yet</h3>
-            <p className="text-sm text-text-muted mt-1">Be the first to share a moment with your pet!</p>
+            <p className="text-sm text-muted-foreground mt-1 font-body">Be the first to share your pet on Petosauras!</p>
+            <button onClick={() => setShowUpload(true)} className="mt-4 text-sm font-heading font-bold text-primary hover:underline">Share your pet 🐾</button>
           </div>
         ) : (
-          <div className="space-y-4 px-4 mt-2">
-            {posts.map((post: any) => {
+          <div className="space-y-2.5 px-4 mt-2">
+            {posts.map((post: any, idx: number) => {
               const profile = post.profiles;
               const pet = post.pets;
               const isLiked = likedPostIds.includes(post.id);
               const isSaved = savedPostIds.includes(post.id);
 
               return (
-                <article key={post.id} className="paw-card overflow-hidden animate-fade-in">
-                  <div className="flex items-center gap-3 p-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-sm font-bold text-primary">
+                <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+                  <div className="flex items-center gap-3 p-3.5">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground">
                       {getInitials(profile?.full_name)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate">{profile?.full_name || "User"}</p>
-                      <p className="text-xs text-text-muted">
+                      <p className="text-sm font-heading font-bold truncate">{profile?.full_name || "User"}</p>
+                      <p className="text-xs text-muted-foreground font-body">
                         {pet?.name && `${pet.name} • ${pet.pet_type} • `}
                         {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                       </p>
                     </div>
                   </div>
-                  <div className="relative aspect-square bg-muted">
+                  <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
                     <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
                     {post.hashtags && post.hashtags.length > 0 && (
                       <div className="absolute bottom-3 left-3 flex gap-1.5">
                         {post.hashtags.map((tag: string) => (
-                          <span key={tag} className="text-xs font-medium bg-card/70 backdrop-blur-sm px-2.5 py-1 rounded-full text-foreground">
+                          <span key={tag} className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white">
                             #{tag.replace(/^#/, "")}
                           </span>
                         ))}
                       </div>
                     )}
                   </div>
-                  <div className="p-3">
+                  <div className="p-3.5">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-4">
-                        <button onClick={() => toggleLikeMutation.mutate(post.id)} className="flex items-center gap-1.5 transition-colors">
-                          <Heart className={`w-5 h-5 ${isLiked ? "fill-destructive text-destructive" : "text-text-mid"}`} />
-                          <span className="text-sm font-medium">{post.like_count || 0}</span>
+                        <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
+                          <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
+                          <span className="text-sm font-body font-medium">{post.like_count || 0}</span>
                         </button>
-                        <button className="flex items-center gap-1.5 text-text-mid">
-                          <MessageCircle className="w-5 h-5" />
-                          <span className="text-sm font-medium">{post.comment_count || 0}</span>
+                        <button className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
+                          <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
+                          <span className="text-sm font-body font-medium">{post.comment_count || 0}</span>
                         </button>
-                        <button className="text-text-mid"><Share2 className="w-5 h-5" /></button>
+                        <button className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
                       </div>
-                      <button onClick={() => toggleSaveMutation.mutate(post.id)}>
-                        <Bookmark className={`w-5 h-5 ${isSaved ? "fill-primary text-primary" : "text-text-mid"}`} />
+                      <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
+                        <Bookmark className="w-5 h-5" strokeWidth={1.8} fill={isSaved ? "hsl(var(--primary))" : "none"} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
                       </button>
                     </div>
-                    <p className="text-sm">
-                      <span className="font-semibold">@{profile?.username || "user"}</span>{" "}
-                      <span className="text-text-mid">{post.caption}</span>
+                    <p className="text-sm font-body">
+                      <span className="font-heading font-bold">@{profile?.username || "user"}</span>{" "}
+                      <span className="text-muted-foreground">{post.caption}</span>
                     </p>
                   </div>
                 </article>

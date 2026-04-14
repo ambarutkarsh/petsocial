@@ -7,7 +7,7 @@ import RegistrationFlow from "@/components/RegistrationFlow";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 
 const petEmojis = ["🐕", "🐈", "🐠", "🦜", "🐇"];
 const features = ["📸 Share moments", "💬 Discuss & help", "🏥 Track health", "📚 Pet knowledge"];
@@ -89,39 +89,38 @@ const AuthScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="min-h-screen flex flex-col relative overflow-hidden">
+      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}>
         <div className="absolute top-[-80px] left-[-60px] w-[220px] h-[220px] rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute top-[40px] right-[-80px] w-[200px] h-[200px] rounded-full bg-secondary/15 blur-3xl" />
         <div className="absolute bottom-[200px] left-[50%] w-[180px] h-[180px] rounded-full bg-accent/10 blur-3xl" />
 
         <div className="flex-1 flex flex-col items-center justify-center pt-16 pb-6 px-6 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4 shadow-paw-lg">
-            <span className="text-4xl">🐾</span>
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center mb-4 shadow-petosauras-lg">
+            <span className="text-4xl">🦕</span>
           </div>
-          <h1 className="text-3xl font-heading font-bold tracking-tight">
-            <span className="text-primary">Paw</span>
-            <span className="text-foreground">Social</span>
+          <h1 className="text-3xl font-heading font-extrabold tracking-tight">
+            <span className="text-primary" style={{ fontSize: "1.1em" }}>P</span>
+            <span className="text-primary">etosauras</span>
           </h1>
-          <p className="text-text-mid mt-2 text-center">A home for every pet & pet lover 🐾</p>
+          <p className="text-muted-foreground mt-2 text-center text-[15px]">Your pet's world, all in one place 🦕</p>
           <div className="flex gap-3 mt-6">
             {petEmojis.map((emoji, i) => (
-              <div key={i} className="w-12 h-12 rounded-full bg-card shadow-paw flex items-center justify-center text-xl animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div key={i} className="w-12 h-12 rounded-full bg-card border-2 border-border-strong shadow-petosauras flex items-center justify-center text-xl animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
                 {emoji}
               </div>
             ))}
           </div>
           <div className="flex flex-wrap gap-2 mt-6 justify-center">
             {features.map((f) => (
-              <span key={f} className="text-xs font-medium bg-card shadow-paw px-3 py-1.5 rounded-full text-text-mid">{f}</span>
+              <span key={f} className="text-xs font-body font-semibold bg-card shadow-petosauras px-3 py-1.5 rounded-full text-muted-foreground">{f}</span>
             ))}
           </div>
         </div>
 
-        <div className="bg-card rounded-t-[28px] shadow-paw-lg px-6 pt-8 pb-8 relative z-10 animate-slide-up">
+        <div className="bg-card rounded-t-[28px] shadow-[0_-8px_40px_rgba(123,94,167,0.12)] px-6 pt-8 pb-8 relative z-10 animate-slide-up">
           {sheetView === "login" && (
             <>
-              {/* Google sign-in */}
-              <Button variant="outline" className="w-full h-12 rounded-full border-[#E0DAD5] bg-white text-primary font-semibold mb-4 gap-3"
+              <Button variant="outline" className="w-full h-12 rounded-full border-border bg-card text-foreground font-bold mb-4 gap-3"
                 onClick={handleGoogleSignIn}>
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -132,34 +131,31 @@ const AuthScreen = () => {
                 Continue with Google
               </Button>
 
-              {/* Divider */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px bg-[#E0DAD5]" />
-                <span className="text-xs text-text-muted font-medium">or</span>
-                <div className="flex-1 h-px bg-[#E0DAD5]" />
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-text-hint font-body font-medium">or</span>
+                <div className="flex-1 h-px bg-border" />
               </div>
 
               <form onSubmit={handleLogin} className="space-y-4">
-                <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl bg-muted/50 border-0 px-4 font-body" />
+                <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <div>
-                  <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 rounded-xl bg-muted/50 border-0 px-4 font-body" />
+                  <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                   <div className="flex justify-end mt-1.5">
                     <button type="button" onClick={() => { setResetEmail(email); setSheetView("forgotPassword"); }}
-                      className="text-[13px] text-primary font-medium">
+                      className="text-[13px] text-primary font-body font-semibold">
                       Forgot password?
                     </button>
                   </div>
                 </div>
                 <Button type="submit" className="w-full" size="lg" disabled={submitting}>
-                  {submitting ? "Signing in…" : "Sign In"}
+                  {submitting ? "Signing in…" : "Sign In to Petosauras"}
                 </Button>
               </form>
-              <p className="text-center text-sm text-text-mid mt-4">
+              <p className="text-center text-sm text-muted-foreground mt-4 font-body">
                 New here?{" "}
-                <button onClick={() => { setRegistrationStep(0); setShowRegistration(true); }} className="text-primary font-semibold hover:underline">
-                  Create account
+                <button onClick={() => { setRegistrationStep(0); setShowRegistration(true); }} className="text-primary font-bold hover:underline">
+                  Join Petosauras
                 </button>
               </p>
             </>
@@ -168,18 +164,17 @@ const AuthScreen = () => {
           {sheetView === "forgotPassword" && (
             <div className="animate-fade-in">
               <button onClick={() => setSheetView("login")}
-                className="flex items-center gap-1 text-sm font-semibold text-primary mb-4">
-                <ArrowLeft className="w-4 h-4" /> Back to login
+                className="flex items-center gap-1 text-sm font-bold text-primary mb-4">
+                <ChevronLeft className="w-4 h-4" strokeWidth={1.8} /> Back to login
               </button>
               <h2 className="text-[22px] font-heading font-bold mb-1">Reset your password</h2>
-              <p className="text-sm text-text-muted mb-6">
+              <p className="text-sm text-text-hint mb-6 font-body">
                 Enter your registered email address. We'll send you a link to reset your password.
               </p>
               <div className="space-y-4">
                 <div>
                   <Input type="email" placeholder="Email address" value={resetEmail}
-                    onChange={(e) => { setResetEmail(e.target.value); setResetError(""); }}
-                    className="h-12 rounded-xl bg-muted/50 border-0 px-4 font-body" />
+                    onChange={(e) => { setResetEmail(e.target.value); setResetError(""); }} />
                   {resetError && <p className="text-xs text-destructive mt-1">{resetError}</p>}
                 </div>
                 <Button onClick={handleForgotPassword} className="w-full" size="lg" disabled={resetSubmitting}>
@@ -193,10 +188,10 @@ const AuthScreen = () => {
             <div className="animate-fade-in text-center py-4">
               <span className="text-5xl mb-4 block">✉️</span>
               <h2 className="text-xl font-heading font-bold mb-2">Check your inbox</h2>
-              <p className="text-sm text-text-muted mb-6">
+              <p className="text-sm text-text-hint mb-6 font-body">
                 We've sent a password reset link to <strong>{resetEmail}</strong>. It may take a few minutes to arrive.
               </p>
-              <button onClick={() => setSheetView("login")} className="text-sm text-primary font-semibold hover:underline">
+              <button onClick={() => setSheetView("login")} className="text-sm text-primary font-bold hover:underline">
                 Back to login
               </button>
             </div>

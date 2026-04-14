@@ -18,20 +18,22 @@ const HealthScreen = () => {
       <div className="pb-20 px-4">
         <header className="pt-6 pb-4">
           <h1 className="font-heading text-2xl font-bold">Pet Health</h1>
-          <p className="text-sm text-muted-foreground mt-1">Everything your pet needs, in one place</p>
+          <p className="text-sm text-muted-foreground mt-1 font-body">Everything your pet needs, in one place</p>
         </header>
         <div className="grid grid-cols-2 gap-3">
-          {healthCards.map((c) => (
+          {healthCards.map((c, idx) => (
             <button
               key={c.path}
               onClick={() => navigate(c.path)}
-              className="text-left rounded-2xl bg-card border border-border/50 p-[18px] active:scale-[0.97] transition-transform"
-              style={{ boxShadow: "0 2px 14px rgba(0,0,0,0.05)", borderLeft: "4px solid hsl(var(--primary))" }}
+              className="text-left rounded-[22px] bg-card border border-border p-[18px] shadow-petosauras active:scale-[0.97] transition-all duration-250 hover:shadow-petosauras-md hover:-translate-y-[2px] animate-fade-up"
+              style={{ borderLeft: "4px solid hsl(var(--primary))", animationDelay: `${idx * 60}ms` }}
             >
-              <span className="text-[48px] leading-none block mb-2">{c.emoji}</span>
+              <div className="w-12 h-12 rounded-[14px] bg-primary-light flex items-center justify-center mb-2">
+                <span className="text-[28px] leading-none">{c.emoji}</span>
+              </div>
               <h3 className="font-heading font-bold text-base">{c.title}</h3>
-              <p className="text-[13px] text-muted-foreground mt-0.5">{c.desc}</p>
-              <ChevronRight className="w-4 h-4 text-primary mt-2" />
+              <p className="text-[13px] text-muted-foreground mt-0.5 font-body">{c.desc}</p>
+              <ChevronRight className="w-4 h-4 text-primary mt-2" strokeWidth={1.8} />
             </button>
           ))}
         </div>
