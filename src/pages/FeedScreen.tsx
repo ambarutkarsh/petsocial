@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus } from "lucide-react";
+import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, MoreVertical, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -136,6 +136,22 @@ const FeedScreen = () => {
     },
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: async (postId: string) => {
+      await supabase.from("post_comments").delete().eq("post_id", postId);
+      await supabase.from("post_likes").delete().eq("post_id", postId);
+      await supabase.from("saved_posts").delete().eq("post_id", postId);
+      await supabase.from("posts").delete().eq("id", postId).eq("user_id", user!.id);
+      trackEvent("post_deleted", { post_id: postId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["my-likes"] });
+      queryClient.invalidateQueries({ queryKey: ["my-saves"] });
+      toast.success("Post deleted 🗑️");
+    },
+    onError: () => toast.error("Failed to delete post"),
+  });
   const getInitials = (name: string | null) => {
     if (!name) return "?";
     return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
@@ -268,6 +284,18 @@ const FeedScreen = () => {
                         {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                       </p>
                     </div>
+                    {post.user_id === user?.id && (
+                      <button
+                        onClick={() => {
+                          if (confirm("Delete this post? This cannot be undone.")) {
+                            deletePostMutation.mutate(post.id);
+                          }
+                        }}
+                        className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" strokeWidth={1.8} />
+                      </button>
+                    )}
                   </div>
                   <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
                     <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
