@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      budget_estimates: {
+        Row: {
+          breed: string | null
+          budget_tier: string | null
+          city: string | null
+          created_at: string | null
+          details_json: Json | null
+          food_monthly: number | null
+          grooming_monthly: number | null
+          health_monthly: number | null
+          id: string
+          ownership_monthly: number | null
+          pet_id: string | null
+          pet_type: string | null
+          total_annual: number | null
+          total_monthly: number | null
+          user_id: string | null
+        }
+        Insert: {
+          breed?: string | null
+          budget_tier?: string | null
+          city?: string | null
+          created_at?: string | null
+          details_json?: Json | null
+          food_monthly?: number | null
+          grooming_monthly?: number | null
+          health_monthly?: number | null
+          id?: string
+          ownership_monthly?: number | null
+          pet_id?: string | null
+          pet_type?: string | null
+          total_annual?: number | null
+          total_monthly?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          breed?: string | null
+          budget_tier?: string | null
+          city?: string | null
+          created_at?: string | null
+          details_json?: Json | null
+          food_monthly?: number | null
+          grooming_monthly?: number | null
+          health_monthly?: number | null
+          id?: string
+          ownership_monthly?: number | null
+          pet_id?: string | null
+          pet_type?: string | null
+          total_annual?: number | null
+          total_monthly?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_estimates_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budget_estimates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       follows: {
         Row: {
           created_at: string | null
@@ -483,6 +552,7 @@ export type Database = {
           created_at: string | null
           date_of_birth: string | null
           gender: string | null
+          height_cm: number | null
           id: string
           is_primary: boolean | null
           name: string
@@ -499,6 +569,7 @@ export type Database = {
           created_at?: string | null
           date_of_birth?: string | null
           gender?: string | null
+          height_cm?: number | null
           id?: string
           is_primary?: boolean | null
           name: string
@@ -515,6 +586,7 @@ export type Database = {
           created_at?: string | null
           date_of_birth?: string | null
           gender?: string | null
+          height_cm?: number | null
           id?: string
           is_primary?: boolean | null
           name?: string
@@ -972,6 +1044,38 @@ export type Database = {
             columns: ["pet_id"]
             isOneToOne: false
             referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waitlist: {
+        Row: {
+          created_at: string | null
+          email: string
+          feature: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          feature?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          feature?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waitlist_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
