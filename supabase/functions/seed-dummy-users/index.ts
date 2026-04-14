@@ -242,6 +242,21 @@ Deno.serve(async (req) => {
     )
     const PEXELS_KEY = Deno.env.get('PEXELS_API_KEY')!
 
+    // Verify caller is admin
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+    const token = authHeader.replace('Bearer ', '')
+    const { data: { user: caller }, error: authError } = await supabaseAdmin.auth.getUser(token)
+    if (authError || !caller || caller.email !== 'petosauras@gmail.com') {
+      return new Response(JSON.stringify({ error: 'Forbidden: admin only' }), {
+        status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // Check action
     let body: any = {}
     try { body = await req.json() } catch {}

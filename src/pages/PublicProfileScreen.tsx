@@ -23,7 +23,7 @@ const PublicProfileScreen = () => {
     enabled: !!userId,
     queryFn: async () => {
       trackEvent("profile_viewed_other", { user_id: userId });
-      const { data } = await supabase.from("profiles").select("*").eq("id", userId!).single();
+      const { data } = await supabase.from("public_profiles").select("*").eq("id", userId!).single();
       return data;
     },
   });
