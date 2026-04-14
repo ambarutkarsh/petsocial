@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Search, Plus, MessageSquare, Eye, AlertTriangle, RotateCcw, Loader2, ExternalLink, PenSquare, CheckCircle, MapPin, Clock, DollarSign } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Plus, MessageSquare, Eye, AlertTriangle, RotateCcw, Loader2, ExternalLink, PenSquare, CheckCircle, MapPin, Clock, DollarSign, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
@@ -11,8 +12,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const filters = ["Pet News", "All", "🚶 Walker", "✂️ Groomer", "🩺 Vet", "Urgent 🚨", "My Pets", "Solved"];
+const filters = ["⭐ Facts", "Pet News", "All", "🚶 Walker", "✂️ Groomer", "🩺 Vet", "Urgent 🚨", "My Posts", "Solved"];
 
 const categoryColors: Record<string, string> = {
   Canine: "bg-primary-light text-primary",
@@ -53,18 +56,60 @@ const serviceBadges: Record<string, { label: string; color: string }> = {
   Vet: { label: "🩺 Vet Needed", color: "bg-[#FFE8E8] text-[#CC3333]" },
 };
 
+const postTypeOptions = [
+  { value: "general", label: "💬 General", desc: "General discussion" },
+  { value: "urgent", label: "🚨 Urgent", desc: "Needs immediate help or advice" },
+  { value: "walker", label: "🚶 Walker", desc: "Looking for a pet walker" },
+  { value: "groomer", label: "✂️ Groomer", desc: "Looking for a groomer" },
+  { value: "vet", label: "🩺 Vet", desc: "Looking for a vet" },
+  { value: "myposts", label: "🐾 My Posts", desc: "Share something about your pet" },
+];
+
+const defaultTabMap: Record<string, string> = {
+  interesting_facts: "⭐ Facts",
+  trending: "All",
+  urgent: "Urgent 🚨",
+  my_posts: "My Posts",
+  walker: "🚶 Walker",
+  groomer: "✂️ Groomer",
+  vet: "🩺 Vet",
+  pet_news: "Pet News",
+};
+
+const tabToDbMap: Record<string, string> = {
+  "⭐ Facts": "interesting_facts",
+  "All": "trending",
+  "Urgent 🚨": "urgent",
+  "My Posts": "my_posts",
+  "🚶 Walker": "walker",
+  "✂️ Groomer": "groomer",
+  "🩺 Vet": "vet",
+  "Pet News": "pet_news",
+};
+
+const defaultTabOptions = [
+  { value: "interesting_facts", label: "⭐ Interesting Facts", recommended: true },
+  { value: "trending", label: "🔥 Trending" },
+  { value: "urgent", label: "🚨 Urgent" },
+  { value: "my_posts", label: "💬 My Posts" },
+  { value: "walker", label: "🚶 Walker" },
+  { value: "groomer", label: "✂️ Groomer" },
+  { value: "vet", label: "🩺 Vet" },
+];
+
 const ForumScreen = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [activeFilter, setActiveFilter] = useState("Pet News");
+  const [activeFilter, setActiveFilter] = useState("⭐ Facts");
   const [expandedNewsId, setExpandedNewsId] = useState<number | null>(null);
   const [showUpload, setShowUpload] = useState(false);
+  const [defaultTabLoaded, setDefaultTabLoaded] = useState(false);
 
   const [showNewPost, setShowNewPost] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newCategory, setNewCategory] = useState("");
-  const [newType, setNewType] = useState<"mypets" | "urgent" | "">("");
+  const [newPostType, setNewPostType] = useState("");
   const [posting, setPosting] = useState(false);
 
   // Service-specific fields
@@ -83,21 +128,41 @@ const ForumScreen = () => {
   const [svcSymptoms, setSvcSymptoms] = useState("");
 
   const [detectingLocation, setDetectingLocation] = useState(false);
+  const [showDefaultTabSheet, setShowDefaultTabSheet] = useState(false);
+  const [selectedDefaultTab, setSelectedDefaultTab] = useState("interesting_facts");
 
-  const isServiceCategory = ["Walker", "Groomer", "Vet"].includes(newCategory);
+  const isServicePostType = ["walker", "groomer", "vet"].includes(newPostType);
+  const serviceCategory = isServicePostType ? newPostType.charAt(0).toUpperCase() + newPostType.slice(1) : "";
 
   const { data: profile } = useQuery({
     queryKey: ["profile-state", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("state, city").eq("id", user!.id).single();
+      const { data } = await supabase.from("profiles").select("state, city, community_default_tab").eq("id", user!.id).single();
       return data;
     },
   });
 
+  // Set default tab from profile
+  useEffect(() => {
+    if (defaultTabLoaded || !profile) return;
+    const tabSet = localStorage.getItem("communityDefaultTabSet");
+    const dbTab = profile.community_default_tab;
+    
+    if (tabSet || dbTab) {
+      const tab = dbTab || localStorage.getItem("communityDefaultTab") || "interesting_facts";
+      setActiveFilter(defaultTabMap[tab] || "⭐ Facts");
+      setDefaultTabLoaded(true);
+    } else {
+      // First time — show preference sheet
+      setDefaultTabLoaded(true);
+      setShowDefaultTabSheet(true);
+    }
+  }, [profile, defaultTabLoaded]);
+
   const { data: topics = [], isLoading } = useQuery({
-    queryKey: ["forum-topics", activeFilter],
-    enabled: activeFilter !== "Pet News",
+    queryKey: ["forum-topics", activeFilter, user?.id],
+    enabled: !["Pet News", "⭐ Facts"].includes(activeFilter),
     queryFn: async () => {
       let query = supabase.from("forum_topics").select("*").order("created_at", { ascending: false });
       if (activeFilter === "All") {
@@ -112,6 +177,8 @@ const ForumScreen = () => {
         query = query.eq("is_urgent", true);
       } else if (activeFilter === "Solved") {
         query = query.eq("is_solved", true);
+      } else if (activeFilter === "My Posts" && user) {
+        query = query.eq("user_id", user.id);
       }
       const { data } = await query.limit(20);
       return data || [];
@@ -128,6 +195,29 @@ const ForumScreen = () => {
       if (error) throw new Error("Failed to fetch news");
       return data?.articles || [];
     },
+  });
+
+  // Interesting Facts
+  const { data: petFacts = [], isLoading: factsLoading, refetch: refetchFacts } = useQuery({
+    queryKey: ["pet-facts"],
+    enabled: activeFilter === "⭐ Facts",
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("pet_facts")
+        .select("*")
+        .gt("expires_at", new Date().toISOString())
+        .order("generated_at", { ascending: false })
+        .limit(8);
+      
+      if (!data || data.length === 0) {
+        // Generate new facts
+        const { data: newData, error } = await supabase.functions.invoke("generate-pet-facts");
+        if (error) return [];
+        return newData?.facts || [];
+      }
+      return data;
+    },
+    staleTime: 1000 * 60 * 5,
   });
 
   const handleDetectLocation = async () => {
@@ -155,17 +245,17 @@ const ForumScreen = () => {
   };
 
   const validateServiceFields = (): string | null => {
-    if (newCategory === "Walker") {
+    if (serviceCategory === "Walker") {
       if (!svcLocation) return "Please enter your area";
       if (!svcPetType) return "Please select pet type";
       if (!svcPetSize) return "Please select pet size";
       if (!svcDuration) return "Please select walk duration";
       if (!svcFrequency) return "Please select frequency";
-    } else if (newCategory === "Groomer") {
+    } else if (serviceCategory === "Groomer") {
       if (!svcLocation) return "Please enter your area";
       if (!svcPetType) return "Please select pet type";
       if (svcGroomType.length === 0) return "Please select at least one grooming service";
-    } else if (newCategory === "Vet") {
+    } else if (serviceCategory === "Vet") {
       if (!svcLocation) return "Please enter your area";
       if (!svcPetType) return "Please select pet type";
       if (!svcConsultType) return "Please select consultation type";
@@ -177,50 +267,50 @@ const ForumScreen = () => {
 
   const handleSubmitPost = async () => {
     if (!user || !newTitle || !newContent || !newCategory) return;
+    if (!newPostType) { toast.error("Please select a post type"); return; }
     if (newTitle.trim().length < 5) { toast.error("Title must be at least 5 characters"); return; }
     if (newContent.trim().length < 20) { toast.error("Description must be at least 20 characters"); return; }
 
-    if (isServiceCategory) {
+    if (isServicePostType) {
       const svcError = validateServiceFields();
       if (svcError) { toast.error(svcError); return; }
-    } else if (!newType) {
-      toast.error("Please select a post type"); return;
     }
 
     setPosting(true);
 
     const tags: string[] = [];
-    if (newType === "mypets") tags.push("mypets");
-    if (isServiceCategory) {
-      tags.push(newCategory.toLowerCase());
+    if (newPostType === "myposts") tags.push("mypets");
+    if (isServicePostType) {
+      tags.push(serviceCategory.toLowerCase());
       if (svcLocation) tags.push(svcLocation);
     }
 
     const { error } = await supabase.from("forum_topics").insert({
       user_id: user.id,
       title: newTitle,
-      content: newContent + (isServiceCategory ? `\n\n---\n📍 ${svcLocation}${svcBudget ? ` · 💰 ₹${svcBudget}` : ""}${svcDuration ? ` · ⏱ ${svcDuration}` : ""}` : ""),
-      pet_category: newCategory,
-      is_urgent: newType === "urgent" || svcUrgency === "Urgent",
+      content: newContent + (isServicePostType ? `\n\n---\n📍 ${svcLocation}${svcBudget ? ` · 💰 ₹${svcBudget}` : ""}${svcDuration ? ` · ⏱ ${svcDuration}` : ""}` : ""),
+      pet_category: isServicePostType ? serviceCategory : newCategory,
+      is_urgent: newPostType === "urgent" || svcUrgency === "Urgent",
       tags,
     });
 
     setPosting(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Posted to Community! 🦕");
+    trackEvent("community_post_created", { category: newCategory, is_urgent: newPostType === "urgent" });
     setShowNewPost(false);
     resetForm();
     queryClient.invalidateQueries({ queryKey: ["forum-topics"] });
   };
 
   const resetForm = () => {
-    setNewTitle(""); setNewContent(""); setNewCategory(""); setNewType("");
+    setNewTitle(""); setNewContent(""); setNewCategory(""); setNewPostType("");
     setSvcLocation(""); setSvcPetType(""); setSvcPetSize(""); setSvcDuration("");
     setSvcFrequency(""); setSvcBudget(""); setSvcTime([]); setSvcNotes("");
     setSvcGroomType([]); setSvcAtHome(""); setSvcConsultType(""); setSvcUrgency(""); setSvcSymptoms("");
   };
 
-  const canSubmitPost = newTitle.trim().length >= 5 && newContent.trim().length >= 20 && newCategory && (isServiceCategory || newType);
+  const canSubmitPost = newTitle.trim().length >= 5 && newContent.trim().length >= 20 && newCategory && newPostType;
 
   const getServiceChips = (topic: any) => {
     const cat = topic.pet_category;
@@ -235,6 +325,21 @@ const ForumScreen = () => {
     if (cat === "Vet" && topic.is_urgent) chips.push("🚨 Urgent");
     return chips;
   };
+
+  const saveDefaultTab = async (tab: string) => {
+    localStorage.setItem("communityDefaultTab", tab);
+    localStorage.setItem("communityDefaultTabSet", "true");
+    if (user) {
+      await supabase.from("profiles").update({ community_default_tab: tab }).eq("id", user.id);
+    }
+    setActiveFilter(defaultTabMap[tab] || "⭐ Facts");
+    setShowDefaultTabSheet(false);
+    toast.success("Preference saved!");
+  };
+
+  const factsLastUpdated = petFacts.length > 0 && petFacts[0]?.generated_at
+    ? formatDistanceToNow(new Date(petFacts[0].generated_at), { addSuffix: true })
+    : null;
 
   return (
     <MobileLayout>
@@ -259,6 +364,70 @@ const ForumScreen = () => {
             </button>
           ))}
         </div>
+
+        {/* INTERESTING FACTS TAB */}
+        {activeFilter === "⭐ Facts" && (
+          <div className="px-4 space-y-3">
+            {factsLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-[22px] overflow-hidden shadow-md bg-card">
+                  <Skeleton className="w-full h-[200px]" />
+                  <div className="p-4 space-y-2">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+              ))
+            ) : petFacts.length === 0 ? (
+              <div className="text-center py-10">
+                <span className="text-5xl block mb-3">⭐</span>
+                <p className="text-sm text-muted-foreground font-body">No facts available right now</p>
+                <Button variant="outline" size="sm" className="mt-3" onClick={() => refetchFacts()}>
+                  <RotateCcw className="w-3 h-3 mr-1" /> Generate Facts
+                </Button>
+              </div>
+            ) : (
+              <>
+                {petFacts.map((fact: any, idx: number) => (
+                  <div key={fact.id || idx} className="rounded-[22px] overflow-hidden shadow-md bg-card animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+                    {fact.image_url && (
+                      <div className="relative h-[200px]">
+                        <img src={fact.image_url} alt={fact.pet_type || "pet"} className="w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-full bg-card/70 backdrop-blur-sm text-xs font-body font-bold">
+                          {fact.emoji || "🐾"} {fact.pet_type || "Pet"}
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{fact.emoji || "🐾"}</span>
+                        <span className="text-xs font-body font-semibold text-primary uppercase tracking-wide">Did you know?</span>
+                      </div>
+                      <p className="text-[15px] font-body font-semibold leading-relaxed">{fact.fact}</p>
+                      {fact.photographer && (
+                        <p className="text-[11px] text-muted-foreground mt-3 font-body">
+                          📷 Photo by{" "}
+                          {fact.pexels_url ? (
+                            <a href={fact.pexels_url} target="_blank" rel="noopener noreferrer" className="text-primary underline">{fact.photographer}</a>
+                          ) : fact.photographer}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                <div className="text-center py-4 space-y-2">
+                  <p className="text-xs text-muted-foreground font-body">Facts refresh every 4 hours ✨</p>
+                  {factsLastUpdated && <p className="text-[11px] text-muted-foreground font-body">Updated {factsLastUpdated}</p>}
+                  <Button variant="outline" size="sm" onClick={() => refetchFacts()}>
+                    <RotateCcw className="w-3 h-3 mr-1" /> Refresh Facts
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {/* PET NEWS TAB */}
         {activeFilter === "Pet News" && (
@@ -323,7 +492,7 @@ const ForumScreen = () => {
         )}
 
         {/* FORUM TOPICS */}
-        {activeFilter !== "Pet News" && (
+        {!["Pet News", "⭐ Facts"].includes(activeFilter) && (
           <>
             {isLoading ? (
               <div className="px-4 space-y-3">
@@ -415,7 +584,7 @@ const ForumScreen = () => {
                 <p className="text-xs font-body font-bold text-muted-foreground mb-2 uppercase tracking-wide">Category</p>
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                   {forumCategories.map((c) => (
-                    <button key={c.label} onClick={() => { setNewCategory(c.label); if (["Walker", "Groomer", "Vet"].includes(c.label)) { setSvcLocation(profile?.city || ""); } }}
+                    <button key={c.label} onClick={() => { setNewCategory(c.label); if (["Walker", "Groomer", "Vet"].includes(c.label)) { setSvcLocation(profile?.city || ""); setNewPostType(c.label.toLowerCase()); } }}
                       className={`shrink-0 px-3 py-2 rounded-full text-sm font-body font-bold flex items-center gap-1 transition-colors ${
                         newCategory === c.label ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"
                       }`}>
@@ -425,8 +594,27 @@ const ForumScreen = () => {
                 </div>
               </div>
 
+              {/* Post Type Dropdown */}
+              {!["Walker", "Groomer", "Vet"].includes(newCategory) && (
+                <div>
+                  <p className="text-xs font-body font-bold text-muted-foreground mb-2 uppercase tracking-wide">Post Type</p>
+                  <Select value={newPostType} onValueChange={setNewPostType}>
+                    <SelectTrigger className="rounded-[16px] bg-surface-alt border-[1.5px] border-border h-12 font-body text-[15px]">
+                      <SelectValue placeholder="Select post type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {postTypeOptions.filter(o => !["walker", "groomer", "vet"].includes(o.value)).map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          <span className="font-body">{opt.label} — <span className="text-muted-foreground text-xs">{opt.desc}</span></span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
               {/* Service-specific fields */}
-              {newCategory === "Walker" && (
+              {serviceCategory === "Walker" && (
                 <div className="space-y-3 p-3 bg-surface-alt rounded-[16px]">
                   <p className="text-xs font-bold text-muted-foreground uppercase">Walker Details</p>
                   <Input placeholder="Your area / locality *" value={svcLocation} onChange={(e) => setSvcLocation(e.target.value)} />
@@ -460,7 +648,7 @@ const ForumScreen = () => {
                 </div>
               )}
 
-              {newCategory === "Groomer" && (
+              {serviceCategory === "Groomer" && (
                 <div className="space-y-3 p-3 bg-surface-alt rounded-[16px]">
                   <p className="text-xs font-bold text-muted-foreground uppercase">Groomer Details</p>
                   <Input placeholder="Your area / locality *" value={svcLocation} onChange={(e) => setSvcLocation(e.target.value)} />
@@ -484,7 +672,7 @@ const ForumScreen = () => {
                 </div>
               )}
 
-              {newCategory === "Vet" && (
+              {serviceCategory === "Vet" && (
                 <div className="space-y-3 p-3 bg-surface-alt rounded-[16px]">
                   <p className="text-xs font-bold text-muted-foreground uppercase">Vet Details</p>
                   <Input placeholder="Your area / locality *" value={svcLocation} onChange={(e) => setSvcLocation(e.target.value)} />
@@ -512,35 +700,44 @@ const ForumScreen = () => {
                 </div>
               )}
 
-              {/* Post type (non-service only) */}
-              {!isServiceCategory && (
-                <div>
-                  <p className="text-xs font-body font-bold text-muted-foreground mb-2 uppercase tracking-wide">Post type</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button onClick={() => setNewType("mypets")}
-                      className={`p-4 rounded-[22px] border-2 text-left transition-all ${
-                        newType === "mypets" ? "border-primary bg-primary-light" : "border-border"
-                      }`}>
-                      <span className="text-2xl">🐾</span>
-                      <p className="text-sm font-heading font-bold mt-1">My Pets</p>
-                      <p className="text-[11px] text-muted-foreground font-body">Share something about your pet</p>
-                    </button>
-                    <button onClick={() => setNewType("urgent")}
-                      className={`p-4 rounded-[22px] border-2 text-left transition-all ${
-                        newType === "urgent" ? "border-primary bg-primary-light" : "border-border"
-                      }`}>
-                      <span className="text-2xl">⚠️</span>
-                      <p className="text-sm font-heading font-bold mt-1">Urgent</p>
-                      <p className="text-[11px] text-muted-foreground font-body">Need immediate help</p>
-                    </button>
-                  </div>
-                </div>
-              )}
-
               <Button onClick={handleSubmitPost} className="w-full" size="lg" disabled={!canSubmitPost || posting}>
                 {posting ? "Posting…" : "Post to Community 🦕"}
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* DEFAULT TAB PREFERENCE SHEET */}
+      {showDefaultTabSheet && (
+        <div className="fixed inset-0 z-50 flex items-end">
+          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => { setShowDefaultTabSheet(false); saveDefaultTab("interesting_facts"); }} />
+          <div className="relative w-full max-w-[430px] mx-auto bg-card rounded-t-[28px] px-6 pt-4 pb-8 animate-slide-up">
+            <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
+            <h2 className="text-lg font-heading font-bold mb-1">Customise your Community feed</h2>
+            <p className="text-sm text-muted-foreground font-body mb-4">Choose which tab you'd like to see first when you open Community</p>
+            
+            <div className="space-y-2">
+              {defaultTabOptions.map((opt) => (
+                <button key={opt.value} onClick={() => setSelectedDefaultTab(opt.value)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-[16px] border-2 transition-all ${
+                    selectedDefaultTab === opt.value ? "border-primary bg-primary-light" : "border-border"
+                  }`}>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    selectedDefaultTab === opt.value ? "border-primary" : "border-muted-foreground"
+                  }`}>
+                    {selectedDefaultTab === opt.value && <div className="w-3 h-3 rounded-full bg-primary" />}
+                  </div>
+                  <span className="text-sm font-body font-semibold">{opt.label}</span>
+                  {opt.recommended && <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold ml-auto">Recommended</span>}
+                </button>
+              ))}
+            </div>
+
+            <Button className="w-full mt-4" onClick={() => saveDefaultTab(selectedDefaultTab)}>Save Preference</Button>
+            <button className="w-full text-center text-sm text-muted-foreground font-body mt-2 py-2" onClick={() => saveDefaultTab("interesting_facts")}>
+              Skip for now
+            </button>
           </div>
         </div>
       )}
