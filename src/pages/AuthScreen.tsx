@@ -66,14 +66,11 @@ const AuthScreen = () => {
     }
     setResetError("");
     setResetSubmitting(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+    await supabase.auth.resetPasswordForEmail(resetEmail, {
       redirectTo: window.location.origin + "/reset-password",
     });
     setResetSubmitting(false);
-    if (error) {
-      setResetError("If this email is registered, you'll receive a reset link.");
-      return;
-    }
+    // Always show success to prevent email enumeration
     setSheetView("resetSent");
   };
 

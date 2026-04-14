@@ -96,7 +96,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
       caption,
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
       pet_id: selectedPetId || null,
-      ai_validated: true,
+      ai_validated: false,
     });
 
     setPosting(false);
