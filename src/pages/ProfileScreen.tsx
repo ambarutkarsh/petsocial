@@ -10,6 +10,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+
+const defaultTabOptions = [
+  { value: "interesting_facts", label: "⭐ Interesting Facts" },
+  { value: "trending", label: "🔥 Trending" },
+  { value: "urgent", label: "🚨 Urgent" },
+  { value: "my_posts", label: "💬 My Posts" },
+  { value: "walker", label: "🚶 Walker" },
+  { value: "groomer", label: "✂️ Groomer" },
+  { value: "vet", label: "🩺 Vet" },
+];
+
+const defaultTabLabels: Record<string, string> = Object.fromEntries(defaultTabOptions.map(o => [o.value, o.label]));
 
 const ProfileScreen = () => {
   const { user, signOut } = useAuth();
