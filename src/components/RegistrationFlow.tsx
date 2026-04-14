@@ -294,7 +294,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
         }
       }
 
-      toast.success("Account created! Welcome to PawSocial 🐾");
+      toast.success("Welcome to Petosauras! 🦕");
       onComplete();
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong");
