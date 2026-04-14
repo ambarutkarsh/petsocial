@@ -20,6 +20,7 @@ import PetDigiLockerScreen from "./pages/PetDigiLockerScreen";
 import BudgetCalculatorScreen from "./pages/BudgetCalculatorScreen";
 import OrderNowScreen from "./pages/OrderNowScreen";
 import CompleteRegistrationScreen from "./pages/CompleteRegistrationScreen";
+import AdminSeedScreen from "./pages/AdminSeedScreen";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
