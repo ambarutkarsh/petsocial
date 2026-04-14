@@ -61,6 +61,7 @@ const App = () => (
             <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfileScreen /></ProtectedRoute>} />
             <Route path="/post/:postId" element={<PostDetailScreen />} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
+            <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
