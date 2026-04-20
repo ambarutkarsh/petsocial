@@ -276,6 +276,7 @@ Deno.serve(async (req) => {
         await supabaseAdmin.from('saved_posts').delete().in('user_id', seedUserIds)
         await supabaseAdmin.from('follows').delete().in('follower_id', seedUserIds)
         await supabaseAdmin.from('follows').delete().in('following_id', seedUserIds)
+        await supabaseAdmin.from('stories').delete().in('user_id', seedUserIds)
         // Delete seed posts (by is_seed_post flag)
         await supabaseAdmin.from('posts').delete().eq('is_seed_post', true)
         await supabaseAdmin.from('pets').delete().in('owner_id', seedUserIds)
