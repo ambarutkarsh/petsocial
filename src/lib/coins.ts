@@ -1,5 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * Sauras-Coins gamification is currently DISABLED.
+ * Flip this to `true` to re-enable client-side coin awards, animations,
+ * and the daily-login bonus. Backend tables/triggers remain intact.
+ */
+export const COINS_ENABLED = false;
+
 export type CoinReason =
   | "post_created"
   | "comment_added"
