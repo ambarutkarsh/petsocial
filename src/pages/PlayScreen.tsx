@@ -17,14 +17,13 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { maybeAwardDailyLogin, getCoinBalance } from "@/lib/coins";
 
-type SubTab = "reels" | "news" | "facts" | "nearby" | "games";
+type SubTab = "reels" | "news" | "facts" | "nearby";
 
 const SUB_TABS: { key: SubTab; label: string; emoji: string }[] = [
   { key: "reels", label: "Reels", emoji: "🎬" },
   { key: "news", label: "News", emoji: "📰" },
   { key: "facts", label: "Facts", emoji: "⭐" },
   { key: "nearby", label: "Nearby", emoji: "🗺️" },
-  { key: "games", label: "Games", emoji: "🎮" },
 ];
 
 const PlayScreen = () => {
