@@ -94,6 +94,7 @@ export async function getCoinBalance(userId: string): Promise<number> {
 
 /** Daily login award — at most once per day per user (tracked in localStorage). */
 export async function maybeAwardDailyLogin() {
+  if (!COINS_ENABLED) return;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
   const key = `lastDailyLogin:${user.id}`;
