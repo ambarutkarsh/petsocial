@@ -124,7 +124,7 @@ const AdminSeedScreen = () => {
       try {
         const seedUserId = crypto.randomUUID();
 
-        const { error: profileError } = await supabase.from("profiles").upsert({
+        const { error: profileError } = await supabase.from("profiles").insert({
           id: seedUserId,
           full_name: u.name,
           username: u.username,
