@@ -97,7 +97,7 @@ const defaultTabOptions = [
   { value: "vet", label: "🩺 Vet" },
 ];
 
-const ForumScreen = () => {
+const ForumScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [activeFilter, setActiveFilter] = useState("⭐ Facts");

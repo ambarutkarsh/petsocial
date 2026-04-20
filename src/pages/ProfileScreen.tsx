@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { getCoinBalance } from "@/lib/coins";
+import { Coins } from "lucide-react";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },
@@ -78,6 +80,21 @@ const ProfileScreen = () => {
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       return (data || []).map((s: any) => s.posts).filter(Boolean);
+    },
+  });
+
+  const { data: coinBalance = 0 } = useQuery({
+    queryKey: ["coins", user?.id],
+    enabled: !!user,
+    queryFn: () => getCoinBalance(user!.id),
+  });
+
+  const { data: achievements = [] } = useQuery({
+    queryKey: ["achievements", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("achievements").select("badge_key").eq("user_id", user!.id);
+      return (data || []).map((a) => a.badge_key);
     },
   });
 
@@ -201,6 +218,10 @@ const ProfileScreen = () => {
               <p className="text-lg font-heading font-extrabold text-primary">{profile?.following_count || 0}</p>
               <p className="text-xs text-muted-foreground font-body">Following</p>
             </div>
+          </div>
+          <div className="mt-2 paw-card p-3 flex items-center justify-center gap-2 bg-gradient-to-r from-warning/10 to-primary/10">
+            <Coins className="w-5 h-5 text-warning" />
+            <p className="text-sm font-heading font-bold">🪙 {coinBalance} Sauras-Coins</p>
           </div>
         </div>
 
