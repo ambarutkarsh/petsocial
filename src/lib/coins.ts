@@ -30,6 +30,7 @@ const AMOUNTS: Record<CoinReason, number> = {
 
 /** Award coins client-side for simple actions. Server-side triggers handle milestones. */
 export async function awardCoins(reason: CoinReason, opts?: { silent?: boolean }) {
+  if (!COINS_ENABLED) return null;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
   const amount = AMOUNTS[reason];
