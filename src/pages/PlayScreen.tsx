@@ -472,75 +472,7 @@ const PlayScreen = () => {
           </div>
         )}
 
-        {/* ===== GAMES ===== */}
-        {activeTab === "games" && (
-          <div className="px-4 mt-3 space-y-4">
-            {/* Coin balance hero */}
-            <div className="paw-card p-5 text-center bg-gradient-to-br from-primary to-[#9B7EC8] text-primary-foreground border-0">
-              <Coins className="w-8 h-8 mx-auto mb-2 text-warning" />
-              <p className="text-xs font-body uppercase tracking-wide opacity-80">Sauras-Coins</p>
-              <p className="text-4xl font-heading font-extrabold mt-1">{coinBalance}</p>
-              <div className="mt-3">
-                <div className="flex justify-between text-[11px] font-body mb-1 opacity-90">
-                  <span>{coinBalance} / {nextTier.coins}</span>
-                  <span>{nextTier.reward}</span>
-                </div>
-                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-warning rounded-full transition-all" style={{ width: `${tierProgress}%` }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Challenges */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2">🎯 Daily Challenges</h3>
-              <div className="space-y-2">
-                {challenges.map((c, i) => (
-                  <div key={i} className="paw-card p-3 flex items-center gap-3">
-                    <span className="text-2xl">{c.emoji}</span>
-                    <p className="flex-1 text-sm font-body font-semibold">{c.text}</p>
-                    <span className="text-xs font-heading font-bold text-warning bg-warning/10 px-2 py-1 rounded-full">+{c.reward} 🪙</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Reward tiers */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2">🎁 Redeem Rewards</h3>
-              <div className="space-y-2">
-                {tiers.map((t) => (
-                  <button key={t.coins} onClick={() => toast.info("Redeem coming soon!")} className="paw-card p-3 w-full flex items-center gap-3 text-left">
-                    <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center text-warning font-heading font-extrabold text-xs">{t.coins}</div>
-                    <div className="flex-1">
-                      <p className="text-sm font-body font-semibold">{t.reward}</p>
-                      <p className="text-xs text-muted-foreground">{coinBalance >= t.coins ? "Available!" : `${t.coins - coinBalance} coins to go`}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Leaderboard */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2 flex items-center gap-1"><Trophy className="w-4 h-4 text-warning" /> Top Pet Parents</h3>
-              <div className="paw-card divide-y divide-border">
-                {leaderboard.length === 0 ? (
-                  <p className="p-4 text-center text-sm text-muted-foreground font-body">No coins earned yet — be the first! 🪙</p>
-                ) : leaderboard.map((row: any, i: number) => (
-                  <div key={row.user_id} className="p-3 flex items-center gap-3">
-                    <span className={`w-7 text-center font-heading font-extrabold ${i === 0 ? "text-warning" : "text-muted-foreground"}`}>{i + 1}</span>
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-xs font-heading font-extrabold text-primary-foreground overflow-hidden">
-                      {row.profile?.avatar_url ? <img src={row.profile.avatar_url} alt="" className="w-full h-full object-cover" /> : getInitials(row.profile?.full_name)}
-                    </div>
-                    <p className="flex-1 text-sm font-body font-semibold truncate">{row.profile?.full_name || "User"}</p>
-                    <span className="text-sm font-heading font-bold text-primary">{row.coins} 🪙</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Games tab removed — Sauras-Coins gamification disabled */}
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
