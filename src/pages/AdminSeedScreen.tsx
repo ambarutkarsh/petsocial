@@ -59,6 +59,7 @@ const AdminSeedScreen = () => {
         ...prev,
         `✅ ${data.users_created} users created`,
         `✅ ${data.posts_created} posts created`,
+        data.stories_created ? `✅ ${data.stories_created} stories created (24h)` : "",
         data.skipped > 0 ? `⚠️ ${data.skipped} skipped (already exist)` : "",
         `🎉 ${data.message}`,
       ].filter(Boolean));
