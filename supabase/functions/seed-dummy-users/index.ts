@@ -451,12 +451,45 @@ Deno.serve(async (req) => {
       }
     }
 
+    // 7. Seed stories (24h expiry) — pick ~half of the seed users
+    const STORY_CAPTIONS = [
+      "Morning vibes ☀️", "Best buddy 🐾", "Snack time! 🍖", "Lazy Sunday 😴",
+      "Park day 🌳", "New toy alert 🎾", "Spa day 🛁", "Couch potato mode 🛋️",
+      "Cuddle session ❤️", "Adventure time! 🌟"
+    ]
+    let storiesCreated = 0
+    const storyUserIds = createdUserIds.sort(() => Math.random() - 0.5).slice(0, Math.ceil(createdUserIds.length / 2))
+    for (const userId of storyUserIds) {
+      // Find this user's pet + pet_type
+      const { data: petRow } = await supabaseAdmin
+        .from('pets').select('id, pet_type').eq('owner_id', userId).limit(1).single()
+      const petType = petRow?.pet_type || 'Canine'
+      const queries = PEXELS_QUERIES[petType] || PEXELS_QUERIES['Canine']
+      const query = queries[Math.floor(Math.random() * queries.length)]
+      const imageUrl = await fetchPexelsImage(query, PEXELS_KEY)
+      const hoursAgo = Math.floor(Math.random() * 20) // within last 20h so still active
+      const createdAt = new Date()
+      createdAt.setHours(createdAt.getHours() - hoursAgo)
+      const expiresAt = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000)
+      await supabaseAdmin.from('stories').insert({
+        user_id: userId,
+        pet_id: petRow?.id || null,
+        media_url: imageUrl,
+        media_type: 'image',
+        caption: STORY_CAPTIONS[Math.floor(Math.random() * STORY_CAPTIONS.length)],
+        created_at: createdAt.toISOString(),
+        expires_at: expiresAt.toISOString()
+      })
+      storiesCreated++
+    }
+
     return new Response(JSON.stringify({
       success: true,
       users_created: usersCreated,
       posts_created: postsCreated,
+      stories_created: storiesCreated,
       skipped,
-      message: `Seed data created: ${usersCreated} users, ${postsCreated} posts`
+      message: `Seed data created: ${usersCreated} users, ${postsCreated} posts, ${storiesCreated} stories`
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
 
   } catch (err) {
