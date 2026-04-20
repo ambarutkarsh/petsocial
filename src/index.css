@@ -127,3 +127,8 @@
 .animate-heart-pop {
   animation: heartPop 0.3s ease;
 }
+
+@keyframes coinPop {
+  0%   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -60px) scale(1.25); }
+}

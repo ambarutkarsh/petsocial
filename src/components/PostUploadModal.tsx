@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { awardCoins } from "@/lib/coins";
 
 interface Props {
   open: boolean;
@@ -106,6 +107,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
     }
 
     toast.success("Posted to Petosauras! 🦕");
+    awardCoins("post_created");
     queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
     setCaption("");
     setHashtags([]);
