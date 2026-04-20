@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Coins, Sparkles, MapPin, Star, ExternalLink, Loader2, RotateCcw, Trophy } from "lucide-react";
+import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Sparkles, MapPin, Star, ExternalLink, Loader2, RotateCcw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -15,7 +15,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { maybeAwardDailyLogin, getCoinBalance } from "@/lib/coins";
 
 type SubTab = "reels" | "news" | "facts" | "nearby";
 
@@ -37,11 +36,6 @@ const PlayScreen = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Award daily-login coins on mount
-  useEffect(() => {
-    maybeAwardDailyLogin();
-  }, [user]);
-
   const { data: profile } = useQuery({
     queryKey: ["my-profile-mini", user?.id],
     enabled: !!user,
@@ -49,12 +43,6 @@ const PlayScreen = () => {
       const { data } = await supabase.from("profiles").select("avatar_url, full_name, state").eq("id", user!.id).single();
       return data;
     },
-  });
-
-  const { data: coinBalance = 0 } = useQuery({
-    queryKey: ["coins", user?.id],
-    enabled: !!user,
-    queryFn: () => getCoinBalance(user!.id),
   });
 
   // ============= REELS =============
@@ -248,33 +236,7 @@ const PlayScreen = () => {
     }
   };
 
-  // ============= GAMES (challenges) =============
-  const challenges = [
-    { emoji: "🎬", text: "Post a reel today", reward: 10 },
-    { emoji: "🍖", text: "Log your pet's meal", reward: 5 },
-    { emoji: "❤️", text: "Get 10 likes on a post", reward: 15 },
-    { emoji: "💉", text: "Upload a vaccination record", reward: 20 },
-  ];
-  const tiers = [
-    { coins: 500, reward: "10% off partner pet food brands" },
-    { coins: 1000, reward: "Featured post (pinned 24h)" },
-    { coins: 2000, reward: "Premium badge on profile 🌟" },
-  ];
-  const nextTier = tiers.find((t) => coinBalance < t.coins) || tiers[tiers.length - 1];
-  const tierProgress = Math.min(100, (coinBalance / nextTier.coins) * 100);
-
-  const { data: leaderboard = [] } = useQuery({
-    queryKey: ["leaderboard"],
-    enabled: activeTab === "games",
-    queryFn: async () => {
-      const { data } = await supabase.from("sauras_coins").select("user_id, coins, total_earned").order("coins", { ascending: false }).limit(10);
-      if (!data?.length) return [];
-      const ids = data.map((d) => d.user_id);
-      const { data: profs } = await supabase.from("public_profiles").select("id, full_name, avatar_url").in("id", ids);
-      const pmap = new Map((profs || []).map((p) => [p.id, p]));
-      return data.map((d) => ({ ...d, profile: pmap.get(d.user_id) }));
-    },
-  });
+  // Games sub-tab and Sauras-Coins UI are temporarily disabled.
 
   return (
     <MobileLayout>
