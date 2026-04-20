@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Coins, Sparkles, MapPin, Star, ExternalLink, Loader2, RotateCcw, Trophy } from "lucide-react";
+import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Sparkles, MapPin, Star, ExternalLink, Loader2, RotateCcw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -15,16 +15,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { maybeAwardDailyLogin, getCoinBalance } from "@/lib/coins";
 
-type SubTab = "reels" | "news" | "facts" | "nearby" | "games";
+type SubTab = "reels" | "news" | "facts" | "nearby";
 
 const SUB_TABS: { key: SubTab; label: string; emoji: string }[] = [
   { key: "reels", label: "Reels", emoji: "🎬" },
   { key: "news", label: "News", emoji: "📰" },
   { key: "facts", label: "Facts", emoji: "⭐" },
   { key: "nearby", label: "Nearby", emoji: "🗺️" },
-  { key: "games", label: "Games", emoji: "🎮" },
 ];
 
 const PlayScreen = () => {
@@ -38,11 +36,6 @@ const PlayScreen = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Award daily-login coins on mount
-  useEffect(() => {
-    maybeAwardDailyLogin();
-  }, [user]);
-
   const { data: profile } = useQuery({
     queryKey: ["my-profile-mini", user?.id],
     enabled: !!user,
@@ -50,12 +43,6 @@ const PlayScreen = () => {
       const { data } = await supabase.from("profiles").select("avatar_url, full_name, state").eq("id", user!.id).single();
       return data;
     },
-  });
-
-  const { data: coinBalance = 0 } = useQuery({
-    queryKey: ["coins", user?.id],
-    enabled: !!user,
-    queryFn: () => getCoinBalance(user!.id),
   });
 
   // ============= REELS =============
@@ -249,33 +236,7 @@ const PlayScreen = () => {
     }
   };
 
-  // ============= GAMES (challenges) =============
-  const challenges = [
-    { emoji: "🎬", text: "Post a reel today", reward: 10 },
-    { emoji: "🍖", text: "Log your pet's meal", reward: 5 },
-    { emoji: "❤️", text: "Get 10 likes on a post", reward: 15 },
-    { emoji: "💉", text: "Upload a vaccination record", reward: 20 },
-  ];
-  const tiers = [
-    { coins: 500, reward: "10% off partner pet food brands" },
-    { coins: 1000, reward: "Featured post (pinned 24h)" },
-    { coins: 2000, reward: "Premium badge on profile 🌟" },
-  ];
-  const nextTier = tiers.find((t) => coinBalance < t.coins) || tiers[tiers.length - 1];
-  const tierProgress = Math.min(100, (coinBalance / nextTier.coins) * 100);
-
-  const { data: leaderboard = [] } = useQuery({
-    queryKey: ["leaderboard"],
-    enabled: activeTab === "games",
-    queryFn: async () => {
-      const { data } = await supabase.from("sauras_coins").select("user_id, coins, total_earned").order("coins", { ascending: false }).limit(10);
-      if (!data?.length) return [];
-      const ids = data.map((d) => d.user_id);
-      const { data: profs } = await supabase.from("public_profiles").select("id, full_name, avatar_url").in("id", ids);
-      const pmap = new Map((profs || []).map((p) => [p.id, p]));
-      return data.map((d) => ({ ...d, profile: pmap.get(d.user_id) }));
-    },
-  });
+  // Games sub-tab and Sauras-Coins UI are temporarily disabled.
 
   return (
     <MobileLayout>
@@ -511,75 +472,7 @@ const PlayScreen = () => {
           </div>
         )}
 
-        {/* ===== GAMES ===== */}
-        {activeTab === "games" && (
-          <div className="px-4 mt-3 space-y-4">
-            {/* Coin balance hero */}
-            <div className="paw-card p-5 text-center bg-gradient-to-br from-primary to-[#9B7EC8] text-primary-foreground border-0">
-              <Coins className="w-8 h-8 mx-auto mb-2 text-warning" />
-              <p className="text-xs font-body uppercase tracking-wide opacity-80">Sauras-Coins</p>
-              <p className="text-4xl font-heading font-extrabold mt-1">{coinBalance}</p>
-              <div className="mt-3">
-                <div className="flex justify-between text-[11px] font-body mb-1 opacity-90">
-                  <span>{coinBalance} / {nextTier.coins}</span>
-                  <span>{nextTier.reward}</span>
-                </div>
-                <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-warning rounded-full transition-all" style={{ width: `${tierProgress}%` }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Challenges */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2">🎯 Daily Challenges</h3>
-              <div className="space-y-2">
-                {challenges.map((c, i) => (
-                  <div key={i} className="paw-card p-3 flex items-center gap-3">
-                    <span className="text-2xl">{c.emoji}</span>
-                    <p className="flex-1 text-sm font-body font-semibold">{c.text}</p>
-                    <span className="text-xs font-heading font-bold text-warning bg-warning/10 px-2 py-1 rounded-full">+{c.reward} 🪙</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Reward tiers */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2">🎁 Redeem Rewards</h3>
-              <div className="space-y-2">
-                {tiers.map((t) => (
-                  <button key={t.coins} onClick={() => toast.info("Redeem coming soon!")} className="paw-card p-3 w-full flex items-center gap-3 text-left">
-                    <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center text-warning font-heading font-extrabold text-xs">{t.coins}</div>
-                    <div className="flex-1">
-                      <p className="text-sm font-body font-semibold">{t.reward}</p>
-                      <p className="text-xs text-muted-foreground">{coinBalance >= t.coins ? "Available!" : `${t.coins - coinBalance} coins to go`}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Leaderboard */}
-            <div>
-              <h3 className="font-heading font-bold text-base mb-2 flex items-center gap-1"><Trophy className="w-4 h-4 text-warning" /> Top Pet Parents</h3>
-              <div className="paw-card divide-y divide-border">
-                {leaderboard.length === 0 ? (
-                  <p className="p-4 text-center text-sm text-muted-foreground font-body">No coins earned yet — be the first! 🪙</p>
-                ) : leaderboard.map((row: any, i: number) => (
-                  <div key={row.user_id} className="p-3 flex items-center gap-3">
-                    <span className={`w-7 text-center font-heading font-extrabold ${i === 0 ? "text-warning" : "text-muted-foreground"}`}>{i + 1}</span>
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-xs font-heading font-extrabold text-primary-foreground overflow-hidden">
-                      {row.profile?.avatar_url ? <img src={row.profile.avatar_url} alt="" className="w-full h-full object-cover" /> : getInitials(row.profile?.full_name)}
-                    </div>
-                    <p className="flex-1 text-sm font-body font-semibold truncate">{row.profile?.full_name || "User"}</p>
-                    <span className="text-sm font-heading font-bold text-primary">{row.coins} 🪙</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Games tab removed — Sauras-Coins gamification disabled */}
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />

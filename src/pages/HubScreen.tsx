@@ -57,7 +57,7 @@ const HubScreen = () => {
             <div className="flex-1 min-w-0">
               <p className="font-heading font-bold truncate">{profile?.full_name || "Pet Parent"}</p>
               <p className="text-xs text-muted-foreground font-body truncate">@{profile?.username || "user"}</p>
-              <p className="text-xs text-warning font-heading font-bold mt-1 flex items-center gap-1"><Coins className="w-3 h-3" /> {coinBalance} Sauras-Coins</p>
+              {/* Sauras-Coins balance hidden — gamification temporarily disabled */}
             </div>
             <button onClick={() => navigate("/profile")} className="text-xs text-primary font-heading font-bold flex items-center">
               View <ChevronRight className="w-3 h-3" />

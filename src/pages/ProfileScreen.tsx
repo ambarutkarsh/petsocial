@@ -219,10 +219,7 @@ const ProfileScreen = () => {
               <p className="text-xs text-muted-foreground font-body">Following</p>
             </div>
           </div>
-          <div className="mt-2 paw-card p-3 flex items-center justify-center gap-2 bg-gradient-to-r from-warning/10 to-primary/10">
-            <Coins className="w-5 h-5 text-warning" />
-            <p className="text-sm font-heading font-bold">🪙 {coinBalance} Sauras-Coins</p>
-          </div>
+          {/* Sauras-Coins balance hidden — gamification temporarily disabled */}
         </div>
 
         {/* Pets */}

@@ -1,5 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * Sauras-Coins gamification is currently DISABLED.
+ * Flip this to `true` to re-enable client-side coin awards, animations,
+ * and the daily-login bonus. Backend tables/triggers remain intact.
+ */
+export const COINS_ENABLED = false;
+
 export type CoinReason =
   | "post_created"
   | "comment_added"
@@ -23,6 +30,7 @@ const AMOUNTS: Record<CoinReason, number> = {
 
 /** Award coins client-side for simple actions. Server-side triggers handle milestones. */
 export async function awardCoins(reason: CoinReason, opts?: { silent?: boolean }) {
+  if (!COINS_ENABLED) return null;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
   const amount = AMOUNTS[reason];
@@ -86,6 +94,7 @@ export async function getCoinBalance(userId: string): Promise<number> {
 
 /** Daily login award — at most once per day per user (tracked in localStorage). */
 export async function maybeAwardDailyLogin() {
+  if (!COINS_ENABLED) return;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
   const key = `lastDailyLogin:${user.id}`;
