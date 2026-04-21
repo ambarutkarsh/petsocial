@@ -336,6 +336,7 @@ const FeedScreen = () => {
       <BottomNav onPostClick={() => setShowUpload(true)} />
       <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
       <CommentSheet postId={commentPostId || ""} open={!!commentPostId} onClose={() => setCommentPostId(null)} />
+      {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && (
         <StoryViewer stories={stories} initialIndex={storyStartIndex} onClose={() => { setShowStoryViewer(false); queryClient.invalidateQueries({ queryKey: ["viewed-stories"] }); }} />
       )}
