@@ -332,8 +332,23 @@ const PlayScreen = () => {
               })}
             </div>
 
-            {/* Pinned Alerts */}
-            {alerts.length > 0 && (
+            {/* Category pills */}
+            <div className="px-4 py-2.5 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border">
+              {REEL_PILLS.map((p) => (
+                <button
+                  key={p.key}
+                  onClick={() => setActivePill(p.key)}
+                  className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-body font-bold transition-colors ${
+                    activePill === p.key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {p.emoji} {p.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Pinned Alerts (only on Reels pill) */}
+            {activePill === "reel" && alerts.length > 0 && (
               <div className="px-4 mt-3 space-y-2">
                 {alerts.map((a: any) => (
                   <div key={a.id} className="paw-card p-3 border-l-4 border-destructive bg-destructive/5 animate-fade-up">
@@ -348,78 +363,117 @@ const PlayScreen = () => {
               </div>
             )}
 
-            {/* Posts */}
-            {postsLoading ? (
-              <div className="space-y-4 px-4 mt-2">
-                {[1, 2].map((i) => (
-                  <div key={i} className="paw-card p-4 animate-pulse">
-                    <div className="aspect-square bg-muted rounded-[22px]" />
-                  </div>
-                ))}
-              </div>
-            ) : posts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
-                <span className="text-6xl mb-4">🦕</span>
-                <h3 className="font-heading font-bold text-lg">No posts yet</h3>
-                <button onClick={() => setShowCreate(true)} className="mt-4 text-sm font-heading font-bold text-primary hover:underline">Share your pet 🐾</button>
-              </div>
-            ) : (
-              <div className="space-y-2.5 px-4 mt-2">
-                {posts.map((post: any, idx: number) => {
-                  const isLiked = likedPostIds.includes(post.id);
-                  const isSaved = savedPostIds.includes(post.id);
-                  const profile = post.profiles;
-                  const pet = post.pets;
-                  return (
-                    <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
-                      <div className="flex items-center gap-3 p-3.5">
-                        <div onClick={() => navigate(`/profile/${post.user_id}`)} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground cursor-pointer overflow-hidden">
-                          {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="w-10 h-10 object-cover" /> : getInitials(profile?.full_name)}
+            {/* ===== Reels pill: posts feed ===== */}
+            {activePill === "reel" && (
+              postsLoading ? (
+                <div className="space-y-4 px-4 mt-2">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="paw-card p-4 animate-pulse">
+                      <div className="aspect-square bg-muted rounded-[22px]" />
+                    </div>
+                  ))}
+                </div>
+              ) : posts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
+                  <span className="text-6xl mb-4">🦕</span>
+                  <h3 className="font-heading font-bold text-lg">No posts yet</h3>
+                  <button onClick={() => setShowCreate(true)} className="mt-4 text-sm font-heading font-bold text-primary hover:underline">Share your pet 🐾</button>
+                </div>
+              ) : (
+                <div className="space-y-2.5 px-4 mt-2">
+                  {posts.map((post: any, idx: number) => {
+                    const isLiked = likedPostIds.includes(post.id);
+                    const isSaved = savedPostIds.includes(post.id);
+                    const profile = post.profiles;
+                    const pet = post.pets;
+                    return (
+                      <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+                        <div className="flex items-center gap-3 p-3.5">
+                          <div onClick={() => navigate(`/profile/${post.user_id}`)} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground cursor-pointer overflow-hidden">
+                            {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="w-10 h-10 object-cover" /> : getInitials(profile?.full_name)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p onClick={() => navigate(`/profile/${post.user_id}`)} className="text-sm font-heading font-bold truncate cursor-pointer hover:text-primary">{profile?.full_name || "Unknown"}</p>
+                            <p className="text-xs text-muted-foreground font-body">
+                              {pet?.name && `${pet.name} • ${pet.pet_type} • `}
+                              {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                            </p>
+                          </div>
+                          {post.user_id === user?.id && (
+                            <button onClick={() => { if (confirm("Delete this post?")) deletePostMutation.mutate(post.id); }} className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                        <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+                          <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div className="p-3.5">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-4">
+                              <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
+                                <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
+                                <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.like_count || 0}</span>
+                              </button>
+                              <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light">
+                                <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
+                                <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
+                              </button>
+                              <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
+                            </div>
+                            <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light">
+                              <Bookmark className="w-5 h-5" fill={isSaved ? "hsl(var(--primary))" : "none"} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
+                            </button>
+                          </div>
+                          {post.caption && (
+                            <p className="text-sm font-body">
+                              <span className="font-heading font-bold">@{profile?.username || "user"}</span>{" "}
+                              <span className="text-muted-foreground">{post.caption}</span>
+                            </p>
+                          )}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )
+            )}
+
+            {/* ===== Service pills (Adopt / Walker / Groomer / Vet): forum topics ===== */}
+            {activePill !== "reel" && (
+              serviceLoading ? (
+                <div className="space-y-3 px-4 mt-3">
+                  {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-[22px]" />)}
+                </div>
+              ) : serviceTopics.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
+                  <span className="text-6xl mb-4">{REEL_PILLS.find(p => p.key === activePill)?.emoji}</span>
+                  <h3 className="font-heading font-bold text-lg">No {REEL_PILLS.find(p => p.key === activePill)?.label} posts yet</h3>
+                  <p className="text-sm text-muted-foreground font-body mt-2">Be the first to post — tap the + button below.</p>
+                </div>
+              ) : (
+                <div className="space-y-2.5 px-4 mt-3">
+                  {serviceTopics.map((t: any, idx: number) => (
+                    <article key={t.id} className="paw-card p-4 animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div onClick={() => navigate(`/profile/${t.user_id}`)} className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-xs font-heading font-extrabold text-primary-foreground cursor-pointer overflow-hidden">
+                          {t.profiles?.avatar_url ? <img src={t.profiles.avatar_url} alt="" className="w-full h-full object-cover" /> : getInitials(t.profiles?.full_name)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p onClick={() => navigate(`/profile/${post.user_id}`)} className="text-sm font-heading font-bold truncate cursor-pointer hover:text-primary">{profile?.full_name || "Unknown"}</p>
-                          <p className="text-xs text-muted-foreground font-body">
-                            {pet?.name && `${pet.name} • ${pet.pet_type} • `}
-                            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                          </p>
+                          <p className="text-sm font-heading font-bold truncate">{t.profiles?.full_name || "Unknown"}</p>
+                          <p className="text-[11px] text-muted-foreground font-body">{formatDistanceToNow(new Date(t.created_at), { addSuffix: true })}</p>
                         </div>
-                        {post.user_id === user?.id && (
-                          <button onClick={() => { if (confirm("Delete this post?")) deletePostMutation.mutate(post.id); }} className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
+                        <span className="text-[10px] font-body font-bold bg-primary-light text-primary px-2 py-0.5 rounded-full uppercase">
+                          {REEL_PILLS.find(p => p.key === activePill)?.label}
+                        </span>
                       </div>
-                      <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
-                        <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
-                      </div>
-                      <div className="p-3.5">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-4">
-                            <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
-                              <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
-                              <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.like_count || 0}</span>
-                            </button>
-                            <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light">
-                              <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
-                              <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
-                            </button>
-                            <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
-                          </div>
-                          <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light">
-                            <Bookmark className="w-5 h-5" fill={isSaved ? "hsl(var(--primary))" : "none"} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
-                          </button>
-                        </div>
-                        {post.caption && (
-                          <p className="text-sm font-body">
-                            <span className="font-heading font-bold">@{profile?.username || "user"}</span>{" "}
-                            <span className="text-muted-foreground">{post.caption}</span>
-                          </p>
-                        )}
-                      </div>
+                      <h3 className="font-heading font-bold text-sm mb-1">{t.title}</h3>
+                      <p className="text-xs text-muted-foreground font-body whitespace-pre-line line-clamp-4">{t.content}</p>
+                      <button onClick={() => navigate("/hub")} className="mt-2 text-xs font-heading font-bold text-primary hover:underline">View in Hub →</button>
                     </article>
-                  );
-                })}
-              </div>
+                  ))}
+                </div>
+              )
             )}
           </>
         )}
