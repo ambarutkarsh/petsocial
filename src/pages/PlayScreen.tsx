@@ -72,8 +72,20 @@ const FeedScreen = () => {
   };
 
 
-  // ============= POSTS (always shown if "reels" selected) =============
-  const showReels = selectedPills.includes("reels");
+  /**
+   * A pill is "active" when either:
+   *  - it is the directly selected pill, OR
+   *  - the Curated pill is active AND this pill is in the user's saved mix.
+   * Nearby is never auto-included via Curated (location-based, opt-in only).
+   */
+  const isPillActive = (key: FeedPillKey): boolean => {
+    if (activePill === key) return true;
+    if (activePill === "curated" && key !== "nearby" && savedPrefs.includes(key)) return true;
+    return false;
+  };
+
+  // ============= POSTS (always shown if "reels" selected or in curated mix) =============
+  const showReels = isPillActive("reels");
   const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ["feed-posts"],
     enabled: showReels,
@@ -145,7 +157,7 @@ const FeedScreen = () => {
   });
 
   // ============= NEWS / FACTS =============
-  const showNews = selectedPills.includes("news");
+  const showNews = isPillActive("news");
   const { data: newsArticles = [], isLoading: newsLoading } = useQuery({
     queryKey: ["pet-news", profile?.state],
     enabled: showNews && !!profile?.state,
@@ -155,7 +167,7 @@ const FeedScreen = () => {
     },
   });
 
-  const showFacts = selectedPills.includes("facts");
+  const showFacts = isPillActive("facts");
   const { data: petFacts = [], isLoading: factsLoading } = useQuery({
     queryKey: ["pet-facts"],
     enabled: showFacts,
@@ -171,7 +183,7 @@ const FeedScreen = () => {
   });
 
   // ============= ADOPT / WALKER =============
-  const showAdopt = selectedPills.includes("adopt");
+  const showAdopt = isPillActive("adopt");
   const { data: adoptTopics = [] } = useQuery({
     queryKey: ["adopt-topics"],
     enabled: showAdopt,
@@ -181,7 +193,7 @@ const FeedScreen = () => {
     },
   });
 
-  const showWalker = selectedPills.includes("walker");
+  const showWalker = isPillActive("walker");
   const { data: walkerTopics = [] } = useQuery({
     queryKey: ["walker-topics"],
     enabled: showWalker,
@@ -192,7 +204,7 @@ const FeedScreen = () => {
   });
 
   // ============= COMPETITIONS =============
-  const showCompetition = selectedPills.includes("competition");
+  const showCompetition = isPillActive("competition");
   const { data: competitions = [] } = useQuery({
     queryKey: ["active-competitions"],
     enabled: showCompetition,
@@ -203,7 +215,7 @@ const FeedScreen = () => {
   });
 
   // ============= PET CLUB =============
-  const showPetClub = selectedPills.includes("pet_club");
+  const showPetClub = isPillActive("pet_club");
   const { data: petClubEvents = [] } = useQuery({
     queryKey: ["pet-club-events"],
     enabled: showPetClub,
@@ -214,7 +226,7 @@ const FeedScreen = () => {
   });
 
   // ============= FIND MATES =============
-  const showFindMates = selectedPills.includes("find_mates");
+  const showFindMates = isPillActive("find_mates");
   const { data: matePets = [] } = useQuery({
     queryKey: ["mate-pets", user?.id, profile?.city],
     enabled: showFindMates && !!user,
@@ -232,7 +244,7 @@ const FeedScreen = () => {
   const [mateIdx, setMateIdx] = useState(0);
 
   // ============= NEARBY =============
-  const showNearby = selectedPills.includes("nearby");
+  const showNearby = activePill === "nearby"; // never auto-included by Curated
   const fetchNearby = async (subKey: string) => {
     if (subKey === "lost_found") {
       const { data } = await supabase.from("forum_topics").select("*, profiles!forum_topics_user_id_fkey(full_name, avatar_url)").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
