@@ -20,7 +20,8 @@ const HealthScreen = () => {
     <MobileLayout>
       <div className="pb-20 px-4">
         <header className="pt-6 pb-4 flex items-center gap-3">
-          <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
+          {/* LOGO LOCKED — Do not change without explicit user instruction */}
+          <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
           <div>
             <h1 className="font-heading text-2xl font-bold">Pet Health</h1>
             <p className="text-sm text-muted-foreground mt-1 font-body">Everything your pet needs, in one place</p>
