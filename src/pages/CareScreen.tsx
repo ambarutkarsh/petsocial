@@ -1,56 +1,59 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
 
-const careCards = [
-  { emoji: "🚑", title: "SOS / Ambulance", desc: "Emergency vet help", path: "/care/sos", accent: "destructive" },
-  { emoji: "🏥", title: "Vet & Reviews", desc: "Find vets near you", path: "/care/vet", accent: "primary" },
-  { emoji: "📋", title: "Health Tracker", desc: "Log weight, food, vitals", path: "/care/tracker", accent: "primary" },
-  { emoji: "💉", title: "Vaccinations", desc: "Track due dates", path: "/care/vaccines", accent: "accent" },
-  { emoji: "📂", title: "Digital Locker", desc: "Documents & records", path: "/care/locker", accent: "primary" },
-  { emoji: "🧬", title: "AI Health Insight", desc: "Get AI advice", path: "/care/ai", accent: "secondary", badge: "Soon" },
+const services = [
+  { emoji: "🏥", label: "Vet Near Me", path: "/hub/vet-near-me" },
+  { emoji: "🚑", label: "SOS", path: "/hub/sos" },
+  { emoji: "🛡️", label: "Insurance", path: "/hub/insurance" },
+  { emoji: "🤝", label: "NGO Connect", path: "/hub/ngo" },
+  { emoji: "💰", label: "Budget Calc", path: "/hub/budget" },
+  { emoji: "💉", label: "Microchip", path: "/hub/microchip" },
+  { emoji: "🐾", label: "Pet Recommender", path: "/hub/recommender" },
+  { emoji: "✈️", label: "Petcation", path: "/hub/petcation" },
+  { emoji: "🚛", label: "Pet Moving", path: "/hub/pet-moving" },
+  { emoji: "📋", label: "License Info", path: "/hub/license" },
+  { emoji: "⚖️", label: "Know Rights", path: "/hub/rights" },
+  { emoji: "🚗", label: "Pick & Drop", path: "/hub/pickup" },
 ];
 
-const CareScreen = () => {
+const HubScreen = () => {
   const navigate = useNavigate();
   const [showCreate, setShowCreate] = useState(false);
 
   return (
     <MobileLayout>
-      <div className="pb-20 px-4">
-        <header className="pt-6 pb-4">
-          <h1 className="font-heading text-2xl font-bold">Pet Care</h1>
-          <p className="text-sm text-muted-foreground mt-1 font-body">Health, safety, and wellbeing — all in one place</p>
-        </header>
+      <div className="pb-20">
+        <div className="px-5 pt-4 pb-2">
+          <h1 className="font-heading font-bold text-xl">Hub</h1>
+          <p className="text-xs text-muted-foreground font-body">All your pet services in one place</p>
+        </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {careCards.map((c, idx) => (
-            <button
-              key={c.path}
-              onClick={() => navigate(c.path)}
-              className="relative text-left rounded-[22px] bg-card border border-border p-[18px] shadow-petosauras active:scale-[0.97] transition-all duration-250 hover:shadow-petosauras-md hover:-translate-y-[2px] animate-fade-up"
-              style={{ borderLeft: `4px solid hsl(var(--${c.accent}))`, animationDelay: `${idx * 60}ms` }}
-            >
-              {c.badge && (
-                <span className="absolute top-2 right-2 text-[9px] font-body font-bold bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{c.badge}</span>
-              )}
-              <div className="w-12 h-12 rounded-[14px] bg-primary-light flex items-center justify-center mb-2">
-                <span className="text-[28px] leading-none">{c.emoji}</span>
-              </div>
-              <h3 className="font-heading font-bold text-sm leading-tight">{c.title}</h3>
-              <p className="text-[12px] text-muted-foreground mt-0.5 font-body line-clamp-2">{c.desc}</p>
-              <ChevronRight className="w-4 h-4 text-primary mt-2" strokeWidth={1.8} />
-            </button>
-          ))}
+        <div className="px-4 mt-3">
+          <div className="grid grid-cols-3 gap-3">
+            {services.map((s, idx) => (
+              <button
+                key={s.path}
+                onClick={() => navigate(s.path)}
+                className="flex flex-col items-center gap-2 p-3 rounded-[18px] bg-card border border-border shadow-petosauras hover:shadow-petosauras-md active:scale-[0.97] transition-all animate-fade-up"
+                style={{ animationDelay: `${idx * 40}ms` }}
+              >
+                <div className="w-11 h-11 rounded-full bg-primary-light flex items-center justify-center">
+                  <span className="text-[22px]">{s.emoji}</span>
+                </div>
+                <span className="text-[11px] font-body font-semibold text-center text-muted-foreground leading-tight">{s.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
+
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };
 
-export default CareScreen;
+export default HubScreen;

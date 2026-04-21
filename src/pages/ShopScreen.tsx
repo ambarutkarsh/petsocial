@@ -1,212 +1,260 @@
-import { useState } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ShoppingBag, MapPin, Star, ExternalLink, Loader2, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Camera, Pencil, Check, X, Plus } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import AddPetSheet from "@/components/AddPetSheet";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { trackEvent } from "@/lib/analytics";
+import { differenceInYears, differenceInMonths, format } from "date-fns";
+import { petTypes, breedsByType } from "@/lib/registrationData";
+import HealthLogScreen from "./HealthLogScreen";
+import PetDigiLockerScreen from "./PetDigiLockerScreen";
 
-const BRANDS = [
-  { name: "Royal Canin", emoji: "🐶", url: "https://www.royalcanin.com/in" },
-  { name: "Drools", emoji: "🥩", url: "https://www.droolspetfood.com" },
-  { name: "Heads Up For Tails", emoji: "🦴", url: "https://www.headsupfortails.com" },
-  { name: "Pedigree", emoji: "🐕", url: "https://www.pedigree.in" },
-];
-
-const NGOS = [
-  { name: "Blue Cross of India", emoji: "🐾", desc: "Chennai's oldest animal welfare org", url: "https://bluecrossofindia.org" },
-  { name: "PETA India", emoji: "🐾", desc: "People for the Ethical Treatment of Animals", url: "https://www.petaindia.com" },
-  { name: "Animal Aid Unlimited", emoji: "🐾", desc: "Udaipur-based rescue org", url: "https://www.animalaidunlimited.org" },
-  { name: "Friendicoes SECA", emoji: "🐾", desc: "Delhi animal rescue and adoption", url: "https://friendicoes.com" },
-];
-
-type Sub = "adopt" | "mate";
-
-const ShopScreen = () => {
-  const navigate = useNavigate();
+const MyPetScreen = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [showCreate, setShowCreate] = useState(false);
-  const [adoptTab, setAdoptTab] = useState<Sub>("adopt");
-  const [shops, setShops] = useState<any[]>([]);
-  const [shopsLoading, setShopsLoading] = useState(false);
-  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [showAddPet, setShowAddPet] = useState(false);
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [draft, setDraft] = useState<any>({});
 
-  const { data: adoptionTopics = [] } = useQuery({
-    queryKey: ["forum-topics", "adoption"],
+  const { data: pets = [] } = useQuery({
+    queryKey: ["my-pets", user?.id],
+    enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("forum_topics").select("*").eq("pet_category", "adoption").order("created_at", { ascending: false }).limit(10);
+      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id).order("is_primary", { ascending: false });
       return data || [];
     },
   });
 
-  const { data: matingTopics = [] } = useQuery({
-    queryKey: ["forum-topics", "mating"],
-    queryFn: async () => {
-      const { data } = await supabase.from("forum_topics").select("*").eq("pet_category", "mating").order("created_at", { ascending: false }).limit(10);
-      return data || [];
-    },
-  });
+  const activePet = pets.find((p: any) => p.id === selectedPetId) || pets[0];
 
-  const findShops = async () => {
-    setShopsLoading(true);
-    try {
-      const pos = await new Promise<GeolocationPosition>((res, rej) => navigator.geolocation.getCurrentPosition(res, rej));
-      const { data, error } = await supabase.functions.invoke("fetch-nearby-places", {
-        body: { lat: pos.coords.latitude, lng: pos.coords.longitude, type: "pet_store", radius: 5000 },
-      });
-      if (error) throw error;
-      setShops(data?.places || []);
-    } catch {
-      toast.error("Could not get location");
-    } finally {
-      setShopsLoading(false);
-    }
+  const petAge = useMemo(() => {
+    if (!activePet?.date_of_birth) return activePet?.age_years ? `${activePet.age_years} years` : "Not set";
+    const dob = new Date(activePet.date_of_birth);
+    const yrs = differenceInYears(new Date(), dob);
+    const mos = differenceInMonths(new Date(), dob) % 12;
+    return `${yrs} years ${mos} months`;
+  }, [activePet]);
+
+  const startEdit = (field: string, value: any) => {
+    setEditing(field);
+    setDraft({ ...draft, [field]: value });
   };
 
-  const joinWaitlist = async () => {
-    if (!waitlistEmail || !waitlistEmail.includes("@")) {
-      toast.error("Please enter a valid email");
-      return;
-    }
-    await supabase.from("waitlist").insert({ email: waitlistEmail, user_id: user?.id || null, feature: "order_now" });
-    toast.success("You're on the waitlist! 🦕");
-    trackEvent("waitlist_joined");
-    setWaitlistEmail("");
+  const saveField = async (field: string, value: any) => {
+    if (!activePet) return;
+    const { error } = await supabase.from("pets").update({ [field]: value }).eq("id", activePet.id);
+    if (error) { toast.error("Save failed"); return; }
+    toast.success("Pet profile updated! 🐾");
+    setEditing(null);
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
   };
 
-  const postAdoption = (cat: "adoption" | "mating") => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    const title = prompt(cat === "adoption" ? "Pet to adopt — title" : "Pet for mating — title");
-    if (!title) return;
-    const content = prompt("Describe pet (species, breed, age, location, contact info)");
-    if (!content || content.length < 20) {
-      toast.error("Please add more detail");
-      return;
-    }
-    supabase.from("forum_topics").insert({ user_id: user.id, title, content, pet_category: cat, tags: [cat] }).then(() => {
-      toast.success("Posted!");
-      window.location.reload();
-    });
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activePet || !user) return;
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/${activePet.id}/avatar_${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (upErr) { toast.error("Upload failed"); return; }
+    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+    await supabase.from("pets").update({ avatar_url: urlData.publicUrl }).eq("id", activePet.id);
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
+    toast.success("Pet photo updated! 📸");
   };
+
+  if (pets.length === 0) {
+    return (
+      <MobileLayout>
+        <div className="px-5 pt-4 pb-20">
+          <h1 className="font-heading font-bold text-xl mb-1">MyPet</h1>
+          <p className="text-xs text-muted-foreground font-body">Add your first pet to get started</p>
+          <div className="text-center py-16">
+            <span className="text-6xl block mb-3">🐾</span>
+            <Button onClick={() => setShowAddPet(true)}>
+              <Plus className="w-4 h-4" /> Add Pet
+            </Button>
+          </div>
+        </div>
+        <BottomNav onPostClick={() => setShowCreate(true)} />
+        <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+        <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
+      </MobileLayout>
+    );
+  }
 
   return (
     <MobileLayout>
       <div className="pb-20">
-        <div className="px-4 pt-4 pb-2">
-          <h1 className="text-xl font-heading font-bold">🐾 MyPet</h1>
-          <p className="text-xs text-muted-foreground font-body mt-0.5">Your pets, all in one place. Full rebuild coming next phase.</p>
-        </div>
-
-        {/* SECTION 1: Brands */}
-        <div className="px-4 mt-4">
-          <h2 className="font-heading font-bold text-base mb-2">🥩 Pet Food Brands</h2>
-          <div className="grid grid-cols-2 gap-2">
-            {BRANDS.map((b) => (
-              <a key={b.name} href={b.url} target="_blank" rel="noreferrer" onClick={() => trackEvent("brand_clicked", { brand: b.name })} className="paw-card p-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl">{b.emoji}</span>
-                  <span className="text-[9px] font-body font-bold bg-accent-light text-accent px-1.5 py-0.5 rounded-full">Partner</span>
-                </div>
-                <p className="font-heading font-bold text-sm mt-2">{b.name}</p>
-                <p className="text-[11px] text-primary font-body font-bold mt-1 flex items-center gap-1">Shop <ExternalLink className="w-3 h-3" /></p>
-              </a>
+        {/* Pet selector */}
+        {pets.length > 1 && (
+          <div className="px-4 pt-3 flex gap-2 overflow-x-auto no-scrollbar">
+            {pets.map((p: any) => (
+              <button key={p.id} onClick={() => setSelectedPetId(p.id)}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${p.id === activePet?.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                {p.avatar_emoji || "🐾"} {p.name}
+              </button>
             ))}
+            <button onClick={() => setShowAddPet(true)} className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary">
+              <Plus className="w-3 h-3 inline" /> Add
+            </button>
           </div>
+        )}
 
-          {/* Waitlist */}
-          <div className="paw-card p-4 mt-3 bg-gradient-to-br from-primary-light to-secondary-light">
-            <p className="font-heading font-bold text-sm">🚀 Order Now — Coming Soon</p>
-            <p className="text-xs text-muted-foreground font-body mt-1 mb-2">Get notified at launch</p>
-            <div className="flex gap-2">
-              <Input value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} placeholder="you@example.com" className="flex-1 h-10" />
-              <Button size="sm" onClick={joinWaitlist}>Join</Button>
-            </div>
-          </div>
-        </div>
+        <div className="px-4 mt-3">
+          <Tabs defaultValue="profile">
+            <TabsList className="w-full">
+              <TabsTrigger value="profile" className="flex-1 text-xs">🐾 MyPet</TabsTrigger>
+              <TabsTrigger value="health" className="flex-1 text-xs">📊 Health</TabsTrigger>
+              <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vax</TabsTrigger>
+              <TabsTrigger value="docs" className="flex-1 text-xs">📂 Docs</TabsTrigger>
+              <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
+            </TabsList>
 
-        {/* SECTION 2: Local shops */}
-        <div className="px-4 mt-6">
-          <h2 className="font-heading font-bold text-base mb-2">📍 Pet Shops Near You</h2>
-          <Button onClick={findShops} disabled={shopsLoading} className="w-full" variant="outline">
-            {shopsLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Searching...</> : <><MapPin className="w-4 h-4" /> Find Nearby Shops</>}
-          </Button>
-          <div className="mt-3 space-y-2">
-            {shops.map((s) => (
-              <div key={s.place_id} className="paw-card p-3 flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <p className="font-heading font-bold text-sm truncate">{s.name}</p>
-                  <p className="text-xs text-muted-foreground font-body truncate">{s.address}</p>
-                  <div className="flex gap-3 mt-1">
-                    {s.rating > 0 && <span className="text-xs flex items-center gap-1"><Star className="w-3 h-3 fill-warning text-warning" />{s.rating}</span>}
-                    <span className="text-xs text-muted-foreground">{s.distance_km} km</span>
+            <TabsContent value="profile" className="mt-4">
+              <div className="paw-card p-5">
+                {/* Avatar */}
+                <div className="flex justify-center">
+                  <div className="relative w-[120px] h-[120px]">
+                    {activePet.avatar_url ? (
+                      <img src={activePet.avatar_url} alt="" className="w-full h-full rounded-full object-cover border-4 border-card shadow-petosauras-md" />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-6xl border-4 border-card shadow-petosauras-md">
+                        {activePet.avatar_emoji || "🐾"}
+                      </div>
+                    )}
+                    <button onClick={() => fileRef.current?.click()} className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-petosauras">
+                      <Camera className="w-4 h-4 text-primary-foreground" />
+                    </button>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
                   </div>
                 </div>
-                <Button size="sm" variant="outline" onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}&query_place_id=${s.place_id}`, "_blank")}>
-                  Directions
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* SECTION 3: Adoption / Mating */}
-        <div className="px-4 mt-6">
-          <h2 className="font-heading font-bold text-base mb-2">🐾 Adoption & Mating</h2>
-          <div className="flex gap-2 mb-3">
-            <button onClick={() => setAdoptTab("adopt")} className={`flex-1 py-2 rounded-full text-sm font-body font-bold transition-colors ${adoptTab === "adopt" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>Adopt 🐾</button>
-            <button onClick={() => setAdoptTab("mate")} className={`flex-1 py-2 rounded-full text-sm font-body font-bold transition-colors ${adoptTab === "mate" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>Find a Mate 💕</button>
-          </div>
-          <Button size="sm" className="w-full mb-3" onClick={() => postAdoption(adoptTab === "adopt" ? "adoption" : "mating")}>
-            <Heart className="w-4 h-4" /> {adoptTab === "adopt" ? "Post for Adoption" : "Post for Mating"}
-          </Button>
-          <div className="space-y-2">
-            {(adoptTab === "adopt" ? adoptionTopics : matingTopics).length === 0 ? (
-              <p className="text-center text-sm text-muted-foreground font-body py-4">No posts yet. Be the first!</p>
-            ) : (adoptTab === "adopt" ? adoptionTopics : matingTopics).map((t: any) => (
-              <div key={t.id} className="paw-card p-3">
-                <p className="font-heading font-bold text-sm">{t.title}</p>
-                <p className="text-xs text-muted-foreground font-body mt-1 line-clamp-3 whitespace-pre-line">{t.content}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+                {/* Fields */}
+                <div className="mt-5 space-y-3">
+                  {/* Name */}
+                  <Field label="Name">
+                    {editing === "name" ? (
+                      <div className="flex gap-1">
+                        <Input value={draft.name || ""} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="h-9" />
+                        <Button size="sm" onClick={() => saveField("name", draft.name)}><Check className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <span className="font-body font-semibold">{activePet.name}</span>
+                        <button onClick={() => startEdit("name", activePet.name)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                      </div>
+                    )}
+                  </Field>
 
-        {/* SECTION 4: NGO Hub */}
-        <div className="px-4 mt-6">
-          <h2 className="font-heading font-bold text-base mb-2">❤️ NGO Hub</h2>
-          <div className="space-y-2">
-            {NGOS.map((n) => (
-              <div key={n.name} className="paw-card p-3">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{n.emoji}</span>
-                  <div className="flex-1">
-                    <p className="font-heading font-bold text-sm">{n.name}</p>
-                    <p className="text-xs text-muted-foreground font-body">{n.desc}</p>
-                    <div className="flex gap-2 mt-2">
-                      <Button size="sm" variant="outline" onClick={() => window.open(n.url, "_blank")}>Visit Website</Button>
-                      <Button size="sm" onClick={() => window.open(n.url, "_blank")}>Donate</Button>
-                    </div>
-                  </div>
+                  {/* Pet type */}
+                  <Field label="Pet Type">
+                    {editing === "pet_type" ? (
+                      <div className="flex gap-1">
+                        <select value={draft.pet_type} onChange={(e) => setDraft({ ...draft, pet_type: e.target.value })} className="flex-1 h-9 rounded-md border border-input bg-background px-2 text-sm">
+                          {petTypes.map(p => <option key={p.label} value={p.label}>{p.emoji} {p.label}</option>)}
+                        </select>
+                        <Button size="sm" onClick={() => saveField("pet_type", draft.pet_type)}><Check className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <span className="font-body">{activePet.avatar_emoji || "🐾"} {activePet.pet_type}</span>
+                        <button onClick={() => startEdit("pet_type", activePet.pet_type)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                      </div>
+                    )}
+                  </Field>
+
+                  {/* Breed */}
+                  <Field label="Breed / Species">
+                    {editing === "species" ? (
+                      <div className="flex gap-1">
+                        <select value={draft.species || ""} onChange={(e) => setDraft({ ...draft, species: e.target.value })} className="flex-1 h-9 rounded-md border border-input bg-background px-2 text-sm">
+                          <option value="">Select</option>
+                          {(breedsByType[activePet.pet_type] || []).map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                        <Button size="sm" onClick={() => saveField("species", draft.species)}><Check className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <span className="font-body">{activePet.species || "Not set"}</span>
+                        <button onClick={() => startEdit("species", activePet.species)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                      </div>
+                    )}
+                  </Field>
+
+                  {/* DOB */}
+                  <Field label="Date of Birth">
+                    {editing === "date_of_birth" ? (
+                      <div className="flex gap-1">
+                        <Input type="date" value={draft.date_of_birth || ""} onChange={(e) => setDraft({ ...draft, date_of_birth: e.target.value })} className="h-9" />
+                        <Button size="sm" onClick={() => saveField("date_of_birth", draft.date_of_birth)}><Check className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-body">{activePet.date_of_birth ? format(new Date(activePet.date_of_birth), "dd MMM yyyy") : "Not set"}</p>
+                          <p className="text-[11px] text-muted-foreground">{petAge}</p>
+                        </div>
+                        <button onClick={() => startEdit("date_of_birth", activePet.date_of_birth || "")}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                      </div>
+                    )}
+                  </Field>
+
+                  {/* Gender */}
+                  <Field label="Gender">
+                    {editing === "gender" ? (
+                      <div className="flex gap-1">
+                        <button onClick={() => setDraft({ ...draft, gender: "Male" })} className={`flex-1 h-9 rounded-md text-sm ${draft.gender === "Male" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>Male</button>
+                        <button onClick={() => setDraft({ ...draft, gender: "Female" })} className={`flex-1 h-9 rounded-md text-sm ${draft.gender === "Female" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>Female</button>
+                        <Button size="sm" onClick={() => saveField("gender", draft.gender)}><Check className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <span className="font-body">{activePet.gender || "Not set"}</span>
+                        <button onClick={() => startEdit("gender", activePet.gender)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                      </div>
+                    )}
+                  </Field>
                 </div>
               </div>
-            ))}
-          </div>
+            </TabsContent>
+
+            <TabsContent value="health"><HealthLogScreen /></TabsContent>
+            <TabsContent value="vaccines"><PetDigiLockerScreen /></TabsContent>
+            <TabsContent value="docs"><PetDigiLockerScreen /></TabsContent>
+            <TabsContent value="growth"><PetDigiLockerScreen /></TabsContent>
+          </Tabs>
         </div>
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
     </MobileLayout>
   );
 };
 
-export default ShopScreen;
+const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div>
+    <p className="text-[11px] text-muted-foreground font-body uppercase tracking-wide mb-1">{label}</p>
+    {children}
+  </div>
+);
+
+export default MyPetScreen;
