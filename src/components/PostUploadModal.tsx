@@ -98,7 +98,8 @@ const PostUploadModal = ({ open, onClose }: Props) => {
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
       pet_id: selectedPetId || null,
       ai_validated: false,
-    });
+      post_category: "reel",
+    } as any);
 
     setPosting(false);
     if (error) {

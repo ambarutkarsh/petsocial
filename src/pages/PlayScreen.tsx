@@ -17,12 +17,21 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 
 type SubTab = "reels" | "news" | "facts" | "nearby";
+type ReelPill = "reel" | "adopt" | "walker" | "groomer" | "vet";
 
 const SUB_TABS: { key: SubTab; label: string; emoji: string }[] = [
-  { key: "reels", label: "Reels", emoji: "🎬" },
+  { key: "reels", label: "Feeds", emoji: "🎬" },
   { key: "news", label: "News", emoji: "📰" },
   { key: "facts", label: "Facts", emoji: "⭐" },
   { key: "nearby", label: "Nearby", emoji: "🗺️" },
+];
+
+const REEL_PILLS: { key: ReelPill; label: string; emoji: string }[] = [
+  { key: "reel", label: "Reels", emoji: "🎬" },
+  { key: "adopt", label: "Adopt", emoji: "🏠" },
+  { key: "walker", label: "Walker", emoji: "🚶" },
+  { key: "groomer", label: "Groomer", emoji: "✂️" },
+  { key: "vet", label: "Vet", emoji: "🩺" },
 ];
 
 const PlayScreen = () => {
