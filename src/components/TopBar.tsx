@@ -100,7 +100,10 @@ const TopBar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-lg border-b border-border">
+      <header
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-full bg-card border-b border-border"
+        style={{ maxWidth: 480, height: 56, zIndex: 1000, borderBottomWidth: 0.5 }}
+      >
         <div className="h-14 px-4 flex items-center justify-between">
           <button
             onClick={() => navigate("/feeds")}
