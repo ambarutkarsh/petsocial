@@ -41,6 +41,7 @@ const PlayScreen = () => {
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
   const [activeTab, setActiveTab] = useState<SubTab>("reels");
+  const [activePill, setActivePill] = useState<ReelPill>("reel");
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
