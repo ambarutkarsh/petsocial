@@ -32,7 +32,12 @@ const documentCategories = [
 
 const categoryLabels: Record<string, string> = Object.fromEntries(documentCategories.map(c => [c.value, c.label]));
 
-const PetDigiLockerScreen = () => {
+interface PetDigiLockerScreenProps {
+  /** When true, render plain content (no MobileLayout wrapper) — used as a tab inside MyPet. */
+  embedded?: boolean;
+}
+
+const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
