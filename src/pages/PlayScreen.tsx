@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS, NEARBY_SUB_PILLS, MAX_PILL_SELECTION, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP, getGooglePlacesUsage } from "@/lib/feedPills";
+import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
 import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
 
 const FeedScreen = () => {
@@ -26,7 +26,8 @@ const FeedScreen = () => {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
-  const [selectedPills, setSelectedPills] = useState<FeedPillKey[]>([]);
+  const [activePill, setActivePill] = useState<FeedPillKey>("reels");
+  const [savedPrefs, setSavedPrefs] = useState<FeedPillKey[]>([]);
   const [nearbySub, setNearbySub] = useState<string>("parks");
   const [nearbyPlaces, setNearbyPlaces] = useState<any[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
@@ -41,33 +42,35 @@ const FeedScreen = () => {
     },
   });
 
-  // Initialize from saved prefs
+  // Initialize active pill: Curated if user saved 2-3 prefs, else Reels.
   useEffect(() => {
     if (!profile) return;
-    const saved = (profile.feed_preferences || []) as string[];
-    const valid = saved.filter((s): s is FeedPillKey => FEED_PILLS.some(p => p.key === s));
-    setSelectedPills(valid.length ? valid.slice(0, MAX_PILL_SELECTION) : ["reels"]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
-
-  const togglePill = async (key: FeedPillKey) => {
-    let next: FeedPillKey[];
-    if (selectedPills.includes(key)) {
-      next = selectedPills.filter(p => p !== key);
-      if (next.length === 0) next = ["reels"];
+    const saved = ((profile.feed_preferences || []) as string[])
+      .filter((s): s is FeedPillKey => FEED_PILLS.some((p) => p.key === s));
+    setSavedPrefs(saved);
+    if (saved.length >= 2) {
+      setActivePill("curated");
     } else {
-      if (selectedPills.length >= MAX_PILL_SELECTION) {
-        toast.error("Maximum 3 feeds selected. Deselect one to add another.");
-        return;
-      }
-      next = [...selectedPills, key];
+      setActivePill("reels");
     }
-    setSelectedPills(next);
-    trackEvent("feed_pills_changed", { pills: next.join(",") });
-    if (user) {
-      await supabase.from("profiles").update({ feed_preferences: next as any }).eq("id", user.id);
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, profile?.feed_preferences?.join(",")]);
+
+  const hasCurated = savedPrefs.length >= 2;
+
+  /**
+   * Single-select pill behaviour:
+   *  - Tapping a different pill activates it.
+   *  - Tapping the active pill is a no-op (never zero pills active).
+   *  - feed_preferences in DB is left ALONE here — it represents the user's
+   *    Curated mix, edited via Profile → Feed Preferences (not by tapping).
+   */
+  const togglePill = (key: FeedPillKey) => {
+    if (key === activePill) return;
+    setActivePill(key);
+    trackEvent("feed_pill_changed", { pill: key });
   };
+
 
   // ============= POSTS (always shown if "reels" selected) =============
   const showReels = selectedPills.includes("reels");
