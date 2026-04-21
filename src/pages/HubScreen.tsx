@@ -44,10 +44,6 @@ const HubScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3 border-b border-border">
-          <h1 className="text-xl font-heading font-bold">🧭 Hub</h1>
-        </header>
-
         {/* Mini profile */}
         <div className="px-4 mt-3">
           <div className="paw-card p-4 flex items-center gap-3">

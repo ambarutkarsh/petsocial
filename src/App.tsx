@@ -8,6 +8,7 @@ import AuthScreen from "./pages/AuthScreen";
 import PlayScreen from "./pages/PlayScreen";
 import CareScreen from "./pages/CareScreen";
 import ShopScreen from "./pages/ShopScreen";
+import ShopComingSoonScreen from "./pages/ShopComingSoonScreen";
 import HubScreen from "./pages/HubScreen";
 import SosScreen from "./pages/SosScreen";
 import LegalScreen from "./pages/LegalScreen";
@@ -47,46 +48,59 @@ const App = () => (
         <BrowserRouter>
           <PageTracker />
           <Routes>
-            <Route path="/" element={<Navigate to="/play" replace />} />
+            <Route path="/" element={<Navigate to="/feeds" replace />} />
             <Route path="/auth" element={<AuthScreen />} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
             <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
 
-            {/* New 4+1 tabs */}
-            <Route path="/play" element={<ProtectedRoute><PlayScreen /></ProtectedRoute>} />
-            <Route path="/care" element={<ProtectedRoute><CareScreen /></ProtectedRoute>} />
-            <Route path="/shop" element={<ProtectedRoute><ShopScreen /></ProtectedRoute>} />
-            <Route path="/hub" element={<ProtectedRoute><HubScreen /></ProtectedRoute>} />
-
-            {/* Care sub-pages (reusing existing screens) */}
-            <Route path="/care/sos" element={<ProtectedRoute><SosScreen /></ProtectedRoute>} />
-            <Route path="/care/vet" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
-            <Route path="/care/tracker" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
-            <Route path="/care/vaccines" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
-            <Route path="/care/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
-            <Route path="/care/ai" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
+            {/* New 5-slot bottom nav: Feeds | Hub | + | MyPet | Shop */}
+            <Route path="/feeds" element={<ProtectedRoute><PlayScreen /></ProtectedRoute>} />
+            <Route path="/hub" element={<ProtectedRoute><CareScreen /></ProtectedRoute>} />
+            <Route path="/mypet" element={<ProtectedRoute><ShopScreen /></ProtectedRoute>} />
+            <Route path="/shop" element={<ProtectedRoute><ShopComingSoonScreen /></ProtectedRoute>} />
 
             {/* Hub sub-pages */}
+            <Route path="/hub/sos" element={<ProtectedRoute><SosScreen /></ProtectedRoute>} />
+            <Route path="/hub/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
+            <Route path="/hub/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
             <Route path="/hub/legal" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/license" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/rights" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/settings" element={<ProtectedRoute><SettingsScreen /></ProtectedRoute>} />
 
-            {/* Legacy routes kept for backwards compat */}
-            <Route path="/feed" element={<Navigate to="/play" replace />} />
-            <Route path="/health" element={<ProtectedRoute><HealthScreen /></ProtectedRoute>} />
-            <Route path="/health/log" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
-            <Route path="/health/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
-            <Route path="/health/digilocker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
-            <Route path="/health/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
-            <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
-            <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
-            <Route path="/community" element={<Navigate to="/hub" replace />} />
-            <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
+            {/* MyPet sub-pages */}
+            <Route path="/mypet/health" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
+            <Route path="/mypet/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
 
+            {/* Other screens */}
             <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
             <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfileScreen /></ProtectedRoute>} />
-            <Route path="/post/:postId" element={<PostDetailScreen />} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
+            <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
+            <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
             <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
+
+            {/* Public post detail keeps its own layout */}
+            <Route path="/post/:postId" element={<PostDetailScreen />} />
+
+            {/* Legacy redirects */}
+            <Route path="/play" element={<Navigate to="/feeds" replace />} />
+            <Route path="/feed" element={<Navigate to="/feeds" replace />} />
+            <Route path="/care" element={<Navigate to="/hub" replace />} />
+            <Route path="/community" element={<Navigate to="/hub" replace />} />
+            <Route path="/care/sos" element={<Navigate to="/hub/sos" replace />} />
+            <Route path="/care/vet" element={<Navigate to="/hub/vet-near-me" replace />} />
+            <Route path="/care/tracker" element={<Navigate to="/mypet/health" replace />} />
+            <Route path="/care/vaccines" element={<Navigate to="/mypet/health" replace />} />
+            <Route path="/care/locker" element={<Navigate to="/mypet/locker" replace />} />
+            <Route path="/care/ai" element={<Navigate to="/learn" replace />} />
+            <Route path="/health" element={<ProtectedRoute><HealthScreen /></ProtectedRoute>} />
+            <Route path="/health/log" element={<Navigate to="/mypet/health" replace />} />
+            <Route path="/health/vet-near-me" element={<Navigate to="/hub/vet-near-me" replace />} />
+            <Route path="/health/digilocker" element={<Navigate to="/mypet/locker" replace />} />
+            <Route path="/health/budget" element={<Navigate to="/hub/budget" replace />} />
+            <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

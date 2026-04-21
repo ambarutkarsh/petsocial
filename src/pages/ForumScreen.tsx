@@ -344,15 +344,7 @@ const ForumScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
-          <div className="flex items-center gap-2">
-            <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 32, objectFit: "contain" }} />
-            <h1 className="text-xl font-heading font-extrabold text-primary">Community</h1>
-          </div>
-          <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors"><Search className="w-5 h-5" strokeWidth={1.8} /></button>
-        </header>
-
-        <div className="px-4 flex items-center justify-between mb-3 mt-3">
+        <div className="px-4 pt-4 flex items-center justify-between mb-3">
           <h2 className="text-lg font-heading font-bold">Discussions</h2>
           <Button size="sm" onClick={() => setShowNewPost(true)}><PenSquare className="w-4 h-4" strokeWidth={1.8} /> New Post</Button>
         </div>

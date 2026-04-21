@@ -313,7 +313,7 @@ const PetDigiLockerScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center gap-3">
+        <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate("/health")}><ArrowLeft className="w-5 h-5" /></button>
           <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
         </header>

@@ -204,7 +204,7 @@ const HealthLogScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-8">
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center gap-3">
+        <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate("/health")} className="text-primary"><ArrowLeft className="w-5 h-5" /></button>
           <div>
             <h1 className="text-lg font-heading font-bold">Log Health Entry</h1>
