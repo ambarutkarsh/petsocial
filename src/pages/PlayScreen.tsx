@@ -246,15 +246,18 @@ const FeedScreen = () => {
       if (!sub) return;
       const city = profile?.city || "India";
       const isPark = subKey === "parks";
-      let body: any = { type: "park", keyword: "dog", radius: 5000 };
+      const fallbackQuery = `${sub.query || subKey} ${city}`.trim();
+      const body: any = isPark
+        ? { type: "park", keyword: "dog", radius: 5000, query: fallbackQuery }
+        : { query: fallbackQuery };
       try {
-        const pos = await new Promise<GeolocationPosition>((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
-        body.lat = pos.coords.latitude; body.lng = pos.coords.longitude;
+        const pos = await new Promise<GeolocationPosition>((res, rej) =>
+          navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 })
+        );
+        body.lat = pos.coords.latitude;
+        body.lng = pos.coords.longitude;
       } catch {
-        body.query = `${sub.query} ${city}`;
-      }
-      if (!isPark) {
-        body = { query: `${sub.query} ${city}` };
+        // keep query as fallback for geocoding
       }
       const { data } = await supabase.functions.invoke("fetch-nearby-places", { body });
       incrementGooglePlacesUsage();
