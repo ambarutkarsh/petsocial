@@ -97,6 +97,7 @@ const CompleteRegistrationScreen = () => {
     <MobileLayout>
       <div className="min-h-screen px-6 py-8" style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}>
         <div className="text-center mb-8">
+          {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 60, objectFit: "contain" }} className="mx-auto mb-3" />
           <h1 className="text-2xl font-heading font-extrabold text-primary">Welcome to Petosauras! 🦕</h1>
           <p className="text-sm text-muted-foreground mt-1 font-body">Just a few details to get started</p>

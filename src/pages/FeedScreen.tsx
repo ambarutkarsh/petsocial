@@ -191,7 +191,8 @@ const FeedScreen = () => {
       <div className="pb-20">
         {/* Header */}
         <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
-          <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
+          {/* LOGO LOCKED — Do not change without explicit user instruction */}
+          <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
           <div className="flex gap-2">
             <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors">
               <Search className="w-5 h-5" strokeWidth={1.8} />

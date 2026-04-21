@@ -141,6 +141,7 @@ const AuthScreen = () => {
         <div className="absolute bottom-[200px] left-[50%] w-[180px] h-[180px] rounded-full bg-accent/10 blur-3xl" />
 
         <div className="flex-1 flex flex-col items-center justify-center pt-16 pb-6 px-6 relative z-10">
+          {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 80, objectFit: "contain", marginBottom: 12 }} />
           <div className="flex gap-3 mt-6">
             {petEmojis.map((emoji, i) => (
