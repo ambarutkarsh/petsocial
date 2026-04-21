@@ -22,17 +22,27 @@ const NotificationsScreen = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("notifications")
-        .select("*, profiles!notifications_actor_id_fkey(full_name, avatar_url)")
-        .eq("recipient_id", user!.id)
+        .select("*")
+        .eq("user_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(30);
-      return data || [];
+      if (!data || data.length === 0) return [];
+      const actorIds = Array.from(new Set(data.map((n: any) => n.from_user_id).filter(Boolean)));
+      let actorMap: Record<string, { full_name: string | null; avatar_url: string | null }> = {};
+      if (actorIds.length > 0) {
+        const { data: actors } = await supabase
+          .from("profiles")
+          .select("id, full_name, avatar_url")
+          .in("id", actorIds);
+        actorMap = Object.fromEntries((actors || []).map((a: any) => [a.id, { full_name: a.full_name, avatar_url: a.avatar_url }]));
+      }
+      return data.map((n: any) => ({ ...n, actor: n.from_user_id ? actorMap[n.from_user_id] : null }));
     },
   });
 
   const markAllRead = useMutation({
     mutationFn: async () => {
-      await supabase.from("notifications").update({ is_read: true }).eq("recipient_id", user!.id).eq("is_read", false);
+      await supabase.from("notifications").update({ is_read: true }).eq("user_id", user!.id).eq("is_read", false);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
   });
