@@ -1,13 +1,14 @@
-/** The 9 feed pills used on /feeds and step 3 of onboarding. */
+/** The feed pills used on /feeds. Order here is the render order. */
 export type FeedPillKey =
+  | "curated"
   | "reels"
+  | "nearby"
   | "news"
   | "facts"
   | "adopt"
   | "walker"
   | "competition"
   | "pet_club"
-  | "nearby"
   | "find_mates";
 
 export interface FeedPill {
@@ -17,17 +18,22 @@ export interface FeedPill {
   desc: string;
 }
 
+/** Pills excluding Curated — Curated is conditionally prepended at runtime. */
 export const FEED_PILLS: FeedPill[] = [
   { key: "reels", emoji: "🎬", label: "Reels", desc: "Trending pet reels" },
+  { key: "nearby", emoji: "📍", label: "Nearby", desc: "Pet-friendly places" },
   { key: "news", emoji: "📰", label: "News", desc: "Pet news in your state" },
   { key: "facts", emoji: "⭐", label: "Facts", desc: "Daily pet facts" },
   { key: "adopt", emoji: "🐾", label: "Adopt", desc: "Pets looking for homes" },
   { key: "walker", emoji: "🚶", label: "Walker", desc: "Find a pet walker" },
   { key: "competition", emoji: "🏆", label: "Competition", desc: "Live pet contests" },
   { key: "pet_club", emoji: "🐶", label: "Pet Club", desc: "Local pet meetups" },
-  { key: "nearby", emoji: "📍", label: "Nearby", desc: "Pet-friendly places" },
   { key: "find_mates", emoji: "💕", label: "Find Mates", desc: "Mating connections" },
 ];
+
+/** Pills eligible for the Curated multi-select editor (excludes nearby + curated itself). */
+export const CURATABLE_PILLS: FeedPill[] = FEED_PILLS.filter((p) => p.key !== "nearby");
+
 
 export const NEARBY_SUB_PILLS = [
   { key: "walker", emoji: "🚶", label: "Walker", query: "pet walker" },

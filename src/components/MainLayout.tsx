@@ -3,26 +3,21 @@ import TopBar from "./TopBar";
 
 interface MainLayoutProps {
   children: ReactNode;
-  /** Hide the sticky top bar (rare — e.g. fullscreen viewers). */
+  /** Hide the fixed top bar (rare — e.g. fullscreen viewers). */
   hideTopBar?: boolean;
 }
 
 /**
- * App shell that injects the persistent sticky TopBar above the page.
- * Existing pages still render their own MobileLayout + BottomNav, so we
- * don't add another container/nav here — that would double-wrap.
- *
- * The TopBar is `position: sticky` and lives inside the page's scroll
- * container, so it stays at the top of every screen including sub-pages.
+ * Alias of MobileLayout — kept for backward-compat with routes that import
+ * `MainLayout`. Renders the 480px app shell with the fixed TopBar.
  */
 const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
   if (hideTopBar) return <>{children}</>;
-
   return (
-    <div className="min-h-screen bg-muted/30 flex justify-center">
-      <div className="w-full max-w-[430px] min-h-screen bg-background relative flex flex-col">
+    <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
+      <div className="app-root">
         <TopBar />
-        <div className="flex-1">{children}</div>
+        {children}
       </div>
     </div>
   );

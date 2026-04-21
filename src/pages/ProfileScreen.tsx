@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2 } from "lucide-react";
+import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
+import PageWrapper from "@/components/PageWrapper";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import AddPetSheet from "@/components/AddPetSheet";
 import EditAddressSheet from "@/components/EditAddressSheet";
+import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +16,7 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
 import { Coins } from "lucide-react";
+import type { FeedPillKey } from "@/lib/feedPills";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },
@@ -28,7 +31,7 @@ const defaultTabOptions = [
 const defaultTabLabels: Record<string, string> = Object.fromEntries(defaultTabOptions.map(o => [o.value, o.label]));
 
 const ProfileScreen = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showUpload, setShowUpload] = useState(false);
@@ -40,6 +43,7 @@ const ProfileScreen = () => {
   const [mediaFilter, setMediaFilter] = useState<"all" | "image" | "video">("all");
   const [showDefaultTabPref, setShowDefaultTabPref] = useState(false);
   const [selectedDefaultTab, setSelectedDefaultTab] = useState("");
+  const [showFeedPrefs, setShowFeedPrefs] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -109,8 +113,29 @@ const ProfileScreen = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/auth");
+    try {
+      // Clear local caches first so a new session never inherits prior state.
+      try {
+        localStorage.removeItem("feed_prefs");
+        localStorage.removeItem("user_profile");
+        localStorage.removeItem("communityDefaultTab");
+        localStorage.removeItem("communityDefaultTabSet");
+        localStorage.removeItem("onboardingComplete");
+        localStorage.removeItem("gplaces_calls_" + new Date().toDateString());
+      } catch {}
+
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Sign out error:", error);
+        // Force-clear local session even if remote revoke failed.
+        await supabase.auth.signOut({ scope: "local" });
+      }
+    } catch (err) {
+      console.error("Sign out failed:", err);
+    } finally {
+      // Nuclear redirect — guarantees a fresh app state.
+      window.location.href = "/";
+    }
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,7 +164,8 @@ const ProfileScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="pb-20">
+      <PageWrapper noPadding>
+        <div style={{ paddingBottom: 20 }}>
         <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #9B7EC8 50%, #FF8C66 100%)" }}>
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
@@ -333,40 +359,41 @@ const ProfileScreen = () => {
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
-      </div>
 
-      {/* Default Tab Preference Sheet */}
-      {showDefaultTabPref && (
-        <div className="fixed inset-0 z-50 flex items-end">
-          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => setShowDefaultTabPref(false)} />
-          <div className="relative w-full max-w-[430px] mx-auto bg-card rounded-t-[28px] px-6 pt-4 pb-8 animate-slide-up">
-            <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
-            <h2 className="text-lg font-heading font-bold mb-1">Default Community Tab</h2>
-            <p className="text-sm text-muted-foreground font-body mb-4">Choose which tab opens first in Community</p>
-            <div className="space-y-2">
-              {defaultTabOptions.map((opt) => (
-                <button key={opt.value} onClick={() => setSelectedDefaultTab(opt.value)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-[16px] border-2 transition-all ${
-                    selectedDefaultTab === opt.value ? "border-primary bg-primary-light" : "border-border"
-                  }`}>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedDefaultTab === opt.value ? "border-primary" : "border-muted-foreground"}`}>
-                    {selectedDefaultTab === opt.value && <div className="w-3 h-3 rounded-full bg-primary" />}
-                  </div>
-                  <span className="text-sm font-body font-semibold">{opt.label}</span>
-                </button>
-              ))}
+        {/* Default Tab Preference Sheet */}
+        {showDefaultTabPref && (
+          <div className="fixed inset-0 z-[1100] flex items-end">
+            <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => setShowDefaultTabPref(false)} />
+            <div className="relative w-full mx-auto bg-card rounded-t-[28px] px-6 pt-4 pb-8 animate-slide-up" style={{ maxWidth: 480 }}>
+              <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
+              <h2 className="text-lg font-heading font-bold mb-1">Default Community Tab</h2>
+              <p className="text-sm text-muted-foreground font-body mb-4">Choose which tab opens first in Community</p>
+              <div className="space-y-2">
+                {defaultTabOptions.map((opt) => (
+                  <button key={opt.value} onClick={() => setSelectedDefaultTab(opt.value)}
+                    className={`w-full flex items-center gap-3 p-3 rounded-[16px] border-2 transition-all ${
+                      selectedDefaultTab === opt.value ? "border-primary bg-primary-light" : "border-border"
+                    }`}>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedDefaultTab === opt.value ? "border-primary" : "border-muted-foreground"}`}>
+                      {selectedDefaultTab === opt.value && <div className="w-3 h-3 rounded-full bg-primary" />}
+                    </div>
+                    <span className="text-sm font-body font-semibold">{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+              <Button className="w-full mt-4" onClick={async () => {
+                localStorage.setItem("communityDefaultTab", selectedDefaultTab);
+                localStorage.setItem("communityDefaultTabSet", "true");
+                if (user) await supabase.from("profiles").update({ community_default_tab: selectedDefaultTab }).eq("id", user.id);
+                queryClient.invalidateQueries({ queryKey: ["profile"] });
+                setShowDefaultTabPref(false);
+                toast.success("Preference saved!");
+              }}>Save Preference</Button>
             </div>
-            <Button className="w-full mt-4" onClick={async () => {
-              localStorage.setItem("communityDefaultTab", selectedDefaultTab);
-              localStorage.setItem("communityDefaultTabSet", "true");
-              if (user) await supabase.from("profiles").update({ community_default_tab: selectedDefaultTab }).eq("id", user.id);
-              queryClient.invalidateQueries({ queryKey: ["profile"] });
-              setShowDefaultTabPref(false);
-              toast.success("Preference saved!");
-            }}>Save Preference</Button>
           </div>
+        )}
         </div>
-      )}
+      </PageWrapper>
 
       <BottomNav onPostClick={() => setShowUpload(true)} />
       <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
@@ -378,6 +405,15 @@ const ProfileScreen = () => {
         currentState={profile?.state}
         currentPin={profile?.pin_code}
       />
+      {user && (
+        <FeedPreferencesSheet
+          open={showFeedPrefs}
+          onClose={() => setShowFeedPrefs(false)}
+          userId={user.id}
+          initial={(profile?.feed_preferences || []) as FeedPillKey[]}
+          onSaved={() => queryClient.invalidateQueries({ queryKey: ["profile"] })}
+        />
+      )}
     </MobileLayout>
   );
 };

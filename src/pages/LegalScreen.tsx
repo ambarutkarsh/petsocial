@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
+import PageWrapper from "@/components/PageWrapper";
+import BottomNav from "@/components/BottomNav";
 
 const RIGHTS = [
   {
@@ -34,16 +36,28 @@ const LegalScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="pb-10 px-4">
-        <header className="pt-4 flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"><ArrowLeft className="w-5 h-5" /></button>
+      <PageWrapper>
+        <header className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/hub")}
+            aria-label="Back to Hub"
+            className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
           <h1 className="font-heading text-xl font-bold">⚖️ Legal & Rights</h1>
         </header>
-        <p className="text-sm text-muted-foreground font-body mt-2">Know Your Rights as a Pet Owner in India</p>
+        <p className="text-sm text-muted-foreground font-body mt-2">
+          Know Your Rights as a Pet Owner in India
+        </p>
 
         <div className="mt-4 space-y-3">
           {RIGHTS.map((r, i) => (
-            <div key={i} className="paw-card p-4 animate-fade-up" style={{ animationDelay: `${i * 60}ms` }}>
+            <div
+              key={i}
+              className="paw-card p-4 animate-fade-up"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
               <div className="flex items-start gap-3">
                 <span className="text-3xl">{r.emoji}</span>
                 <div className="flex-1">
@@ -62,7 +76,8 @@ const LegalScreen = () => {
             </div>
           ))}
         </div>
-      </div>
+      </PageWrapper>
+      <BottomNav />
     </MobileLayout>
   );
 };

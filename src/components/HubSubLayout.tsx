@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import MobileLayout from "./MobileLayout";
 import BottomNav from "./BottomNav";
 import CreateSheet from "./CreateSheet";
+import PageWrapper from "./PageWrapper";
 
 interface Props {
   title: string;
@@ -18,8 +19,8 @@ const HubSubLayout = ({ title, subtitle, emoji, children }: Props) => {
 
   return (
     <MobileLayout>
-      <div className="pb-24 min-h-screen">
-        <header className="px-4 pt-4 flex items-center gap-3">
+      <PageWrapper>
+        <header className="flex items-center gap-3">
           <button
             onClick={() => navigate("/hub")}
             aria-label="Back to Hub"
@@ -36,8 +37,8 @@ const HubSubLayout = ({ title, subtitle, emoji, children }: Props) => {
           </div>
         </header>
 
-        <div className="px-4 mt-4">{children}</div>
-      </div>
+        <div className="mt-4">{children}</div>
+      </PageWrapper>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />

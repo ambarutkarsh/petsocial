@@ -78,22 +78,45 @@
     @apply border-border;
   }
 
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply text-foreground font-body antialiased;
+    background: #EFEFEF;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+  }
+
+  /* Root mobile shell — every page renders inside this. */
+  .app-root {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #FBF8F4;
+    position: relative;
+    overflow-x: hidden;
   }
 }
 
 @layer utilities {
   .paw-card {
     @apply bg-card rounded-[22px] border shadow-petosauras;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
   }
 
   .paw-container {
-    @apply max-w-[430px] mx-auto min-h-screen bg-background relative;
+    @apply mx-auto min-h-screen bg-background relative;
+    max-width: 480px;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .no-scrollbar::-webkit-scrollbar {

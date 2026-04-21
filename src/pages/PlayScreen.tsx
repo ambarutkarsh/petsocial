@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS, NEARBY_SUB_PILLS, MAX_PILL_SELECTION, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP, getGooglePlacesUsage } from "@/lib/feedPills";
+import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
 import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
 
 const FeedScreen = () => {
@@ -26,7 +26,8 @@ const FeedScreen = () => {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
-  const [selectedPills, setSelectedPills] = useState<FeedPillKey[]>([]);
+  const [activePill, setActivePill] = useState<FeedPillKey>("reels");
+  const [savedPrefs, setSavedPrefs] = useState<FeedPillKey[]>([]);
   const [nearbySub, setNearbySub] = useState<string>("parks");
   const [nearbyPlaces, setNearbyPlaces] = useState<any[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
@@ -41,36 +42,50 @@ const FeedScreen = () => {
     },
   });
 
-  // Initialize from saved prefs
+  // Initialize active pill: Curated if user saved 2-3 prefs, else Reels.
   useEffect(() => {
     if (!profile) return;
-    const saved = (profile.feed_preferences || []) as string[];
-    const valid = saved.filter((s): s is FeedPillKey => FEED_PILLS.some(p => p.key === s));
-    setSelectedPills(valid.length ? valid.slice(0, MAX_PILL_SELECTION) : ["reels"]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
-
-  const togglePill = async (key: FeedPillKey) => {
-    let next: FeedPillKey[];
-    if (selectedPills.includes(key)) {
-      next = selectedPills.filter(p => p !== key);
-      if (next.length === 0) next = ["reels"];
+    const saved = ((profile.feed_preferences || []) as string[])
+      .filter((s): s is FeedPillKey => FEED_PILLS.some((p) => p.key === s));
+    setSavedPrefs(saved);
+    if (saved.length >= 2) {
+      setActivePill("curated");
     } else {
-      if (selectedPills.length >= MAX_PILL_SELECTION) {
-        toast.error("Maximum 3 feeds selected. Deselect one to add another.");
-        return;
-      }
-      next = [...selectedPills, key];
+      setActivePill("reels");
     }
-    setSelectedPills(next);
-    trackEvent("feed_pills_changed", { pills: next.join(",") });
-    if (user) {
-      await supabase.from("profiles").update({ feed_preferences: next as any }).eq("id", user.id);
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, profile?.feed_preferences?.join(",")]);
+
+  const hasCurated = savedPrefs.length >= 2;
+
+  /**
+   * Single-select pill behaviour:
+   *  - Tapping a different pill activates it.
+   *  - Tapping the active pill is a no-op (never zero pills active).
+   *  - feed_preferences in DB is left ALONE here — it represents the user's
+   *    Curated mix, edited via Profile → Feed Preferences (not by tapping).
+   */
+  const togglePill = (key: FeedPillKey) => {
+    if (key === activePill) return;
+    setActivePill(key);
+    trackEvent("feed_pill_changed", { pill: key });
   };
 
-  // ============= POSTS (always shown if "reels" selected) =============
-  const showReels = selectedPills.includes("reels");
+
+  /**
+   * A pill is "active" when either:
+   *  - it is the directly selected pill, OR
+   *  - the Curated pill is active AND this pill is in the user's saved mix.
+   * Nearby is never auto-included via Curated (location-based, opt-in only).
+   */
+  const isPillActive = (key: FeedPillKey): boolean => {
+    if (activePill === key) return true;
+    if (activePill === "curated" && key !== "nearby" && savedPrefs.includes(key)) return true;
+    return false;
+  };
+
+  // ============= POSTS (always shown if "reels" selected or in curated mix) =============
+  const showReels = isPillActive("reels");
   const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ["feed-posts"],
     enabled: showReels,
@@ -142,7 +157,7 @@ const FeedScreen = () => {
   });
 
   // ============= NEWS / FACTS =============
-  const showNews = selectedPills.includes("news");
+  const showNews = isPillActive("news");
   const { data: newsArticles = [], isLoading: newsLoading } = useQuery({
     queryKey: ["pet-news", profile?.state],
     enabled: showNews && !!profile?.state,
@@ -152,7 +167,7 @@ const FeedScreen = () => {
     },
   });
 
-  const showFacts = selectedPills.includes("facts");
+  const showFacts = isPillActive("facts");
   const { data: petFacts = [], isLoading: factsLoading } = useQuery({
     queryKey: ["pet-facts"],
     enabled: showFacts,
@@ -168,7 +183,7 @@ const FeedScreen = () => {
   });
 
   // ============= ADOPT / WALKER =============
-  const showAdopt = selectedPills.includes("adopt");
+  const showAdopt = isPillActive("adopt");
   const { data: adoptTopics = [] } = useQuery({
     queryKey: ["adopt-topics"],
     enabled: showAdopt,
@@ -178,7 +193,7 @@ const FeedScreen = () => {
     },
   });
 
-  const showWalker = selectedPills.includes("walker");
+  const showWalker = isPillActive("walker");
   const { data: walkerTopics = [] } = useQuery({
     queryKey: ["walker-topics"],
     enabled: showWalker,
@@ -189,7 +204,7 @@ const FeedScreen = () => {
   });
 
   // ============= COMPETITIONS =============
-  const showCompetition = selectedPills.includes("competition");
+  const showCompetition = isPillActive("competition");
   const { data: competitions = [] } = useQuery({
     queryKey: ["active-competitions"],
     enabled: showCompetition,
@@ -200,7 +215,7 @@ const FeedScreen = () => {
   });
 
   // ============= PET CLUB =============
-  const showPetClub = selectedPills.includes("pet_club");
+  const showPetClub = isPillActive("pet_club");
   const { data: petClubEvents = [] } = useQuery({
     queryKey: ["pet-club-events"],
     enabled: showPetClub,
@@ -211,7 +226,7 @@ const FeedScreen = () => {
   });
 
   // ============= FIND MATES =============
-  const showFindMates = selectedPills.includes("find_mates");
+  const showFindMates = isPillActive("find_mates");
   const { data: matePets = [] } = useQuery({
     queryKey: ["mate-pets", user?.id, profile?.city],
     enabled: showFindMates && !!user,
@@ -229,7 +244,7 @@ const FeedScreen = () => {
   const [mateIdx, setMateIdx] = useState(0);
 
   // ============= NEARBY =============
-  const showNearby = selectedPills.includes("nearby");
+  const showNearby = activePill === "nearby"; // never auto-included by Curated
   const fetchNearby = async (subKey: string) => {
     if (subKey === "lost_found") {
       const { data } = await supabase.from("forum_topics").select("*, profiles!forum_topics_user_id_fkey(full_name, avatar_url)").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
@@ -583,21 +598,44 @@ const FeedScreen = () => {
           </div>
         )}
 
-        {/* Pills */}
-        <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border sticky top-14 z-30">
-          {FEED_PILLS.map(p => {
-            const active = selectedPills.includes(p.key);
+        {/* Pills — single-select. Curated only appears if user saved 2+ prefs. */}
+        <div
+          className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border"
+          style={{ position: "sticky", top: 56, zIndex: 30 }}
+        >
+          {hasCurated && (() => {
+            const active = activePill === "curated";
             return (
-              <button key={p.key} onClick={() => togglePill(p.key)}
-                className={`shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border ${active ? "bg-primary text-primary-foreground border-primary pl-3.5 pr-2 py-1.5" : "bg-card text-muted-foreground border-border px-3.5 py-1.5"}`}>
-                <span>{p.emoji} {p.label}</span>
-                {active && (
-                  <X
-                    className="w-3 h-3 opacity-90 hover:opacity-100"
-                    strokeWidth={2.5}
-                    onClick={(e) => { e.stopPropagation(); togglePill(p.key); }}
-                  />
-                )}
+              <button
+                key="curated"
+                onClick={() => togglePill("curated")}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
+                style={
+                  active
+                    ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
+                    : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
+                }
+              >
+                ⭐ Curated ({savedPrefs.length})
+              </button>
+            );
+          })()}
+          {FEED_PILLS.map((p) => {
+            const active = activePill === p.key;
+            return (
+              <button
+                key={p.key}
+                onClick={() => togglePill(p.key)}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
+                style={
+                  active
+                    ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
+                    : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
+                }
+              >
+                <span>
+                  {p.emoji} {p.label}
+                </span>
               </button>
             );
           })}
