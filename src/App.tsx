@@ -28,6 +28,16 @@ import BudgetCalculatorScreen from "./pages/BudgetCalculatorScreen";
 import OrderNowScreen from "./pages/OrderNowScreen";
 import CompleteRegistrationScreen from "./pages/CompleteRegistrationScreen";
 import AdminSeedScreen from "./pages/AdminSeedScreen";
+import OnboardingScreen from "./pages/OnboardingScreen";
+import InsuranceScreen from "./pages/hub/InsuranceScreen";
+import NgoScreen from "./pages/hub/NgoScreen";
+import PickupScreen from "./pages/hub/PickupScreen";
+import RecommenderScreen from "./pages/hub/RecommenderScreen";
+import PetcationScreen from "./pages/hub/PetcationScreen";
+import PetMovingScreen from "./pages/hub/PetMovingScreen";
+import MicrochipScreen from "./pages/hub/MicrochipScreen";
+import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
+import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
@@ -50,6 +60,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/feeds" replace />} />
             <Route path="/auth" element={<AuthScreen />} />
+            <Route path="/onboarding" element={<OnboardingScreen />} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
             <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
 
@@ -66,6 +77,13 @@ const App = () => (
             <Route path="/hub/legal" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/license" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/rights" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/insurance" element={<ProtectedRoute><InsuranceScreen /></ProtectedRoute>} />
+            <Route path="/hub/ngo" element={<ProtectedRoute><NgoScreen /></ProtectedRoute>} />
+            <Route path="/hub/pickup" element={<ProtectedRoute><PickupScreen /></ProtectedRoute>} />
+            <Route path="/hub/recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
+            <Route path="/hub/petcation" element={<ProtectedRoute><PetcationScreen /></ProtectedRoute>} />
+            <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
+            <Route path="/hub/microchip" element={<ProtectedRoute><MicrochipScreen /></ProtectedRoute>} />
             <Route path="/hub/settings" element={<ProtectedRoute><SettingsScreen /></ProtectedRoute>} />
 
             {/* MyPet sub-pages */}
@@ -79,6 +97,8 @@ const App = () => (
             <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
             <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
             <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
+            <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
+            <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
 
             {/* Public post detail keeps its own layout */}
             <Route path="/post/:postId" element={<PostDetailScreen />} />
