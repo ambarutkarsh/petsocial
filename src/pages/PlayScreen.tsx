@@ -586,8 +586,15 @@ const FeedScreen = () => {
             const active = selectedPills.includes(p.key);
             return (
               <button key={p.key} onClick={() => togglePill(p.key)}
-                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-body font-bold transition-colors border ${active ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"}`}>
-                {p.emoji} {p.label}
+                className={`shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border ${active ? "bg-primary text-primary-foreground border-primary pl-3.5 pr-2 py-1.5" : "bg-card text-muted-foreground border-border px-3.5 py-1.5"}`}>
+                <span>{p.emoji} {p.label}</span>
+                {active && (
+                  <X
+                    className="w-3 h-3 opacity-90 hover:opacity-100"
+                    strokeWidth={2.5}
+                    onClick={(e) => { e.stopPropagation(); togglePill(p.key); }}
+                  />
+                )}
               </button>
             );
           })}

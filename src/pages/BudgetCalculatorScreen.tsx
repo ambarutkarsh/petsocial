@@ -140,7 +140,7 @@ const BudgetCalculatorScreen = () => {
     <MobileLayout>
       <div className="pb-20 px-4">
         <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 py-3 flex items-center gap-3">
-          <button onClick={() => step > 1 && step < 5 ? setStep(step - 1) : navigate("/health")}>
+          <button onClick={() => step > 1 && step < 5 ? setStep(step - 1) : navigate("/hub")}>
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="font-heading font-bold text-lg">Budget Calculator</h1>

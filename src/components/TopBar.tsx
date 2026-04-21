@@ -4,6 +4,7 @@ import { Search, Bell, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+// LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-logo.png";
 
 const TopBar = () => {

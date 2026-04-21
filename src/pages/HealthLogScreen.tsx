@@ -17,7 +17,12 @@ const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const units = ["grams", "ml", "cups"];
 const vaccineChips = ["Rabies", "DA2PP", "Leptospirosis", "Bordetella", "Feline FVRCP", "FeLV", "Canine Influenza"];
 
-const HealthLogScreen = () => {
+interface HealthLogScreenProps {
+  /** When true, render plain content (no MobileLayout wrapper) — used as a tab inside MyPet. */
+  embedded?: boolean;
+}
+
+const HealthLogScreen = ({ embedded = false }: HealthLogScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -201,16 +206,21 @@ const HealthLogScreen = () => {
 
   const totalFoodToday = todayFoodLogs.reduce((acc: number, l: any) => acc + (l.quantity || 0), 0);
 
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+    embedded ? <>{children}</> : <MobileLayout>{children}</MobileLayout>;
+
   return (
-    <MobileLayout>
+    <Wrapper>
       <div className="pb-8">
-        <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
-          <button onClick={() => navigate("/health")} className="text-primary"><ArrowLeft className="w-5 h-5" /></button>
-          <div>
-            <h1 className="text-lg font-heading font-bold">Log Health Entry</h1>
-            {pet && <p className="text-xs text-text-muted">{pet.name}</p>}
-          </div>
-        </header>
+        {!embedded && (
+          <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
+            <button onClick={() => navigate("/mypet")} className="text-primary"><ArrowLeft className="w-5 h-5" /></button>
+            <div>
+              <h1 className="text-lg font-heading font-bold">Log Health Entry</h1>
+              {pet && <p className="text-xs text-text-muted">{pet.name}</p>}
+            </div>
+          </header>
+        )}
 
         {/* Health Score */}
         <div className="px-4 mb-4">
@@ -451,7 +461,7 @@ const HealthLogScreen = () => {
           )}
         </div>
       </div>
-    </MobileLayout>
+    </Wrapper>
   );
 };
 
