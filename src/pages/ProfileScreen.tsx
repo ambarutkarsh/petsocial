@@ -394,6 +394,9 @@ const ProfileScreen = () => {
         </div>
       )}
 
+        </div>
+      </PageWrapper>
+
       <BottomNav onPostClick={() => setShowUpload(true)} />
       <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
       <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
@@ -404,6 +407,15 @@ const ProfileScreen = () => {
         currentState={profile?.state}
         currentPin={profile?.pin_code}
       />
+      {user && (
+        <FeedPreferencesSheet
+          open={showFeedPrefs}
+          onClose={() => setShowFeedPrefs(false)}
+          userId={user.id}
+          initial={(profile?.feed_preferences || []) as FeedPillKey[]}
+          onSaved={() => queryClient.invalidateQueries({ queryKey: ["profile"] })}
+        />
+      )}
     </MobileLayout>
   );
 };
