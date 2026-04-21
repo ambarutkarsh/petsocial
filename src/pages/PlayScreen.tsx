@@ -715,6 +715,7 @@ const FeedScreen = () => {
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
+      {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
       {showStoryCreator && <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />}
     </MobileLayout>
