@@ -431,17 +431,21 @@ const FeedScreen = () => {
     </article>
   );
 
-  const renderNewsCard = (n: any, idx: number) => (
-    <a key={idx} href={n.url} target="_blank" rel="noreferrer" className="paw-card overflow-hidden block animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
-      {n.image && <img src={n.image} alt="" className="w-full aspect-video object-cover" />}
-      <div className="p-4">
-        <p className="text-[11px] text-primary font-bold uppercase">{n.source || "News"}</p>
-        <h3 className="font-heading font-bold text-base mt-1">{n.title}</h3>
-        {n.description && <p className="text-sm text-muted-foreground font-body mt-1 line-clamp-2">{n.description}</p>}
-        <p className="text-xs text-primary font-bold mt-2">Read more →</p>
-      </div>
-    </a>
-  );
+  const renderNewsCard = (n: any, idx: number) => {
+    const sourceName = typeof n.source === "string" ? n.source : n.source?.name || "News";
+    const imageUrl = n.image || n.urlToImage;
+    return (
+      <a key={idx} href={n.url} target="_blank" rel="noreferrer" className="paw-card overflow-hidden block animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
+        {imageUrl && <img src={imageUrl} alt="" className="w-full aspect-video object-cover" />}
+        <div className="p-4">
+          <p className="text-[11px] text-primary font-bold uppercase">{sourceName}</p>
+          <h3 className="font-heading font-bold text-base mt-1">{n.title}</h3>
+          {n.description && <p className="text-sm text-muted-foreground font-body mt-1 line-clamp-2">{n.description}</p>}
+          <p className="text-xs text-primary font-bold mt-2">Read more →</p>
+        </div>
+      </a>
+    );
+  };
 
   const renderFactCard = (f: any, idx: number) => (
     <article key={f.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
