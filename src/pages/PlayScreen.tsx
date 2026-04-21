@@ -24,6 +24,7 @@ const FeedScreen = () => {
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
+  const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
