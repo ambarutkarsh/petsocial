@@ -61,7 +61,7 @@ const PostDetailScreen = () => {
   return (
     <MobileLayout>
       <div className="min-h-screen">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-4 py-3 flex items-center gap-3 border-b border-border">
+        <header className="sticky top-14 bg-card/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3 border-b border-border">
           <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-[10px] bg-surface-alt flex items-center justify-center">
             <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
           </button>

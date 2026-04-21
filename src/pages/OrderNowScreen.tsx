@@ -34,7 +34,7 @@ const OrderNowScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20 px-4">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 py-3 flex items-center gap-3 border-b border-border">
+        <header className="sticky top-14 bg-card/80 backdrop-blur-lg z-30 py-3 flex items-center gap-3 border-b border-border">
           <button onClick={() => navigate("/health")}><ChevronLeft className="w-5 h-5" strokeWidth={1.8} /></button>
           <h1 className="font-heading font-bold text-lg">Order Now</h1>
         </header>

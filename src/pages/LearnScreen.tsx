@@ -37,15 +37,7 @@ const LearnScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3.5 flex items-center justify-between border-b border-border">
-          <div className="flex items-center gap-2">
-            <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 32, objectFit: "contain" }} />
-            <h1 className="text-xl font-heading font-extrabold text-primary">Learn</h1>
-          </div>
-          <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors"><Search className="w-5 h-5" strokeWidth={1.8} /></button>
-        </header>
-
-        <div className="px-4 mb-4 mt-3">
+        <div className="px-4 mb-4 pt-4">
           <div className="flex bg-muted rounded-full p-1">
             <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
               <BookOpen className="w-4 h-4" strokeWidth={1.8} /> Knowledge Base

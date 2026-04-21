@@ -75,7 +75,7 @@ const VetNearMeScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20 px-4">
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 py-3 flex items-center justify-between">
+        <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/health")}><ArrowLeft className="w-5 h-5" /></button>
             <h1 className="font-heading font-bold text-lg">Vet Near Me</h1>

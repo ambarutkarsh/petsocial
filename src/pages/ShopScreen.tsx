@@ -101,10 +101,10 @@ const ShopScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        <header className="sticky top-0 bg-card/80 backdrop-blur-lg z-40 px-5 py-3 flex items-center justify-between border-b border-border">
-          <h1 className="text-xl font-heading font-bold">🛍️ Shop</h1>
-          <button className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"><ShoppingBag className="w-5 h-5 text-muted-foreground" /></button>
-        </header>
+        <div className="px-4 pt-4 pb-2">
+          <h1 className="text-xl font-heading font-bold">🐾 MyPet</h1>
+          <p className="text-xs text-muted-foreground font-body mt-0.5">Your pets, all in one place. Full rebuild coming next phase.</p>
+        </div>
 
         {/* SECTION 1: Brands */}
         <div className="px-4 mt-4">
