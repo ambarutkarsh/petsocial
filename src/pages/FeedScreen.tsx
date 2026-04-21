@@ -18,6 +18,7 @@ import { trackEvent } from "@/lib/analytics";
 const FeedScreen = () => {
   const [showUpload, setShowUpload] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
+  const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
