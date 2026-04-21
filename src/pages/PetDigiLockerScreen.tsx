@@ -35,9 +35,11 @@ const categoryLabels: Record<string, string> = Object.fromEntries(documentCatego
 interface PetDigiLockerScreenProps {
   /** When true, render plain content (no MobileLayout wrapper) — used as a tab inside MyPet. */
   embedded?: boolean;
+  /** When provided, render only this single tab and hide the internal tab bar. */
+  activeTab?: "health" | "vaccines" | "documents" | "growth";
 }
 
-const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => {
+const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
