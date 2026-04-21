@@ -14,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { differenceInYears, differenceInMonths, format } from "date-fns";
 import { petTypes, breedsByType } from "@/lib/registrationData";
-import HealthLogScreen from "./HealthLogScreen";
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
 
 const MyPetScreen = () => {
@@ -117,9 +116,9 @@ const MyPetScreen = () => {
           <Tabs defaultValue="profile">
             <TabsList className="w-full">
               <TabsTrigger value="profile" className="flex-1 text-xs">🐾 MyPet</TabsTrigger>
-              <TabsTrigger value="health" className="flex-1 text-xs">📊 Health</TabsTrigger>
-              <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vax</TabsTrigger>
-              <TabsTrigger value="docs" className="flex-1 text-xs">📂 Docs</TabsTrigger>
+              <TabsTrigger value="health" className="flex-1 text-xs">📊 Health Log</TabsTrigger>
+              <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vaccines</TabsTrigger>
+              <TabsTrigger value="docs" className="flex-1 text-xs">📂 Documents</TabsTrigger>
               <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
             </TabsList>
 
@@ -236,10 +235,10 @@ const MyPetScreen = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="health"><HealthLogScreen embedded /></TabsContent>
-            <TabsContent value="vaccines"><PetDigiLockerScreen embedded /></TabsContent>
-            <TabsContent value="docs"><PetDigiLockerScreen embedded /></TabsContent>
-            <TabsContent value="growth"><PetDigiLockerScreen embedded /></TabsContent>
+            <TabsContent value="health"><PetDigiLockerScreen embedded activeTab="health" /></TabsContent>
+            <TabsContent value="vaccines"><PetDigiLockerScreen embedded activeTab="vaccines" /></TabsContent>
+            <TabsContent value="docs"><PetDigiLockerScreen embedded activeTab="documents" /></TabsContent>
+            <TabsContent value="growth"><PetDigiLockerScreen embedded activeTab="growth" /></TabsContent>
           </Tabs>
         </div>
       </div>

@@ -35,9 +35,11 @@ const categoryLabels: Record<string, string> = Object.fromEntries(documentCatego
 interface PetDigiLockerScreenProps {
   /** When true, render plain content (no MobileLayout wrapper) — used as a tab inside MyPet. */
   embedded?: boolean;
+  /** When provided, render only this single tab and hide the internal tab bar. */
+  activeTab?: "health" | "vaccines" | "documents" | "growth";
 }
 
-const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => {
+const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -330,8 +332,8 @@ const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => 
           </header>
         )}
 
-        {/* Pet selector */}
-        {pets.length > 1 && (
+        {/* Pet selector — hidden when used as embedded single-tab inside MyPet */}
+        {pets.length > 1 && !activeTab && (
           <div className="px-4 flex gap-2 overflow-x-auto no-scrollbar pb-2">
             {pets.map((p: any) => (
               <button key={p.id} onClick={() => setSelectedPetId(p.id)}
@@ -342,14 +344,16 @@ const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => 
           </div>
         )}
 
-        <div className="px-4 mt-2">
-          <Tabs defaultValue="health">
-            <TabsList className="w-full">
-              <TabsTrigger value="health" className="flex-1 text-xs">📊 Health Log</TabsTrigger>
-              <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vaccines</TabsTrigger>
-              <TabsTrigger value="documents" className="flex-1 text-xs">📁 Documents</TabsTrigger>
-              <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
-            </TabsList>
+        <div className={activeTab ? "px-0" : "px-4 mt-2"}>
+          <Tabs value={activeTab ?? undefined} defaultValue={activeTab ?? "health"}>
+            {!activeTab && (
+              <TabsList className="w-full">
+                <TabsTrigger value="health" className="flex-1 text-xs">📊 Health Log</TabsTrigger>
+                <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vaccines</TabsTrigger>
+                <TabsTrigger value="documents" className="flex-1 text-xs">📁 Documents</TabsTrigger>
+                <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
+              </TabsList>
+            )}
 
             {/* TAB 1: HEALTH LOG */}
             <TabsContent value="health" className="space-y-4 mt-3">
