@@ -381,10 +381,12 @@ const FeedScreen = () => {
   // ============= HELPERS =============
   const getInitials = (name?: string | null) => !name ? "?" : name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   const getMediaUrl = (path: string) => path?.startsWith("http") ? path : supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
-  const sharePost = async (post: any) => {
+  const sharePost = (post: any) => {
     const url = `${window.location.origin}/post/${post.id}`;
-    if (navigator.share) { try { await navigator.share({ title: "Petosauras", url }); } catch {} }
-    else { await navigator.clipboard.writeText(url); toast.success("Link copied! 📋"); }
+    const caption = (post.caption || "").toString().slice(0, 80);
+    const text = caption ? `${caption} — on Petosauras 🐾` : "Check this out on Petosauras 🐾";
+    setSharePostData({ url, text });
+    trackEvent("post_share_opened", { post_id: post.id });
   };
 
   // ============= RENDER HELPERS =============
