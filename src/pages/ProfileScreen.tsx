@@ -164,7 +164,8 @@ const ProfileScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="pb-20">
+      <PageWrapper noPadding>
+        <div style={{ paddingBottom: 20 }}>
         <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #9B7EC8 50%, #FF8C66 100%)" }}>
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
