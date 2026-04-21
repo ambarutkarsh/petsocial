@@ -598,21 +598,44 @@ const FeedScreen = () => {
           </div>
         )}
 
-        {/* Pills */}
-        <div className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border sticky top-14 z-30">
-          {FEED_PILLS.map(p => {
-            const active = selectedPills.includes(p.key);
+        {/* Pills — single-select. Curated only appears if user saved 2+ prefs. */}
+        <div
+          className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border"
+          style={{ position: "sticky", top: 56, zIndex: 30 }}
+        >
+          {hasCurated && (() => {
+            const active = activePill === "curated";
             return (
-              <button key={p.key} onClick={() => togglePill(p.key)}
-                className={`shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border ${active ? "bg-primary text-primary-foreground border-primary pl-3.5 pr-2 py-1.5" : "bg-card text-muted-foreground border-border px-3.5 py-1.5"}`}>
-                <span>{p.emoji} {p.label}</span>
-                {active && (
-                  <X
-                    className="w-3 h-3 opacity-90 hover:opacity-100"
-                    strokeWidth={2.5}
-                    onClick={(e) => { e.stopPropagation(); togglePill(p.key); }}
-                  />
-                )}
+              <button
+                key="curated"
+                onClick={() => togglePill("curated")}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
+                style={
+                  active
+                    ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
+                    : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
+                }
+              >
+                ⭐ Curated ({savedPrefs.length})
+              </button>
+            );
+          })()}
+          {FEED_PILLS.map((p) => {
+            const active = activePill === p.key;
+            return (
+              <button
+                key={p.key}
+                onClick={() => togglePill(p.key)}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
+                style={
+                  active
+                    ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
+                    : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
+                }
+              >
+                <span>
+                  {p.emoji} {p.label}
+                </span>
               </button>
             );
           })}
