@@ -93,6 +93,36 @@ const AuthScreen = () => {
     setSheetView("resetSent");
   };
 
+  const handleSendOtp = async () => {
+    if (!otpEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(otpEmail)) {
+      toast.error("Enter a valid email");
+      return;
+    }
+    setOtpSubmitting(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: otpEmail,
+      options: { shouldCreateUser: false },
+    });
+    setOtpSubmitting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Code sent! Check your email.");
+    setOtpStage("verify");
+  };
+
+  const handleVerifyOtp = async () => {
+    if (otpCode.length < 6) { toast.error("Enter the 6-digit code"); return; }
+    setOtpSubmitting(true);
+    const { error } = await supabase.auth.verifyOtp({
+      email: otpEmail,
+      token: otpCode,
+      type: "email",
+    });
+    setOtpSubmitting(false);
+    if (error) { toast.error(error.message); return; }
+    trackEvent("otp_login_success");
+    navigate("/feed");
+  };
+
   if (showRegistration) {
     return (
       <RegistrationFlow
