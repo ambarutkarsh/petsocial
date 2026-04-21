@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2 } from "lucide-react";
+import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
+import PageWrapper from "@/components/PageWrapper";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import AddPetSheet from "@/components/AddPetSheet";
 import EditAddressSheet from "@/components/EditAddressSheet";
+import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +16,7 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
 import { Coins } from "lucide-react";
+import type { FeedPillKey } from "@/lib/feedPills";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },
@@ -28,7 +31,7 @@ const defaultTabOptions = [
 const defaultTabLabels: Record<string, string> = Object.fromEntries(defaultTabOptions.map(o => [o.value, o.label]));
 
 const ProfileScreen = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showUpload, setShowUpload] = useState(false);
@@ -40,6 +43,7 @@ const ProfileScreen = () => {
   const [mediaFilter, setMediaFilter] = useState<"all" | "image" | "video">("all");
   const [showDefaultTabPref, setShowDefaultTabPref] = useState(false);
   const [selectedDefaultTab, setSelectedDefaultTab] = useState("");
+  const [showFeedPrefs, setShowFeedPrefs] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -109,8 +113,29 @@ const ProfileScreen = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/auth");
+    try {
+      // Clear local caches first so a new session never inherits prior state.
+      try {
+        localStorage.removeItem("feed_prefs");
+        localStorage.removeItem("user_profile");
+        localStorage.removeItem("communityDefaultTab");
+        localStorage.removeItem("communityDefaultTabSet");
+        localStorage.removeItem("onboardingComplete");
+        localStorage.removeItem("gplaces_calls_" + new Date().toDateString());
+      } catch {}
+
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Sign out error:", error);
+        // Force-clear local session even if remote revoke failed.
+        await supabase.auth.signOut({ scope: "local" });
+      }
+    } catch (err) {
+      console.error("Sign out failed:", err);
+    } finally {
+      // Nuclear redirect — guarantees a fresh app state.
+      window.location.href = "/";
+    }
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
