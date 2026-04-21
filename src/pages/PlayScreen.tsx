@@ -7,6 +7,7 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
 import CommentSheet from "@/components/CommentSheet";
+import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const FeedScreen = () => {
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
+  const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
@@ -379,10 +381,12 @@ const FeedScreen = () => {
   // ============= HELPERS =============
   const getInitials = (name?: string | null) => !name ? "?" : name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   const getMediaUrl = (path: string) => path?.startsWith("http") ? path : supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
-  const sharePost = async (post: any) => {
+  const sharePost = (post: any) => {
     const url = `${window.location.origin}/post/${post.id}`;
-    if (navigator.share) { try { await navigator.share({ title: "Petosauras", url }); } catch {} }
-    else { await navigator.clipboard.writeText(url); toast.success("Link copied! 📋"); }
+    const caption = (post.caption || "").toString().slice(0, 80);
+    const text = caption ? `${caption} — on Petosauras 🐾` : "Check this out on Petosauras 🐾";
+    setSharePostData({ url, text });
+    trackEvent("post_share_opened", { post_id: post.id });
   };
 
   // ============= RENDER HELPERS =============
@@ -711,6 +715,7 @@ const FeedScreen = () => {
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
+      {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
       {showStoryCreator && <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />}
     </MobileLayout>

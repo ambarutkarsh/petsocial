@@ -58,9 +58,9 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 flex items-end justify-center" style={{ zIndex: 2000 }}>
       <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-[430px] bg-card rounded-t-[28px] animate-slide-up" style={{ height: "70vh" }}>
+      <div className="relative w-full max-w-[480px] bg-card rounded-t-[28px] animate-slide-up shadow-2xl" style={{ height: "75vh" }}>
         <div className="flex flex-col h-full">
           <div className="px-6 pt-4 pb-3 border-b border-border">
             <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-3" />
@@ -98,7 +98,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
             )}
           </div>
 
-          <div className="px-4 py-3 border-t border-border bg-card">
+          <div className="px-4 py-3 border-t border-border bg-card" style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-xs font-heading font-bold text-primary shrink-0">
                 {getInitials(user?.user_metadata?.full_name || null)}
