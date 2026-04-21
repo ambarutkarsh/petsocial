@@ -84,6 +84,31 @@ const PlayScreen = () => {
     },
   });
 
+  // Service-pill posts (Adopt / Walker / Groomer / Vet) — pulled from forum_topics, NOT posts
+  const pillToCategory: Record<ReelPill, string | null> = {
+    reel: null,
+    adopt: "adoption",
+    walker: "walker",
+    groomer: "groomer",
+    vet: "vet",
+  };
+
+  const { data: serviceTopics = [], isLoading: serviceLoading } = useQuery({
+    queryKey: ["service-topics", activePill],
+    enabled: activeTab === "reels" && activePill !== "reel",
+    queryFn: async () => {
+      const cat = pillToCategory[activePill];
+      if (!cat) return [];
+      const { data } = await supabase
+        .from("forum_topics")
+        .select("*, profiles!forum_topics_user_id_fkey(full_name, username, avatar_url)")
+        .eq("pet_category", cat)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      return data || [];
+    },
+  });
+
   const { data: likedPostIds = [] } = useQuery({
     queryKey: ["my-likes", user?.id],
     enabled: !!user,
