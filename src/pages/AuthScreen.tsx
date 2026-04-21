@@ -13,7 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 const petEmojis = ["🐕", "🐈", "🐠", "🦜", "🐇"];
 const features = ["📸 Share moments", "💬 Discuss & help", "🏥 Track health", "📚 Pet knowledge"];
 
-type SheetView = "login" | "forgotPassword" | "resetSent";
+type SheetView = "login" | "forgotPassword" | "resetSent" | "otp";
 
 const AuthScreen = () => {
   const navigate = useNavigate();
@@ -27,6 +27,11 @@ const AuthScreen = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetSubmitting, setResetSubmitting] = useState(false);
   const [resetError, setResetError] = useState("");
+  const [authMode, setAuthMode] = useState<"password" | "otp">("password");
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpStage, setOtpStage] = useState<"request" | "verify">("request");
+  const [otpSubmitting, setOtpSubmitting] = useState(false);
 
   useEffect(() => {
     if (loading || !user) return;
