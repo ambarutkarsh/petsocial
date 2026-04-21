@@ -4,7 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import MainLayout from "@/components/MainLayout";
 import AuthScreen from "./pages/AuthScreen";
 import PlayScreen from "./pages/PlayScreen";
 import CareScreen from "./pages/CareScreen";
@@ -30,7 +29,7 @@ import OrderNowScreen from "./pages/OrderNowScreen";
 import CompleteRegistrationScreen from "./pages/CompleteRegistrationScreen";
 import AdminSeedScreen from "./pages/AdminSeedScreen";
 import NotFound from "./pages/NotFound";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
@@ -40,13 +39,6 @@ const PageTracker = () => {
   useEffect(() => { trackPageView(location.pathname); }, [location]);
   return null;
 };
-
-/** Wrap a protected page in the persistent app shell (top bar + bottom nav). */
-const Shell = ({ children }: { children: ReactNode }) => (
-  <ProtectedRoute>
-    <MainLayout>{children}</MainLayout>
-  </ProtectedRoute>
-);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -62,36 +54,36 @@ const App = () => (
             <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
 
             {/* New 5-slot bottom nav: Feeds | Hub | + | MyPet | Shop */}
-            <Route path="/feeds" element={<Shell><PlayScreen /></Shell>} />
-            <Route path="/hub" element={<Shell><CareScreen /></Shell>} />
-            <Route path="/mypet" element={<Shell><ShopScreen /></Shell>} />
-            <Route path="/shop" element={<Shell><ShopComingSoonScreen /></Shell>} />
+            <Route path="/feeds" element={<ProtectedRoute><PlayScreen /></ProtectedRoute>} />
+            <Route path="/hub" element={<ProtectedRoute><CareScreen /></ProtectedRoute>} />
+            <Route path="/mypet" element={<ProtectedRoute><ShopScreen /></ProtectedRoute>} />
+            <Route path="/shop" element={<ProtectedRoute><ShopComingSoonScreen /></ProtectedRoute>} />
 
-            {/* Hub sub-pages (existing screens, now under /hub/*) */}
-            <Route path="/hub/sos" element={<Shell><SosScreen /></Shell>} />
-            <Route path="/hub/vet-near-me" element={<Shell><VetNearMeScreen /></Shell>} />
-            <Route path="/hub/budget" element={<Shell><BudgetCalculatorScreen /></Shell>} />
-            <Route path="/hub/legal" element={<Shell><LegalScreen /></Shell>} />
-            <Route path="/hub/license" element={<Shell><LegalScreen /></Shell>} />
-            <Route path="/hub/rights" element={<Shell><LegalScreen /></Shell>} />
-            <Route path="/hub/settings" element={<Shell><SettingsScreen /></Shell>} />
+            {/* Hub sub-pages */}
+            <Route path="/hub/sos" element={<ProtectedRoute><SosScreen /></ProtectedRoute>} />
+            <Route path="/hub/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
+            <Route path="/hub/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
+            <Route path="/hub/legal" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/license" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/rights" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
+            <Route path="/hub/settings" element={<ProtectedRoute><SettingsScreen /></ProtectedRoute>} />
 
-            {/* MyPet sub-pages (existing screens) */}
-            <Route path="/mypet/health" element={<Shell><HealthLogScreen /></Shell>} />
-            <Route path="/mypet/locker" element={<Shell><PetDigiLockerScreen /></Shell>} />
+            {/* MyPet sub-pages */}
+            <Route path="/mypet/health" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
+            <Route path="/mypet/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
 
-            {/* Other shell-wrapped screens */}
-            <Route path="/profile" element={<Shell><ProfileScreen /></Shell>} />
-            <Route path="/profile/:userId" element={<Shell><PublicProfileScreen /></Shell>} />
-            <Route path="/notifications" element={<Shell><NotificationsScreen /></Shell>} />
-            <Route path="/forum" element={<Shell><ForumScreen /></Shell>} />
-            <Route path="/learn" element={<Shell><LearnScreen /></Shell>} />
-            <Route path="/admin/seed" element={<Shell><AdminSeedScreen /></Shell>} />
+            {/* Other screens */}
+            <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
+            <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfileScreen /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
+            <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
+            <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
+            <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
 
             {/* Public post detail keeps its own layout */}
             <Route path="/post/:postId" element={<PostDetailScreen />} />
 
-            {/* Legacy redirects (keep all old links working) */}
+            {/* Legacy redirects */}
             <Route path="/play" element={<Navigate to="/feeds" replace />} />
             <Route path="/feed" element={<Navigate to="/feeds" replace />} />
             <Route path="/care" element={<Navigate to="/hub" replace />} />
@@ -102,12 +94,12 @@ const App = () => (
             <Route path="/care/vaccines" element={<Navigate to="/mypet/health" replace />} />
             <Route path="/care/locker" element={<Navigate to="/mypet/locker" replace />} />
             <Route path="/care/ai" element={<Navigate to="/learn" replace />} />
-            <Route path="/health" element={<Shell><HealthScreen /></Shell>} />
+            <Route path="/health" element={<ProtectedRoute><HealthScreen /></ProtectedRoute>} />
             <Route path="/health/log" element={<Navigate to="/mypet/health" replace />} />
             <Route path="/health/vet-near-me" element={<Navigate to="/hub/vet-near-me" replace />} />
             <Route path="/health/digilocker" element={<Navigate to="/mypet/locker" replace />} />
             <Route path="/health/budget" element={<Navigate to="/hub/budget" replace />} />
-            <Route path="/health/order" element={<Shell><OrderNowScreen /></Shell>} />
+            <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
