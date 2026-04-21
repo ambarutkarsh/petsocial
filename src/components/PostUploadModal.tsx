@@ -167,6 +167,25 @@ const PostUploadModal = ({ open, onClose }: Props) => {
               {myPets.map((p: any) => <option key={p.id} value={p.id}>{p.avatar_emoji} {p.name}</option>)}
             </select>
           )}
+          <div>
+            <p className="text-xs font-body font-semibold text-muted-foreground mb-1.5">Category <span className="text-destructive">*</span></p>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c.key}
+                  type="button"
+                  onClick={() => setCategory(c.key)}
+                  className={`text-[12px] font-body font-bold px-3 py-1.5 rounded-full transition-all ${
+                    category === c.key
+                      ? "bg-primary text-primary-foreground shadow-petosauras"
+                      : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex gap-2">
             <Input placeholder="#hashtag" value={hashtagInput} onChange={(e) => setHashtagInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addHashtag())} className="flex-1" />
             <Button variant="outline" size="sm" onClick={addHashtag}>Add</Button>
@@ -178,8 +197,8 @@ const PostUploadModal = ({ open, onClose }: Props) => {
               ))}
             </div>
           )}
-          <Button disabled={validationStatus !== "valid" || posting} className="w-full" size="lg" onClick={handlePost}>
-            {posting ? "Posting…" : "Post to Petosauras 🦕"}
+          <Button disabled={validationStatus !== "valid" || !category || posting} className="w-full" size="lg" onClick={handlePost}>
+            {posting ? "Posting…" : !category ? "Select a category" : "Post to Petosauras 🦕"}
           </Button>
         </div>
       </div>
