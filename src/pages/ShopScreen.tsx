@@ -54,7 +54,8 @@ const MyPetScreen = () => {
 
   const saveField = async (field: string, value: any) => {
     if (!activePet) return;
-    const { error } = await supabase.from("pets").update({ [field]: value }).eq("id", activePet.id);
+    const update: any = { [field]: value };
+    const { error } = await supabase.from("pets").update(update).eq("id", activePet.id);
     if (error) { toast.error("Save failed"); return; }
     toast.success("Pet profile updated! 🐾");
     setEditing(null);

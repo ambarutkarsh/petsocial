@@ -47,7 +47,8 @@ const FeedScreen = () => {
     const saved = (profile.feed_preferences || []) as string[];
     const valid = saved.filter((s): s is FeedPillKey => FEED_PILLS.some(p => p.key === s));
     setSelectedPills(valid.length ? valid.slice(0, MAX_PILL_SELECTION) : ["reels"]);
-  }, [profile?.id]); // eslint-disable-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const togglePill = async (key: FeedPillKey) => {
     let next: FeedPillKey[];
@@ -658,7 +659,7 @@ const FeedScreen = () => {
       <BottomNav onPostClick={() => setShowCreate(true)} />
       <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
-      {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} startIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
+      {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
       {showStoryCreator && <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />}
     </MobileLayout>
   );
