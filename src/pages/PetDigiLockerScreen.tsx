@@ -693,7 +693,7 @@ const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => 
           </Tabs>
         </div>
       </div>
-    </MobileLayout>
+    </Wrapper>
   );
 };
 
