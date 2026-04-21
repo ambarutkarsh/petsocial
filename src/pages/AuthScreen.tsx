@@ -176,21 +176,83 @@ const AuthScreen = () => {
                 <div className="flex-1 h-px bg-border" />
               </div>
 
-              <form onSubmit={handleLogin} className="space-y-4">
-                <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <div>
-                  <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                  <div className="flex justify-end mt-1.5">
-                    <button type="button" onClick={() => { setResetEmail(email); setSheetView("forgotPassword"); }}
-                      className="text-[13px] text-primary font-body font-semibold">
-                      Forgot password?
-                    </button>
+              <div className="flex bg-muted rounded-full p-1 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("password")}
+                  className={`flex-1 text-xs font-body font-bold py-2 rounded-full transition-all ${
+                    authMode === "password" ? "bg-card text-foreground shadow-petosauras" : "text-muted-foreground"
+                  }`}
+                >
+                  Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("otp")}
+                  className={`flex-1 text-xs font-body font-bold py-2 rounded-full transition-all ${
+                    authMode === "otp" ? "bg-card text-foreground shadow-petosauras" : "text-muted-foreground"
+                  }`}
+                >
+                  Email OTP
+                </button>
+              </div>
+
+              {authMode === "password" ? (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <Input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <div>
+                    <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <div className="flex justify-end mt-1.5">
+                      <button type="button" onClick={() => { setResetEmail(email); setSheetView("forgotPassword"); }}
+                        className="text-[13px] text-primary font-body font-semibold">
+                        Forgot password?
+                      </button>
+                    </div>
                   </div>
+                  <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                    {submitting ? "Signing in…" : "Sign In to Petosauras"}
+                  </Button>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  {otpStage === "request" ? (
+                    <>
+                      <Input type="email" placeholder="Email address" value={otpEmail} onChange={(e) => setOtpEmail(e.target.value)} />
+                      <Button onClick={handleSendOtp} className="w-full" size="lg" disabled={otpSubmitting}>
+                        {otpSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</> : "Send code"}
+                      </Button>
+                      <p className="text-[11px] text-text-hint font-body text-center">
+                        We'll email a 6-digit code. No password needed.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[13px] text-muted-foreground font-body text-center">
+                        Code sent to <strong>{otpEmail}</strong>
+                      </p>
+                      <Input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="6-digit code"
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                        className="text-center text-lg tracking-[0.5em] font-bold"
+                      />
+                      <Button onClick={handleVerifyOtp} className="w-full" size="lg" disabled={otpSubmitting}>
+                        {otpSubmitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Verifying…</> : "Verify & sign in"}
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={() => { setOtpStage("request"); setOtpCode(""); }}
+                        className="w-full text-[13px] text-primary font-body font-semibold"
+                      >
+                        Use a different email
+                      </button>
+                    </>
+                  )}
                 </div>
-                <Button type="submit" className="w-full" size="lg" disabled={submitting}>
-                  {submitting ? "Signing in…" : "Sign In to Petosauras"}
-                </Button>
-              </form>
+              )}
+
               <p className="text-center text-sm text-muted-foreground mt-4 font-body">
                 New here?{" "}
                 <button onClick={() => { setRegistrationStep(0); setShowRegistration(true); trackEvent("signup_started"); }} className="text-primary font-bold hover:underline">
