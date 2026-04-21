@@ -591,63 +591,73 @@ export type Database = {
       }
       notifications: {
         Row: {
-          actor_id: string | null
-          created_at: string | null
-          entity_id: string | null
-          entity_type: string | null
+          body: string | null
+          created_at: string
+          from_user_id: string | null
           id: string
-          is_read: boolean | null
-          message: string | null
-          recipient_id: string
-          type: string
+          is_read: boolean
+          post_id: string | null
+          redirect_url: string | null
+          title: string | null
+          type: string | null
+          user_id: string
         }
         Insert: {
-          actor_id?: string | null
-          created_at?: string | null
-          entity_id?: string | null
-          entity_type?: string | null
+          body?: string | null
+          created_at?: string
+          from_user_id?: string | null
           id?: string
-          is_read?: boolean | null
-          message?: string | null
-          recipient_id: string
-          type: string
+          is_read?: boolean
+          post_id?: string | null
+          redirect_url?: string | null
+          title?: string | null
+          type?: string | null
+          user_id: string
         }
         Update: {
-          actor_id?: string | null
-          created_at?: string | null
-          entity_id?: string | null
-          entity_type?: string | null
+          body?: string | null
+          created_at?: string
+          from_user_id?: string | null
           id?: string
-          is_read?: boolean | null
-          message?: string | null
-          recipient_id?: string
-          type?: string
+          is_read?: boolean
+          post_id?: string | null
+          redirect_url?: string | null
+          title?: string | null
+          type?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "notifications_actor_id_fkey"
-            columns: ["actor_id"]
+            foreignKeyName: "notifications_from_user_id_fkey"
+            columns: ["from_user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "notifications_actor_id_fkey"
-            columns: ["actor_id"]
+            foreignKeyName: "notifications_from_user_id_fkey"
+            columns: ["from_user_id"]
             isOneToOne: false
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "notifications_recipient_id_fkey"
-            columns: ["recipient_id"]
+            foreignKeyName: "notifications_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "notifications_recipient_id_fkey"
-            columns: ["recipient_id"]
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "public_profiles"
             referencedColumns: ["id"]
@@ -1009,6 +1019,7 @@ export type Database = {
           community_default_tab: string | null
           created_at: string | null
           email: string | null
+          feed_preferences: string[] | null
           follower_count: number | null
           following_count: number | null
           full_name: string | null
@@ -1030,6 +1041,7 @@ export type Database = {
           community_default_tab?: string | null
           created_at?: string | null
           email?: string | null
+          feed_preferences?: string[] | null
           follower_count?: number | null
           following_count?: number | null
           full_name?: string | null
@@ -1051,6 +1063,7 @@ export type Database = {
           community_default_tab?: string | null
           created_at?: string | null
           email?: string | null
+          feed_preferences?: string[] | null
           follower_count?: number | null
           following_count?: number | null
           full_name?: string | null
