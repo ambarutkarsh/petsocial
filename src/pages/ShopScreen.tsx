@@ -114,13 +114,15 @@ const MyPetScreen = () => {
 
         <div className="px-4 mt-3">
           <Tabs defaultValue="profile">
-            <TabsList className="w-full">
-              <TabsTrigger value="profile" className="flex-1 text-xs">🐾 MyPet</TabsTrigger>
-              <TabsTrigger value="health" className="flex-1 text-xs">📊 Health Log</TabsTrigger>
-              <TabsTrigger value="vaccines" className="flex-1 text-xs">💉 Vaccines</TabsTrigger>
-              <TabsTrigger value="docs" className="flex-1 text-xs">📂 Documents</TabsTrigger>
-              <TabsTrigger value="growth" className="flex-1 text-xs">📈 Growth</TabsTrigger>
-            </TabsList>
+            <div className="w-full overflow-x-auto no-scrollbar -mx-4 px-4">
+              <TabsList className="inline-flex w-auto min-w-full">
+                <TabsTrigger value="profile" className="text-xs whitespace-nowrap">🐾 MyPet</TabsTrigger>
+                <TabsTrigger value="health" className="text-xs whitespace-nowrap">📊 Health Log</TabsTrigger>
+                <TabsTrigger value="vaccines" className="text-xs whitespace-nowrap">💉 Vaccines</TabsTrigger>
+                <TabsTrigger value="docs" className="text-xs whitespace-nowrap">📂 Documents</TabsTrigger>
+                <TabsTrigger value="growth" className="text-xs whitespace-nowrap">📈 Growth</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="profile" className="mt-4">
               <div className="paw-card p-5">
