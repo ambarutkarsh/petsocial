@@ -7,6 +7,7 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
 import CommentSheet from "@/components/CommentSheet";
+import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import { Button } from "@/components/ui/button";
