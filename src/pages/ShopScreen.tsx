@@ -14,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { differenceInYears, differenceInMonths, format } from "date-fns";
 import { petTypes, breedsByType } from "@/lib/registrationData";
-import HealthLogScreen from "./HealthLogScreen";
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
 
 const MyPetScreen = () => {
