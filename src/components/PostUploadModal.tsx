@@ -23,7 +23,18 @@ const PostUploadModal = ({ open, onClose }: Props) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedPetId, setSelectedPetId] = useState("");
+  const [category, setCategory] = useState<string>("");
   const [posting, setPosting] = useState(false);
+
+  const CATEGORIES = [
+    { key: "reel", label: "🎬 Reel" },
+    { key: "moment", label: "📸 Moment" },
+    { key: "adopt", label: "🏠 Adopt" },
+    { key: "lost", label: "🆘 Lost" },
+    { key: "found", label: "✅ Found" },
+    { key: "tips", label: "💡 Tips" },
+    { key: "fun", label: "🎉 Fun" },
+  ];
 
   const { data: myPets = [] } = useQuery({
     queryKey: ["my-pets", user?.id],
@@ -98,7 +109,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
       pet_id: selectedPetId || null,
       ai_validated: false,
-      post_category: "reel",
+      post_category: category || "reel",
     } as any);
 
     setPosting(false);
@@ -116,6 +127,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
     setSelectedFile(null);
     setValidationStatus("idle");
     setSelectedPetId("");
+    setCategory("");
     onClose();
   };
 
@@ -155,6 +167,25 @@ const PostUploadModal = ({ open, onClose }: Props) => {
               {myPets.map((p: any) => <option key={p.id} value={p.id}>{p.avatar_emoji} {p.name}</option>)}
             </select>
           )}
+          <div>
+            <p className="text-xs font-body font-semibold text-muted-foreground mb-1.5">Category <span className="text-destructive">*</span></p>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c.key}
+                  type="button"
+                  onClick={() => setCategory(c.key)}
+                  className={`text-[12px] font-body font-bold px-3 py-1.5 rounded-full transition-all ${
+                    category === c.key
+                      ? "bg-primary text-primary-foreground shadow-petosauras"
+                      : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex gap-2">
             <Input placeholder="#hashtag" value={hashtagInput} onChange={(e) => setHashtagInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addHashtag())} className="flex-1" />
             <Button variant="outline" size="sm" onClick={addHashtag}>Add</Button>
@@ -166,8 +197,8 @@ const PostUploadModal = ({ open, onClose }: Props) => {
               ))}
             </div>
           )}
-          <Button disabled={validationStatus !== "valid" || posting} className="w-full" size="lg" onClick={handlePost}>
-            {posting ? "Posting…" : "Post to Petosauras 🦕"}
+          <Button disabled={validationStatus !== "valid" || !category || posting} className="w-full" size="lg" onClick={handlePost}>
+            {posting ? "Posting…" : !category ? "Select a category" : "Post to Petosauras 🦕"}
           </Button>
         </div>
       </div>
