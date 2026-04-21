@@ -164,22 +164,14 @@ const FeedScreen = () => {
     return supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
   };
 
-  const sharePost = async (post: any) => {
+  const sharePost = (post: any) => {
     trackEvent("post_shared");
     const shareUrl = `${window.location.origin}/post/${post.id}`;
     const profile = post.profiles;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${profile?.full_name}'s pet on Petosauras`,
-          text: post.caption || "Check out this pet post on Petosauras!",
-          url: shareUrl,
-        });
-      } catch {}
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard! 📋");
-    }
+    const text = post.caption
+      ? `${post.caption.toString().slice(0, 80)} — on Petosauras 🐾`
+      : `${profile?.full_name || "Someone"}'s pet on Petosauras 🐾`;
+    setSharePostData({ url: shareUrl, text });
   };
 
   const handleStoryTap = (idx: number) => {
