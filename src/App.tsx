@@ -50,6 +50,11 @@ const PageTracker = () => {
   return null;
 };
 
+const RootRedirect = () => {
+  const seen = typeof window !== "undefined" && localStorage.getItem("onboardingComplete") === "true";
+  return <Navigate to={seen ? "/feeds" : "/onboarding"} replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -58,7 +63,7 @@ const App = () => (
         <BrowserRouter>
           <PageTracker />
           <Routes>
-            <Route path="/" element={<Navigate to="/feeds" replace />} />
+            <Route path="/" element={<RootRedirect />} />
             <Route path="/auth" element={<AuthScreen />} />
             <Route path="/onboarding" element={<OnboardingScreen />} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
