@@ -7,6 +7,7 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import CommentSheet from "@/components/CommentSheet";
+import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import { supabase } from "@/integrations/supabase/client";
