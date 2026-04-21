@@ -1,31 +1,28 @@
 import { ReactNode } from "react";
 import TopBar from "./TopBar";
-import BottomNav from "./BottomNav";
 
 interface MainLayoutProps {
   children: ReactNode;
   /** Hide the sticky top bar (rare — e.g. fullscreen viewers). */
   hideTopBar?: boolean;
-  /** Hide the sticky bottom nav (rare — e.g. fullscreen viewers). */
-  hideBottomNav?: boolean;
-  /** Override FAB behavior (otherwise opens default Create sheet). */
-  onCreateClick?: () => void;
 }
 
-const MainLayout = ({
-  children,
-  hideTopBar = false,
-  hideBottomNav = false,
-  onCreateClick,
-}: MainLayoutProps) => {
+/**
+ * App shell that injects the persistent sticky TopBar above the page.
+ * Existing pages still render their own MobileLayout + BottomNav, so we
+ * don't add another container/nav here — that would double-wrap.
+ *
+ * The TopBar is `position: sticky` and lives inside the page's scroll
+ * container, so it stays at the top of every screen including sub-pages.
+ */
+const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
+  if (hideTopBar) return <>{children}</>;
+
   return (
     <div className="min-h-screen bg-muted/30 flex justify-center">
       <div className="w-full max-w-[430px] min-h-screen bg-background relative flex flex-col">
-        {!hideTopBar && <TopBar />}
-        <main className={`flex-1 ${!hideBottomNav ? "pb-20" : ""}`}>
-          {children}
-        </main>
-        {!hideBottomNav && <BottomNav onPostClick={onCreateClick} />}
+        <TopBar />
+        <div className="flex-1">{children}</div>
       </div>
     </div>
   );
