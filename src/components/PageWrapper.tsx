@@ -24,7 +24,7 @@ const PageWrapper = ({ children, noPadding = false, className = "", style }: Pag
   <div
     className={className}
     style={{
-      paddingTop: 56,
+      paddingTop: 0,
       paddingBottom: 72,
       paddingLeft: noPadding ? 0 : 16,
       paddingRight: noPadding ? 0 : 16,
