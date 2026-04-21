@@ -300,28 +300,35 @@ const PetDigiLockerScreen = ({ embedded = false }: PetDigiLockerScreenProps) => 
     </Popover>
   );
 
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+    embedded ? <>{children}</> : <MobileLayout>{children}</MobileLayout>;
+
   if (!activePet) {
     return (
-      <MobileLayout>
+      <Wrapper>
         <div className="px-4 py-3 flex items-center gap-3">
-          <button onClick={() => navigate("/health")}><ArrowLeft className="w-5 h-5" /></button>
+          {!embedded && (
+            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+          )}
           <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
         </div>
         <div className="text-center py-16">
           <span className="text-5xl block mb-3">🐾</span>
           <p className="text-sm text-muted-foreground">Add a pet first to use DigiLocker</p>
         </div>
-      </MobileLayout>
+      </Wrapper>
     );
   }
 
   return (
-    <MobileLayout>
+    <Wrapper>
       <div className="pb-20">
-        <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
-          <button onClick={() => navigate("/health")}><ArrowLeft className="w-5 h-5" /></button>
-          <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
-        </header>
+        {!embedded && (
+          <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
+            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+            <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
+          </header>
+        )}
 
         {/* Pet selector */}
         {pets.length > 1 && (
