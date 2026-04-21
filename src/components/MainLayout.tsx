@@ -9,7 +9,8 @@ interface MainLayoutProps {
 
 /**
  * Alias of MobileLayout — kept for backward-compat with routes that import
- * `MainLayout`. Renders the 480px app shell with the fixed TopBar.
+ * `MainLayout`. Renders the 480px app shell with the fixed TopBar and
+ * reserves 56px top padding so content never sits under the bar.
  */
 const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
   if (hideTopBar) return <>{children}</>;
@@ -17,7 +18,7 @@ const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
       <div className="app-root">
         <TopBar />
-        {children}
+        <div style={{ paddingTop: 56 }}>{children}</div>
       </div>
     </div>
   );

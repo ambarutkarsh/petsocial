@@ -14,15 +14,15 @@ interface MobileLayoutProps {
  * - Outer wrapper paints the off-canvas grey background.
  * - `.app-root` is the real 480px column containing the fixed TopBar
  *   (and BottomNav, mounted by individual pages).
- * - Pages should render their content inside <PageWrapper> so the 56px
- *   top offset and 72px bottom offset are reserved automatically.
+ * - The inner content area automatically reserves 56px top offset so
+ *   page content is never overlapped by the fixed TopBar.
  */
 const MobileLayout = ({ children, className = "", hideTopBar = false }: MobileLayoutProps) => {
   return (
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
       <div className={`app-root ${className}`}>
         {!hideTopBar && <TopBar />}
-        {children}
+        <div style={{ paddingTop: hideTopBar ? 0 : 56 }}>{children}</div>
       </div>
     </div>
   );
