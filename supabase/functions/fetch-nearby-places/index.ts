@@ -43,8 +43,9 @@ Deno.serve(async (req) => {
     }
 
     if (!lat || !lng) {
-      return new Response(JSON.stringify({ error: "Need lat/lng or query", places: [] }), {
-        status: 400,
+      // Graceful empty response instead of 400 so client doesn't error out
+      return new Response(JSON.stringify({ places: [], error: "Need lat/lng or query", lat: null, lng: null }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
