@@ -98,7 +98,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
             )}
           </div>
 
-          <div className="px-4 py-3 border-t border-border bg-card">
+          <div className="px-4 py-3 border-t border-border bg-card" style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-xs font-heading font-bold text-primary shrink-0">
                 {getInitials(user?.user_metadata?.full_name || null)}
