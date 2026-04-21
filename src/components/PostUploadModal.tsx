@@ -23,7 +23,18 @@ const PostUploadModal = ({ open, onClose }: Props) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedPetId, setSelectedPetId] = useState("");
+  const [category, setCategory] = useState<string>("");
   const [posting, setPosting] = useState(false);
+
+  const CATEGORIES = [
+    { key: "reel", label: "🎬 Reel" },
+    { key: "moment", label: "📸 Moment" },
+    { key: "adopt", label: "🏠 Adopt" },
+    { key: "lost", label: "🆘 Lost" },
+    { key: "found", label: "✅ Found" },
+    { key: "tips", label: "💡 Tips" },
+    { key: "fun", label: "🎉 Fun" },
+  ];
 
   const { data: myPets = [] } = useQuery({
     queryKey: ["my-pets", user?.id],
@@ -98,7 +109,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
       pet_id: selectedPetId || null,
       ai_validated: false,
-      post_category: "reel",
+      post_category: category || "reel",
     } as any);
 
     setPosting(false);
@@ -116,6 +127,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
     setSelectedFile(null);
     setValidationStatus("idle");
     setSelectedPetId("");
+    setCategory("");
     onClose();
   };
 
