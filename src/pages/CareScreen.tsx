@@ -14,7 +14,7 @@ const services = [
   { emoji: "🤝", label: "NGO Connect", path: "/hub/ngo" },
   { emoji: "💰", label: "Budget Calc", path: "/hub/budget" },
   { emoji: "💉", label: "Microchip", path: "/hub/microchip" },
-  { emoji: "🐾", label: "Pet Recommender", path: "/hub/recommender" },
+  { emoji: "🐾", label: "Pet Recommender", path: "/hub/pet-recommender" },
   { emoji: "✈️", label: "Petcation", path: "/hub/petcation" },
   { emoji: "🚛", label: "Pet Moving", path: "/hub/pet-moving" },
   { emoji: "📋", label: "License Info", path: "/hub/license" },

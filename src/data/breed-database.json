@@ -1,0 +1,449 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-04-23",
+  "currency": "INR",
+  "notes": "Costs are indicative ranges for India. Refresh quarterly via scraper. Tier 1 = metros, Tier 2 = larger non-metros, Tier 3 = smaller cities/towns.",
+  "attributeScale": "1 (very low) to 10 (very high)",
+  "breeds": [
+    {
+      "id": "labrador_retriever",
+      "name": "Labrador Retriever",
+      "category": "canine",
+      "subCategoryTags": ["family-friendly", "gentle", "high-energy", "trainable"],
+      "attributes": {
+        "spaceNeed": 7,
+        "energyLevel": 8,
+        "groomingNeed": 4,
+        "noiseLevel": 4,
+        "trainability": 9,
+        "climateTolerance": 6,
+        "kidFriendliness": 10,
+        "firstTimeOwnerFriendly": 9,
+        "guardingAbility": 3,
+        "independence": 3
+      },
+      "lifeExpectancyYears": "10-12",
+      "adultWeightKg": "25-36",
+      "costs": {
+        "purchase": { "tier1": [15000, 40000], "tier2": [10000, 25000], "tier3": [8000, 20000] },
+        "monthlyFood": { "tier1": [3500, 6000], "tier2": [3000, 5000], "tier3": [2500, 4500] },
+        "monthlyGrooming": [500, 1500],
+        "monthlyVetAverage": [1000, 2500],
+        "oneTimeSetup": [8000, 15000],
+        "annualVaccination": [3000, 5000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "indian_pariah",
+      "name": "Indian Pariah (Indie)",
+      "category": "canine",
+      "subCategoryTags": ["family-friendly", "low-maintenance", "guarding", "adaptable"],
+      "attributes": {
+        "spaceNeed": 6,
+        "energyLevel": 7,
+        "groomingNeed": 2,
+        "noiseLevel": 5,
+        "trainability": 7,
+        "climateTolerance": 10,
+        "kidFriendliness": 8,
+        "firstTimeOwnerFriendly": 8,
+        "guardingAbility": 7,
+        "independence": 6
+      },
+      "lifeExpectancyYears": "13-16",
+      "adultWeightKg": "15-25",
+      "costs": {
+        "purchase": { "tier1": [0, 2000], "tier2": [0, 1000], "tier3": [0, 500] },
+        "monthlyFood": { "tier1": [2000, 3500], "tier2": [1500, 3000], "tier3": [1000, 2500] },
+        "monthlyGrooming": [200, 500],
+        "monthlyVetAverage": [500, 1500],
+        "oneTimeSetup": [3000, 8000],
+        "annualVaccination": [2500, 4000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true,
+        "adoptionRecommended": true
+      }
+    },
+    {
+      "id": "german_shepherd",
+      "name": "German Shepherd",
+      "category": "canine",
+      "subCategoryTags": ["guarding", "working", "protective", "trainable"],
+      "attributes": {
+        "spaceNeed": 9,
+        "energyLevel": 9,
+        "groomingNeed": 7,
+        "noiseLevel": 6,
+        "trainability": 10,
+        "climateTolerance": 4,
+        "kidFriendliness": 7,
+        "firstTimeOwnerFriendly": 4,
+        "guardingAbility": 10,
+        "independence": 5
+      },
+      "lifeExpectancyYears": "9-13",
+      "adultWeightKg": "30-40",
+      "costs": {
+        "purchase": { "tier1": [25000, 60000], "tier2": [18000, 40000], "tier3": [15000, 30000] },
+        "monthlyFood": { "tier1": [4500, 7500], "tier2": [3500, 6000], "tier3": [3000, 5000] },
+        "monthlyGrooming": [800, 2000],
+        "monthlyVetAverage": [1500, 3500],
+        "oneTimeSetup": [10000, 18000],
+        "annualVaccination": [3500, 5500]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": false,
+        "hotClimateOk": false,
+        "noviceFriendly": false,
+        "goodWithKids": true,
+        "goodWithOtherPets": false
+      }
+    },
+    {
+      "id": "beagle",
+      "name": "Beagle",
+      "category": "canine",
+      "subCategoryTags": ["family-friendly", "playful", "medium-energy"],
+      "attributes": {
+        "spaceNeed": 5,
+        "energyLevel": 7,
+        "groomingNeed": 3,
+        "noiseLevel": 8,
+        "trainability": 5,
+        "climateTolerance": 6,
+        "kidFriendliness": 9,
+        "firstTimeOwnerFriendly": 6,
+        "guardingAbility": 4,
+        "independence": 4
+      },
+      "lifeExpectancyYears": "12-15",
+      "adultWeightKg": "9-14",
+      "costs": {
+        "purchase": { "tier1": [15000, 35000], "tier2": [12000, 25000], "tier3": [10000, 20000] },
+        "monthlyFood": { "tier1": [2500, 4000], "tier2": [2000, 3500], "tier3": [1800, 3000] },
+        "monthlyGrooming": [400, 1000],
+        "monthlyVetAverage": [800, 2000],
+        "oneTimeSetup": [6000, 12000],
+        "annualVaccination": [3000, 5000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "shih_tzu",
+      "name": "Shih Tzu",
+      "category": "canine",
+      "subCategoryTags": ["companion", "lap", "apartment", "low-energy"],
+      "attributes": {
+        "spaceNeed": 2,
+        "energyLevel": 4,
+        "groomingNeed": 9,
+        "noiseLevel": 5,
+        "trainability": 6,
+        "climateTolerance": 4,
+        "kidFriendliness": 7,
+        "firstTimeOwnerFriendly": 7,
+        "guardingAbility": 3,
+        "independence": 3
+      },
+      "lifeExpectancyYears": "10-16",
+      "adultWeightKg": "4-7",
+      "costs": {
+        "purchase": { "tier1": [20000, 45000], "tier2": [15000, 35000], "tier3": [12000, 25000] },
+        "monthlyFood": { "tier1": [1500, 2500], "tier2": [1200, 2200], "tier3": [1000, 2000] },
+        "monthlyGrooming": [1500, 3500],
+        "monthlyVetAverage": [800, 2000],
+        "oneTimeSetup": [5000, 10000],
+        "annualVaccination": [3000, 5000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": false,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "persian_cat",
+      "name": "Persian Cat",
+      "category": "feline",
+      "subCategoryTags": ["companion", "lap", "quiet", "low-energy"],
+      "attributes": {
+        "spaceNeed": 3,
+        "energyLevel": 3,
+        "groomingNeed": 9,
+        "noiseLevel": 2,
+        "trainability": 4,
+        "climateTolerance": 4,
+        "kidFriendliness": 6,
+        "firstTimeOwnerFriendly": 6,
+        "guardingAbility": 1,
+        "independence": 7
+      },
+      "lifeExpectancyYears": "12-17",
+      "adultWeightKg": "3-5",
+      "costs": {
+        "purchase": { "tier1": [15000, 40000], "tier2": [10000, 30000], "tier3": [8000, 20000] },
+        "monthlyFood": { "tier1": [1500, 3000], "tier2": [1200, 2500], "tier3": [1000, 2200] },
+        "monthlyGrooming": [800, 2000],
+        "monthlyVetAverage": [600, 1800],
+        "oneTimeSetup": [4000, 9000],
+        "annualVaccination": [2500, 4000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": false,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "indian_billi",
+      "name": "Indian Domestic Cat",
+      "category": "feline",
+      "subCategoryTags": ["companion", "low-maintenance", "adaptable", "quiet"],
+      "attributes": {
+        "spaceNeed": 3,
+        "energyLevel": 6,
+        "groomingNeed": 3,
+        "noiseLevel": 3,
+        "trainability": 5,
+        "climateTolerance": 10,
+        "kidFriendliness": 7,
+        "firstTimeOwnerFriendly": 9,
+        "guardingAbility": 1,
+        "independence": 8
+      },
+      "lifeExpectancyYears": "12-18",
+      "adultWeightKg": "3-5",
+      "costs": {
+        "purchase": { "tier1": [0, 1000], "tier2": [0, 500], "tier3": [0, 0] },
+        "monthlyFood": { "tier1": [1000, 2000], "tier2": [800, 1800], "tier3": [600, 1500] },
+        "monthlyGrooming": [200, 500],
+        "monthlyVetAverage": [400, 1200],
+        "oneTimeSetup": [2500, 6000],
+        "annualVaccination": [2000, 3500]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true,
+        "adoptionRecommended": true
+      }
+    },
+    {
+      "id": "rabbit_holland_lop",
+      "name": "Holland Lop Rabbit",
+      "category": "small_mammal",
+      "subCategoryTags": ["family-friendly", "gentle", "caged", "quiet"],
+      "attributes": {
+        "spaceNeed": 3,
+        "energyLevel": 5,
+        "groomingNeed": 4,
+        "noiseLevel": 1,
+        "trainability": 5,
+        "climateTolerance": 4,
+        "kidFriendliness": 7,
+        "firstTimeOwnerFriendly": 6,
+        "guardingAbility": 1,
+        "independence": 5
+      },
+      "lifeExpectancyYears": "7-12",
+      "adultWeightKg": "1-2",
+      "costs": {
+        "purchase": { "tier1": [2500, 6000], "tier2": [2000, 5000], "tier3": [1500, 4000] },
+        "monthlyFood": { "tier1": [1000, 2000], "tier2": [800, 1500], "tier3": [600, 1200] },
+        "monthlyGrooming": [200, 500],
+        "monthlyVetAverage": [500, 1500],
+        "oneTimeSetup": [4000, 8000],
+        "annualVaccination": [1500, 3000]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": false,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": false
+      }
+    },
+    {
+      "id": "guinea_pig",
+      "name": "Guinea Pig",
+      "category": "small_mammal",
+      "subCategoryTags": ["family-friendly", "gentle", "caged", "starter"],
+      "attributes": {
+        "spaceNeed": 2,
+        "energyLevel": 4,
+        "groomingNeed": 3,
+        "noiseLevel": 3,
+        "trainability": 3,
+        "climateTolerance": 6,
+        "kidFriendliness": 9,
+        "firstTimeOwnerFriendly": 9,
+        "guardingAbility": 1,
+        "independence": 4
+      },
+      "lifeExpectancyYears": "5-8",
+      "adultWeightKg": "0.7-1.2",
+      "costs": {
+        "purchase": { "tier1": [500, 2000], "tier2": [400, 1500], "tier3": [300, 1200] },
+        "monthlyFood": { "tier1": [600, 1200], "tier2": [500, 1000], "tier3": [400, 900] },
+        "monthlyGrooming": [100, 300],
+        "monthlyVetAverage": [300, 1000],
+        "oneTimeSetup": [3000, 6000],
+        "annualVaccination": [500, 1500]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": false
+      }
+    },
+    {
+      "id": "goldfish",
+      "name": "Goldfish (Aquarium)",
+      "category": "aquatic",
+      "subCategoryTags": ["display", "starter", "low-interaction", "quiet"],
+      "attributes": {
+        "spaceNeed": 3,
+        "energyLevel": 1,
+        "groomingNeed": 5,
+        "noiseLevel": 1,
+        "trainability": 1,
+        "climateTolerance": 8,
+        "kidFriendliness": 6,
+        "firstTimeOwnerFriendly": 7,
+        "guardingAbility": 1,
+        "independence": 10
+      },
+      "lifeExpectancyYears": "10-15",
+      "adultWeightKg": "0.1-0.5",
+      "costs": {
+        "purchase": { "tier1": [50, 500], "tier2": [50, 400], "tier3": [30, 300] },
+        "monthlyFood": { "tier1": [200, 500], "tier2": [150, 400], "tier3": [100, 300] },
+        "monthlyGrooming": [0, 0],
+        "monthlyVetAverage": [0, 200],
+        "oneTimeSetup": [3000, 15000],
+        "annualVaccination": [0, 0]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "planted_community_tank",
+      "name": "Planted Community Tank (Tetras, Rasboras, Shrimp)",
+      "category": "aquatic",
+      "subCategoryTags": ["display", "aesthetic", "aquascape"],
+      "attributes": {
+        "spaceNeed": 4,
+        "energyLevel": 1,
+        "groomingNeed": 6,
+        "noiseLevel": 1,
+        "trainability": 1,
+        "climateTolerance": 6,
+        "kidFriendliness": 5,
+        "firstTimeOwnerFriendly": 5,
+        "guardingAbility": 1,
+        "independence": 9
+      },
+      "lifeExpectancyYears": "3-5",
+      "adultWeightKg": "< 0.1",
+      "costs": {
+        "purchase": { "tier1": [1500, 5000], "tier2": [1200, 4000], "tier3": [1000, 3500] },
+        "monthlyFood": { "tier1": [200, 500], "tier2": [150, 400], "tier3": [150, 350] },
+        "monthlyGrooming": [300, 800],
+        "monthlyVetAverage": [0, 0],
+        "oneTimeSetup": [8000, 30000],
+        "annualVaccination": [0, 0]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": false,
+        "goodWithKids": true,
+        "goodWithOtherPets": true
+      }
+    },
+    {
+      "id": "budgerigar",
+      "name": "Budgerigar (Budgie)",
+      "category": "avian",
+      "subCategoryTags": ["companion", "caged", "social", "playful"],
+      "attributes": {
+        "spaceNeed": 3,
+        "energyLevel": 6,
+        "groomingNeed": 3,
+        "noiseLevel": 6,
+        "trainability": 5,
+        "climateTolerance": 7,
+        "kidFriendliness": 7,
+        "firstTimeOwnerFriendly": 7,
+        "guardingAbility": 2,
+        "independence": 4
+      },
+      "lifeExpectancyYears": "5-10",
+      "adultWeightKg": "< 0.05",
+      "costs": {
+        "purchase": { "tier1": [400, 1500], "tier2": [300, 1200], "tier3": [200, 800] },
+        "monthlyFood": { "tier1": [300, 600], "tier2": [250, 500], "tier3": [200, 400] },
+        "monthlyGrooming": [0, 100],
+        "monthlyVetAverage": [200, 800],
+        "oneTimeSetup": [2000, 6000],
+        "annualVaccination": [0, 500]
+      },
+      "suitabilityFlags": {
+        "apartmentFriendly": true,
+        "hotClimateOk": true,
+        "noviceFriendly": true,
+        "goodWithKids": true,
+        "goodWithOtherPets": false
+      }
+    }
+  ],
+  "pinCodeToTier": {
+    "strategy": "first_three_digits_lookup",
+    "description": "Map PIN first 3 digits to city, then city to tier. Use a lookup table at runtime. Defaults to tier2 if unknown.",
+    "sampleMap": {
+      "110": { "city": "New Delhi", "tier": "tier1" },
+      "400": { "city": "Mumbai", "tier": "tier1" },
+      "560": { "city": "Bengaluru", "tier": "tier1" },
+      "600": { "city": "Chennai", "tier": "tier1" },
+      "700": { "city": "Kolkata", "tier": "tier1" },
+      "500": { "city": "Hyderabad", "tier": "tier1" },
+      "411": { "city": "Pune", "tier": "tier1" },
+      "380": { "city": "Ahmedabad", "tier": "tier1" },
+      "302": { "city": "Jaipur", "tier": "tier2" },
+      "226": { "city": "Lucknow", "tier": "tier2" },
+      "800": { "city": "Patna", "tier": "tier2" },
+      "201": { "city": "Ghaziabad / Noida", "tier": "tier2" }
+    }
+  }
+}

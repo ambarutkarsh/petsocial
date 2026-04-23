@@ -86,6 +86,7 @@ const App = () => (
             <Route path="/hub/ngo" element={<ProtectedRoute><NgoScreen /></ProtectedRoute>} />
             <Route path="/hub/pickup" element={<ProtectedRoute><PickupScreen /></ProtectedRoute>} />
             <Route path="/hub/recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
+            <Route path="/hub/pet-recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
             <Route path="/hub/petcation" element={<ProtectedRoute><PetcationScreen /></ProtectedRoute>} />
             <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
             <Route path="/hub/microchip" element={<ProtectedRoute><MicrochipScreen /></ProtectedRoute>} />
