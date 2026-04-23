@@ -53,6 +53,7 @@ const FeedScreen = () => {
 
   // Initialize active pill: Curated if user saved 2-3 prefs, else Reels.
   useEffect(() => {
+    if (isGuest) { setActivePill("reels"); return; }
     if (!profile) return;
     const saved = ((profile.feed_preferences || []) as string[])
       .filter((s): s is FeedPillKey => FEED_PILLS.some((p) => p.key === s));
