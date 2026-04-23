@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Loader2, MapPin, Star, X, ChevronLeft, ChevronRight, Trophy, Calendar as CalIcon } from "lucide-react";
+import { Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Loader2, MapPin, Star, X, ChevronLeft, ChevronRight, Trophy, Calendar as CalIcon, Lock } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -13,14 +13,21 @@ import StoryCreator from "@/components/StoryCreator";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
 import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
+import { maskName } from "@/lib/maskName";
+
+// Pills enabled for guest browsing
+const GUEST_ENABLED_PILLS: FeedPillKey[] = ["reels", "news", "facts"];
 
 const FeedScreen = () => {
   const { user } = useAuth();
+  const { triggerGuestPopup } = useGuestPopup();
   const navigate = useNavigate();
+  const isGuest = !user;
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
@@ -46,6 +53,7 @@ const FeedScreen = () => {
 
   // Initialize active pill: Curated if user saved 2-3 prefs, else Reels.
   useEffect(() => {
+    if (isGuest) { setActivePill("reels"); return; }
     if (!profile) return;
     const saved = ((profile.feed_preferences || []) as string[])
       .filter((s): s is FeedPillKey => FEED_PILLS.some((p) => p.key === s));
@@ -68,6 +76,10 @@ const FeedScreen = () => {
    *    Curated mix, edited via Profile → Feed Preferences (not by tapping).
    */
   const togglePill = (key: FeedPillKey) => {
+    if (isGuest && !GUEST_ENABLED_PILLS.includes(key)) {
+      triggerGuestPopup();
+      return;
+    }
     if (key === activePill) return;
     setActivePill(key);
     trackEvent("feed_pill_changed", { pill: key });
@@ -395,17 +407,32 @@ const FeedScreen = () => {
     const isSaved = savedPostIds.includes(post.id);
     const liveLikes = (liveCounts as any)?.likes?.[post.id] ?? post.like_count ?? 0;
     const liveComments = (liveCounts as any)?.comments?.[post.id] ?? post.comment_count ?? 0;
+    const displayName = isGuest ? maskName(post.profiles?.full_name) : (post.profiles?.full_name || "Unknown");
+    const profileClick = () => {
+      if (isGuest) { triggerGuestPopup(); return; }
+      navigate(`/profile/${post.user_id}`);
+    };
+    const guardedAction = (fn: () => void) => () => {
+      if (isGuest) { triggerGuestPopup(); return; }
+      fn();
+    };
     return (
       <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
         <div className="flex items-center gap-3 p-3.5">
-          <button onClick={() => navigate(`/profile/${post.user_id}`)} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
-            {post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 object-cover" /> : getInitials(post.profiles?.full_name)}
+          <button onClick={profileClick} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
+            {!isGuest && post.profiles?.avatar_url ? (
+              <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 object-cover" />
+            ) : isGuest ? (
+              <span className="text-base">🐾</span>
+            ) : (
+              getInitials(post.profiles?.full_name)
+            )}
           </button>
           <div className="flex-1 min-w-0">
-            <p onClick={() => navigate(`/profile/${post.user_id}`)} className="text-sm font-heading font-bold truncate cursor-pointer">{post.profiles?.full_name || "Unknown"}</p>
+            <p onClick={profileClick} className="text-sm font-heading font-bold truncate cursor-pointer">{displayName}</p>
             <p className="text-xs text-muted-foreground font-body">{post.pets?.name && `${post.pets.name} • `}{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</p>
           </div>
-          {post.user_id === user?.id && (
+          {!isGuest && post.user_id === user?.id && (
             <button onClick={() => { if (confirm("Delete this post?")) deletePostMutation.mutate(post.id); }} className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
               <Trash2 className="w-4 h-4" />
             </button>
@@ -419,16 +446,16 @@ const FeedScreen = () => {
           )
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
-          <button onClick={() => toggleLikeMutation.mutate(post.id)} className="flex items-center gap-1.5">
+          <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
             <Heart className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveLikes}</span>
           </button>
-          <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5">
+          <button onClick={guardedAction(() => setCommentPostId(post.id))} className="flex items-center gap-1.5">
             <MessageCircle className="w-6 h-6 text-foreground" strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveComments}</span>
           </button>
-          <button onClick={() => sharePost(post)}><Send className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
-          <button onClick={() => toggleSaveMutation.mutate(post.id)} className="ml-auto">
+          <button onClick={guardedAction(() => sharePost(post))}><Send className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
+          <button onClick={guardedAction(() => toggleSaveMutation.mutate(post.id))} className="ml-auto">
             <Bookmark className={`w-6 h-6 ${isSaved ? "fill-primary text-primary" : "text-foreground"}`} strokeWidth={1.6} />
           </button>
         </div>
@@ -579,8 +606,8 @@ const FeedScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        {/* Stories */}
-        {showReels && (
+        {/* Stories — hidden for guests */}
+        {showReels && !isGuest && (
           <div className="px-5 py-3 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
             <div className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => setShowStoryCreator(true)}>
               <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
@@ -609,13 +636,16 @@ const FeedScreen = () => {
         >
           {hasCurated && (() => {
             const active = activePill === "curated";
+            const disabled = isGuest && !GUEST_ENABLED_PILLS.includes("curated");
             return (
               <button
                 key="curated"
                 onClick={() => togglePill("curated")}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
-                  active
+                  disabled
+                    ? { background: "#F2F0F5", color: "#ABA8B8", borderColor: "#E8E5F0", opacity: 0.4, cursor: "not-allowed" }
+                    : active
                     ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
                     : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
                 }
@@ -626,18 +656,22 @@ const FeedScreen = () => {
           })()}
           {FEED_PILLS.map((p) => {
             const active = activePill === p.key;
+            const disabled = isGuest && !GUEST_ENABLED_PILLS.includes(p.key);
             return (
               <button
                 key={p.key}
                 onClick={() => togglePill(p.key)}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
-                  active
+                  disabled
+                    ? { background: "#F2F0F5", color: "#ABA8B8", borderColor: "#E8E5F0", opacity: 0.4, cursor: "not-allowed" }
+                    : active
                     ? { background: "#7B5EA7", color: "white", borderColor: "#7B5EA7" }
                     : { background: "white", color: "#6B6880", borderColor: "#E8E5F0" }
                 }
               >
                 <span>
+                  {disabled && <Lock className="w-3 h-3 inline mr-1" />}
                   {p.emoji} {p.label}
                 </span>
               </button>

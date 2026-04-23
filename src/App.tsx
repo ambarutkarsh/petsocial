@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-route
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthScreen from "./pages/AuthScreen";
 import PlayScreen from "./pages/PlayScreen";
@@ -50,10 +51,8 @@ const PageTracker = () => {
   return null;
 };
 
-const RootRedirect = () => {
-  const seen = typeof window !== "undefined" && localStorage.getItem("onboardingComplete") === "true";
-  return <Navigate to={seen ? "/feeds" : "/onboarding"} replace />;
-};
+// Default landing is always /feeds (works for guests and logged-in users)
+const RootRedirect = () => <Navigate to="/feeds" replace />;
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -61,6 +60,7 @@ const App = () => (
       <Sonner />
       <AuthProvider>
         <BrowserRouter>
+          <GuestPopupProvider>
           <PageTracker />
           <Routes>
             <Route path="/" element={<RootRedirect />} />
@@ -69,15 +69,15 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
             <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
 
-            {/* New 5-slot bottom nav: Feeds | Hub | + | MyPet | Shop */}
-            <Route path="/feeds" element={<ProtectedRoute><PlayScreen /></ProtectedRoute>} />
-            <Route path="/hub" element={<ProtectedRoute><CareScreen /></ProtectedRoute>} />
+            {/* Public to guests with feature gating: Feeds, Hub, Shop */}
+            <Route path="/feeds" element={<PlayScreen />} />
+            <Route path="/hub" element={<CareScreen />} />
             <Route path="/mypet" element={<ProtectedRoute><ShopScreen /></ProtectedRoute>} />
-            <Route path="/shop" element={<ProtectedRoute><ShopComingSoonScreen /></ProtectedRoute>} />
+            <Route path="/shop" element={<ShopComingSoonScreen />} />
 
-            {/* Hub sub-pages */}
-            <Route path="/hub/sos" element={<ProtectedRoute><SosScreen /></ProtectedRoute>} />
-            <Route path="/hub/vet-near-me" element={<ProtectedRoute><VetNearMeScreen /></ProtectedRoute>} />
+            {/* Hub sub-pages — Vet Near Me & SOS are public; rest require auth */}
+            <Route path="/hub/sos" element={<SosScreen />} />
+            <Route path="/hub/vet-near-me" element={<VetNearMeScreen />} />
             <Route path="/hub/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
             <Route path="/hub/legal" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/license" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
@@ -128,6 +128,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </GuestPopupProvider>
         </BrowserRouter>
       </AuthProvider>
     </TooltipProvider>
