@@ -1,0 +1,119 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-04-23",
+  "intents": [
+    {
+      "id": "guard_security",
+      "label": "Guarding & home security",
+      "keywords": [
+        "guard", "protect", "protection", "security", "safety",
+        "bark", "alert", "intruder", "watchdog", "watch dog",
+        "defend", "home security", "guard dog"
+      ],
+      "primaryCategory": "canine",
+      "subCategoryTags": ["guarding", "working", "protective"],
+      "weight": 1.0
+    },
+    {
+      "id": "companionship_affection",
+      "label": "Companionship & affection",
+      "keywords": [
+        "companion", "cuddle", "lap", "affectionate", "loving",
+        "friendly", "lonely", "company", "bond", "emotional support",
+        "snuggle"
+      ],
+      "primaryCategory": "any",
+      "subCategoryTags": ["companion", "affectionate", "lap"],
+      "weight": 0.9
+    },
+    {
+      "id": "family_kids",
+      "label": "Family & kids",
+      "keywords": [
+        "kids", "children", "family", "playful", "gentle",
+        "child friendly", "toddler", "baby", "family pet",
+        "good with kids"
+      ],
+      "primaryCategory": "any",
+      "subCategoryTags": ["family-friendly", "gentle", "tolerant"],
+      "weight": 1.0
+    },
+    {
+      "id": "low_maintenance",
+      "label": "Low maintenance & busy lifestyle",
+      "keywords": [
+        "low maintenance", "busy", "travel", "apartment",
+        "independent", "quiet", "easy", "minimal care",
+        "work long hours", "first time"
+      ],
+      "primaryCategory": "any",
+      "subCategoryTags": ["independent", "quiet", "low-energy"],
+      "weight": 0.85
+    },
+    {
+      "id": "active_exercise",
+      "label": "Active lifestyle & exercise buddy",
+      "keywords": [
+        "active", "running", "hiking", "exercise", "jogging",
+        "energetic", "outdoor", "adventure", "sporty",
+        "running partner", "fit"
+      ],
+      "primaryCategory": "canine",
+      "subCategoryTags": ["high-energy", "athletic", "working"],
+      "weight": 0.95
+    },
+    {
+      "id": "aesthetic_display",
+      "label": "Display & aesthetic interest",
+      "keywords": [
+        "beautiful", "exotic", "unique", "display", "aquarium",
+        "aquascape", "terrarium", "paludarium", "colourful",
+        "decorative", "show"
+      ],
+      "primaryCategory": "aquatic_exotic",
+      "subCategoryTags": ["display", "aesthetic", "exotic"],
+      "weight": 1.0
+    },
+    {
+      "id": "therapy_wellbeing",
+      "label": "Mental health & therapy",
+      "keywords": [
+        "anxiety", "depression", "mental health", "therapy",
+        "stress", "calm", "soothing", "emotional", "wellbeing",
+        "therapy animal"
+      ],
+      "primaryCategory": "any",
+      "subCategoryTags": ["calm", "affectionate", "low-stress"],
+      "weight": 0.9
+    },
+    {
+      "id": "kids_first_pet",
+      "label": "First pet for a child",
+      "keywords": [
+        "first pet", "child's pet", "starter pet", "small pet",
+        "cage", "hamster", "fish for kid", "learn responsibility"
+      ],
+      "primaryCategory": "small_mammal_or_fish",
+      "subCategoryTags": ["small", "caged", "low-risk"],
+      "weight": 0.9
+    }
+  ],
+  "categories": {
+    "canine": { "label": "Dogs", "icon": "dog" },
+    "feline": { "label": "Cats", "icon": "cat" },
+    "small_mammal": { "label": "Small mammals (rabbits, guinea pigs, hamsters)", "icon": "rabbit" },
+    "aquatic": { "label": "Fish & aquariums", "icon": "fish" },
+    "avian": { "label": "Birds", "icon": "bird" },
+    "reptile": { "label": "Reptiles", "icon": "turtle" },
+    "aquatic_exotic": { "label": "Aquatic / exotic display", "icon": "fish" },
+    "small_mammal_or_fish": { "label": "Starter pets", "icon": "rabbit" },
+    "any": { "label": "Multiple categories", "icon": "paw" }
+  },
+  "matchingRules": {
+    "strategy": "keyword + fuzzy",
+    "fuzzyThreshold": 0.4,
+    "minKeywordsForMatch": 1,
+    "tieBreaker": "highest_weight",
+    "fallbackCategory": "any"
+  }
+}
