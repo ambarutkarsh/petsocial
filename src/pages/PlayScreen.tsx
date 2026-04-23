@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Loader2, MapPin, Star, X, ChevronLeft, ChevronRight, Trophy, Calendar as CalIcon } from "lucide-react";
+import { Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Loader2, MapPin, Star, X, ChevronLeft, ChevronRight, Trophy, Calendar as CalIcon, Lock } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -13,14 +13,21 @@ import StoryCreator from "@/components/StoryCreator";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
 import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
+import { maskName } from "@/lib/maskName";
+
+// Pills enabled for guest browsing
+const GUEST_ENABLED_PILLS: FeedPillKey[] = ["reels", "news", "facts"];
 
 const FeedScreen = () => {
   const { user } = useAuth();
+  const { triggerGuestPopup } = useGuestPopup();
   const navigate = useNavigate();
+  const isGuest = !user;
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
@@ -68,6 +75,10 @@ const FeedScreen = () => {
    *    Curated mix, edited via Profile → Feed Preferences (not by tapping).
    */
   const togglePill = (key: FeedPillKey) => {
+    if (isGuest && !GUEST_ENABLED_PILLS.includes(key)) {
+      triggerGuestPopup();
+      return;
+    }
     if (key === activePill) return;
     setActivePill(key);
     trackEvent("feed_pill_changed", { pill: key });
