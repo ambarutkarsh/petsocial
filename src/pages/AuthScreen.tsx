@@ -53,7 +53,7 @@ const AuthScreen = () => {
           setShowRegistration(true);
         }
       } else {
-        navigate("/feed", { replace: true });
+        navigate("/feeds", { replace: true });
       }
     };
     checkProfile();
@@ -67,14 +67,14 @@ const AuthScreen = () => {
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
     trackEvent("login_success");
-    navigate("/feed");
+    navigate("/feeds");
   };
 
   const handleGoogleSignIn = async () => {
     trackEvent("google_login_click");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: "https://petosauras.com/feed" },
+      options: { redirectTo: "https://petosauras.com/feeds" },
     });
     if (error) toast.error("Google sign-in failed. Please try again.");
   };
@@ -120,14 +120,14 @@ const AuthScreen = () => {
     setOtpSubmitting(false);
     if (error) { toast.error(error.message); return; }
     trackEvent("otp_login_success");
-    navigate("/feed");
+    navigate("/feeds");
   };
 
   if (showRegistration) {
     return (
       <RegistrationFlow
         initialStep={registrationStep}
-        onComplete={() => navigate("/feed")}
+        onComplete={() => navigate("/feeds")}
         onBackToLogin={() => setShowRegistration(false)}
       />
     );

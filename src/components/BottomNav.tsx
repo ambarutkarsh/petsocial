@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Sparkles, HeartHandshake, Plus, PawPrint, ShoppingBag } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import CreateSheet from "./CreateSheet";
 
 const navItems = [
   { icon: Sparkles, label: "Feeds", path: "/feeds", event: "bottom_nav_feeds_tap", match: ["/feeds", "/play", "/feed"] },
   { icon: HeartHandshake, label: "Hub", path: "/hub", event: "bottom_nav_hub_tap", match: ["/hub", "/care", "/forum", "/community"] },
   { icon: Plus, label: "Create", path: "__create", isFab: true, event: "fab_create_button_tap", match: [] },
-  { icon: PawPrint, label: "MyPet", path: "/mypet", event: "bottom_nav_mypet_tap", match: ["/mypet", "/health"] },
+  { icon: PawPrint, label: "MyPet", path: "/mypet", event: "bottom_nav_mypet_tap", match: ["/mypet", "/health"], requiresAuth: true },
   { icon: ShoppingBag, label: "Shop", path: "/shop", event: "bottom_nav_shop_tap", match: ["/shop"] },
 ];
 
@@ -19,6 +21,8 @@ interface BottomNavProps {
 const BottomNav = ({ onPostClick }: BottomNavProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { triggerGuestPopup } = useGuestPopup();
   const [createOpen, setCreateOpen] = useState(false);
 
   const isPathActive = (matches: string[]) =>
@@ -41,6 +45,10 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
                   key={item.path}
                   onClick={() => {
                     trackEvent(item.event);
+                    if (!user) {
+                      triggerGuestPopup();
+                      return;
+                    }
                     if (onPostClick) onPostClick();
                     else setCreateOpen(true);
                   }}
@@ -57,6 +65,10 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
                 key={item.path}
                 onClick={() => {
                   trackEvent(item.event);
+                  if (item.requiresAuth && !user) {
+                    triggerGuestPopup();
+                    return;
+                  }
                   navigate(item.path);
                 }}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 ${
