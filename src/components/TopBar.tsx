@@ -120,29 +120,51 @@ const TopBar = () => {
             >
               <Search className="w-5 h-5" strokeWidth={1.8} />
             </button>
-            <button
-              onClick={() => navigate("/notifications")}
-              aria-label="Notifications"
-              className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
-            >
-              <Bell className="w-5 h-5" strokeWidth={1.8} />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => navigate("/profile")}
-              aria-label="Profile"
-              className="w-9 h-9 rounded-full bg-primary-light text-primary font-bold text-sm flex items-center justify-center overflow-hidden ml-1"
-            >
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <span>{initials}</span>
-              )}
-            </button>
+            {user && (
+              <button
+                onClick={() => navigate("/notifications")}
+                aria-label="Notifications"
+                className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
+              >
+                <Bell className="w-5 h-5" strokeWidth={1.8} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
+            {user ? (
+              <button
+                onClick={() => navigate("/profile")}
+                aria-label="Profile"
+                className="w-9 h-9 rounded-full bg-primary-light text-primary font-bold text-sm flex items-center justify-center overflow-hidden ml-1"
+              >
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/auth")}
+                style={{
+                  background: "#7B5EA7",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 50,
+                  padding: "7px 16px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  marginLeft: 4,
+                }}
+                className="font-body"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </header>
