@@ -168,23 +168,34 @@ export function matchIntent(
 
   let best: { intent: Intent; score: number } | null = null;
 
+  // Build n-gram tokens (1, 2, 3 word windows) from user text so multi-word
+  // keywords like "guard dog" can match.
+  const words = text.replace(/[^\w\s]/g, " ").split(/\s+/).filter(Boolean);
+  const tokens = new Set<string>();
+  for (let i = 0; i < words.length; i++) {
+    tokens.add(words[i]);
+    if (i + 1 < words.length) tokens.add(words[i] + " " + words[i + 1]);
+    if (i + 2 < words.length)
+      tokens.add(words[i] + " " + words[i + 1] + " " + words[i + 2]);
+  }
+
   for (const intent of tax.intents) {
-    // Each keyword is a discrete searchable record.
     const fuse = new Fuse(intent.keywords, {
       threshold: tax.matchingRules.fuzzyThreshold,
       includeScore: true,
       ignoreLocation: true,
     });
-    const hits = fuse.search(text);
-    if (hits.length === 0) continue;
-
-    // Lower fuse score = better match. Combine with weight.
-    const rawScore = hits[0].score ?? 1;
-    const weighted = (1 - rawScore) * intent.weight;
-
-    if (!best || weighted > (1 - best.score) * best.intent.weight) {
-      best = { intent, score: rawScore };
+    let bestRaw = 1;
+    for (const tok of tokens) {
+      const hits = fuse.search(tok);
+      if (hits.length && (hits[0].score ?? 1) < bestRaw) {
+        bestRaw = hits[0].score ?? 1;
+      }
     }
+    if (bestRaw >= 1) continue;
+    const weighted = (1 - bestRaw) * intent.weight;
+    const bestWeighted = best ? (1 - best.score) * best.intent.weight : -1;
+    if (weighted > bestWeighted) best = { intent, score: bestRaw };
   }
 
   if (!best) {
