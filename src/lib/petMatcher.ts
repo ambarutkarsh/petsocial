@@ -112,8 +112,8 @@ export interface BreedDatabase {
   };
 }
 
-export const taxonomy: Taxonomy = taxonomyJson as Taxonomy;
-export const database: BreedDatabase = breedJson as BreedDatabase;
+export const taxonomy: Taxonomy = taxonomyJson as unknown as Taxonomy;
+export const database: BreedDatabase = breedJson as unknown as BreedDatabase;
 
 // ---------- Lifestyle answer types ----------
 

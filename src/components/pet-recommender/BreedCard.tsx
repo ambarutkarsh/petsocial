@@ -39,7 +39,7 @@ const BreedCard = ({ result }: Props) => {
               {score}% match
             </span>
             {overBudget && (
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-body font-semibold">
+              <span className="px-2 py-0.5 rounded-full bg-accent/20 text-accent-foreground text-[11px] font-body font-semibold border border-accent/30">
                 Slightly over budget
               </span>
             )}
