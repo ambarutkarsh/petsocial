@@ -406,17 +406,32 @@ const FeedScreen = () => {
     const isSaved = savedPostIds.includes(post.id);
     const liveLikes = (liveCounts as any)?.likes?.[post.id] ?? post.like_count ?? 0;
     const liveComments = (liveCounts as any)?.comments?.[post.id] ?? post.comment_count ?? 0;
+    const displayName = isGuest ? maskName(post.profiles?.full_name) : (post.profiles?.full_name || "Unknown");
+    const profileClick = () => {
+      if (isGuest) { triggerGuestPopup(); return; }
+      navigate(`/profile/${post.user_id}`);
+    };
+    const guardedAction = (fn: () => void) => () => {
+      if (isGuest) { triggerGuestPopup(); return; }
+      fn();
+    };
     return (
       <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
         <div className="flex items-center gap-3 p-3.5">
-          <button onClick={() => navigate(`/profile/${post.user_id}`)} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
-            {post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 object-cover" /> : getInitials(post.profiles?.full_name)}
+          <button onClick={profileClick} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
+            {!isGuest && post.profiles?.avatar_url ? (
+              <img src={post.profiles.avatar_url} alt="" className="w-10 h-10 object-cover" />
+            ) : isGuest ? (
+              <span className="text-base">🐾</span>
+            ) : (
+              getInitials(post.profiles?.full_name)
+            )}
           </button>
           <div className="flex-1 min-w-0">
-            <p onClick={() => navigate(`/profile/${post.user_id}`)} className="text-sm font-heading font-bold truncate cursor-pointer">{post.profiles?.full_name || "Unknown"}</p>
+            <p onClick={profileClick} className="text-sm font-heading font-bold truncate cursor-pointer">{displayName}</p>
             <p className="text-xs text-muted-foreground font-body">{post.pets?.name && `${post.pets.name} • `}{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</p>
           </div>
-          {post.user_id === user?.id && (
+          {!isGuest && post.user_id === user?.id && (
             <button onClick={() => { if (confirm("Delete this post?")) deletePostMutation.mutate(post.id); }} className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
               <Trash2 className="w-4 h-4" />
             </button>
@@ -430,16 +445,16 @@ const FeedScreen = () => {
           )
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
-          <button onClick={() => toggleLikeMutation.mutate(post.id)} className="flex items-center gap-1.5">
+          <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
             <Heart className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveLikes}</span>
           </button>
-          <button onClick={() => setCommentPostId(post.id)} className="flex items-center gap-1.5">
+          <button onClick={guardedAction(() => setCommentPostId(post.id))} className="flex items-center gap-1.5">
             <MessageCircle className="w-6 h-6 text-foreground" strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveComments}</span>
           </button>
-          <button onClick={() => sharePost(post)}><Send className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
-          <button onClick={() => toggleSaveMutation.mutate(post.id)} className="ml-auto">
+          <button onClick={guardedAction(() => sharePost(post))}><Send className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
+          <button onClick={guardedAction(() => toggleSaveMutation.mutate(post.id))} className="ml-auto">
             <Bookmark className={`w-6 h-6 ${isSaved ? "fill-primary text-primary" : "text-foreground"}`} strokeWidth={1.6} />
           </button>
         </div>
