@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { X, Heart, Send, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { X, Send, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
+import { maskName } from "@/lib/maskName";
 
 interface Props {
   postId: string;
@@ -13,9 +15,11 @@ interface Props {
 
 const CommentSheet = ({ postId, open, onClose }: Props) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
+  const isGuest = !user;
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["post-comments", postId],
@@ -86,7 +90,9 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-heading font-bold">{c.profiles?.full_name || "User"}</span>
+                      <span className="text-[13px] font-heading font-bold">
+                        {isGuest ? maskName(c.profiles?.full_name) : (c.profiles?.full_name || "User")}
+                      </span>
                       <span className="text-[11px] text-text-hint font-body">
                         · {formatDistanceToNow(new Date(c.created_at), { addSuffix: true })}
                       </span>
@@ -99,30 +105,40 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
           </div>
 
           <div className="px-4 py-3 border-t border-border bg-card" style={{ paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-xs font-heading font-bold text-primary shrink-0">
-                {getInitials(user?.user_metadata?.full_name || null)}
+            {isGuest ? (
+              <button
+                onClick={() => { onClose(); navigate("/auth"); }}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-full bg-primary-light text-primary"
+              >
+                <span className="text-sm font-body font-semibold">Login to join the conversation</span>
+                <span className="text-sm font-body font-bold">Sign in →</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-xs font-heading font-bold text-primary shrink-0">
+                  {getInitials(user?.user_metadata?.full_name || null)}
+                </div>
+                <div className="flex-1 relative">
+                  <input
+                    value={content}
+                    onChange={(e) => setContent(e.target.value.slice(0, 500))}
+                    onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && content.trim() && sendMutation.mutate()}
+                    placeholder="Add a comment..."
+                    className="w-full h-10 bg-surface-alt rounded-full px-4 pr-12 text-sm font-body outline-none border border-border focus:border-primary transition-colors"
+                  />
+                  {content.trim() && (
+                    <button
+                      onClick={() => sendMutation.mutate()}
+                      disabled={sending}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-primary flex items-center justify-center"
+                    >
+                      <Send className="w-3.5 h-3.5 text-primary-foreground" />
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="flex-1 relative">
-                <input
-                  value={content}
-                  onChange={(e) => setContent(e.target.value.slice(0, 500))}
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && content.trim() && sendMutation.mutate()}
-                  placeholder="Add a comment..."
-                  className="w-full h-10 bg-surface-alt rounded-full px-4 pr-12 text-sm font-body outline-none border border-border focus:border-primary transition-colors"
-                />
-                {content.trim() && (
-                  <button
-                    onClick={() => sendMutation.mutate()}
-                    disabled={sending}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-primary flex items-center justify-center"
-                  >
-                    <Send className="w-3.5 h-3.5 text-primary-foreground" />
-                  </button>
-                )}
-              </div>
-            </div>
-            {content.length > 400 && (
+            )}
+            {!isGuest && content.length > 400 && (
               <p className="text-[11px] text-text-hint text-right mt-1 font-body">{content.length}/500</p>
             )}
           </div>
