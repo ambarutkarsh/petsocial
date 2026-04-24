@@ -307,13 +307,11 @@ const ValidateChipSection = () => {
     if (!v.isValid) return;
     setSearching(true);
     try {
-      const { data } = await supabase
-        .from("pet_microchips")
-        .select("verification_status, city, state, registered_at, owner_id")
-        .eq("chip_number", v.cleaned)
-        .eq("is_active", true)
-        .maybeSingle();
-      setResult((prev) => prev ? { ...prev, found: data ? { status: (data.verification_status as ChipVerificationStatus), city: data.city, state: data.state, registered_at: data.registered_at, owner_id: data.owner_id } : undefined } : prev);
+      // Use security-definer RPC so we don't leak owner identity, vet info,
+      // city/state, or document URLs of other users' chip records.
+      const { data } = await supabase.rpc("lookup_microchip", { _chip_number: v.cleaned });
+      const row = Array.isArray(data) && data.length > 0 ? data[0] : null;
+      setResult((prev) => prev ? { ...prev, found: row ? { status: (row.verification_status as ChipVerificationStatus), city: null, state: null, registered_at: null, owner_id: row.owner_id } : undefined } : prev);
     } finally {
       setSearching(false);
     }
