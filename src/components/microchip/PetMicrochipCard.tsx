@@ -4,7 +4,7 @@ import { Syringe, Upload, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import ChipStatusBadge, { ChipVerificationStatus } from "./ChipStatusBadge";
-import { formatChipNumber } from "@/lib/microchipValidator";
+import { formatChipNumber, ChipFormat } from "@/lib/microchipValidator";
 
 interface Props {
   petId: string;
@@ -48,7 +48,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
   }
 
   const status = (chip.verification_status as ChipVerificationStatus) || "self_declared";
-  const formatted = formatChipNumber(chip.chip_number, chip.chip_format);
+  const formatted = formatChipNumber(chip.chip_number, chip.chip_format as ChipFormat);
   const borderColor = status === "document_verified" ? "border-[#52C788]" : "border-[#4ECDC4]";
 
   return (
