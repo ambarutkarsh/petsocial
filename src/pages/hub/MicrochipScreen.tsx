@@ -287,7 +287,7 @@ const ValidateChipSection = () => {
     isValid: boolean;
     isLegacy: boolean;
     errorMessage?: string;
-    found?: { status: ChipVerificationStatus; city?: string | null; state?: string | null; registered_at: string; owner_id: string };
+    found?: { status: ChipVerificationStatus; city?: string | null; state?: string | null; registered_at?: string | null; owner_id: string };
   }>(null);
   const [searching, setSearching] = useState(false);
   const [showRegistries, setShowRegistries] = useState(false);
@@ -307,13 +307,11 @@ const ValidateChipSection = () => {
     if (!v.isValid) return;
     setSearching(true);
     try {
-      const { data } = await supabase
-        .from("pet_microchips")
-        .select("verification_status, city, state, registered_at, owner_id")
-        .eq("chip_number", v.cleaned)
-        .eq("is_active", true)
-        .maybeSingle();
-      setResult((prev) => prev ? { ...prev, found: data ? { status: (data.verification_status as ChipVerificationStatus), city: data.city, state: data.state, registered_at: data.registered_at, owner_id: data.owner_id } : undefined } : prev);
+      // Use security-definer RPC so we don't leak owner identity, vet info,
+      // city/state, or document URLs of other users' chip records.
+      const { data } = await supabase.rpc("lookup_microchip", { _chip_number: v.cleaned });
+      const row = Array.isArray(data) && data.length > 0 ? data[0] : null;
+      setResult((prev) => prev ? { ...prev, found: row ? { status: (row.verification_status as ChipVerificationStatus), city: null, state: null, registered_at: null, owner_id: row.owner_id } : undefined } : prev);
     } finally {
       setSearching(false);
     }
@@ -398,7 +396,7 @@ const ValidateChipSection = () => {
               )}
               <p className="text-xs text-muted-foreground font-body">
                 {[result.found.city, result.found.state].filter(Boolean).join(", ") || "Location not shared"}
-                {" · Registered " + new Date(result.found.registered_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                {result.found.registered_at ? " · Registered " + new Date(result.found.registered_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : ""}
               </p>
 
               {/* Found this pet section */}
