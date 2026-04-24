@@ -37,12 +37,12 @@ const WizardShell = () => {
   };
 
   return (
-    <div className="md:grid md:grid-cols-[200px_1fr] md:gap-6">
-      <aside className="md:sticky md:top-4 md:self-start">
+    <div className="flex flex-col gap-5">
+      <div className="w-full">
         <ProgressIndicator step={step} />
-      </aside>
+      </div>
 
-      <section className="mt-5 md:mt-0">
+      <section className="w-full">
         {step === 0 && (
           <StepIntent
             value={intentText}
