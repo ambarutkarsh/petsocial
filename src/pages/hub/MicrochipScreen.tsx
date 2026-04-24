@@ -287,7 +287,7 @@ const ValidateChipSection = () => {
     isValid: boolean;
     isLegacy: boolean;
     errorMessage?: string;
-    found?: { status: ChipVerificationStatus; city?: string | null; state?: string | null; registered_at: string; owner_id: string };
+    found?: { status: ChipVerificationStatus; city?: string | null; state?: string | null; registered_at?: string | null; owner_id: string };
   }>(null);
   const [searching, setSearching] = useState(false);
   const [showRegistries, setShowRegistries] = useState(false);
