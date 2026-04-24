@@ -1948,6 +1948,14 @@ export type Database = {
         Args: { _amount: number; _reason: string; _user_id: string }
         Returns: undefined
       }
+      lookup_microchip: {
+        Args: { _chip_number: string }
+        Returns: {
+          found: boolean
+          owner_id: string
+          verification_status: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
