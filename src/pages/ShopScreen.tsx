@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { differenceInYears, differenceInMonths, format } from "date-fns";
 import { petTypes, breedsByType } from "@/lib/registrationData";
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
+import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
 
 const MyPetScreen = () => {
   const { user } = useAuth();
@@ -234,6 +235,12 @@ const MyPetScreen = () => {
                     )}
                   </Field>
                 </div>
+
+                {user && activePet?.id && (
+                  <div className="mt-4">
+                    <PetMicrochipCard petId={activePet.id} ownerId={user.id} />
+                  </div>
+                )}
               </div>
             </TabsContent>
 
