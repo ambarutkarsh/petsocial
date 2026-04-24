@@ -38,6 +38,7 @@ import PetcationScreen from "./pages/hub/PetcationScreen";
 import PetMovingScreen from "./pages/hub/PetMovingScreen";
 import MicrochipScreen from "./pages/hub/MicrochipScreen";
 import RegisterMicrochipScreen from "./pages/hub/RegisterMicrochipScreen";
+import PetCareScreen from "./pages/hub/PetCareScreen";
 import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
 import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
 import NotFound from "./pages/NotFound";
@@ -86,8 +87,9 @@ const App = () => (
             <Route path="/hub/insurance" element={<ProtectedRoute><InsuranceScreen /></ProtectedRoute>} />
             <Route path="/hub/ngo" element={<ProtectedRoute><NgoScreen /></ProtectedRoute>} />
             <Route path="/hub/pickup" element={<ProtectedRoute><PickupScreen /></ProtectedRoute>} />
-            <Route path="/hub/recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
-            <Route path="/hub/pet-recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
+            <Route path="/hub/recommender" element={<RecommenderScreen />} />
+            <Route path="/hub/pet-recommender" element={<RecommenderScreen />} />
+            <Route path="/hub/pet-care" element={<PetCareScreen />} />
             <Route path="/hub/petcation" element={<ProtectedRoute><PetcationScreen /></ProtectedRoute>} />
             <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
             <Route path="/hub/microchip" element={<MicrochipScreen />} />
