@@ -1,0 +1,902 @@
+{
+  "meta": {
+    "version": "1.0",
+    "source": "Compiled from ASPCA, AAHA, WSAVA, FDA, PetMD, Vetic India, Zigly, BuraqPets, iAdopt India, GoelVetPharma",
+    "disclaimer": "This information is for general guidance only. Always consult a licensed veterinarian for medical decisions.",
+    "lastUpdated": "2026-04"
+  },
+
+  "diet": {
+    "disclaimer": "Dietary needs vary by individual pet. Consult your vet before making significant diet changes.",
+    "pets": {
+      "Canine": {
+        "ageGroups": {
+          "puppy": {
+            "label": "Puppy (0–12 months)",
+            "description": "Puppies need twice the calories per kilogram as adult dogs. High protein and DHA for brain and eye development are critical.",
+            "proteinPercent": "22–32%",
+            "fatPercent": "8–18%",
+            "mealsPerDay": 3,
+            "keyNutrients": ["DHA", "Calcium", "Phosphorus", "Protein", "Vitamin D"],
+            "recommended": [
+              "Royal Canin Puppy/Starter",
+              "Drools Focus Puppy",
+              "Pedigree Puppy",
+              "Boiled chicken + rice (home-cooked supplement)",
+              "Scrambled egg (occasional)"
+            ],
+            "avoid": ["Adult dog food", "Raw meat (risk of bacteria)", "Excess calcium supplements", "Milk (lactose intolerance common)"],
+            "indianHomeFood": "Boiled chicken + white rice + cooked carrot. No salt, no spices. Max 30% of total diet.",
+            "waterIntake": "Approximately 1ml per kcal of food consumed. Always keep fresh water available.",
+            "weatherTips": {
+              "summer": "Increase water by 20%. Feed early morning and late evening to avoid heat-induced nausea.",
+              "monsoon": "Avoid raw food to prevent fungal/bacterial infection. Store dry kibble in airtight containers.",
+              "winter": "Slightly increase caloric intake for outdoor dogs. Warm up wet food slightly."
+            }
+          },
+          "adult": {
+            "label": "Adult (1–7 years)",
+            "description": "Balanced maintenance diet. Protein and fat requirements stabilise. Adjust for activity level.",
+            "proteinPercent": "18–25%",
+            "fatPercent": "5–15%",
+            "mealsPerDay": 2,
+            "keyNutrients": ["Protein", "Omega-3", "Glucosamine (large breeds)", "Fibre"],
+            "recommended": [
+              "Royal Canin Adult (breed-specific)",
+              "Hills Science Diet Adult",
+              "Drools Adult Chicken & Egg",
+              "Arden Grange Adult",
+              "Heads Up for Tails fresh food (subscription)"
+            ],
+            "avoid": ["Table scraps with spices", "Excess treats (>10% of daily calories)", "Salty/fatty Indian snacks"],
+            "indianHomeFood": "Boiled chicken/fish + rice + cooked vegetables (carrot, pumpkin, sweet potato). No onion, garlic, salt.",
+            "portionByWeight": {
+              "5kg": "100–150g dry kibble/day",
+              "10kg": "175–250g dry kibble/day",
+              "20kg": "300–380g dry kibble/day",
+              "30kg": "400–500g dry kibble/day",
+              "40kg": "500–600g dry kibble/day"
+            },
+            "waterIntake": "50ml per kg body weight daily minimum.",
+            "weatherTips": {
+              "summer": "Feed during cooler parts of day. Increase hydration. Watch for heatstroke signs.",
+              "monsoon": "Keep food fresh. Anti-parasite treatment recommended.",
+              "winter": "Active outdoor dogs may need 10–15% more calories."
+            }
+          },
+          "senior": {
+            "label": "Senior (7+ years)",
+            "description": "Senior dogs need maintained or increased protein to prevent muscle wasting. Reduce phosphorus if kidney issues present.",
+            "proteinPercent": "18–25% (do not reduce unless kidney disease confirmed)",
+            "fatPercent": "5–10%",
+            "mealsPerDay": 2,
+            "keyNutrients": ["Glucosamine", "Chondroitin", "Omega-3", "Antioxidants", "Vitamin E"],
+            "recommended": [
+              "Royal Canin Senior",
+              "Hills Science Diet Senior",
+              "Orijen Senior",
+              "Wet food if dental issues present"
+            ],
+            "avoid": ["High phosphorus food if kidney disease", "Excess salt", "Hard kibble without soaking if dental pain"],
+            "indianHomeFood": "Soft boiled chicken + rice + cooked sweet potato. Easier to chew. No bones.",
+            "waterIntake": "Senior dogs are prone to dehydration. Encourage water with wet food or broth addition.",
+            "weatherTips": {
+              "summer": "Very vulnerable to heat. Keep indoors during peak heat hours.",
+              "winter": "Senior joints worsen in cold. Provide warm bedding. Slightly warmer food."
+            }
+          }
+        },
+        "breedNotes": {
+          "Labrador Retriever": "Prone to obesity. Measure portions carefully. Avoid free feeding.",
+          "German Shepherd": "Prone to bloat — feed 2 meals not 1 large meal. Avoid exercise immediately after eating.",
+          "Pomeranian": "Small stomach. 3 small meals better than 2 large. Toy-breed formulas recommended.",
+          "Indie/Mixed Breed": "Generally hardy digestive system. Mid-range protein formula works well.",
+          "Pug": "Brachycephalic — smaller kibble or wet food. Prone to obesity. Monitor portions closely.",
+          "Golden Retriever": "Joint-supportive diet with glucosamine from age 3+. Moderate calorie control."
+        }
+      },
+      "Feline": {
+        "ageGroups": {
+          "kitten": {
+            "label": "Kitten (0–12 months)",
+            "description": "Kittens need nearly 3x the energy of adult cats. High protein including taurine is mandatory for heart health.",
+            "proteinPercent": "35–40%",
+            "mealsPerDay": 4,
+            "keyNutrients": ["Taurine (critical)", "DHA", "Arachidonic acid", "Calcium", "Phosphorus"],
+            "recommended": [
+              "Royal Canin Kitten",
+              "Whiskas Kitten",
+              "Hills Science Diet Kitten",
+              "Boiled boneless chicken (supplement)"
+            ],
+            "avoid": ["Dog food (lacks taurine)", "Cow's milk", "Raw fish (destroys thiamine)", "Onion/garlic"],
+            "taurineNote": "Cats CANNOT synthesise taurine. It must be in their diet. Deficiency causes heart disease and blindness.",
+            "weatherTips": {
+              "summer": "Kittens dehydrate quickly. Wet food preferred. Multiple small water bowls.",
+              "monsoon": "Keep strictly indoor to avoid leptospirosis and parvo exposure.",
+              "winter": "Keep warm. Kittens cannot regulate temperature well."
+            }
+          },
+          "adult": {
+            "label": "Adult (1–7 years)",
+            "description": "Obligate carnivore diet. Cats need animal-based protein. Do not feed grain-free without vet guidance.",
+            "proteinPercent": "30–40%",
+            "mealsPerDay": 2,
+            "keyNutrients": ["Taurine", "Arachidonic acid", "Vitamin A (preformed)", "Niacin"],
+            "recommended": [
+              "Royal Canin Adult Cat",
+              "Whiskas Adult",
+              "Sheba (wet food)",
+              "Drools Cat Adult",
+              "Boiled chicken/tuna in water (occasional)"
+            ],
+            "avoid": ["Vegetarian diet", "Dog food", "Raw fish daily", "Onion/garlic/leek", "Chocolate"],
+            "indianHomeFood": "Boiled boneless chicken + minimal rice. No spices. Occasional canned tuna in water only.",
+            "portionByWeight": {
+              "3kg": "40–60g dry kibble/day OR 180g wet food/day",
+              "4kg": "55–75g dry kibble/day",
+              "5kg": "65–90g dry kibble/day"
+            },
+            "weatherTips": {
+              "summer": "Indoor cats: keep air circulated. Ensure hydration. Wet food helps.",
+              "monsoon": "Watch for upper respiratory infections common in humid conditions.",
+              "winter": "Indoor cats may reduce activity — reduce portions slightly to avoid weight gain."
+            }
+          },
+          "senior": {
+            "label": "Senior (7+ years)",
+            "description": "Senior cats actually need MORE protein to prevent muscle wasting — contrary to popular belief.",
+            "proteinPercent": "30–40% (increase vs adult)",
+            "mealsPerDay": 3,
+            "keyNutrients": ["Protein", "Omega-3", "Antioxidants", "Phosphorus (restrict if kidney disease)"],
+            "recommended": [
+              "Royal Canin Senior",
+              "Hills Science Diet Senior",
+              "Purina Pro Plan Senior",
+              "Wet food — easier on kidneys"
+            ],
+            "avoid": ["Low protein senior foods unless kidney disease confirmed", "Hard dry food if dental pain"]
+          }
+        },
+        "breedNotes": {
+          "Persian": "Flat face — smaller kibble. Prone to kidney disease. Higher water intake critical.",
+          "Siamese": "High energy — needs calorie-dense food. Very vocal when hungry.",
+          "Bengal": "Active breed — higher caloric needs. Raw diet enthusiasts but ensure vet guidance.",
+          "Indie/Mixed Breed": "Generally robust. Standard adult cat food works well."
+        }
+      },
+      "Avian": {
+        "general": {
+          "label": "Pet Birds",
+          "description": "Bird diet varies significantly by species. Seed-only diets are nutritionally deficient.",
+          "keyPrinciple": "Seeds should be maximum 50% of diet. Fresh vegetables, fruits, and pellets are essential.",
+          "recommended": {
+            "Budgerigar (Budgie)": ["Millet spray", "Budgie seed mix", "Dark leafy greens", "Cuttlebone (calcium)", "Fresh apple (no seeds)"],
+            "Cockatiel": ["Cockatiel pellets", "Millet", "Cooked sweet potato", "Broccoli", "Egg food"],
+            "African Grey": ["Harrison's Bird Foods pellets", "Fresh vegetables (carrot, kale, bell pepper)", "Cooked brown rice", "Almonds (occasional)", "Pomegranate"],
+            "Lovebird": ["Pellets", "Seed mix", "Fresh corn", "Dark greens", "Mango (small pieces)"],
+            "Macaw": ["Large parrot pellets", "Fresh fruit and vegetables", "Cooked beans and rice", "Brazil nuts", "Cooked pasta"]
+          },
+          "avoidAll": ["Avocado (toxic to all birds)", "Chocolate", "Caffeine", "Onion/garlic", "Fruit seeds/pits (cyanide)", "Salt", "Alcohol"],
+          "waterNote": "Change water twice daily. Bird water bowls contaminate quickly.",
+          "weatherTips": {
+            "summer": "Provide misting. Keep cage in ventilated shade. Provide fresh water every 4 hours.",
+            "monsoon": "Watch for fungal growth in food. Clean cage daily in humid weather.",
+            "winter": "Birds are tropical — maintain temperature above 18°C. Cover cage at night."
+          }
+        }
+      },
+      "Aquatic": {
+        "general": {
+          "keyPrinciple": "Overfeeding is the #1 cause of fish death. Feed only what fish consume in 2–3 minutes.",
+          "bySpecies": {
+            "Goldfish": {
+              "diet": "Goldfish pellets/flakes, blanched peas (digestion aid), blanched zucchini, occasional bloodworms",
+              "frequency": "2x daily, tiny amounts",
+              "avoid": "Bread, crackers, high-protein food designed for tropical fish",
+              "waterTemp": "18–24°C"
+            },
+            "Betta": {
+              "diet": "Betta-specific pellets, frozen/live bloodworms, daphnia, brine shrimp",
+              "frequency": "2x daily, 2–3 pellets each",
+              "avoid": "Flake food (poor nutrition), overfeeding",
+              "waterTemp": "24–28°C"
+            },
+            "Koi": {
+              "diet": "Koi pellets, wheat germ pellets (spring/autumn), spirulina, fresh peas, watermelon",
+              "frequency": "3–4x daily in summer, 1x in cold (under 10°C stop feeding)",
+              "waterTemp": "15–25°C"
+            },
+            "Discus": {
+              "diet": "Discus-specific pellets, frozen bloodworms, beef heart (occasional), beefheart-based food",
+              "frequency": "3x daily, small amounts",
+              "waterTemp": "28–31°C (higher than most fish — critical)",
+              "note": "Discus are sensitive — water quality is nutrition. 30% water change every 2 days."
+            }
+          }
+        }
+      },
+      "Reptile": {
+        "bySpecies": {
+          "Bearded Dragon": {
+            "juvenile": "70% insects (crickets, dubia roaches), 30% greens",
+            "adult": "30% insects, 70% vegetables and greens",
+            "recommended": "Collard greens, mustard greens, butternut squash, crickets, dubia roaches",
+            "avoid": "Iceberg lettuce, avocado, fireflies (toxic), spinach (binds calcium)",
+            "supplements": "Calcium powder on every feeding. Vitamin D3 3x/week.",
+            "uvb": "UVB light 10–12 hours/day. Critical for calcium metabolism."
+          },
+          "Indian Star Tortoise": {
+            "diet": "Grasses (primary), dark leafy greens, hibiscus flowers, cactus pad",
+            "avoid": "Fruits (too high sugar), animal protein, commercial pellets with preservatives",
+            "note": "Grazing animal — access to grass is ideal. Overfeeding causes pyramid shell."
+          },
+          "Leopard Gecko": {
+            "diet": "Exclusively insects: crickets, dubia roaches, mealworms, waxworms (occasional treat)",
+            "avoid": "Any plant material, fruits, vegetables (insectivore only)",
+            "supplements": "Calcium in dish always available. Vitamin D3 2x/week.",
+            "feedingFrequency": "Juveniles: daily. Adults: every 2–3 days."
+          }
+        }
+      },
+      "Small Pet": {
+        "bySpecies": {
+          "Guinea Pig": {
+            "diet": "Unlimited timothy hay (critical), fresh vegetables (bell pepper, leafy greens), guinea pig pellets",
+            "vitaminC": "Cannot synthesise Vitamin C. Must come from diet. Bell pepper is best source.",
+            "avoid": "Iceberg lettuce, potatoes, onion, garlic, rhubarb, dairy",
+            "note": "Hay must be 80% of diet. Gut motility depends on constant fibre."
+          },
+          "Holland Lop Rabbit": {
+            "diet": "Unlimited timothy hay, fresh leafy greens, limited pellets (1/4 cup per 2kg body weight)",
+            "avoid": "Iceberg lettuce, cabbage, nuts, seeds, bread, pasta, chocolate",
+            "note": "Like guinea pigs — gut stasis (digestive shutdown) is life-threatening. Hay is non-negotiable."
+          },
+          "Hamster": {
+            "diet": "Hamster seed mix, fresh vegetables (broccoli, carrot), occasional hard-boiled egg",
+            "avoid": "Citrus fruits, onion, garlic, almonds, apple seeds",
+            "note": "Hamsters cache food. Check and clean food stores weekly to prevent mold."
+          }
+        }
+      }
+    }
+  },
+
+  "illness": {
+    "disclaimer": "⚠️ This is general guidance only. These are NOT a substitute for veterinary diagnosis. If symptoms are severe, persistent, or your pet is very young/very old, seek immediate vet care.",
+    "emergencySymptoms": [
+      "Difficulty breathing or gasping",
+      "Pale, blue or white gums",
+      "Collapse or inability to stand",
+      "Seizures",
+      "Bloated/distended abdomen",
+      "No urination for 12+ hours",
+      "Suspected poison ingestion",
+      "Trauma or serious injury",
+      "Uncontrolled bleeding",
+      "Extreme lethargy with no response"
+    ],
+    "conditions": {
+      "Vomiting": {
+        "species": ["Canine", "Feline"],
+        "description": "Common in both dogs and cats. Often resolves in 24 hours.",
+        "whenToWorry": "Vomiting more than 3 times/hour, blood in vomit, lethargy, distended belly, foreign object suspected",
+        "homeRemedies": [
+          "Fast for 12–24 hours (water only) for dogs. 8–12 hours for cats.",
+          "After fasting: bland diet — boiled plain chicken + white rice in small amounts every 2–3 hours",
+          "Ensure access to fresh water to prevent dehydration",
+          "Avoid normal food for 48 hours post-vomiting"
+        ],
+        "vetRequired": "If vomiting continues beyond 24 hours, blood present, or accompanied by diarrhoea and lethargy",
+        "indiaNote": "In hot weather, vomiting may indicate heatstroke — move pet to cool area immediately."
+      },
+      "Diarrhoea": {
+        "species": ["Canine", "Feline"],
+        "description": "Loose or watery stools. Often dietary or stress-related.",
+        "homeRemedies": [
+          "Bland diet: boiled chicken + white rice for 2–3 days",
+          "For cats: ensure taurine is still in diet if home cooking",
+          "Probiotics (pet-specific) can help restore gut flora",
+          "Pumpkin puree (plain, no spice) — 1 teaspoon for small dogs — adds fibre"
+        ],
+        "vetRequired": "Blood in stool, more than 24 hours, lethargy, dehydration signs (sunken eyes, dry gums), in puppies/kittens",
+        "indiaNote": "Parvo is common in unvaccinated puppies in India. Diarrhoea in puppies = vet immediately."
+      },
+      "Itching/Skin Issues": {
+        "species": ["Canine", "Feline"],
+        "description": "Scratching, hot spots, redness. Common causes: fleas, food allergy, contact allergy, fungal infection.",
+        "homeRemedies": [
+          "Oatmeal bath: grind oats into fine powder, mix in warm water, soak 10–15 minutes",
+          "Coconut oil: apply topically to dry/itchy areas. Antimicrobial and moisturising.",
+          "Check for fleas: use flea comb. Look for black pepper-like specks (flea dirt).",
+          "Anti-flea treatment: Spot-on treatments like Frontline, Bravecto, or Advocate (vet recommended)"
+        ],
+        "vetRequired": "Open wounds, loss of fur in patches, infection signs (smell, discharge), no improvement in 5 days"
+      },
+      "Fever": {
+        "species": ["Canine", "Feline"],
+        "description": "Normal dog temp: 38–39.2°C. Normal cat temp: 38–39.2°C. Above 39.5°C is fever.",
+        "howToCheck": "Rectal thermometer is most accurate. Ear thermometers available too.",
+        "homeRemedies": [
+          "Cool (not cold) damp cloth on paw pads and armpits",
+          "Ensure hydration — encourage drinking",
+          "Keep pet in cool, ventilated area",
+          "Monitor every 30 minutes"
+        ],
+        "vetRequired": "Temperature above 40°C, fever lasting more than 24 hours, accompanied by vomiting/lethargy/seizures",
+        "warning": "Never give human paracetamol/panadol — FATAL to both dogs and cats."
+      },
+      "Worms/Parasites": {
+        "species": ["Canine", "Feline"],
+        "description": "Roundworms, hookworms, tapeworms, whipworms common in India. Visible signs: pot belly in puppies, worms in stool, weight loss, dull coat.",
+        "homeRemedies": [
+          "No effective home remedy for worms — deworming medication required",
+          "Keep environment clean — pick up stools promptly",
+          "Wash bedding regularly in hot water"
+        ],
+        "treatment": "Deworming medications: Drontal (dogs), Milbemax, Panacur. Available at vet clinics. Puppy schedule: every 2 weeks until 3 months, then monthly until 6 months, then every 3 months.",
+        "vetRequired": "Always use vet-prescribed dewormer. Dose depends on body weight."
+      },
+      "Respiratory Infection": {
+        "species": ["Avian"],
+        "description": "Birds hide illness until critical. Fluffed feathers, tail bobbing while breathing, nasal discharge, clicking sounds = respiratory issue.",
+        "homeRemedies": [
+          "Keep bird warm (28–30°C)",
+          "Remove drafts completely",
+          "Ensure fresh, clean water",
+          "Isolate from other birds immediately"
+        ],
+        "vetRequired": "ANY respiratory symptoms in birds = vet immediately. Birds deteriorate rapidly."
+      },
+      "Appetite Loss": {
+        "species": ["Canine", "Feline", "Avian"],
+        "description": "Not eating for 12–24 hours can indicate anything from stress to serious illness.",
+        "homeRemedies": [
+          "Warm food slightly to enhance aroma",
+          "Try offering different texture (wet vs dry)",
+          "Ensure fresh water is available",
+          "Check for dental pain — difficulty chewing can cause appetite loss",
+          "Reduce stress sources: new pets, moving, visitors"
+        ],
+        "vetRequired": "Not eating for more than 24 hours in adult dogs, 12 hours in cats or birds, any time in puppies/kittens"
+      }
+    }
+  },
+
+  "training": {
+    "disclaimer": "Training requires patience and consistency. Never use punishment-based methods. Positive reinforcement is most effective and humane.",
+    "preparation": {
+      "spaceSmall": {
+        "label": "Small space (apartment/flat)",
+        "suitableFor": ["Basic commands", "Indoor games", "Leash training (hallway)", "Mental stimulation puzzles"]
+      },
+      "spaceMedium": {
+        "label": "Medium space (house with small garden)",
+        "suitableFor": ["All basic commands", "Fetch (short)", "Agility basics", "Socialisation at gate"]
+      },
+      "spaceLarge": {
+        "label": "Large space (house with large garden or access to park)",
+        "suitableFor": ["Full training program", "Agility", "Recall training", "Off-leash work"]
+      }
+    },
+    "schedule15Days": {
+      "Canine": {
+        "week1": {
+          "days": [1, 2, 3, 4, 5, 6, 7],
+          "focus": "Foundation commands",
+          "sessionDuration": "2x 10-minute sessions daily (morning + evening)",
+          "sessions": {
+            "day1": {
+              "morning": "Name recognition: say name + treat reward 20 times. Charge the clicker if using one.",
+              "evening": "Sit: lure nose up with treat, say 'Sit', reward. 5–10 repetitions."
+            },
+            "day2": {
+              "morning": "Sit revision (5 mins) + Down: lure treat to ground, say 'Down', reward.",
+              "evening": "Sit + Down practice. Name recognition game."
+            },
+            "day3": {
+              "morning": "Sit, Down revision + Stay: ask for Sit, say 'Stay', take 1 step back, return and treat.",
+              "evening": "Increase Stay to 3 steps back. Multiple repetitions."
+            },
+            "day4": {
+              "morning": "Recall: call name + 'Come', run backward excitedly, reward with jackpot treat on arrival.",
+              "evening": "Practice Sit + Down + Stay + Come in sequence."
+            },
+            "day5": {
+              "morning": "Loose leash walking: 10-minute walk, stop every time leash tightens. Resume when loose.",
+              "evening": "Sit, Down, Stay, Come review. Add 'Off' if jumping is an issue."
+            },
+            "day6": {
+              "morning": "All commands review in new location (different room or outside).",
+              "evening": "Rest and play session. Mental enrichment (sniff game with hidden treats)."
+            },
+            "day7": {
+              "morning": "Assessment day: test all 5 commands (Sit, Down, Stay, Come, loose leash).",
+              "evening": "Free play and bonding. No formal training."
+            }
+          }
+        },
+        "week2": {
+          "days": [8, 9, 10, 11, 12, 13, 14],
+          "focus": "Intermediate skills and real-world application",
+          "sessions": {
+            "day8": {
+              "morning": "Impulse control: 'Leave it' — place treat on floor, cover with hand, say 'Leave it', reward.",
+              "evening": "Leave it with treat on ground uncovered."
+            },
+            "day9": {
+              "morning": "Place command: teach dog to go to their bed/mat and stay.",
+              "evening": "Place practice + Sit + Down revision."
+            },
+            "day10": {
+              "morning": "Leash manners in outdoor environment. Practice heel.",
+              "evening": "Recall in garden or open space. Increase distance."
+            },
+            "day11": {
+              "morning": "Door manners: sit before door opens. Reinforce calm greetings.",
+              "evening": "Leave it with food bowl: dog must wait for release cue."
+            },
+            "day12": {
+              "morning": "All commands in distracting environment.",
+              "evening": "Mental enrichment: food puzzle, sniff games."
+            },
+            "day13": {
+              "morning": "Introduction to 'Shake' (paw): hold treat in closed fist, dog paws at hand, open and reward.",
+              "evening": "Revision of all learned commands in sequence."
+            },
+            "day14": {
+              "morning": "Real world practice: park/outside location.",
+              "evening": "Rest day — free play and bonding time."
+            }
+          }
+        },
+        "day15": {
+          "label": "Day 15 — Graduation Assessment",
+          "morning": "Full command run-through: Sit, Down, Stay (10 sec), Come (5m recall), Loose leash walk, Leave it, Place.",
+          "evening": "Celebration play session. Continue daily 5–10 min maintenance sessions.",
+          "nextSteps": "Consider puppy socialization classes, agility introduction, or tricks training."
+        },
+        "importantTips": [
+          "Always end on success — if dog fails, make it easier and end with a win",
+          "Puppies (under 12 weeks): max 5 minutes per session",
+          "Hot weather: train indoors or early morning/late evening only",
+          "Never train a hungry dog to desperation or a completely full dog",
+          "Jackpot reward (extra treats + excited praise) for first-time successes",
+          "Avoid scolding — it breaks trust and slows learning"
+        ]
+      },
+      "Feline": {
+        "note": "Cats can be trained but require shorter sessions and higher-value rewards. Clicker training works well.",
+        "schedule": {
+          "week1": {
+            "days": [1, 2, 3, 4, 5],
+            "focus": "Trust and click/treat association",
+            "sessions": {
+              "day1": "Charge clicker: click + immediately give treat. 20 repetitions twice daily.",
+              "day2": "Sit: lure treat over head, click the moment bottom touches ground.",
+              "day3": "Sit consolidation + name recognition.",
+              "day4": "Target stick: touch stick with nose = click + treat.",
+              "day5": "Sit + target stick practice."
+            }
+          },
+          "week2": {
+            "focus": "Useful skills",
+            "sessions": {
+              "day8": "Come when called: call name + clicker + jackpot treat.",
+              "day10": "Carrier training: click for any interest in carrier, gradually progress to entering.",
+              "day14": "Recall + sit on mat/station."
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "poisonPrevention": {
+    "disclaimer": "If you suspect your pet has ingested a toxic substance, contact your vet immediately. Do NOT induce vomiting unless instructed by a vet.",
+    "emergencyContacts": {
+      "india": [
+        "Blue Cross India: 044-22350170",
+        "PETA India Emergency: 1800-200-9732",
+        "Your nearest 24hr vet emergency"
+      ]
+    },
+    "categories": {
+      "foods": {
+        "label": "Toxic Foods",
+        "items": [
+          {
+            "name": "Chocolate",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "HIGH",
+            "toxin": "Theobromine and caffeine",
+            "symptoms": "Vomiting, diarrhoea, increased heart rate, seizures, death",
+            "note": "Dark chocolate and baking chocolate are most dangerous. Even small amounts can kill small dogs."
+          },
+          {
+            "name": "Onion, Garlic, Leek, Chives",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "HIGH",
+            "toxin": "N-propyl disulfide",
+            "symptoms": "Anaemia (destroys red blood cells), weakness, pale gums, collapse",
+            "note": "Cooked, raw, or powdered — all forms toxic. Garlic is 5x more toxic than onion. Very common in Indian cooking — keep all Indian food away from pets."
+          },
+          {
+            "name": "Grapes and Raisins",
+            "toxic_to": ["Canine"],
+            "severity": "CRITICAL",
+            "symptoms": "Acute kidney failure within 24–48 hours",
+            "note": "Even small amounts can cause fatal kidney failure. Mechanism not fully understood."
+          },
+          {
+            "name": "Xylitol (sugar-free sweetener)",
+            "toxic_to": ["Canine"],
+            "severity": "CRITICAL",
+            "toxin": "Xylitol",
+            "symptoms": "Blood sugar crash (within 30 min), seizures, liver failure",
+            "note": "Found in sugar-free gum, some peanut butters, mouthwash, medications. Check peanut butter labels before giving to dogs."
+          },
+          {
+            "name": "Macadamia Nuts",
+            "toxic_to": ["Canine"],
+            "severity": "MEDIUM",
+            "symptoms": "Weakness, vomiting, tremors, hyperthermia",
+            "note": "Not fatal but causes significant distress. Common in imported biscuits."
+          },
+          {
+            "name": "Avocado",
+            "toxic_to": ["Avian", "Small Pet", "Equine"],
+            "severity": "HIGH for birds, MILD for dogs/cats",
+            "toxin": "Persin",
+            "symptoms": "Respiratory distress and death in birds; mild GI upset in dogs/cats",
+            "note": "Fatal to birds and rabbits. Dogs and cats generally tolerate small amounts but best avoided."
+          },
+          {
+            "name": "Caffeine (coffee, tea, energy drinks)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "HIGH",
+            "symptoms": "Hyperactivity, tremors, seizures, abnormal heart rhythm"
+          },
+          {
+            "name": "Alcohol",
+            "toxic_to": ["Canine", "Feline", "All"],
+            "severity": "HIGH",
+            "symptoms": "Vomiting, disorientation, breathing difficulty, coma, death",
+            "note": "Even small amounts dangerous. Indian sweets with alcohol base — keep away."
+          },
+          {
+            "name": "Raw yeast dough",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "HIGH",
+            "symptoms": "Bloat (life-threatening gas expansion), alcohol toxicity as yeast ferments"
+          },
+          {
+            "name": "Salt (excess)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "MEDIUM",
+            "symptoms": "Vomiting, diarrhoea, seizures (large amounts), excessive thirst",
+            "note": "Namkeen, chips, papad — all too salty for pets. Indian snacks are a common source."
+          },
+          {
+            "name": "Milk and dairy (large amounts)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "LOW",
+            "symptoms": "Diarrhoea, digestive upset",
+            "note": "Most adult pets are lactose intolerant. Small amounts usually fine but not recommended."
+          }
+        ]
+      },
+      "plants": {
+        "label": "Toxic Plants (Common in India)",
+        "items": [
+          {
+            "name": "Oleander (Kaner)",
+            "toxic_to": ["Canine", "Feline", "All"],
+            "severity": "CRITICAL",
+            "symptoms": "Heart arrhythmia, vomiting, death",
+            "note": "Extremely common ornamental plant in India. All parts including dried leaves toxic."
+          },
+          {
+            "name": "Dieffenbachia (Dumb Cane)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "HIGH",
+            "symptoms": "Intense mouth burning, swelling, drooling, difficulty swallowing",
+            "note": "Very common houseplant in India. Keep out of reach."
+          },
+          {
+            "name": "Sago Palm (Cycas)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "CRITICAL",
+            "symptoms": "Vomiting, liver failure, death within days",
+            "note": "One of the most toxic plants. Common in Indian gardens and housing societies."
+          },
+          {
+            "name": "Lilies (all varieties)",
+            "toxic_to": ["Feline"],
+            "severity": "CRITICAL for cats",
+            "symptoms": "Kidney failure and death in cats. Even pollen can be fatal.",
+            "note": "Easter lily, tiger lily, peace lily — all deadly to cats. Keep all lilies out of homes with cats."
+          },
+          {
+            "name": "Euphorbia (Spurge family)",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "MEDIUM",
+            "symptoms": "Skin irritation, mouth burning, vomiting",
+            "note": "Milky sap of euphorbias (common succulents and croton) toxic on contact."
+          },
+          {
+            "name": "Aloe Vera",
+            "toxic_to": ["Canine", "Feline"],
+            "severity": "LOW",
+            "symptoms": "Vomiting, diarrhoea, lethargy",
+            "note": "Gel is safe topically but toxic if ingested."
+          },
+          {
+            "name": "Tulsi (Holy Basil)",
+            "toxic_to": ["Feline"],
+            "severity": "LOW for small amounts",
+            "symptoms": "GI upset in cats",
+            "note": "Tulsi is safe for dogs in very small amounts. Cats more sensitive — avoid."
+          },
+          {
+            "name": "Hibiscus",
+            "toxic_to": ["Small Pet"],
+            "severity": "MEDIUM for hamsters/guinea pigs",
+            "symptoms": "Anorexia, diarrhoea",
+            "note": "Safe for dogs and cats but avoid for small pets."
+          },
+          {
+            "name": "Castor bean (Arandi)",
+            "toxic_to": ["All"],
+            "severity": "CRITICAL",
+            "toxin": "Ricin",
+            "symptoms": "Severe vomiting, dehydration, tremors, seizures, death",
+            "note": "Common weed in India. Seeds extremely toxic."
+          }
+        ]
+      },
+      "household": {
+        "label": "Household Hazards",
+        "items": [
+          {
+            "name": "Rat poison (rodenticides)",
+            "toxic_to": ["All"],
+            "severity": "CRITICAL",
+            "symptoms": "Internal bleeding, seizures, death",
+            "note": "Brodifacoum-based rat poisons common in India. Pets exposed by eating poisoned rodents too."
+          },
+          {
+            "name": "Human medications",
+            "toxic_to": ["All"],
+            "severity": "CRITICAL",
+            "items": ["Paracetamol/Panadol (fatal to cats)", "Ibuprofen", "Aspirin", "Antidepressants", "Blood pressure medications"],
+            "note": "Never give human medication to pets. Paracetamol causes fatal liver failure in cats."
+          },
+          {
+            "name": "Insecticides/Pesticides",
+            "toxic_to": ["All"],
+            "severity": "HIGH",
+            "note": "Organophosphate pesticides (common in India) extremely dangerous. Keep pets away during spraying."
+          },
+          {
+            "name": "Essential oils",
+            "toxic_to": ["Feline"],
+            "severity": "HIGH",
+            "symptoms": "Liver failure, respiratory distress",
+            "note": "Tea tree oil, eucalyptus, lavender — concentrated essential oils toxic to cats. Avoid diffusers in rooms where cats rest."
+          },
+          {
+            "name": "Diwali fireworks",
+            "toxic_to": ["All"],
+            "severity": "MEDIUM",
+            "note": "Chemical ingestion from spent fireworks toxic. Keep pets indoors during Diwali, away from firecrackers."
+          }
+        ]
+      }
+    }
+  },
+
+  "safety": {
+    "carTravel": {
+      "label": "Car Travel Safety",
+      "tips": [
+        "Never leave pets in a parked car — temperatures can reach 60°C+ in Indian summers within minutes",
+        "Use a secured carrier or dog seatbelt harness — unrestrained pets can become projectiles in accidents",
+        "Place carrier on floor of back seat — safest position in a crash",
+        "Crack windows for ventilation but not enough for pet to escape",
+        "Never let dog hang head out of window — eye/ear injuries from debris common",
+        "Bring water and collapsible bowl for journeys over 1 hour",
+        "Stop every 2–3 hours for toilet break and stretch",
+        "Feed a light meal 3–4 hours before travel to reduce motion sickness",
+        "For anxious pets: vet can prescribe anti-anxiety medication or motion sickness tablets",
+        "ID tag on collar + microchip essential when travelling away from home"
+      ]
+    },
+    "withKids": {
+      "label": "Pet Safety with Children",
+      "rules": [
+        "Never leave dogs and young children unsupervised — even the most gentle dog can bite when startled",
+        "Teach children to ask before petting any dog — including family pets when eating or sleeping",
+        "Do not disturb a dog while eating, sleeping, or caring for puppies",
+        "Teach 'be a tree' if dog approaches aggressively: stand still, arms folded, look away",
+        "Children should not take food from dogs or disturb their food bowl",
+        "Warn children: do not run from or scream at dogs — triggers chase instinct",
+        "Cats: teach children to let cat approach first, never pick up unwillingly",
+        "All children should wash hands after handling pets"
+      ]
+    },
+    "homeSafety": {
+      "label": "Home Safety for Pets",
+      "tips": [
+        "Secure all medications in closed cabinets — common cause of pet poisoning",
+        "Keep toilet lid closed — small pets can fall in and drown",
+        "Secure loose electrical wires — puppies and kittens chew wires and risk electrocution",
+        "Block balcony gaps — cats especially can fall from great heights",
+        "Remove toxic houseplants (see Poison Prevention section)",
+        "Keep washing machine and dryer doors closed — cats sleep inside",
+        "Secure garbage bins — food waste access causes illness",
+        "Store cleaning chemicals in locked or high cupboards",
+        "Check under car before reversing — cats shelter under vehicles",
+        "Ensure garden fencing is secure and free of gaps for small dogs"
+      ]
+    },
+    "eldersSafety": {
+      "label": "Pet Safety Around Elderly People",
+      "tips": [
+        "Large dogs can knock over elderly individuals — train 'four paws on floor' command",
+        "Ensure pet toys and bowls are not on stairs or walkways — tripping hazards",
+        "Choose calmer breeds for elderly owners — not high-energy working dogs",
+        "Retractable leashes are a fall risk for elderly walkers — use fixed-length leash",
+        "Elderly owners: arrange pet care backup plan for health emergencies",
+        "Cats on laps/beds can be a fall risk when getting up — train pet off furniture if needed"
+      ]
+    },
+    "pregnantPet": {
+      "label": "Pregnant Pet Safety",
+      "tips": [
+        "Confirm pregnancy with vet via ultrasound at 3–4 weeks post-mating",
+        "Increase food by 25–50% in last 3 weeks of pregnancy",
+        "Provide a quiet, private nesting area 1 week before due date",
+        "Do not vaccinate or deworm during pregnancy — consult vet for safe alternatives",
+        "Avoid stressful situations, loud environments, introduction of new animals",
+        "Normal gestation: dogs 63 days, cats 65–67 days, rabbits 28–32 days",
+        "Signs of labour: restlessness, nesting, panting, loss of appetite",
+        "Emergency signs: labour lasting more than 2 hours with no birth, greenish discharge without birth, kitten/puppy stuck in birth canal"
+      ]
+    },
+    "weatherSafety": {
+      "label": "Weather Safety for Pets in India",
+      "summer": {
+        "label": "Summer Safety (March–June)",
+        "tips": [
+          "Walk dogs before 8am and after 7pm — tarmac above 30°C burns paw pads",
+          "Test tarmac: press back of hand on ground for 5 seconds — if too hot for you, too hot for paws",
+          "Ensure shade and water access at all times outdoors",
+          "Signs of heatstroke: heavy panting, drooling, staggering, collapse — wet dog with cool (not cold) water and rush to vet",
+          "Brachycephalic breeds (Pug, Shih Tzu, Persian cat) at extreme risk — keep air-conditioned",
+          "Never leave pets in cars even with windows cracked"
+        ]
+      },
+      "monsoon": {
+        "label": "Monsoon Safety (June–September)",
+        "tips": [
+          "Leptospirosis spread through flood water — vaccinate dogs annually (Lepto vaccine)",
+          "Dry pets thoroughly after rain — ear infections and skin fungus common",
+          "Check paws after walks — cuts and infections from debris in water",
+          "Ticks and fleas peak in monsoon — monthly anti-parasitic treatment essential",
+          "Thunderstorm anxiety: create a safe den, consult vet about anti-anxiety options",
+          "Avoid puddles and stagnant water on walks — contaminated with pathogens"
+        ]
+      },
+      "winter": {
+        "label": "Winter Safety (November–February)",
+        "tips": [
+          "Short-coated breeds (Doberman, Indie dogs) feel cold below 10°C — provide sweater/indoor shelter",
+          "Senior and young pets lose body heat faster — extra bedding required",
+          "Antifreeze (ethylene glycol) has sweet taste and is FATAL — keep away from pets",
+          "Reduced daylight — use reflective collar/leash for evening walks",
+          "Arthritis worsens in cold — older pets may need pain management from vet",
+          "Indoor birds: maintain temperature above 18°C at night"
+        ]
+      }
+    },
+    "firstAid": {
+      "label": "Pet First Aid Essentials",
+      "kitContents": [
+        "Digital rectal thermometer",
+        "Gauze bandages and adhesive bandages (not human bandaids)",
+        "Saline solution for wound cleaning",
+        "Blunt-tipped scissors and tweezers",
+        "Disposable gloves",
+        "Emergency vet's phone number (saved)",
+        "Hydrogen peroxide 3% (ONLY if vet instructs vomiting induction)",
+        "Cold pack",
+        "Muzzle or soft cloth strip (injured animals may bite from pain)"
+      ],
+      "basicProcedures": [
+        {
+          "situation": "Bleeding wound",
+          "action": "Apply firm pressure with gauze for 5–10 minutes. Do not remove pad if soaking through — add more gauze on top. Rush to vet if arterial bleeding."
+        },
+        {
+          "situation": "Suspected fracture",
+          "action": "Do not attempt to splint. Keep pet still and calm. Support body when lifting. Transport to vet immediately."
+        },
+        {
+          "situation": "Burns",
+          "action": "Cool with room-temperature water for 20 minutes. Do NOT use ice or butter. Cover loosely with clean cloth. Vet immediately."
+        },
+        {
+          "situation": "Choking",
+          "action": "Look in mouth if safe to do so. Do not blindly finger-sweep. For dogs: modified Heimlich — firm pressure behind ribcage. Rush to vet."
+        },
+        {
+          "situation": "Heatstroke",
+          "action": "Move to shade/AC immediately. Wet with cool (not cold) water. Fan the pet. Do not cover. Rush to vet. This is a life-threatening emergency."
+        }
+      ]
+    },
+    "foodSafety": {
+      "label": "Food Safety for Pets",
+      "tips": [
+        "Never feed table scraps containing onion, garlic, chili, masalas — toxic",
+        "Wash food and water bowls daily — bacteria grow rapidly in India's climate",
+        "Dry kibble: store in airtight container, away from moisture",
+        "Wet food: refrigerate after opening, discard after 24 hours",
+        "Treats: should be max 10% of daily caloric intake",
+        "Check expiry dates on pet food — particularly important in Indian summer storage",
+        "Do not feed bones from chicken, fish, pork — splintering causes internal injuries"
+      ]
+    },
+    "biteSafety": {
+      "label": "Pet Bite Safety",
+      "forOwners": [
+        "Clean bite wound immediately with soap and water for 5 minutes",
+        "Apply antiseptic (Betadine/Savlon)",
+        "Seek medical attention — even minor dog bites carry infection risk",
+        "Report stray dog bites to local authority and get anti-rabies prophylaxis (PEP) immediately",
+        "Do not delay PEP — rabies is 100% fatal once symptoms appear"
+      ],
+      "preventingBites": [
+        "Never approach a dog that is eating, sleeping or with puppies",
+        "Do not make direct eye contact with an unfamiliar dog",
+        "Be a tree: stand still, arms folded, look away if a dog approaches aggressively",
+        "Never run from an aggressive dog — triggers chase instinct",
+        "Teach children bite safety rules from an early age"
+      ]
+    },
+    "parasiteSafety": {
+      "label": "Parasite Prevention",
+      "schedule": {
+        "dogs": [
+          "Monthly: spot-on flea/tick treatment (Frontline Plus, Bravecto, Nexgard, Simparica)",
+          "Every 3 months: deworming (Drontal, Milbemax)",
+          "Every 6 months: heartworm test (especially in monsoon-heavy regions)",
+          "Annually: full health checkup including fecal test"
+        ],
+        "cats": [
+          "Monthly: Revolution (covers fleas, ticks, heartworm)",
+          "Every 3 months: deworming (Milbemax cat, Drontal cat — different from dog formula)",
+          "Never: use dog flea products on cats — permethrin in dog products is FATAL to cats"
+        ]
+      },
+      "commonParasites": [
+        {
+          "name": "Ticks",
+          "risk": "Transmit tick fever, ehrlichiosis, babesiosis — all potentially fatal",
+          "action": "Remove with tweezers — grip close to skin, pull straight up. Do not twist. Crush body spreads disease. Use tick-prevention products monthly."
+        },
+        {
+          "name": "Fleas",
+          "risk": "Cause intense itching, anaemia in young pets, tapeworm transmission",
+          "action": "Treat pet AND home environment simultaneously. Wash bedding in hot water. Treat all pets in household."
+        },
+        {
+          "name": "Heartworm",
+          "risk": "Mosquito-transmitted. Often fatal if untreated. Higher risk in humid regions of India.",
+          "action": "Prevention far easier than treatment. Monthly preventive medication essential."
+        }
+      ]
+    }
+  }
+}

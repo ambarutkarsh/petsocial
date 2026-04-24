@@ -8,18 +8,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 
 const services = [
-  { emoji: "🏥", label: "Vet Near Me", path: "/hub/vet-near-me", publicOk: true },
+  // Row 1 — all free for guests
   { emoji: "🚑", label: "SOS", path: "/hub/sos", publicOk: true },
-  { emoji: "🛡️", label: "Insurance", path: "/hub/insurance" },
-  { emoji: "🤝", label: "NGO Connect", path: "/hub/ngo" },
+  { emoji: "🐾", label: "Pet Recommender", path: "/hub/pet-recommender", publicOk: true },
+  { emoji: "🩺", label: "Pet Care", path: "/hub/pet-care", publicOk: true },
+  // Row 2
   { emoji: "💰", label: "Budget Calc", path: "/hub/budget" },
+  { emoji: "🛡️", label: "Insurance", path: "/hub/insurance" },
+  { emoji: "🏥", label: "Vet Near Me", path: "/hub/vet-near-me", publicOk: true },
+  // Row 3
   { emoji: "💉", label: "Microchip", path: "/hub/microchip" },
-  { emoji: "🐾", label: "Pet Recommender", path: "/hub/pet-recommender" },
   { emoji: "✈️", label: "Petcation", path: "/hub/petcation" },
   { emoji: "🚛", label: "Pet Moving", path: "/hub/pet-moving" },
-  { emoji: "📋", label: "License Info", path: "/hub/license" },
-  { emoji: "⚖️", label: "Know Rights", path: "/hub/rights" },
-  { emoji: "🚗", label: "Pick & Drop", path: "/hub/pickup" },
+  // Row 4
+  { emoji: "🤝", label: "NGO Connect", path: "/hub/ngo" },
+  { emoji: "🚗", label: "Pet Pick & Drop", path: "/hub/pickup" },
 ];
 
 const HubScreen = () => {
