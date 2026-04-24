@@ -111,6 +111,48 @@ export type Database = {
           },
         ]
       }
+      chip_contact_requests: {
+        Row: {
+          chip_number: string
+          created_at: string
+          id: string
+          message: string | null
+          requester_id: string
+          status: string
+        }
+        Insert: {
+          chip_number: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          requester_id: string
+          status?: string
+        }
+        Update: {
+          chip_number?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          requester_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chip_contact_requests_requester_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chip_contact_requests_requester_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coin_transactions: {
         Row: {
           amount: number
@@ -1052,6 +1094,94 @@ export type Database = {
           photographer?: string | null
         }
         Relationships: []
+      }
+      pet_microchips: {
+        Row: {
+          chip_format: string
+          chip_number: string
+          city: string | null
+          document_name: string | null
+          document_size_kb: number | null
+          document_type: string | null
+          document_uploaded_at: string | null
+          document_url: string | null
+          id: string
+          implant_date: string | null
+          is_active: boolean
+          notes: string | null
+          owner_id: string
+          pet_id: string | null
+          registered_at: string
+          state: string | null
+          verification_status: string
+          vet_clinic: string | null
+          vet_name: string | null
+        }
+        Insert: {
+          chip_format: string
+          chip_number: string
+          city?: string | null
+          document_name?: string | null
+          document_size_kb?: number | null
+          document_type?: string | null
+          document_uploaded_at?: string | null
+          document_url?: string | null
+          id?: string
+          implant_date?: string | null
+          is_active?: boolean
+          notes?: string | null
+          owner_id: string
+          pet_id?: string | null
+          registered_at?: string
+          state?: string | null
+          verification_status?: string
+          vet_clinic?: string | null
+          vet_name?: string | null
+        }
+        Update: {
+          chip_format?: string
+          chip_number?: string
+          city?: string | null
+          document_name?: string | null
+          document_size_kb?: number | null
+          document_type?: string | null
+          document_uploaded_at?: string | null
+          document_url?: string | null
+          id?: string
+          implant_date?: string | null
+          is_active?: boolean
+          notes?: string | null
+          owner_id?: string
+          pet_id?: string | null
+          registered_at?: string
+          state?: string | null
+          verification_status?: string
+          vet_clinic?: string | null
+          vet_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_microchips_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pet_microchips_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pet_microchips_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pet_records: {
         Row: {
