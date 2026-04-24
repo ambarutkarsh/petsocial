@@ -396,7 +396,7 @@ const ValidateChipSection = () => {
               )}
               <p className="text-xs text-muted-foreground font-body">
                 {[result.found.city, result.found.state].filter(Boolean).join(", ") || "Location not shared"}
-                {" · Registered " + new Date(result.found.registered_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                {result.found.registered_at ? " · Registered " + new Date(result.found.registered_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : ""}
               </p>
 
               {/* Found this pet section */}
