@@ -37,6 +37,7 @@ import RecommenderScreen from "./pages/hub/RecommenderScreen";
 import PetcationScreen from "./pages/hub/PetcationScreen";
 import PetMovingScreen from "./pages/hub/PetMovingScreen";
 import MicrochipScreen from "./pages/hub/MicrochipScreen";
+import RegisterMicrochipScreen from "./pages/hub/RegisterMicrochipScreen";
 import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
 import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
 import NotFound from "./pages/NotFound";
@@ -89,7 +90,8 @@ const App = () => (
             <Route path="/hub/pet-recommender" element={<ProtectedRoute><RecommenderScreen /></ProtectedRoute>} />
             <Route path="/hub/petcation" element={<ProtectedRoute><PetcationScreen /></ProtectedRoute>} />
             <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
-            <Route path="/hub/microchip" element={<ProtectedRoute><MicrochipScreen /></ProtectedRoute>} />
+            <Route path="/hub/microchip" element={<MicrochipScreen />} />
+            <Route path="/hub/microchip/register" element={<RegisterMicrochipScreen />} />
             <Route path="/hub/settings" element={<ProtectedRoute><SettingsScreen /></ProtectedRoute>} />
 
             {/* MyPet sub-pages */}
