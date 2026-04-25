@@ -123,6 +123,22 @@ const App = () => (
             <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
             <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
             <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
+            <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
+
+            {/* Book a Vet flow */}
+            <Route path="/hub/book-a-vet" element={<BookAVetScreen />} />
+            <Route path="/hub/book-a-vet/coming-soon" element={<BookAVetComingSoon />} />
+            <Route path="/hub/book-a-vet/:vetId" element={<HubVetProfileScreen />} />
+            <Route path="/hub/book-a-vet/:vetId/confirm" element={<ProtectedRoute><ConfirmBookingScreen /></ProtectedRoute>} />
+            <Route path="/hub/book-a-vet/success/:bookingId" element={<ProtectedRoute><BookingSuccessScreen /></ProtectedRoute>} />
+            <Route path="/mypet/bookings" element={<ProtectedRoute><MyBookingsScreen /></ProtectedRoute>} />
+
+            {/* Vet Dashboard */}
+            <Route path="/vet-dashboard" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Today"><VetTodayScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
+            <Route path="/vet-dashboard/calendar" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Calendar"><VetCalendarScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
+            <Route path="/vet-dashboard/requests" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Requests"><VetRequestsScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
+            <Route path="/vet-dashboard/availability" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Availability"><VetAvailabilityScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
+            <Route path="/vet-dashboard/profile" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Profile"><VetDashProfileScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
 
             {/* Public post detail keeps its own layout */}
             <Route path="/post/:postId" element={<PostDetailScreen />} />
