@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import MobileLayout from "@/components/MobileLayout";
+import AdminLayout from "@/components/admin/AdminLayout";
 import { toast } from "sonner";
-import { ArrowLeft, Sprout, Trash2, Users, FileImage, Loader2 } from "lucide-react";
+import { Sprout, Trash2, Users, FileImage, Loader2 } from "lucide-react";
 
 const ADMIN_EMAIL = "petosauras@gmail.com";
 
@@ -244,15 +244,8 @@ const AdminSeedScreen = () => {
   if (authLoading || !isAdmin) return null;
 
   return (
-    <MobileLayout>
-      <div className="px-5 py-4">
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate("/feed")} className="p-2 rounded-xl bg-surface-alt">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-xl font-heading font-bold text-foreground">Seed Data Manager</h1>
-        </div>
-
+    <AdminLayout title="Seed Data Manager" subtitle="Populate Petosauras with demo users and posts">
+      <div className="max-w-3xl">
         <div className="grid grid-cols-2 gap-3 mb-6">
           <Card className="p-4 text-center rounded-2xl">
             <Users className="w-6 h-6 mx-auto mb-1 text-primary" />
@@ -293,7 +286,7 @@ const AdminSeedScreen = () => {
         )}
 
         {seedUsers > 0 && (
-          <div className="border border-destructive/30 rounded-2xl p-4 mt-4">
+          <div className="border border-destructive/30 rounded-2xl p-4 mt-4 bg-white">
             <h3 className="text-sm font-semibold text-destructive mb-2">Danger Zone</h3>
             <Button
               variant="outline"
@@ -310,7 +303,7 @@ const AdminSeedScreen = () => {
           </div>
         )}
       </div>
-    </MobileLayout>
+    </AdminLayout>
   );
 };
 
