@@ -126,12 +126,14 @@ const RegisterMicrochipScreen = () => {
       }
       setCheckingConflict(true);
       try {
-        // Use security-definer RPC; the table no longer allows public reads
-        // of other users' chip records.
-        const { data } = await supabase.rpc("lookup_microchip", { _chip_number: v.cleaned });
-        const row = Array.isArray(data) && data.length > 0 ? data[0] : null;
-        if (!row) setChipConflict("none");
-        else if (row.owner_id === user.id) setChipConflict("self");
+        const { data } = await supabase
+          .from("pet_microchips")
+          .select("id, owner_id")
+          .eq("chip_number", v.cleaned)
+          .eq("is_active", true)
+          .maybeSingle();
+        if (!data) setChipConflict("none");
+        else if (data.owner_id === user.id) setChipConflict("self");
         else setChipConflict("other");
       } finally {
         setCheckingConflict(false);
