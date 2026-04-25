@@ -32,6 +32,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
 
         if (event === "SIGNED_IN" && session?.user) {
+          // Auto-link unlinked vet record by email match
+          if (session.user.email) {
+            supabase
+              .from("vets")
+              .update({ user_id: session.user.id })
+              .eq("email", session.user.email)
+              .is("user_id", null)
+              .then(() => {});
+          }
+
           // Check if new Google user
           const provider = session.user.app_metadata?.provider;
           if (provider === "google") {
