@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { isAdminEmail } from "@/lib/admin";
 
 const petEmojis = ["🐕", "🐈", "🐠", "🦜", "🐇"];
 const features = ["📸 Share moments", "💬 Discuss & help", "🏥 Track health", "📚 Pet knowledge"];
@@ -35,6 +36,11 @@ const AuthScreen = () => {
 
   useEffect(() => {
     if (loading || !user) return;
+
+    if (isAdminEmail(user.email)) {
+      navigate("/admin", { replace: true });
+      return;
+    }
 
     if (isNewGoogleUser) {
       navigate("/complete-registration", { replace: true });
@@ -67,6 +73,7 @@ const AuthScreen = () => {
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
     trackEvent("login_success");
+    if (isAdminEmail(email)) { navigate("/admin"); return; }
     navigate("/feeds");
   };
 
@@ -120,6 +127,7 @@ const AuthScreen = () => {
     setOtpSubmitting(false);
     if (error) { toast.error(error.message); return; }
     trackEvent("otp_login_success");
+    if (isAdminEmail(otpEmail)) { navigate("/admin"); return; }
     navigate("/feeds");
   };
 

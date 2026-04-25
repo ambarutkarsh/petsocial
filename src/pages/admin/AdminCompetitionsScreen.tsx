@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Loader2, Trash2 } from "lucide-react";
+import { Plus, Loader2, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import MobileLayout from "@/components/MobileLayout";
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +11,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const AdminCompetitionsScreen = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
   const [showForm, setShowForm] = useState(false);
@@ -38,11 +36,9 @@ const AdminCompetitionsScreen = () => {
 
   if (!isAdminEmail(user?.email)) {
     return (
-      <MobileLayout>
-        <div className="p-8 text-center">
-          <p className="text-sm font-body text-muted-foreground">Admin access only.</p>
-        </div>
-      </MobileLayout>
+      <AdminLayout title="Competitions">
+        <p className="text-sm font-body text-muted-foreground">Admin access only.</p>
+      </AdminLayout>
     );
   }
 
@@ -85,22 +81,16 @@ const AdminCompetitionsScreen = () => {
   };
 
   return (
-    <MobileLayout>
-      <div className="pb-20 min-h-screen">
-        <header className="px-4 pt-4 flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
-          >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
-          </button>
-          <h1 className="font-heading font-bold text-xl flex-1">🏆 Competitions</h1>
-          <Button size="sm" onClick={() => setShowForm(!showForm)}>
-            <Plus className="w-4 h-4 mr-1" strokeWidth={2} /> New
-          </Button>
-        </header>
-
-        <div className="px-4 mt-5 space-y-4">
+    <AdminLayout
+      title="Competitions"
+      subtitle="Create and manage photo & reel contests"
+      headerRight={
+        <Button size="sm" onClick={() => setShowForm(!showForm)}>
+          <Plus className="w-4 h-4 mr-1" strokeWidth={2} /> New
+        </Button>
+      }
+    >
+      <div className="space-y-4 max-w-4xl">
           {showForm && (
             <div className="rounded-[18px] bg-card border border-border p-4 shadow-petosauras space-y-3 animate-fade-in">
               <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -167,9 +157,8 @@ const AdminCompetitionsScreen = () => {
               </div>
             ))
           )}
-        </div>
       </div>
-    </MobileLayout>
+    </AdminLayout>
   );
 };
 

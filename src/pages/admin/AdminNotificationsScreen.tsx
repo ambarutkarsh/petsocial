@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
-import MobileLayout from "@/components/MobileLayout";
+import { Send, Loader2 } from "lucide-react";
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +10,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const AdminNotificationsScreen = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -20,11 +18,9 @@ const AdminNotificationsScreen = () => {
 
   if (!isAdminEmail(user?.email)) {
     return (
-      <MobileLayout>
-        <div className="p-8 text-center">
-          <p className="text-sm font-body text-muted-foreground">Admin access only.</p>
-        </div>
-      </MobileLayout>
+      <AdminLayout title="Push Notifications">
+        <p className="text-sm font-body text-muted-foreground">Admin access only.</p>
+      </AdminLayout>
     );
   }
 
@@ -69,62 +65,50 @@ const AdminNotificationsScreen = () => {
   };
 
   return (
-    <MobileLayout>
-      <div className="pb-20 min-h-screen">
-        <header className="px-4 pt-4 flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
-          >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
-          </button>
-          <h1 className="font-heading font-bold text-xl">📣 Bulk Notifications</h1>
-        </header>
-
-        <div className="px-4 mt-5 space-y-4">
-          <div className="rounded-[18px] bg-card border border-border p-4 shadow-petosauras space-y-3">
-            <div>
-              <label className="text-xs font-body font-semibold text-muted-foreground">Title</label>
-              <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="New competition is live! 🏆"
-                maxLength={80}
-              />
-            </div>
-            <div>
-              <label className="text-xs font-body font-semibold text-muted-foreground">Body</label>
-              <Textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Submit your best photo before Sunday..."
-                rows={4}
-                maxLength={300}
-              />
-            </div>
-            <div>
-              <label className="text-xs font-body font-semibold text-muted-foreground">Redirect URL (optional)</label>
-              <Input
-                value={redirect}
-                onChange={(e) => setRedirect(e.target.value)}
-                placeholder="/feeds?pill=competition"
-              />
-            </div>
-            <Button onClick={send} disabled={sending} className="w-full" size="lg">
-              {sending ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</>
-              ) : (
-                <><Send className="w-4 h-4 mr-2" strokeWidth={2} /> Send to all real users</>
-              )}
-            </Button>
+    <AdminLayout title="Push Notifications" subtitle="Send a broadcast notification to all real users">
+      <div className="space-y-4 max-w-2xl">
+        <div className="rounded-2xl bg-white border p-5 space-y-3" style={{ borderColor: "#E8E5F0" }}>
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground">Title</label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="New competition is live! 🏆"
+              maxLength={80}
+            />
           </div>
-
-          <p className="text-[11px] text-muted-foreground font-body text-center">
-            Sends only to non-seed users. Inserts in batches of 500.
-          </p>
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground">Body</label>
+            <Textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="Submit your best photo before Sunday..."
+              rows={4}
+              maxLength={300}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-body font-semibold text-muted-foreground">Redirect URL (optional)</label>
+            <Input
+              value={redirect}
+              onChange={(e) => setRedirect(e.target.value)}
+              placeholder="/feeds?pill=competition"
+            />
+          </div>
+          <Button onClick={send} disabled={sending} className="w-full" size="lg">
+            {sending ? (
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</>
+            ) : (
+              <><Send className="w-4 h-4 mr-2" strokeWidth={2} /> Send to all real users</>
+            )}
+          </Button>
         </div>
+
+        <p className="text-[11px] text-muted-foreground font-body">
+          Sends only to non-seed users. Inserts in batches of 500.
+        </p>
       </div>
-    </MobileLayout>
+    </AdminLayout>
   );
 };
 
