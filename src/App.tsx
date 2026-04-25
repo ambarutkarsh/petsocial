@@ -42,6 +42,7 @@ import PetCareScreen from "./pages/hub/PetCareScreen";
 import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
 import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
 import AdminVetsScreen from "./pages/admin/AdminVetsScreen";
+import AdminDashboardScreen from "./pages/admin/AdminDashboardScreen";
 import BookAVetScreen from "./pages/hub/BookAVetScreen";
 import BookAVetComingSoon from "./pages/hub/BookAVetComingSoon";
 import HubVetProfileScreen from "./pages/hub/VetProfileScreen";
@@ -120,6 +121,7 @@ const App = () => (
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
             <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
             <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboardScreen /></ProtectedRoute>} />
             <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
             <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
             <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
