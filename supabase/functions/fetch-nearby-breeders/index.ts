@@ -31,7 +31,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({ breeders }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (e) {
+  } catch (e: any) {
     return new Response(JSON.stringify({ error: e.message, breeders: [] }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

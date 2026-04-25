@@ -60,7 +60,7 @@ serve(async (req) => {
     return new Response(JSON.stringify(parsed), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (e) {
+  } catch (e: any) {
     console.error("Budget calc error:", e);
     return new Response(JSON.stringify({ error: e.message || "Failed to calculate budget" }), {
       status: 500,
