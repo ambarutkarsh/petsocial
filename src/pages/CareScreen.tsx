@@ -23,6 +23,7 @@ const services = [
   // Row 4
   { emoji: "🤝", label: "NGO Connect", path: "/hub/ngo" },
   { emoji: "🚗", label: "Pet Pick & Drop", path: "/hub/pickup" },
+  { emoji: "🩺", label: "Book a Vet", path: "/hub/book-a-vet" },
 ];
 
 const HubScreen = () => {
