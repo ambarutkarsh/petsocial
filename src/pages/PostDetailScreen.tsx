@@ -15,7 +15,7 @@ const PostDetailScreen = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("posts")
-        .select("*, profiles!posts_user_id_fkey(full_name, username, avatar_url)")
+        .select("*, profiles:public_profiles!posts_user_id_fkey(full_name, username, avatar_url)")
         .eq("id", postId!)
         .single();
       return data;
