@@ -33,7 +33,7 @@ const VetTodayInner = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("vet_bookings")
-        .select("*, pets(name, species), public_profiles!vet_bookings_user_id_fkey(full_name), vet_slots!inner(slot_date, start_time, end_time)")
+        .select("*, pets(name, species), profiles:public_profiles!vet_bookings_user_id_fkey(full_name), vet_slots!inner(slot_date, start_time, end_time)")
         .eq("vet_id", vet!.id)
         .eq("vet_slots.slot_date", today)
         .order("vet_slots(start_time)" as any, { ascending: true });

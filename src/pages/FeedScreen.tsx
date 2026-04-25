@@ -31,7 +31,7 @@ const FeedScreen = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("posts")
-        .select("*, public_profiles!posts_user_id_fkey(full_name, username, avatar_url), pets!posts_pet_id_fkey(name, pet_type)")
+        .select("*, profiles:public_profiles!posts_user_id_fkey(full_name, username, avatar_url), pets!posts_pet_id_fkey(name, pet_type)")
         .order("created_at", { ascending: false })
         .limit(20);
       return data || [];
@@ -61,7 +61,7 @@ const FeedScreen = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("stories")
-        .select("*, public_profiles!stories_user_id_fkey(full_name, avatar_url), pets!stories_pet_id_fkey(name, avatar_emoji)")
+        .select("*, profiles:public_profiles!stories_user_id_fkey(full_name, avatar_url), pets!stories_pet_id_fkey(name, avatar_emoji)")
         .order("created_at", { ascending: false });
       return data || [];
     },

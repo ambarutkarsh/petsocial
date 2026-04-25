@@ -27,7 +27,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
     queryFn: async () => {
       const { data } = await supabase
         .from("post_comments")
-        .select("*, public_profiles!post_comments_user_id_fkey(full_name, avatar_url, username)")
+        .select("*, profiles:public_profiles!post_comments_user_id_fkey(full_name, avatar_url, username)")
         .eq("post_id", postId)
         .order("created_at", { ascending: true })
         .limit(20);
