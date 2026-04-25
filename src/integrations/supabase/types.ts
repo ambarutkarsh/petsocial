@@ -1850,6 +1850,518 @@ export type Database = {
           },
         ]
       }
+      vet_availability: {
+        Row: {
+          consultation_type: string | null
+          created_at: string | null
+          day_of_week: number
+          end_time: string
+          id: string
+          is_active: boolean | null
+          slot_duration_minutes: number
+          start_time: string
+          vet_id: string
+        }
+        Insert: {
+          consultation_type?: string | null
+          created_at?: string | null
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_active?: boolean | null
+          slot_duration_minutes?: number
+          start_time: string
+          vet_id: string
+        }
+        Update: {
+          consultation_type?: string | null
+          created_at?: string | null
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_active?: boolean | null
+          slot_duration_minutes?: number
+          start_time?: string
+          vet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_availability_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_bookings: {
+        Row: {
+          booking_reference: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
+          completed_at: string | null
+          confirmed_at: string | null
+          consultation_type: string
+          created_at: string | null
+          id: string
+          is_emergency: boolean | null
+          pet_id: string | null
+          reason_for_visit: string | null
+          reminder_sent: boolean | null
+          share_health_records: boolean | null
+          slot_id: string
+          status: string
+          symptoms: string[] | null
+          user_id: string
+          user_notes: string | null
+          vet_id: string
+          vet_notes: string | null
+        }
+        Insert: {
+          booking_reference?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          completed_at?: string | null
+          confirmed_at?: string | null
+          consultation_type?: string
+          created_at?: string | null
+          id?: string
+          is_emergency?: boolean | null
+          pet_id?: string | null
+          reason_for_visit?: string | null
+          reminder_sent?: boolean | null
+          share_health_records?: boolean | null
+          slot_id: string
+          status?: string
+          symptoms?: string[] | null
+          user_id: string
+          user_notes?: string | null
+          vet_id: string
+          vet_notes?: string | null
+        }
+        Update: {
+          booking_reference?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
+          completed_at?: string | null
+          confirmed_at?: string | null
+          consultation_type?: string
+          created_at?: string | null
+          id?: string
+          is_emergency?: boolean | null
+          pet_id?: string | null
+          reason_for_visit?: string | null
+          reminder_sent?: boolean | null
+          share_health_records?: boolean | null
+          slot_id?: string
+          status?: string
+          symptoms?: string[] | null
+          user_id?: string
+          user_notes?: string | null
+          vet_id?: string
+          vet_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_bookings_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_bookings_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "vet_slots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_bookings_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_notifications: {
+        Row: {
+          booking_id: string | null
+          channel: string | null
+          id: string
+          message: string | null
+          sent_at: string | null
+          status: string | null
+          vet_id: string
+        }
+        Insert: {
+          booking_id?: string | null
+          channel?: string | null
+          id?: string
+          message?: string | null
+          sent_at?: string | null
+          status?: string | null
+          vet_id: string
+        }
+        Update: {
+          booking_id?: string | null
+          channel?: string | null
+          id?: string
+          message?: string | null
+          sent_at?: string | null
+          status?: string | null
+          vet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_notifications_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "vet_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_notifications_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_prescriptions: {
+        Row: {
+          booking_id: string
+          created_at: string | null
+          diagnosis: string | null
+          document_url: string | null
+          follow_up_date: string | null
+          follow_up_notes: string | null
+          id: string
+          instructions: string | null
+          medications: Json | null
+          owner_id: string | null
+          pet_id: string | null
+          vet_id: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string | null
+          diagnosis?: string | null
+          document_url?: string | null
+          follow_up_date?: string | null
+          follow_up_notes?: string | null
+          id?: string
+          instructions?: string | null
+          medications?: Json | null
+          owner_id?: string | null
+          pet_id?: string | null
+          vet_id: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string | null
+          diagnosis?: string | null
+          document_url?: string | null
+          follow_up_date?: string | null
+          follow_up_notes?: string | null
+          id?: string
+          instructions?: string | null
+          medications?: Json | null
+          owner_id?: string | null
+          pet_id?: string | null
+          vet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_prescriptions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "vet_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_prescriptions_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_prescriptions_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_prescriptions_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_prescriptions_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_reviews: {
+        Row: {
+          booking_id: string
+          created_at: string | null
+          id: string
+          is_anonymous: boolean | null
+          rating: number
+          review_text: string | null
+          reviewer_id: string
+          vet_id: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          rating: number
+          review_text?: string | null
+          reviewer_id: string
+          vet_id: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          rating?: number
+          review_text?: string | null
+          reviewer_id?: string
+          vet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "vet_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_reviews_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vet_slots: {
+        Row: {
+          consultation_type: string | null
+          created_at: string | null
+          end_time: string
+          id: string
+          is_emergency: boolean | null
+          locked_at: string | null
+          locked_by: string | null
+          slot_date: string
+          start_time: string
+          status: string
+          vet_id: string
+        }
+        Insert: {
+          consultation_type?: string | null
+          created_at?: string | null
+          end_time: string
+          id?: string
+          is_emergency?: boolean | null
+          locked_at?: string | null
+          locked_by?: string | null
+          slot_date: string
+          start_time: string
+          status?: string
+          vet_id: string
+        }
+        Update: {
+          consultation_type?: string | null
+          created_at?: string | null
+          end_time?: string
+          id?: string
+          is_emergency?: boolean | null
+          locked_at?: string | null
+          locked_by?: string | null
+          slot_date?: string
+          start_time?: string
+          status?: string
+          vet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_slots_locked_by_fkey"
+            columns: ["locked_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_slots_locked_by_fkey"
+            columns: ["locked_by"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_slots_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "vets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vets: {
+        Row: {
+          avg_rating: number | null
+          bio: string | null
+          city: string
+          clinic_address: string | null
+          clinic_name: string | null
+          consultation_fee_inperson: number | null
+          created_at: string | null
+          email: string
+          emergency_fee_inperson: number | null
+          full_name: string
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          lat: number | null
+          lng: number | null
+          onboarding_status: string | null
+          phone: string
+          pin_code: string | null
+          profile_photo_url: string | null
+          specialisations: string[] | null
+          state: string
+          total_appointments: number | null
+          total_reviews: number | null
+          user_id: string | null
+          vc_india_registration: string | null
+          verified_at: string | null
+          whatsapp_number: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          bio?: string | null
+          city?: string
+          clinic_address?: string | null
+          clinic_name?: string | null
+          consultation_fee_inperson?: number | null
+          created_at?: string | null
+          email: string
+          emergency_fee_inperson?: number | null
+          full_name: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          onboarding_status?: string | null
+          phone: string
+          pin_code?: string | null
+          profile_photo_url?: string | null
+          specialisations?: string[] | null
+          state?: string
+          total_appointments?: number | null
+          total_reviews?: number | null
+          user_id?: string | null
+          vc_india_registration?: string | null
+          verified_at?: string | null
+          whatsapp_number?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          avg_rating?: number | null
+          bio?: string | null
+          city?: string
+          clinic_address?: string | null
+          clinic_name?: string | null
+          consultation_fee_inperson?: number | null
+          created_at?: string | null
+          email?: string
+          emergency_fee_inperson?: number | null
+          full_name?: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          onboarding_status?: string | null
+          phone?: string
+          pin_code?: string | null
+          profile_photo_url?: string | null
+          specialisations?: string[] | null
+          state?: string
+          total_appointments?: number | null
+          total_reviews?: number | null
+          user_id?: string | null
+          vc_india_registration?: string | null
+          verified_at?: string | null
+          whatsapp_number?: string | null
+          years_experience?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       waitlist: {
         Row: {
           created_at: string | null
@@ -1947,6 +2459,14 @@ export type Database = {
       award_coins: {
         Args: { _amount: number; _reason: string; _user_id: string }
         Returns: undefined
+      }
+      lookup_microchip: {
+        Args: { _chip_number: string }
+        Returns: {
+          found: boolean
+          owner_id: string
+          verification_status: string
+        }[]
       }
     }
     Enums: {
