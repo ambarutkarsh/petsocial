@@ -26,7 +26,7 @@ const VetRequestsInner = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("vet_bookings")
-        .select("*, pets(name, species), profiles!vet_bookings_user_id_fkey(full_name), vet_slots(slot_date, start_time)")
+        .select("*, pets(name, species), public_profiles!vet_bookings_user_id_fkey(full_name), vet_slots(slot_date, start_time)")
         .eq("vet_id", vet!.id)
         .eq("status", "pending_vet_confirmation")
         .order("created_at", { ascending: false });
