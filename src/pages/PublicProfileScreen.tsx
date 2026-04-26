@@ -98,7 +98,7 @@ const PublicProfileScreen = () => {
         </header>
 
         {/* Cover */}
-        <div className="h-[120px]" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #9B7EC8 50%, #FF8C66 100%)" }} />
+        <div className="h-[120px]" style={{ background: "linear-gradient(135deg, #2D4A3E 0%, #4A6741 50%, #C4A882 100%)" }} />
 
         {/* Profile info */}
         <div className="px-4 -mt-10 relative z-10">

@@ -224,7 +224,7 @@ const FeedScreen = () => {
             const isViewed = viewedStoryIds.includes(s.id);
             return (
               <div key={s.id} className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => handleStoryTap(idx)}>
-                <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: isViewed ? "#ccc" : "linear-gradient(135deg, #7B5EA7, #FF8C66)" }}>
+                <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: isViewed ? "#ccc" : "linear-gradient(135deg, #2D4A3E, #C4A882)" }}>
                   <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-2xl">
                     {s.pets?.avatar_emoji || "🐾"}
                   </div>

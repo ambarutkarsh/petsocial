@@ -31,7 +31,7 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
   return (
     <>
       <nav
-        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full bg-card border-t border-border shadow-[0_-4px_24px_rgba(123,94,167,0.08)]"
+        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full bg-card border-t border-border shadow-[0_-4px_24px_rgba(45,74,62,0.08)]"
         style={{ maxWidth: 480, height: 64, zIndex: 1000, borderTopWidth: 0.5 }}
       >
         <div className="flex items-center justify-around h-16 px-4 pb-[10px]">
@@ -53,7 +53,7 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
                     else setCreateOpen(true);
                   }}
                   aria-label="Create"
-                  className="relative -mt-[14px] w-[52px] h-[52px] rounded-full bg-gradient-to-br from-primary to-[#9B7EC8] text-primary-foreground shadow-[0_4px_20px_rgba(123,94,167,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
+                  className="relative -mt-[14px] w-[52px] h-[52px] rounded-full bg-gradient-to-br from-primary to-[#4A6741] text-primary-foreground shadow-[0_4px_20px_rgba(45,74,62,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
                 >
                   <Icon className="w-6 h-6" strokeWidth={1.8} />
                 </button>

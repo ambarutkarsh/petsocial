@@ -98,7 +98,7 @@ const CompleteRegistrationScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="min-h-screen px-6 py-8" style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}>
+      <div className="min-h-screen px-6 py-8" style={{ background: "radial-gradient(ellipse at top, #EBF0ED 0%, #F5EDE4 50%, #F5E8E0 100%)" }}>
         <div className="text-center mb-8">
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-logo.png" alt="Petosauras" style={{ height: 60, objectFit: "contain" }} className="mx-auto mb-3" />
