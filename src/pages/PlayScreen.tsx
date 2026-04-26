@@ -280,10 +280,11 @@ const FeedScreen = () => {
       const { data: myPets } = await supabase.from("pets").select("species, pet_type").eq("owner_id", user!.id).eq("is_primary", true).maybeSingle();
       const species = myPets?.species || myPets?.pet_type;
       // Get candidates
-      let q = supabase.from("pets").select("*, profiles:public_profiles!pets_owner_id_fkey(full_name, username, city, avatar_url)").neq("owner_id", user!.id).limit(30);
+      let q = supabase.from("pets").select("*").neq("owner_id", user!.id).limit(30);
       if (species) q = q.or(`species.eq.${species},pet_type.eq.${species}`);
       const { data } = await q;
-      return (data || []).filter((p: any) => !profile?.city || p.profiles?.city === profile.city);
+      const withProfiles = await attachProfiles(data || [], "owner_id" as any);
+      return withProfiles.filter((p: any) => !profile?.city || p.profiles?.city === profile.city);
     },
   });
   const [mateIdx, setMateIdx] = useState(0);
