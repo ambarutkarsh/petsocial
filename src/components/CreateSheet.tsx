@@ -20,7 +20,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
       icon: Camera,
       title: "Upload Photo",
       desc: "Share a pet moment",
-      color: "from-primary to-[#9B7EC8]",
+      color: "from-primary to-[#4A6741]",
       onClick: () => {
         trackEvent("create_upload_photo");
         onClose();
