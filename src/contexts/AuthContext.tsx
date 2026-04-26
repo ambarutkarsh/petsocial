@@ -32,14 +32,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
 
         if (event === "SIGNED_IN" && session?.user) {
-          // Auto-link unlinked vet record by email match
+          // Auto-link unlinked vet record by email match (uses service role
+          // via edge function because vets PII columns are not directly
+          // selectable from the client).
           if (session.user.email) {
-            supabase
-              .from("vets")
-              .update({ user_id: session.user.id })
-              .eq("email", session.user.email)
-              .is("user_id", null)
-              .then(() => {});
+            supabase.functions.invoke("link-vet-by-email").catch(() => {});
           }
 
           // Check if new Google user

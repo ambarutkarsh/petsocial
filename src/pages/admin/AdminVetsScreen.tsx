@@ -68,7 +68,11 @@ const AdminVetsScreen = () => {
   const { data: vets = [], isLoading } = useQuery({
     queryKey: ["admin-vets"],
     enabled: isAdminEmail(user?.email),
-    queryFn: async () => (await supabase.from("vets").select("*").order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke("admin-list-vets");
+      if (error) throw error;
+      return (data as { data?: any[] })?.data ?? [];
+    },
   });
 
   if (!isAdminEmail(user?.email)) {

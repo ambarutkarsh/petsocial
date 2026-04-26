@@ -191,13 +191,19 @@ const AdminSeedScreen = () => {
     }
 
     setLog((prev) => [...prev, "🔗 Adding follows between users..."]);
+    const followRows: { follower_id: string; following_id: string }[] = [];
     for (let i = 0; i < createdUserIds.length; i++) {
       const followTargets = createdUserIds.filter((_, j) => j !== i).slice(0, 5);
       for (const targetId of followTargets) {
-        await supabase.from("follows").insert({
-          follower_id: createdUserIds[i],
-          following_id: targetId,
-        });
+        followRows.push({ follower_id: createdUserIds[i], following_id: targetId });
+      }
+    }
+    if (followRows.length > 0) {
+      const { error: followsErr } = await supabase.functions.invoke("admin-seed-follows", {
+        body: { follows: followRows },
+      });
+      if (followsErr) {
+        setLog((prev) => [...prev, `⚠️ Failed to add follows: ${followsErr.message}`]);
       }
     }
 
