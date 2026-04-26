@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,42 +6,53 @@
 
 @layer base {
   :root {
-    --background: 34 33% 97%;
-    --foreground: 252 25% 14%;
+    /* All colours are HSL of the new earthy/forest palette */
+
+    /* Background / surfaces — cream tones */
+    --background: 33 41% 93%;        /* #F5EDE4 */
+    --foreground: 134 14% 14%;       /* #1E2820 */
 
     --card: 0 0% 100%;
-    --card-foreground: 252 25% 14%;
+    --card-foreground: 134 14% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 252 25% 14%;
+    --popover-foreground: 134 14% 14%;
 
-    --primary: 269 28% 51%;
+    /* Primary — Forest Green #2D4A3E */
+    --primary: 152 24% 23%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 260 100% 96%;
-    --primary-dark: 269 33% 37%;
+    --primary-light: 132 14% 93%;    /* #EBF0ED */
+    --primary-dark: 152 27% 16%;     /* #1E3329 */
+    --primary-mid: 100 22% 33%;      /* #4A6741 */
 
-    --secondary: 16 100% 70%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-light: 16 100% 96%;
+    /* Secondary — Warm Tan #C4A882 */
+    --secondary: 34 36% 64%;
+    --secondary-foreground: 134 14% 14%;
+    --secondary-light: 32 47% 92%;   /* #F5EDE4 area, lighter tan */
+    --secondary-dark: 34 28% 50%;    /* #A08860 */
 
-    --muted: 260 10% 95%;
-    --muted-foreground: 258 8% 55%;
-
-    --accent: 174 55% 55%;
+    /* Accent — Dusty Rose #C4897A */
+    --accent: 11 39% 62%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 174 60% 95%;
+    --accent-light: 12 47% 93%;      /* #F5E8E5 */
 
-    --destructive: 0 100% 71%;
+    /* Muted */
+    --muted: 32 25% 91%;             /* #F0E8DF */
+    --muted-foreground: 152 9% 58%;  /* #8A9E93 */
+
+    /* Semantic */
+    --destructive: 11 39% 62%;       /* dusty rose used as error */
     --destructive-foreground: 0 0% 100%;
+    --success: 100 22% 33%;          /* sage */
+    --warning: 34 36% 64%;           /* tan */
+    --error: 11 39% 62%;             /* dusty rose */
+    --info: 145 15% 41%;             /* #5A7A6A */
 
-    --success: 149 48% 55%;
-    --warning: 33 100% 64%;
-    --error: 0 100% 71%;
-
-    --border: 269 28% 51% / 0.12;
-    --border-strong: 269 28% 51% / 0.25;
-    --input: 34 18% 93%;
-    --ring: 269 28% 51%;
+    /* Borders / inputs */
+    --border: 152 24% 23% / 0.12;
+    --border-strong: 152 24% 23% / 0.25;
+    --input: 32 25% 91%;             /* #F0E8DF */
+    --ring: 152 24% 23%;
 
     --radius: 16px;
     --radius-sm: 10px;
@@ -50,26 +61,31 @@
     --radius-xl: 28px;
     --radius-pill: 50px;
 
-    --text-primary: 252 25% 14%;
-    --text-secondary: 258 8% 55%;
-    --text-hint: 258 6% 69%;
-    --text-mid: 258 8% 55%;
-    --text-muted: 258 6% 69%;
+    /* Text helpers */
+    --text-primary: 134 14% 14%;     /* #1E2820 */
+    --text-secondary: 138 9% 33%;    /* #4A5C50 */
+    --text-hint: 137 14% 74%;        /* #B5C4BB */
+    --text-mid: 138 9% 33%;
+    --text-muted: 152 9% 58%;        /* #8A9E93 */
 
-    --surface-alt: 30 18% 94%;
+    /* Surface alternates */
+    --surface-alt: 32 25% 91%;       /* #F0E8DF */
+    --cream: 30 28% 86%;             /* #E8DDD0 */
 
-    --shadow-sm: 0 2px 12px rgba(123, 94, 167, 0.08);
-    --shadow-md: 0 4px 20px rgba(123, 94, 167, 0.12);
-    --shadow-lg: 0 8px 32px rgba(123, 94, 167, 0.16);
+    /* Shadows — warm-tinted forest green */
+    --shadow-sm: 0 2px 12px rgba(45, 74, 62, 0.08);
+    --shadow-md: 0 4px 20px rgba(45, 74, 62, 0.12);
+    --shadow-lg: 0 8px 32px rgba(45, 74, 62, 0.16);
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar (admin) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 138 9% 33%;
+    --sidebar-primary: 152 24% 23%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 132 14% 93%;
+    --sidebar-accent-foreground: 152 24% 23%;
+    --sidebar-border: 152 24% 23% / 0.10;
+    --sidebar-ring: 152 24% 23%;
   }
 }
 
@@ -98,7 +114,7 @@
     width: 100%;
     margin: 0 auto;
     min-height: 100vh;
-    background: #FBF8F4;
+    background: #F5EDE4;
     position: relative;
     overflow-x: hidden;
   }
