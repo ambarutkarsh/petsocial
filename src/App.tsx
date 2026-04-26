@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-route
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AuthScreen from "./pages/AuthScreen";
@@ -76,6 +77,7 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <AuthProvider>
+        <UserProfileProvider>
         <BrowserRouter>
           <GuestPopupProvider>
           <PageTracker />
@@ -167,6 +169,7 @@ const App = () => (
           </Routes>
           </GuestPopupProvider>
         </BrowserRouter>
+        </UserProfileProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
