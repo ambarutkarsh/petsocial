@@ -104,12 +104,19 @@ const FeedScreen = () => {
     queryKey: ["feed-posts"],
     enabled: showReels,
     queryFn: async () => {
-      const { data } = await supabase
+      const { data: rawPosts } = await supabase
         .from("posts")
-        .select("*, profiles:public_profiles!posts_user_id_fkey(full_name, username, avatar_url), pets!posts_pet_id_fkey(name, pet_type)")
+        .select("*, pets!posts_pet_id_fkey(name, pet_type)")
         .order("created_at", { ascending: false })
         .limit(30);
-      return data || [];
+      if (!rawPosts || rawPosts.length === 0) return [];
+      const userIds = Array.from(new Set(rawPosts.map((p: any) => p.user_id).filter(Boolean)));
+      const { data: profs } = await supabase
+        .from("public_profiles")
+        .select("id, full_name, username, avatar_url, city")
+        .in("id", userIds);
+      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      return rawPosts.map((p: any) => ({ ...p, profiles: profMap.get(p.user_id) || null }));
     },
   });
 
