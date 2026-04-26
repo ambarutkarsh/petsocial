@@ -13,7 +13,10 @@ const VetCalendarInner = () => {
   const { data: vet } = useQuery({
     queryKey: ["my-vet", user?.id],
     enabled: !!user,
-    queryFn: async () => (await supabase.from("vets").select("*").eq("user_id", user!.id).maybeSingle()).data,
+    queryFn: async () => {
+      const { data } = await supabase.rpc("get_my_vet_profile");
+      return Array.isArray(data) ? data[0] ?? null : null;
+    },
   });
 
   const { from, to, days } = useMemo(() => {
