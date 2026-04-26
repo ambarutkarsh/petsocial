@@ -12,12 +12,8 @@ const VetGuard = ({ children }: { children: ReactNode }) => {
     queryKey: ["my-vet", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("vets")
-        .select("*")
-        .eq("user_id", user!.id)
-        .maybeSingle();
-      return data;
+      const { data } = await supabase.rpc("get_my_vet_profile");
+      return Array.isArray(data) ? data[0] ?? null : null;
     },
   });
 
