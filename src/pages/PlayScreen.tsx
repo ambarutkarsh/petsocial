@@ -20,6 +20,20 @@ import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, i
 import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
 import { maskName } from "@/lib/maskName";
 
+// Helper: attach public_profiles to a list of rows by user_id field.
+async function attachProfiles<T extends Record<string, any>>(
+  rows: T[],
+  fkField: keyof T = "user_id" as keyof T,
+  fields = "id, full_name, username, avatar_url, city",
+): Promise<(T & { profiles: any })[]> {
+  if (!rows || rows.length === 0) return [];
+  const ids = Array.from(new Set(rows.map((r) => r[fkField]).filter(Boolean) as string[]));
+  if (ids.length === 0) return rows.map((r) => ({ ...r, profiles: null }));
+  const { data: profs } = await supabase.from("public_profiles").select(fields).in("id", ids);
+  const map = new Map((profs || []).map((p: any) => [p.id, p]));
+  return rows.map((r) => ({ ...r, profiles: map.get(r[fkField] as string) || null }));
+}
+
 // Pills enabled for guest browsing
 const GUEST_ENABLED_PILLS: FeedPillKey[] = ["reels", "news", "facts"];
 
