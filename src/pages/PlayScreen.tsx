@@ -160,11 +160,18 @@ const FeedScreen = () => {
     queryKey: ["stories"],
     enabled: showReels,
     queryFn: async () => {
-      const { data } = await supabase
+      const { data: rawStories } = await supabase
         .from("stories")
-        .select("*, profiles:public_profiles!stories_user_id_fkey(full_name, avatar_url), pets!stories_pet_id_fkey(name, avatar_emoji)")
+        .select("*, pets!stories_pet_id_fkey(name, avatar_emoji)")
         .order("created_at", { ascending: false });
-      return data || [];
+      if (!rawStories || rawStories.length === 0) return [];
+      const userIds = Array.from(new Set(rawStories.map((s: any) => s.user_id).filter(Boolean)));
+      const { data: profs } = await supabase
+        .from("public_profiles")
+        .select("id, full_name, avatar_url")
+        .in("id", userIds);
+      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      return rawStories.map((s: any) => ({ ...s, profiles: profMap.get(s.user_id) || null }));
     },
   });
 
