@@ -21,8 +21,8 @@ const AdminDashboardScreen = () => {
     queryFn: async () => {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       const [{ count: users }, { count: posts }, { count: vets }, { count: bookings }] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", false),
-        supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", false),
+        supabase.from("profiles").select("id", { count: "exact", head: true }).or("is_seed_user.eq.false,is_seed_user.is.null"),
+        supabase.from("posts").select("id", { count: "exact", head: true }).or("is_seed_post.eq.false,is_seed_post.is.null"),
         supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_verified", true),
         supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
       ]);
@@ -36,7 +36,7 @@ const AdminDashboardScreen = () => {
       const { data } = await supabase
         .from("profiles")
         .select("id, full_name, city, created_at")
-        .eq("is_seed_user", false)
+        .or("is_seed_user.eq.false,is_seed_user.is.null")
         .order("created_at", { ascending: false })
         .limit(10);
       const ids = (data ?? []).map((p) => p.id);
