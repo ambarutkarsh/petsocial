@@ -1889,6 +1889,13 @@ export type Database = {
             foreignKeyName: "vet_availability_vet_id_fkey"
             columns: ["vet_id"]
             isOneToOne: false
+            referencedRelation: "public_vets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_availability_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
             referencedRelation: "vets"
             referencedColumns: ["id"]
           },
@@ -1997,6 +2004,13 @@ export type Database = {
             foreignKeyName: "vet_bookings_vet_id_fkey"
             columns: ["vet_id"]
             isOneToOne: false
+            referencedRelation: "public_vets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_bookings_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
             referencedRelation: "vets"
             referencedColumns: ["id"]
           },
@@ -2036,6 +2050,13 @@ export type Database = {
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "vet_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_notifications_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "public_vets"
             referencedColumns: ["id"]
           },
           {
@@ -2123,6 +2144,13 @@ export type Database = {
             foreignKeyName: "vet_prescriptions_vet_id_fkey"
             columns: ["vet_id"]
             isOneToOne: false
+            referencedRelation: "public_vets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_prescriptions_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
             referencedRelation: "vets"
             referencedColumns: ["id"]
           },
@@ -2179,6 +2207,13 @@ export type Database = {
             columns: ["reviewer_id"]
             isOneToOne: false
             referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_reviews_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "public_vets"
             referencedColumns: ["id"]
           },
           {
@@ -2243,6 +2278,13 @@ export type Database = {
             columns: ["locked_by"]
             isOneToOne: false
             referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vet_slots_vet_id_fkey"
+            columns: ["vet_id"]
+            isOneToOne: false
+            referencedRelation: "public_vets"
             referencedColumns: ["id"]
           },
           {
@@ -2451,6 +2493,87 @@ export type Database = {
           state?: string | null
           updated_at?: string | null
           username?: string | null
+        }
+        Relationships: []
+      }
+      public_vets: {
+        Row: {
+          avg_rating: number | null
+          bio: string | null
+          city: string | null
+          clinic_address: string | null
+          clinic_name: string | null
+          consultation_fee_inperson: number | null
+          created_at: string | null
+          emergency_fee_inperson: number | null
+          full_name: string | null
+          id: string | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          lat: number | null
+          lng: number | null
+          onboarding_status: string | null
+          pin_code: string | null
+          profile_photo_url: string | null
+          specialisations: string[] | null
+          state: string | null
+          total_appointments: number | null
+          total_reviews: number | null
+          vc_india_registration: string | null
+          verified_at: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          bio?: string | null
+          city?: string | null
+          clinic_address?: string | null
+          clinic_name?: string | null
+          consultation_fee_inperson?: number | null
+          created_at?: string | null
+          emergency_fee_inperson?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          onboarding_status?: string | null
+          pin_code?: string | null
+          profile_photo_url?: string | null
+          specialisations?: string[] | null
+          state?: string | null
+          total_appointments?: number | null
+          total_reviews?: number | null
+          vc_india_registration?: string | null
+          verified_at?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          avg_rating?: number | null
+          bio?: string | null
+          city?: string | null
+          clinic_address?: string | null
+          clinic_name?: string | null
+          consultation_fee_inperson?: number | null
+          created_at?: string | null
+          emergency_fee_inperson?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          onboarding_status?: string | null
+          pin_code?: string | null
+          profile_photo_url?: string | null
+          specialisations?: string[] | null
+          state?: string | null
+          total_appointments?: number | null
+          total_reviews?: number | null
+          vc_india_registration?: string | null
+          verified_at?: string | null
+          years_experience?: number | null
         }
         Relationships: []
       }
