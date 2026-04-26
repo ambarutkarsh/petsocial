@@ -230,7 +230,8 @@ const FeedScreen = () => {
     queryKey: ["adopt-topics"],
     enabled: showAdopt,
     queryFn: async () => {
-      const { data } = await supabase.from("forum_topics").select("*, profiles:public_profiles!forum_topics_user_id_fkey(full_name, avatar_url, username)").eq("pet_category", "adoption").order("created_at", { ascending: false }).limit(20);
+      const { data } = await supabase.from("forum_topics").select("*").eq("pet_category", "adoption").order("created_at", { ascending: false }).limit(20);
+      return await attachProfiles(data || []);
       return data || [];
     },
   });
@@ -240,7 +241,8 @@ const FeedScreen = () => {
     queryKey: ["walker-topics"],
     enabled: showWalker,
     queryFn: async () => {
-      const { data } = await supabase.from("forum_topics").select("*, profiles:public_profiles!forum_topics_user_id_fkey(full_name, avatar_url, username)").eq("pet_category", "walker").order("created_at", { ascending: false }).limit(20);
+      const { data } = await supabase.from("forum_topics").select("*").eq("pet_category", "walker").order("created_at", { ascending: false }).limit(20);
+      return await attachProfiles(data || []);
       return data || [];
     },
   });
@@ -262,7 +264,8 @@ const FeedScreen = () => {
     queryKey: ["pet-club-events"],
     enabled: showPetClub,
     queryFn: async () => {
-      const { data } = await supabase.from("pet_club_events").select("*, profiles:public_profiles!pet_club_events_user_id_fkey(full_name, avatar_url)").order("event_date", { ascending: true }).limit(20);
+      const { data } = await supabase.from("pet_club_events").select("*").order("event_date", { ascending: true }).limit(20);
+      return await attachProfiles(data || []);
       return data || [];
     },
   });
@@ -289,7 +292,8 @@ const FeedScreen = () => {
   const showNearby = activePill === "nearby"; // never auto-included by Curated
   const fetchNearby = async (subKey: string) => {
     if (subKey === "lost_found") {
-      const { data } = await supabase.from("forum_topics").select("*, profiles:public_profiles!forum_topics_user_id_fkey(full_name, avatar_url)").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
+      const { data: rawTopics } = await supabase.from("forum_topics").select("*").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
+      const data = await attachProfiles(rawTopics || []);
       setNearbyPlaces((data || []).map((t: any) => ({ isTopic: true, ...t })));
       return;
     }
