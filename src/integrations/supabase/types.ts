@@ -2583,6 +2583,45 @@ export type Database = {
         Args: { _amount: number; _reason: string; _user_id: string }
         Returns: undefined
       }
+      get_my_vet_profile: {
+        Args: never
+        Returns: {
+          avg_rating: number | null
+          bio: string | null
+          city: string
+          clinic_address: string | null
+          clinic_name: string | null
+          consultation_fee_inperson: number | null
+          created_at: string | null
+          email: string
+          emergency_fee_inperson: number | null
+          full_name: string
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          lat: number | null
+          lng: number | null
+          onboarding_status: string | null
+          phone: string
+          pin_code: string | null
+          profile_photo_url: string | null
+          specialisations: string[] | null
+          state: string
+          total_appointments: number | null
+          total_reviews: number | null
+          user_id: string | null
+          vc_india_registration: string | null
+          verified_at: string | null
+          whatsapp_number: string | null
+          years_experience: number | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "vets"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       lookup_microchip: {
         Args: { _chip_number: string }
         Returns: {
