@@ -11,6 +11,7 @@ import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
@@ -32,6 +33,7 @@ const defaultTabLabels: Record<string, string> = Object.fromEntries(defaultTabOp
 
 const ProfileScreen = () => {
   const { user } = useAuth();
+  const { refreshProfile } = useUserProfile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showUpload, setShowUpload] = useState(false);
@@ -147,6 +149,7 @@ const ProfileScreen = () => {
     const { data } = supabase.storage.from("avatars").getPublicUrl(path);
     await supabase.from("profiles").update({ avatar_url: data.publicUrl + "?t=" + Date.now() }).eq("id", user.id);
     queryClient.invalidateQueries({ queryKey: ["profile"] });
+    await refreshProfile();
     toast.success("Profile photo updated! 🦕");
   };
 
@@ -155,6 +158,7 @@ const ProfileScreen = () => {
     if (newName.trim().length > 40) { toast.error("Name must be under 40 characters"); return; }
     await supabase.from("profiles").update({ full_name: newName.trim() }).eq("id", user.id);
     queryClient.invalidateQueries({ queryKey: ["profile"] });
+    await refreshProfile();
     setEditingName(false);
     toast.success("Name updated!");
   };

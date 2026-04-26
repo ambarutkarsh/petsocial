@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
 import { toast } from "sonner";
 import { petTypes, breedsByType, indianStates } from "@/lib/registrationData";
 import { trackEvent } from "@/lib/analytics";
@@ -12,6 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 const CompleteRegistrationScreen = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { refreshProfile } = useUserProfile();
   const [step, setStep] = useState(0); // 0=details, 1=pet, 2=photo
 
   // Step A fields
@@ -82,6 +84,7 @@ const CompleteRegistrationScreen = () => {
       await supabase.from("pets").insert(petInsert);
 
       trackEvent("signup_completed", { method: "google" });
+      await refreshProfile();
       toast.success("Welcome to Petosauras! 🦕");
       navigate("/feed", { replace: true });
     } catch (e: any) {
