@@ -140,7 +140,7 @@ const TopBar = () => {
               <button
                 onClick={() => navigate("/auth")}
                 style={{
-                  background: "#2D4A3E",
+                  background: "#1B2A4A",
                   color: "white",
                   border: "none",
                   borderRadius: 50,

@@ -184,12 +184,12 @@ const AdminVetsScreen = () => {
       title="Vet Management"
       subtitle="Manage verified vets on Petosauras"
       headerRight={
-        <Button onClick={openInvite} style={{ background: "#2D4A3E" }} className="text-white hover:opacity-90">
+        <Button onClick={openInvite} style={{ background: "#1B2A4A" }} className="text-white hover:opacity-90">
           <Plus className="w-4 h-4 mr-1" /> Invite New Vet
         </Button>
       }
     >
-      <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "#E8DDD0" }}>
+      <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "#E8D5B8" }}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm font-body">
             <thead className="bg-[#FAFAFA] text-xs text-muted-foreground">
@@ -232,7 +232,7 @@ const AdminVetsScreen = () => {
                           <CheckCircle2 className="w-3 h-3" /> Verify
                         </button>
                       )}
-                      <button onClick={() => openEdit(v)} className="text-[11px] px-2.5 py-1 rounded-full border bg-white inline-flex items-center gap-1" style={{ borderColor: "#E8DDD0" }}>
+                      <button onClick={() => openEdit(v)} className="text-[11px] px-2.5 py-1 rounded-full border bg-white inline-flex items-center gap-1" style={{ borderColor: "#E8D5B8" }}>
                         <Pencil className="w-3 h-3" /> Edit
                       </button>
                       {v.is_active ? (
@@ -286,7 +286,7 @@ const AdminVetsScreen = () => {
                   value={form.city}
                   onChange={(e) => setForm({ ...form, city: e.target.value })}
                   className="w-full h-10 rounded-md border bg-white px-3 text-sm font-body"
-                  style={{ borderColor: "#E8DDD0" }}
+                  style={{ borderColor: "#E8D5B8" }}
                 >
                   {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -307,10 +307,10 @@ const AdminVetsScreen = () => {
                       onClick={() => toggleSpec(s)}
                       className={`text-[11px] px-3 py-1.5 rounded-full border transition-colors ${
                         form.specialisations.includes(s)
-                          ? "bg-[#2D4A3E] text-white border-[#2D4A3E]"
+                          ? "bg-[#1B2A4A] text-white border-[#1B2A4A]"
                           : "bg-white text-foreground"
                       }`}
-                      style={form.specialisations.includes(s) ? {} : { borderColor: "#E8DDD0" }}
+                      style={form.specialisations.includes(s) ? {} : { borderColor: "#E8D5B8" }}
                     >
                       {s}
                     </button>
@@ -356,7 +356,7 @@ const AdminVetsScreen = () => {
             <Button
               onClick={handleSubmit}
               disabled={submitting}
-              style={{ background: "#2D4A3E" }}
+              style={{ background: "#1B2A4A" }}
               className="text-white hover:opacity-90"
             >
               {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

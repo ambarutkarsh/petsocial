@@ -143,7 +143,7 @@ const AuthScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "radial-gradient(ellipse at top, #EBF0ED 0%, #F5EDE4 50%, #F5E8E0 100%)" }}>
+      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "radial-gradient(ellipse at top, #E8EBF2 0%, #F5EDE4 50%, #FBF6E8 100%)" }}>
         <div className="absolute top-[-80px] left-[-60px] w-[220px] h-[220px] rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute top-[40px] right-[-80px] w-[200px] h-[200px] rounded-full bg-secondary/15 blur-3xl" />
         <div className="absolute bottom-[200px] left-[50%] w-[180px] h-[180px] rounded-full bg-accent/10 blur-3xl" />
@@ -165,7 +165,7 @@ const AuthScreen = () => {
           </div>
         </div>
 
-        <div className="bg-card rounded-t-[28px] shadow-[0_-8px_40px_rgba(45,74,62,0.12)] px-6 pt-8 pb-8 relative z-10 animate-slide-up">
+        <div className="bg-card rounded-t-[28px] shadow-[0_-8px_40px_rgba(27,42,74,0.12)] px-6 pt-8 pb-8 relative z-10 animate-slide-up">
           {sheetView === "login" && (
             <>
               <Button variant="outline" className="w-full h-12 rounded-full border-border bg-card text-foreground font-bold mb-4 gap-3"
