@@ -19,7 +19,7 @@ const filters = ["⭐ Facts", "Pet News", "All", "🚶 Walker", "✂️ Groomer"
 
 const categoryColors: Record<string, string> = {
   Canine: "bg-primary-light text-primary",
-  Feline: "bg-secondary-light text-[#A08860]",
+  Feline: "bg-secondary-light text-[#A8882E]",
   Avian: "bg-accent-light text-[#2A9D8F]",
   Aquatic: "bg-[#E8F4FF] text-[#1A6FA8]",
   "Small Pet": "bg-[#E8F5EE] text-[#2A7D4F]",

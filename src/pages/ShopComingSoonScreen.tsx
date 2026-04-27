@@ -48,7 +48,7 @@ const ShopComingSoonScreen = () => {
     <MobileLayout>
       <div className="pb-24">
         {/* Banner */}
-        <section className="bg-gradient-to-br from-primary to-[#4A6741] px-6 py-12 text-center text-primary-foreground">
+        <section className="bg-gradient-to-br from-primary to-[#243660] px-6 py-12 text-center text-primary-foreground">
           <h1 className="font-heading font-black text-[36px] leading-tight">
             COMING SOON 🛍️
           </h1>

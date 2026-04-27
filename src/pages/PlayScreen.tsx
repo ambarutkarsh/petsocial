@@ -652,7 +652,7 @@ const FeedScreen = () => {
               const viewed = viewedStoryIds.includes(s.id);
               return (
                 <div key={s.id} className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => { setStoryStartIndex(i); setShowStoryViewer(true); }}>
-                  <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: viewed ? "#ccc" : "linear-gradient(135deg, #2D4A3E, #C4A882)" }}>
+                  <div className="w-16 h-16 rounded-full p-[2.5px]" style={{ background: viewed ? "#ccc" : "linear-gradient(135deg, #1B2A4A, #C9A84C)" }}>
                     <div className="w-full h-full rounded-full bg-primary-light flex items-center justify-center text-2xl">{s.pets?.avatar_emoji || "🐾"}</div>
                   </div>
                   <span className="text-[10px] font-body font-semibold text-muted-foreground truncate w-16 text-center">{s.pets?.name || s.profiles?.full_name?.split(" ")[0] || "Pet"}</span>
@@ -677,10 +677,10 @@ const FeedScreen = () => {
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
                   disabled
-                    ? { background: "#F0E8DF", color: "#B5C4BB", borderColor: "#E8DDD0", opacity: 0.4, cursor: "not-allowed" }
+                    ? { background: "#F0E6DA", color: "#B0BCCA", borderColor: "#E8D5B8", opacity: 0.4, cursor: "not-allowed" }
                     : active
-                    ? { background: "#2D4A3E", color: "white", borderColor: "#2D4A3E" }
-                    : { background: "white", color: "#8A9E93", borderColor: "#E8DDD0" }
+                    ? { background: "#1B2A4A", color: "white", borderColor: "#1B2A4A" }
+                    : { background: "white", color: "#7A8CA0", borderColor: "#E8D5B8" }
                 }
               >
                 ⭐ Curated ({savedPrefs.length})
@@ -697,10 +697,10 @@ const FeedScreen = () => {
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
                   disabled
-                    ? { background: "#F0E8DF", color: "#B5C4BB", borderColor: "#E8DDD0", opacity: 0.4, cursor: "not-allowed" }
+                    ? { background: "#F0E6DA", color: "#B0BCCA", borderColor: "#E8D5B8", opacity: 0.4, cursor: "not-allowed" }
                     : active
-                    ? { background: "#2D4A3E", color: "white", borderColor: "#2D4A3E" }
-                    : { background: "white", color: "#8A9E93", borderColor: "#E8DDD0" }
+                    ? { background: "#1B2A4A", color: "white", borderColor: "#1B2A4A" }
+                    : { background: "white", color: "#7A8CA0", borderColor: "#E8D5B8" }
                 }
               >
                 <span>

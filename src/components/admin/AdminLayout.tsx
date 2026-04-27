@@ -70,7 +70,7 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
       {/* Sidebar */}
       <aside
         className="fixed left-0 top-0 bottom-0 w-[220px] z-20 hidden md:flex flex-col"
-        style={{ background: "#FFFFFF", borderRight: "1px solid #E8DDD0", paddingTop: 80 }}
+        style={{ background: "#FFFFFF", borderRight: "1px solid #E8D5B8", paddingTop: 80 }}
       >
         <nav className="flex-1 flex flex-col">
           {NAV.map((item) => {
@@ -89,8 +89,8 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
                 }
                 style={({ isActive }) =>
                   isActive
-                    ? { background: "#EBF0ED", color: "#2D4A3E", borderLeft: "3px solid #2D4A3E" }
-                    : { color: "#8A9E93" }
+                    ? { background: "#E8EBF2", color: "#1B2A4A", borderLeft: "3px solid #1B2A4A" }
+                    : { color: "#7A8CA0" }
                 }
               >
                 <Icon className="w-4 h-4" />
@@ -98,7 +98,7 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
               </NavLink>
             );
           })}
-          <div className="my-3 mx-5 border-t" style={{ borderColor: "#E8DDD0" }} />
+          <div className="my-3 mx-5 border-t" style={{ borderColor: "#E8D5B8" }} />
           {NAV_BOTTOM.map((item) => {
             const Icon = item.icon;
             return (
@@ -112,8 +112,8 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
                 }
                 style={({ isActive }) =>
                   isActive
-                    ? { background: "#EBF0ED", color: "#2D4A3E", borderLeft: "3px solid #2D4A3E" }
-                    : { color: "#8A9E93" }
+                    ? { background: "#E8EBF2", color: "#1B2A4A", borderLeft: "3px solid #1B2A4A" }
+                    : { color: "#7A8CA0" }
                 }
               >
                 <Icon className="w-4 h-4" />
@@ -125,7 +125,7 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
       </aside>
 
       {/* Mobile bottom nav for admin */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex z-20" style={{ borderColor: "#E8DDD0" }}>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex z-20" style={{ borderColor: "#E8D5B8" }}>
         {[...NAV, ...NAV_BOTTOM].map((item) => {
           const Icon = item.icon;
           return (
@@ -134,7 +134,7 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
               to={item.to}
               end={(item as any).end}
               className="flex-1 flex flex-col items-center py-2 text-[10px] font-body"
-              style={({ isActive }) => ({ color: isActive ? "#2D4A3E" : "#8A9E93" })}
+              style={({ isActive }) => ({ color: isActive ? "#1B2A4A" : "#7A8CA0" })}
             >
               <Icon className="w-4 h-4 mb-0.5" />
               {item.label.split(" ")[0]}

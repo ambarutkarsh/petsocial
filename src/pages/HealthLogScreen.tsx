@@ -286,7 +286,7 @@ const HealthLogScreen = ({ embedded = false }: HealthLogScreenProps) => {
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(30 20% 94%)" />
                       <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                       <YAxis tick={{ fontSize: 10 }} domain={["auto", "auto"]} />
-                      <Line type="monotone" dataKey="weight" stroke="#2D4A3E" strokeWidth={2} dot={{ r: 4, fill: "#2D4A3E" }} />
+                      <Line type="monotone" dataKey="weight" stroke="#1B2A4A" strokeWidth={2} dot={{ r: 4, fill: "#1B2A4A" }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>

@@ -7,7 +7,7 @@ import { Users, FileImage, Stethoscope, CalendarCheck } from "lucide-react";
 const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string; value: number | string; hint: string }) => (
   <Card className="p-5 rounded-2xl bg-white">
     <div className="flex items-center justify-between mb-3">
-      <Icon className="w-5 h-5 text-[#2D4A3E]" />
+      <Icon className="w-5 h-5 text-[#1B2A4A]" />
     </div>
     <p className="text-xs font-body text-muted-foreground">{label}</p>
     <p className="text-2xl font-heading font-bold mt-1">{value}</p>
@@ -59,7 +59,7 @@ const AdminDashboardScreen = () => {
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">
-        <div className="p-5 border-b" style={{ borderColor: "#E8DDD0" }}>
+        <div className="p-5 border-b" style={{ borderColor: "#E8D5B8" }}>
           <h2 className="text-base font-heading font-bold">Recent Registrations</h2>
           <p className="text-xs text-muted-foreground font-body mt-0.5">Last 10 new pet parents</p>
         </div>
