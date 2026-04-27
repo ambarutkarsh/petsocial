@@ -160,7 +160,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
         )}
 
         <div className="space-y-3 mt-4">
-          <textarea placeholder="What's the story?" value={caption} onChange={(e) => setCaption(e.target.value)} className="w-full h-20 rounded-[16px] bg-surface-alt border-[1.5px] border-border px-[18px] py-3 text-[15px] font-body resize-none focus:border-primary focus:bg-card focus:shadow-[0_0_0_4px_rgba(45,74,62,0.1)] outline-none transition-all duration-200" />
+          <textarea placeholder="What's the story?" value={caption} onChange={(e) => setCaption(e.target.value)} className="w-full h-20 rounded-[16px] bg-surface-alt border-[1.5px] border-border px-[18px] py-3 text-[15px] font-body resize-none focus:border-primary focus:bg-card focus:shadow-[0_0_0_4px_rgba(27,42,74,0.1)] outline-none transition-all duration-200" />
           {myPets.length > 0 && (
             <select value={selectedPetId} onChange={(e) => setSelectedPetId(e.target.value)} className="w-full h-12 rounded-[16px] bg-surface-alt border-[1.5px] border-border px-[18px] text-[15px] font-body text-foreground">
               <option value="">Which pet is in this photo?</option>
