@@ -74,7 +74,7 @@ const OnboardingScreen = () => {
 
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
           <div
-            className={`w-32 h-32 rounded-[40px] bg-gradient-to-br ${current.color} shadow-[0_20px_50px_rgba(27,42,74,0.3)] flex items-center justify-center text-7xl mb-8 animate-fade-in`}
+            className={`w-32 h-32 rounded-[40px] bg-gradient-to-br ${current.color} shadow-[0_20px_50px_rgba(123, 94, 167,0.3)] flex items-center justify-center text-7xl mb-8 animate-fade-in`}
             key={step}
           >
             {current.emoji}

@@ -166,7 +166,7 @@ const AuthScreen = () => {
           </div>
         </div>
 
-        <div className="bg-card rounded-t-[28px] shadow-[0_-8px_40px_rgba(27,42,74,0.12)] px-6 pt-8 pb-8 relative z-10 animate-slide-up">
+        <div className="bg-card rounded-t-[28px] shadow-[0_-8px_40px_rgba(123, 94, 167,0.12)] px-6 pt-8 pb-8 relative z-10 animate-slide-up">
           {sheetView === "login" && (
             <>
               <Button variant="outline" className="w-full h-12 rounded-full border-border bg-card text-foreground font-bold mb-4 gap-3"

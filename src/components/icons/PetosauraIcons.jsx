@@ -612,7 +612,7 @@ export default function PetosauraIconLibrary() {
                 width: 36, height: 36, borderRadius: 8,
                 background: s.c,
                 border: s.border ? "1px solid #F5F1EC" : "none",
-                boxShadow: "0 2px 8px rgba(27,42,74,0.12)"
+                boxShadow: "0 2px 8px rgba(123, 94, 167,0.12)"
               }} />
               <span style={{ fontSize: 9, color: "#9B96B0", display: "block", marginTop: 4, letterSpacing: "0.05em" }}>{s.n}</span>
               <span style={{ fontSize: 8, color: "#ABA8B8", fontFamily: "monospace" }}>{s.c}</span>
@@ -632,7 +632,7 @@ export default function PetosauraIconLibrary() {
             }}>
               {group.label}
             </h2>
-            <div style={{ flex: 1, height: 1, background: "rgba(27,42,74,0.10)" }} />
+            <div style={{ flex: 1, height: 1, background: "rgba(123, 94, 167,0.10)" }} />
           </div>
 
           <div style={{
@@ -646,20 +646,20 @@ export default function PetosauraIconLibrary() {
                 borderRadius: 16,
                 padding: "16px 12px",
                 minWidth: 80,
-                border: "1px solid rgba(27,42,74,0.08)",
-                boxShadow: "0 2px 8px rgba(27,42,74,0.06)",
+                border: "1px solid rgba(123, 94, 167,0.08)",
+                boxShadow: "0 2px 8px rgba(123, 94, 167,0.06)",
                 transition: "all 0.2s",
                 cursor: "pointer",
               }}
                 onMouseEnter={e => {
                   e.currentTarget.style.transform = "translateY(-3px)";
-                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(27,42,74,0.14)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(123, 94, 167,0.14)";
                   e.currentTarget.style.borderColor = "#FF8C66";
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(27,42,74,0.06)";
-                  e.currentTarget.style.borderColor = "rgba(27,42,74,0.08)";
+                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(123, 94, 167,0.06)";
+                  e.currentTarget.style.borderColor = "rgba(123, 94, 167,0.08)";
                 }}
               >
                 <div style={{
