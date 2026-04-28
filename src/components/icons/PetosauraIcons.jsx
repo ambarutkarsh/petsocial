@@ -7,18 +7,23 @@ const defaultNavy = "#7B5EA7";
 const defaultGold = "#FF8C66";
 
 // ─── BASE WRAPPER ────────────────────────────────────────────────
-const Svg = ({ size = 24, className, style, children, viewBox = "0 0 24 24" }) => (
+import { forwardRef } from "react";
+
+const Svg = forwardRef(({ size = 24, className, style, children, viewBox = "0 0 24 24", ...rest }, ref) => (
   <svg
+    ref={ref}
     width={size} height={size}
     viewBox={viewBox}
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...rest}
   >
     {children}
   </svg>
-);
+));
+Svg.displayName = "Svg";
 
 // ─── NAVIGATION ICONS ───────────────────────────────────────────
 export const FeedsIcon = ({ size = 24, color = defaultNavy, ...p }) => (
