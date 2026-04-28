@@ -628,7 +628,7 @@ const FeedScreen = () => {
               <CloseIcon className="w-5 h-5" /> Skip
             </Button>
             <Button className="flex-1" onClick={() => mateInterestMutation.mutate(pet)}>
-              <Heart className="w-5 h-5" /> Interested
+              <HeartIcon className="w-5 h-5" /> Interested
             </Button>
           </div>
         </div>

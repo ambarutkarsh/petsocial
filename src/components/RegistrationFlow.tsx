@@ -4,7 +4,7 @@ import { getPasswordStrength, useCallback, useState, validateStep1, validateStep
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { BackIcon, CheckIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, CheckIcon, CloseIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { breedsByType, indianStates, petTypeEmoji, petTypes } from "@/lib/registrationData";
 
 import MobileLayout from "./MobileLayout";
@@ -554,7 +554,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
             {/* Optional uploads */}
             <p className="text-sm text-text-mid">Upload vaccination cards or vet records (optional)</p>
             <label className="border-2 border-dashed border-primary/30 rounded-2xl p-6 flex flex-col items-center gap-2 bg-primary/5 cursor-pointer">
-              <Upload className="w-6 h-6 text-primary" />
+              <UploadIcon className="w-6 h-6 text-primary" />
               <span className="text-sm font-medium text-primary">
                 {vaccFile ? `📋 ${vaccFile.name}` : "📋 Upload Vaccination Card"}
               </span>
@@ -563,7 +563,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                 onChange={(e) => setVaccFile(e.target.files?.[0] || null)} />
             </label>
             <label className="border-2 border-dashed border-muted rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer">
-              <Upload className="w-6 h-6 text-text-muted" />
+              <UploadIcon className="w-6 h-6 text-text-muted" />
               <span className="text-sm font-medium text-text-mid">
                 {vetFile ? `🩺 ${vetFile.name}` : "🩺 Upload Vet Records"}
               </span>
