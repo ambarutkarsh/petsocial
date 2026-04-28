@@ -32,7 +32,7 @@ async function attachProfiles<T extends Record<string, any>>(
   const ids = Array.from(new Set(rows.map((r) => r[fkField]).filter(Boolean) as string[]));
   if (ids.length === 0) return rows.map((r) => ({ ...r, profiles: null }));
   const { data: profs } = await supabase.from("public_profiles").select(fields).in("id", ids);
-  const map = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
+  const map = new Map((profs || []).map((p: any) => [p.id, p]));
   return rows.map((r) => ({ ...r, profiles: map.get(r[fkField] as string) || null }));
 }
 
@@ -130,7 +130,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, username, avatar_url, city")
         .in("id", userIds);
-      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
       return rawPosts.map((p: any) => ({ ...p, profiles: profMap.get(p.user_id) || null }));
     },
   });
@@ -185,7 +185,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, avatar_url")
         .in("id", userIds);
-      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
       return rawStories.map((s: any) => ({ ...s, profiles: profMap.get(s.user_id) || null }));
     },
   });

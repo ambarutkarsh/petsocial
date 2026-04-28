@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Cormorant Garamond"', 'serif'],
-        body: ['"Raleway"', 'sans-serif'],
-        display: ['"Cormorant Garamond"', 'serif'],
-        label: ['"Raleway"', 'sans-serif'],
+        heading: ['Roboto', 'sans-serif'],
+        body: ['Roboto', 'sans-serif'],
+        display: ['Roboto', 'sans-serif'],
+        label: ['Roboto', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

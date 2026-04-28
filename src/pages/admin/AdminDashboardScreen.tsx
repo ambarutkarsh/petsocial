@@ -44,7 +44,7 @@ const AdminDashboardScreen = () => {
       const { data: pets } = ids.length
         ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
         : { data: [] as any[] };
-      const petByOwner = new LocationPinIcon<string, string>();
+      const petByOwner = new Map<string, string>();
       (pets ?? []).forEach((p: any) => { if (!petByOwner.has(p.owner_id)) petByOwner.set(p.owner_id, p.name); });
       return (data ?? []).map((p) => ({ ...p, pet: petByOwner.get(p.id) ?? "—" }));
     },
