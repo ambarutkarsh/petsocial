@@ -26,15 +26,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isNewGoogleUser, setIsNewGoogleUser] = useState(false);
 
   useEffect(() => {
+    let initialResolved = false;
+    const markReady = () => {
+      initialResolved = true;
+      setLoading(false);
+    };
+
     // IMPORTANT: never await Supabase calls directly inside onAuthStateChange —
     // it can deadlock the auth client and leave `loading` stuck on true,
     // which causes ProtectedRoute / AdminLayout to render nothing.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
         setSession(newSession);
-        setLoading(false);
+        // INITIAL_SESSION fires once on mount with the restored session (or null).
+        // Only after this event is it safe to consider auth "ready".
+        if (event === "INITIAL_SESSION") markReady();
 
         if (event === "SIGNED_IN" && newSession?.user) {
+          markReady();
           // Defer any Supabase calls to a microtask so we don't block the
           // auth state change handler.
           setTimeout(() => {
@@ -74,8 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth
       .getSession()
       .then(({ data: { session: initialSession } }) => {
-        setSession(initialSession);
-        setLoading(false);
+        setSession((prev) => prev ?? initialSession);
+        markReady();
       })
       .catch(async (err) => {
         console.warn("[Auth] getSession failed, clearing stale session:", err);
@@ -83,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           await supabase.auth.signOut();
         } catch {}
         setSession(null);
-        setLoading(false);
+        markReady();
       });
 
     // Safety net: if neither path resolves within 5s, unblock the UI so the
