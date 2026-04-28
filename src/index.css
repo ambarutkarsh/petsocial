@@ -9,8 +9,8 @@
     /* All colours stored as HSL — extracted from new Petosauras logo */
 
     /* Background / surfaces — warm cream tones */
-    --background: 33 41% 93%;        /* #F5EDE4 */
-    --foreground: 219 45% 15%;       /* #152238 */
+    --background: 33 41% 93%;        /* #FBF8F4 */
+    --foreground: 219 45% 15%;       /* #1E1B2E */
 
     --card: 0 0% 100%;
     --card-foreground: 219 45% 15%;
@@ -18,18 +18,18 @@
     --popover: 0 0% 100%;
     --popover-foreground: 219 45% 15%;
 
-    /* Primary — Deep Navy #1B2A4A */
+    /* Primary — Deep Navy #7B5EA7 */
     --primary: 220 46% 20%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 222 24% 93%;    /* #E8EBF2 */
-    --primary-dark: 220 49% 12%;     /* #101A2E */
-    --primary-mid: 220 45% 26%;      /* #243660 */
+    --primary-light: 222 24% 93%;    /* #EDE5FF */
+    --primary-dark: 220 49% 12%;     /* #5C4080 */
+    --primary-mid: 220 45% 26%;      /* #7B5EA7 */
 
-    /* Secondary — Antique Gold #C9A84C */
+    /* Secondary — Antique Gold #FF8C66 */
     --secondary: 44 56% 54%;
     --secondary-foreground: 219 45% 15%;
-    --secondary-light: 47 73% 95%;   /* #FBF6E8 */
-    --secondary-dark: 43 58% 42%;    /* #A8882E */
+    --secondary-light: 47 73% 95%;   /* #FFF0EB */
+    --secondary-dark: 43 58% 42%;    /* #CC5500 */
     --gold-mid: 43 53% 62%;          /* #D4B86A */
 
     /* Accent — Dusty Rose (kept for errors/SOS) */
@@ -38,8 +38,8 @@
     --accent-light: 12 47% 93%;      /* #F5E8E5 */
 
     /* Muted */
-    --muted: 33 35% 90%;             /* #F0E6DA */
-    --muted-foreground: 213 14% 55%; /* #7A8CA0 */
+    --muted: 33 35% 90%;             /* #F5F1EC */
+    --muted-foreground: 213 14% 55%; /* #9B96B0 */
 
     /* Semantic */
     --destructive: 11 39% 62%;
@@ -53,7 +53,7 @@
     --border: 220 46% 20% / 0.12;
     --border-strong: 220 46% 20% / 0.25;
     --border-gold: 44 56% 54% / 0.35;
-    --input: 33 35% 90%;             /* #F0E6DA */
+    --input: 33 35% 90%;             /* #F5F1EC */
     --ring: 220 46% 20%;
 
     --radius: 16px;
@@ -64,15 +64,15 @@
     --radius-pill: 50px;
 
     /* Text helpers */
-    --text-primary: 219 45% 15%;     /* #152238 */
-    --text-secondary: 218 27% 33%;   /* #3D4F6B */
-    --text-hint: 213 21% 73%;        /* #B0BCCA */
+    --text-primary: 219 45% 15%;     /* #1E1B2E */
+    --text-secondary: 218 27% 33%;   /* #6B6880 */
+    --text-hint: 213 21% 73%;        /* #ABA8B8 */
     --text-mid: 218 27% 33%;
-    --text-muted: 213 14% 55%;       /* #7A8CA0 */
+    --text-muted: 213 14% 55%;       /* #9B96B0 */
 
     /* Surface alternates */
-    --surface-alt: 33 35% 90%;       /* #F0E6DA */
-    --cream: 32 47% 81%;             /* #E8D5B8 */
+    --surface-alt: 33 35% 90%;       /* #F5F1EC */
+    --cream: 32 47% 81%;             /* #F5F1EC */
     --sand: 35 41% 87%;              /* #EDE0CE */
 
     /* Shadows — navy tinted */
@@ -120,7 +120,7 @@
     width: 100%;
     margin: 0 auto;
     min-height: 100vh;
-    background: #F5EDE4;
+    background: #FBF8F4;
     position: relative;
     overflow-x: hidden;
   }

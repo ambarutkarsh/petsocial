@@ -11,7 +11,7 @@ const STEPS = [
     icon: FeedsIcon,
     title: "Share pet moments",
     desc: "Reels, photos & stories — connect with millions of pet parents across India.",
-    color: "from-primary to-[#243660]",
+    color: "from-primary to-[#7B5EA7]",
   },
   {
     emoji: "🏥",
@@ -55,7 +55,7 @@ const OnboardingScreen = () => {
     <MobileLayout>
       <div
         className="min-h-screen flex flex-col"
-        style={{ background: "radial-gradient(ellipse at top, #E8EBF2 0%, #F5EDE4 50%, #FBF6E8 100%)" }}
+        style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}
       >
         <div className="flex justify-between items-center px-5 pt-5">
           {step > 0 ? (

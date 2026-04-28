@@ -144,7 +144,7 @@ const AuthScreen = () => {
 
   return (
     <MobileLayout>
-      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "radial-gradient(ellipse at top, #E8EBF2 0%, #F5EDE4 50%, #FBF6E8 100%)" }}>
+      <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}>
         <div className="absolute top-[-80px] left-[-60px] w-[220px] h-[220px] rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute top-[40px] right-[-80px] w-[200px] h-[200px] rounded-full bg-secondary/15 blur-3xl" />
         <div className="absolute bottom-[200px] left-[50%] w-[180px] h-[180px] rounded-full bg-accent/10 blur-3xl" />

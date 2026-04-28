@@ -1,10 +1,10 @@
 // Petosauras Custom Icon Library
-// Flat, materialistic SVG icons — Navy #1B2A4A + Gold #C9A84C
+// Flat, materialistic SVG icons — Navy #7B5EA7 + Gold #FF8C66
 // Usage: import { PIcon } from './PetosauraIcons'
 // All icons accept: size (default 24), color, className, style props
 
-const defaultNavy = "#1B2A4A";
-const defaultGold = "#C9A84C";
+const defaultNavy = "#7B5EA7";
+const defaultGold = "#FF8C66";
 
 // ─── BASE WRAPPER ────────────────────────────────────────────────
 const Svg = ({ size = 24, className, style, children, viewBox = "0 0 24 24" }) => (
@@ -480,7 +480,7 @@ const iconGroups = [
       { name: "Hub", C: HubIcon },
       { name: "MyPet", C: MyPetIcon },
       { name: "Shop", C: ShopIcon },
-      { name: "Plus (FAB)", C: PlusIcon, bg: "#1B2A4A" },
+      { name: "Plus (FAB)", C: PlusIcon, bg: "#7B5EA7" },
     ]
   },
   {
@@ -572,7 +572,7 @@ const iconGroups = [
 export default function PetosauraIconLibrary() {
   return (
     <div style={{
-      background: "#F5EDE4",
+      background: "#FBF8F4",
       minHeight: "100vh",
       fontFamily: "'Raleway', sans-serif",
       padding: "32px 24px",
@@ -582,40 +582,40 @@ export default function PetosauraIconLibrary() {
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 48 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
-          <div style={{ width: 40, height: 2, background: "#C9A84C" }} />
-          <span style={{ fontSize: 10, letterSpacing: "0.25em", color: "#7A8CA0", textTransform: "uppercase", fontWeight: 600 }}>
+          <div style={{ width: 40, height: 2, background: "#FF8C66" }} />
+          <span style={{ fontSize: 10, letterSpacing: "0.25em", color: "#9B96B0", textTransform: "uppercase", fontWeight: 600 }}>
             Icon System
           </span>
-          <div style={{ width: 40, height: 2, background: "#C9A84C" }} />
+          <div style={{ width: 40, height: 2, background: "#FF8C66" }} />
         </div>
         <h1 style={{
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: 36, fontWeight: 600,
-          color: "#1B2A4A", margin: "0 0 6px"
+          color: "#7B5EA7", margin: "0 0 6px"
         }}>
           Petosauras Icon Library
         </h1>
-        <p style={{ fontSize: 11, letterSpacing: "0.2em", color: "#7A8CA0", textTransform: "uppercase", fontWeight: 300, margin: 0 }}>
+        <p style={{ fontSize: 11, letterSpacing: "0.2em", color: "#9B96B0", textTransform: "uppercase", fontWeight: 300, margin: 0 }}>
           For Every Pet · For Every Moment
         </p>
         {/* Colour swatches */}
         <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
           {[
-            { c: "#1B2A4A", n: "Navy" },
-            { c: "#C9A84C", n: "Gold" },
-            { c: "#F5EDE4", n: "Cream", border: true },
-            { c: "#E8D5B8", n: "Sand" },
+            { c: "#7B5EA7", n: "Navy" },
+            { c: "#FF8C66", n: "Gold" },
+            { c: "#FBF8F4", n: "Cream", border: true },
+            { c: "#F5F1EC", n: "Sand" },
             { c: "#C4897A", n: "Error" },
           ].map(s => (
             <div key={s.c} style={{ textAlign: "center" }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 8,
                 background: s.c,
-                border: s.border ? "1px solid #E8D5B8" : "none",
+                border: s.border ? "1px solid #F5F1EC" : "none",
                 boxShadow: "0 2px 8px rgba(27,42,74,0.12)"
               }} />
-              <span style={{ fontSize: 9, color: "#7A8CA0", display: "block", marginTop: 4, letterSpacing: "0.05em" }}>{s.n}</span>
-              <span style={{ fontSize: 8, color: "#B0BCCA", fontFamily: "monospace" }}>{s.c}</span>
+              <span style={{ fontSize: 9, color: "#9B96B0", display: "block", marginTop: 4, letterSpacing: "0.05em" }}>{s.n}</span>
+              <span style={{ fontSize: 8, color: "#ABA8B8", fontFamily: "monospace" }}>{s.c}</span>
             </div>
           ))}
         </div>
@@ -628,7 +628,7 @@ export default function PetosauraIconLibrary() {
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 20, fontWeight: 600,
-              color: "#1B2A4A", margin: 0
+              color: "#7B5EA7", margin: 0
             }}>
               {group.label}
             </h2>
@@ -654,7 +654,7 @@ export default function PetosauraIconLibrary() {
                 onMouseEnter={e => {
                   e.currentTarget.style.transform = "translateY(-3px)";
                   e.currentTarget.style.boxShadow = "0 6px 20px rgba(27,42,74,0.14)";
-                  e.currentTarget.style.borderColor = "#C9A84C";
+                  e.currentTarget.style.borderColor = "#FF8C66";
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.transform = "translateY(0)";
@@ -665,7 +665,7 @@ export default function PetosauraIconLibrary() {
                 <div style={{
                   width: 48, height: 48,
                   borderRadius: 12,
-                  background: bg || "#FBF6E8",
+                  background: bg || "#FFF0EB",
                   display: "flex", alignItems: "center",
                   justifyContent: "center",
                   border: `1px solid ${bg ? "transparent" : "rgba(201,168,76,0.25)"}`,
@@ -673,7 +673,7 @@ export default function PetosauraIconLibrary() {
                   <C size={26} />
                 </div>
                 <span style={{
-                  fontSize: 10, color: "#7A8CA0",
+                  fontSize: 10, color: "#9B96B0",
                   textAlign: "center", fontWeight: 600,
                   letterSpacing: "0.04em",
                   lineHeight: 1.3,
@@ -690,19 +690,19 @@ export default function PetosauraIconLibrary() {
 
       {/* Usage note */}
       <div style={{
-        background: "#1B2A4A", borderRadius: 16,
+        background: "#7B5EA7", borderRadius: 16,
         padding: "20px 24px", marginTop: 16,
         display: "flex", alignItems: "flex-start", gap: 16
       }}>
         <VerifiedIcon size={28} />
         <div>
-          <p style={{ color: "#C9A84C", fontSize: 12, fontWeight: 700, margin: "0 0 4px", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <p style={{ color: "#FF8C66", fontSize: 12, fontWeight: 700, margin: "0 0 4px", letterSpacing: "0.1em", textTransform: "uppercase" }}>
             Usage in Lovable
           </p>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 12, margin: 0, lineHeight: 1.6 }}>
-            Copy <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#C9A84C" }}>PetosauraIcons.jsx</code> into{" "}
-            <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#C9A84C" }}>src/components/icons/</code> and import any icon with{" "}
-            <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#C9A84C" }}>{"import { FeedsIcon } from '../icons/PetosauraIcons'"}</code>
+            Copy <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#FF8C66" }}>PetosauraIcons.jsx</code> into{" "}
+            <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#FF8C66" }}>src/components/icons/</code> and import any icon with{" "}
+            <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4, color: "#FF8C66" }}>{"import { FeedsIcon } from '../icons/PetosauraIcons'"}</code>
           </p>
         </div>
       </div>

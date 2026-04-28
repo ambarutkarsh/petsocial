@@ -55,7 +55,7 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
                     else setCreateOpen(true);
                   }}
                   aria-label="Create"
-                  className="relative -mt-[14px] w-[52px] h-[52px] rounded-full bg-gradient-to-br from-primary to-[#243660] text-primary-foreground shadow-[0_4px_20px_rgba(27,42,74,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
+                  className="relative -mt-[14px] w-[52px] h-[52px] rounded-full bg-gradient-to-br from-primary to-[#7B5EA7] text-primary-foreground shadow-[0_4px_20px_rgba(27,42,74,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
                 >
                   <Icon className="w-6 h-6" strokeWidth={1.8} />
                 </button>
