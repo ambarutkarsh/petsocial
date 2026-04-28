@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -149,9 +149,9 @@
     scrollbar-width: none;
   }
 
-  /* Uppercase label utility — Raleway tracked */
+  /* Uppercase label utility */
   .label-caps {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;

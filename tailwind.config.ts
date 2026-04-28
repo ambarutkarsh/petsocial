@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Roboto', 'sans-serif'],
-        body: ['Roboto', 'sans-serif'],
-        display: ['Roboto', 'sans-serif'],
-        label: ['Roboto', 'sans-serif'],
+        heading: ['Nunito', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
+        display: ['Nunito', 'sans-serif'],
+        label: ['DM Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
