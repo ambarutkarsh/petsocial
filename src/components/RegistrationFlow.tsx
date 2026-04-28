@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { getPasswordStrength, useCallback, useState, validateStep1, validateStep2 } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { BackIcon, CheckIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
 import { breedsByType, indianStates, petTypeEmoji, petTypes } from "@/lib/registrationData";
 
