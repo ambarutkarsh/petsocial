@@ -1,8 +1,8 @@
-import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, import { ChevronDown, toast } from "sonner";
+import { import { ChevronDown, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertDialog, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, ExternalLink, Loader2, MoreVertical, Trash2 } from "lucide-react";
@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 import { docTypeLabel } from "@/components/microchip/docTypes";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+
 import HubSubLayout from "@/components/HubSubLayout";
 
 } from "@/components/ui/alert-dialog";

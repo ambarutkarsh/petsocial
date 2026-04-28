@@ -1,6 +1,6 @@
-import { DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { DialogHeader, DialogTitle, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, useState } from "react";
+import { useState } from "react";
 import { Loader2, Power } from "lucide-react";
 import { CloseIcon, EditIcon, PlusIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
