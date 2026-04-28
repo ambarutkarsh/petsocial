@@ -26,15 +26,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isNewGoogleUser, setIsNewGoogleUser] = useState(false);
 
   useEffect(() => {
+    let initialResolved = false;
+    const markReady = () => {
+      initialResolved = true;
+      setLoading(false);
+    };
+
     // IMPORTANT: never await Supabase calls directly inside onAuthStateChange —
     // it can deadlock the auth client and leave `loading` stuck on true,
     // which causes ProtectedRoute / AdminLayout to render nothing.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
         setSession(newSession);
-        setLoading(false);
+        // INITIAL_SESSION fires once on mount with the restored session (or null).
+        // Only after this event is it safe to consider auth "ready".
+        if (event === "INITIAL_SESSION") markReady();
 
         if (event === "SIGNED_IN" && newSession?.user) {
+          markReady();
           // Defer any Supabase calls to a microtask so we don't block the
           // auth state change handler.
           setTimeout(() => {
