@@ -17,18 +17,24 @@ const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string
 );
 
 const AdminDashboardScreen = () => {
-  const { data: stats } = useQuery({
+  const { data: stats, isLoading: statsLoading, error: statsError } = useQuery({
     queryKey: ["admin-dashboard-stats"],
     queryFn: async () => {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const [{ count: users }, { count: posts }, { count: vets }, { count: bookings }] = await Promise.all([
+      const [u, p, v, b] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }).or("is_seed_user.eq.false,is_seed_user.is.null"),
         supabase.from("posts").select("id", { count: "exact", head: true }).or("is_seed_post.eq.false,is_seed_post.is.null"),
         supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_verified", true),
         supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
       ]);
-      return { users: users ?? 0, posts: posts ?? 0, vets: vets ?? 0, bookings: bookings ?? 0 };
+      const firstErr = u.error || p.error || v.error || b.error;
+      if (firstErr) {
+        console.error("[AdminDashboard] stats query error:", firstErr);
+        throw new Error(firstErr.message);
+      }
+      return { users: u.count ?? 0, posts: p.count ?? 0, vets: v.count ?? 0, bookings: b.count ?? 0 };
     },
+    retry: 1,
   });
 
   const { data: recent = [] } = useQuery({
@@ -52,11 +58,16 @@ const AdminDashboardScreen = () => {
 
   return (
     <AdminLayout title="Dashboard" subtitle="Petosauras admin overview">
+      {statsError && (
+        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-body">
+          Failed to load stats: {(statsError as Error).message}
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={ProfileIcon} label="Total Users" value={stats?.users ?? "…"} hint="Profiles" />
-        <StatCard icon={DocumentIcon} label="Total Posts" value={stats?.posts ?? "…"} hint="All posts" />
-        <StatCard icon={VetIcon} label="Active Vets" value={stats?.vets ?? "…"} hint="Verified" />
-        <StatCard icon={BookVetIcon} label="Bookings" value={stats?.bookings ?? "…"} hint="This week" />
+        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint="Profiles" />
+        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint="All posts" />
+        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="Verified" />
+        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="This week" />
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">
