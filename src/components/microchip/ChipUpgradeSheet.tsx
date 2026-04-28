@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { DOC_TYPES, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { UploadIcon } from "@/components/icons/PetosauraIcons";
+import { DOC_TYPES } from "./docTypes";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
