@@ -94,7 +94,7 @@ const AdminDashboardScreen = () => {
         <div><b>Auth:</b> {authLoading ? "loading…" : user ? `signed in as ${user.email} (${user.id.slice(0,8)}…)` : "NOT signed in"}</div>
         <div><b>Stats query:</b> {statsLoading ? "loading…" : statsError ? `ERROR: ${(statsError as Error).message}` : `OK — updated ${dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : "—"}`}</div>
         {stats && (
-          <div><b>Counts:</b> non-seed users={stats.users}, non-seed posts={stats.posts}, seed users={stats.seedUsers}, seed posts={stats.seedPosts}, active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
+          <div><b>Counts:</b> total users={stats.users} (real={stats.realUsers}, seed={stats.seedUsers}), total posts={stats.posts} (real={stats.realPosts}, seed={stats.seedPosts}), active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
         )}
         {recentError && <div className="text-red-700"><b>Recent error:</b> {(recentError as Error).message}</div>}
       </div>
@@ -105,10 +105,10 @@ const AdminDashboardScreen = () => {
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint="Profiles" />
-        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint="All posts" />
-        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="Verified" />
-        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="This week" />
+        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint={stats ? `${stats.realUsers} real + ${stats.seedUsers} seed` : "Profiles"} />
+        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint={stats ? `${stats.realPosts} real + ${stats.seedPosts} seed` : "All posts"} />
+        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="is_active=true" />
+        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="Last 7 days" />
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">
