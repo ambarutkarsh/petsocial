@@ -25,10 +25,12 @@ const AdminDashboardScreen = () => {
     enabled: !authLoading && !!user,
     queryFn: async () => {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      // Use total counts (RLS-safe, no fragile .or()) and subtract seed counts
+      // to derive non-seed numbers. This avoids PostgREST quirks with head:true + .or().
       const [u, p, v, b, su, sp] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }).or("is_seed_user.eq.false,is_seed_user.is.null"),
-        supabase.from("posts").select("id", { count: "exact", head: true }).or("is_seed_post.eq.false,is_seed_post.is.null"),
-        supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_verified", true),
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("posts").select("id", { count: "exact", head: true }),
+        supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true),
         supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
         supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
@@ -45,13 +47,19 @@ const AdminDashboardScreen = () => {
         console.error("[AdminDashboard] errors:", errors);
         throw new Error(errors.join(" | "));
       }
+      const totalUsers = u.count ?? 0;
+      const totalPosts = p.count ?? 0;
+      const seedUsers = su.count ?? 0;
+      const seedPosts = sp.count ?? 0;
       return {
-        users: u.count ?? 0,
-        posts: p.count ?? 0,
-        vets: v.count ?? 0,
+        users: totalUsers,                          // ALL users (real signal)
+        posts: totalPosts,                          // ALL posts
+        realUsers: Math.max(0, totalUsers - seedUsers),
+        realPosts: Math.max(0, totalPosts - seedPosts),
+        vets: v.count ?? 0,                         // active (verification not required)
         bookings: b.count ?? 0,
-        seedUsers: su.count ?? 0,
-        seedPosts: sp.count ?? 0,
+        seedUsers,
+        seedPosts,
       };
     },
     retry: 1,
@@ -61,20 +69,21 @@ const AdminDashboardScreen = () => {
     queryKey: ["admin-recent-registrations", user?.id],
     enabled: !authLoading && !!user,
     queryFn: async () => {
+      // Fetch last 20 then filter out seed users client-side (avoids .or() quirks).
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, full_name, city, created_at")
-        .or("is_seed_user.eq.false,is_seed_user.is.null")
+        .select("id, full_name, city, created_at, is_seed_user")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
       if (error) throw new Error(error.message);
-      const ids = (data ?? []).map((p) => p.id);
+      const filtered = (data ?? []).filter((p: any) => p.is_seed_user !== true).slice(0, 10);
+      const ids = filtered.map((p) => p.id);
       const { data: pets } = ids.length
         ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
         : { data: [] as any[] };
       const petByOwner = new Map<string, string>();
       (pets ?? []).forEach((p: any) => { if (!petByOwner.has(p.owner_id)) petByOwner.set(p.owner_id, p.name); });
-      return (data ?? []).map((p) => ({ ...p, pet: petByOwner.get(p.id) ?? "—" }));
+      return filtered.map((p) => ({ ...p, pet: petByOwner.get(p.id) ?? "—" }));
     },
   });
 
@@ -85,7 +94,7 @@ const AdminDashboardScreen = () => {
         <div><b>Auth:</b> {authLoading ? "loading…" : user ? `signed in as ${user.email} (${user.id.slice(0,8)}…)` : "NOT signed in"}</div>
         <div><b>Stats query:</b> {statsLoading ? "loading…" : statsError ? `ERROR: ${(statsError as Error).message}` : `OK — updated ${dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : "—"}`}</div>
         {stats && (
-          <div><b>Counts:</b> non-seed users={stats.users}, non-seed posts={stats.posts}, seed users={stats.seedUsers}, seed posts={stats.seedPosts}, active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
+          <div><b>Counts:</b> total users={stats.users} (real={stats.realUsers}, seed={stats.seedUsers}), total posts={stats.posts} (real={stats.realPosts}, seed={stats.seedPosts}), active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
         )}
         {recentError && <div className="text-red-700"><b>Recent error:</b> {(recentError as Error).message}</div>}
       </div>
@@ -96,10 +105,10 @@ const AdminDashboardScreen = () => {
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint="Profiles" />
-        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint="All posts" />
-        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="Verified" />
-        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="This week" />
+        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint={stats ? `${stats.realUsers} real + ${stats.seedUsers} seed` : "Profiles"} />
+        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint={stats ? `${stats.realPosts} real + ${stats.seedPosts} seed` : "All posts"} />
+        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="is_active=true" />
+        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="Last 7 days" />
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">
