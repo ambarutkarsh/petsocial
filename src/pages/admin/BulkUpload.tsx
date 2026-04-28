@@ -148,7 +148,10 @@ const BulkUpload = () => {
         contentType: photo.file.type || "image/jpeg",
         upsert: false,
       });
-    if (upErr) throw upErr;
+    if (upErr) {
+      console.error("Storage upload error:", JSON.stringify(upErr));
+      throw new Error(upErr.message);
+    }
 
     const {
       data: { publicUrl },
