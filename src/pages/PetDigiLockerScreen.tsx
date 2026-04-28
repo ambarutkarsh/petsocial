@@ -633,7 +633,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                                 </div>
                                 <div className="flex gap-1 shrink-0">
                                   <button onClick={() => handleViewRecord(doc)} className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" title="View">
-                                    <EyeIcon className="w-3.5 h-3.5 text-primary" />
+                                    <Eye className="w-3.5 h-3.5 text-primary" />
                                   </button>
                                   <button onClick={() => handleDeleteRecord(doc)} className="w-7 h-7 rounded-full bg-destructive/10 flex items-center justify-center" title="Delete">
                                     <Trash2 className="w-3.5 h-3.5 text-destructive" />

@@ -8,8 +8,8 @@ import { toast } from "sonner";
 
 import PetCareStepper from "@/components/petcare/PetCareStepper";
 import PetCareDisclaimer from "@/components/petcare/PetCareDisclaimer";
-import StepCategory, { PETCARE_CATEGORIES } from "@/components/petcare/StepCategory";
-import StepPetDetails from "@/components/petcare/StepPetDetails";
+import StepCategory, { PETCARE_CATEGORIES, type PetCareCategory } from "@/components/petcare/StepCategory";
+import StepPetDetails, { type PetDetails } from "@/components/petcare/StepPetDetails";
 import { useMemo, useState } from "react";
 
 import DietResults from "@/components/petcare/results/DietResults";
@@ -61,7 +61,7 @@ const PetCareScreen = () => {
         await (navigator as any).share({ title, text: "Expert pet guidance on Petosauras", url });
       } else {
         await navigator.clipboard.writeText(url);
-        toast({ title: "Link copied", description: url });
+        toast.success("Link copied", { description: url });
       }
     } catch {
       // user cancelled

@@ -14,7 +14,7 @@ import { BackIcon, UploadIcon, VerifiedIcon, WarningIcon } from "@/components/ic
 import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 
 import ChipStepper from "@/components/microchip/ChipStepper";
-import ChipDocUploadZone from "@/components/microchip/ChipDocUploadZone";
+import ChipDocUploadZone, { type PickedFile } from "@/components/microchip/ChipDocUploadZone";
 import { DOC_TYPES, docTypeLabel } from "@/components/microchip/docTypes";
 
 import HubSubLayout from "@/components/HubSubLayout";
