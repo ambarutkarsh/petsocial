@@ -326,17 +326,17 @@ const FeedScreen = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
-                          <HeartIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isLiked ? "#FF6B6B" : "none") && isLiked ? "#FF6B6B" : "none" !== 'none'} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
+                          <Heart size={20} strokeWidth={1.5} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "#9B96B0"} />
                           <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>{post.like_count || 0}</span>
                         </button>
                         <button onClick={() => { setCommentPostId(post.id); trackEvent("comment_submitted", { post_id: post.id }); }} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
-                          <CommentIcon className="w-5 h-5" strokeWidth={1.8} />
+                          <MessageCircle size={20} strokeWidth={1.5} />
                           <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
                         </button>
-                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><ShareIcon className="w-5 h-5" strokeWidth={1.8} /></button>
+                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Share2 size={20} strokeWidth={1.5} /></button>
                       </div>
                       <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
-                        <SaveIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isSaved ? "hsl(var(--primary))" : "none") && isSaved ? "hsl(var(--primary))" : "none" !== 'none'} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
+                        <Bookmark size={20} strokeWidth={1.5} fill={isSaved ? "#7B5EA7" : "none"} color={isSaved ? "#7B5EA7" : "#9B96B0"} />
                       </button>
                     </div>
                     <p className="text-sm font-body">
