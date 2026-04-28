@@ -10,11 +10,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { BackIcon, DOC_TYPES, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
-import { formatChipNumber, validateMicrochip } from "./microchipValidator";
+import { BackIcon, UploadIcon, VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
+import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 
 import ChipStepper from "@/components/microchip/ChipStepper";
-import ChipDocUploadZone, WarningIcon, docTypeLabel } from "@/components/microchip/docTypes";
+import ChipDocUploadZone from "@/components/microchip/ChipDocUploadZone";
+import { DOC_TYPES, docTypeLabel } from "@/components/microchip/docTypes";
 
 import HubSubLayout from "@/components/HubSubLayout";
 
