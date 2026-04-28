@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Camera, Video, Radio, Siren, X } from "lucide-react";
 import PostUploadModal from "./PostUploadModal";
 import AlertForm from "./AlertForm";
 import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
+import { Radio } from "lucide-react";
+import { CameraIcon, CloseIcon, PlayIcon, SOSIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -17,7 +18,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
 
   const options = [
     {
-      icon: Camera,
+      icon: CameraIcon,
       title: "Upload Photo",
       desc: "Share a pet moment",
       color: "from-primary to-[#243660]",
@@ -28,7 +29,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
       },
     },
     {
-      icon: Video,
+      icon: PlayIcon,
       title: "Post Reel",
       desc: "Share a short video",
       color: "from-secondary to-[#FFA577]",
@@ -49,7 +50,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
       },
     },
     {
-      icon: Siren,
+      icon: SOSIcon,
       title: "Alert",
       desc: "Lost or found pet",
       color: "from-[#FF6B6B] to-[#FF9999]",
@@ -71,7 +72,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-heading font-bold">Create</h2>
               <button onClick={onClose} className="text-text-hint hover:text-foreground">
-                <X className="w-5 h-5" strokeWidth={1.8} />
+                <CloseIcon className="w-5 h-5" strokeWidth={1.8} />
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3">

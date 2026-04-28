@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { ArrowLeft, MapPin, Search, Star, Phone, Clock, ExternalLink, Map } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { trackEvent } from "@/lib/analytics";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
+import { Clock, ExternalLink, Phone } from "lucide-react";
+import { BackIcon, LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
 
 interface VetClinic {
   name: string; address: string; phone: string; rating: number;
@@ -77,12 +79,12 @@ const VetNearMeScreen = () => {
       <div className="pb-20 px-4">
         <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/hub")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/hub")}><BackIcon className="w-5 h-5" /></button>
             <h1 className="font-heading font-bold text-lg">Vet Near Me</h1>
           </div>
           {results.length > 0 && (
             <Button size="sm" variant="ghost" onClick={() => setShowMap(!showMap)}>
-              <Map className="w-4 h-4 mr-1" />{showMap ? "List" : "Map"}
+              <LocationPinIcon className="w-4 h-4 mr-1" />{showMap ? "List" : "Map"}
             </Button>
           )}
         </header>
@@ -94,7 +96,7 @@ const VetNearMeScreen = () => {
           </button>
           <button onClick={() => setMode("search")}
             className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "search" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-            🔍 Search by PIN / City
+            🔍 SearchIcon by PIN / City
           </button>
         </div>
 
@@ -105,7 +107,7 @@ const VetNearMeScreen = () => {
         ) : (
           <div className="flex gap-2 mb-4">
             <Input placeholder="Enter PIN code or city name" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSearch()} />
-            <Button onClick={handleSearch} disabled={loading}><Search className="w-4 h-4" /></Button>
+            <Button onClick={handleSearch} disabled={loading}><SearchIcon className="w-4 h-4" /></Button>
           </div>
         )}
 
@@ -114,7 +116,7 @@ const VetNearMeScreen = () => {
             <span className="text-4xl block mb-3">🔧</span>
             <p className="text-sm text-muted-foreground mb-3">Google Maps API is not configured yet. Vet search will be available soon.</p>
             <Button variant="outline" onClick={openGoogleMapsFallback}>
-              <ExternalLink className="w-4 h-4 mr-1" /> Search on Google Maps →
+              <ExternalLink className="w-4 h-4 mr-1" /> SearchIcon on Google Maps →
             </Button>
           </div>
         )}
@@ -125,7 +127,7 @@ const VetNearMeScreen = () => {
             <div className="flex gap-2 justify-center">
               <Button variant="outline" size="sm" onClick={() => { setError(""); setSearched(false); }}>Try Again</Button>
               <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
-                <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+                <ExternalLink className="w-3 h-3 mr-1" /> SearchIcon on Google Maps
               </Button>
             </div>
           </div>
@@ -155,12 +157,12 @@ const VetNearMeScreen = () => {
                   <h3 className="font-heading font-bold text-sm flex-1">🏥 {clinic.name}</h3>
                   {clinic.rating > 0 && (
                     <span className="flex items-center gap-1 text-xs font-semibold text-amber-600">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />{clinic.rating}
+                      <StarIcon className="w-3 h-3 fill-amber-400 text-amber-400" />{clinic.rating}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />{clinic.address} · {clinic.distance_km.toFixed(1)} km away
+                  <LocationPinIcon className="w-3 h-3" />{clinic.address} · {clinic.distance_km.toFixed(1)} km away
                 </p>
                 <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
@@ -176,7 +178,7 @@ const VetNearMeScreen = () => {
                         <div className="flex items-center gap-2 text-xs">
                           <span className="font-semibold">{r.author_name}</span>
                           <span className="flex items-center text-amber-500">
-                            {Array.from({ length: r.rating }).map((_, j) => <Star key={j} className="w-2.5 h-2.5 fill-current" />)}
+                            {Array.from({ length: r.rating }).map((_, j) => <StarIcon key={j} className="w-2.5 h-2.5 fill-current" />)}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.text}</p>
@@ -199,7 +201,7 @@ const VetNearMeScreen = () => {
             <span className="text-4xl block mb-3">🔍</span>
             <p className="text-sm text-muted-foreground mb-3">No veterinary clinics found within 5km. Try searching by city name instead.</p>
             <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
-              <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+              <ExternalLink className="w-3 h-3 mr-1" /> SearchIcon on Google Maps
             </Button>
           </div>
         )}

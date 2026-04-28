@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, Trash2 } from "lucide-react";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
+import { Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -133,7 +134,7 @@ const StoryViewer = ({ stories, initialIndex = 0, onClose }: Props) => {
               </button>
             )}
             <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="w-8 h-8 rounded-full bg-foreground/30 flex items-center justify-center">
-              <X className="w-4 h-4 text-primary-foreground" />
+              <CloseIcon className="w-4 h-4 text-primary-foreground" />
             </button>
           </div>
         </div>

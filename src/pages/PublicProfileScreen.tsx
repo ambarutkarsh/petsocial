@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { ChevronLeft, MoreHorizontal, MapPin, Play } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
+import { ChevronLeft, MoreHorizontal } from "lucide-react";
+import { LocationPinIcon, PlayIcon } from "@/components/icons/PetosauraIcons";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
-import { trackEvent } from "@/lib/analytics";
 
 const PublicProfileScreen = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -113,7 +115,7 @@ const PublicProfileScreen = () => {
           <p className="text-[13px] text-muted-foreground font-body">@{profile?.username || "user"}</p>
           {locationText && (
             <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1 font-body">
-              <MapPin className="w-3 h-3" strokeWidth={1.8} /> {locationText}
+              <LocationPinIcon className="w-3 h-3" strokeWidth={1.8} /> {locationText}
             </p>
           )}
           {profile?.bio && (
@@ -198,7 +200,7 @@ const PublicProfileScreen = () => {
                   <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
                   {post.media_type === "video" && (
                     <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-foreground/60 flex items-center justify-center">
-                      <Play className="w-3 h-3 text-primary-foreground" fill="white" />
+                      <PlayIcon className="w-3 h-3 text-primary-foreground" fill="white" />
                     </div>
                   )}
                 </div>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import VetDashboardLayout from "@/components/vet/VetDashboardLayout";
-import VetGuard from "@/components/vet/VetGuard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+import VetDashboardLayout from "@/components/vet/VetDashboardLayout";
+import VetGuard from "@/components/vet/VetGuard";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 

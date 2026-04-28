@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search, Bell, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { BellIcon, CloseIcon, ProfileIcon, SearchIcon } from "@/components/icons/PetosauraIcons";
+
 // LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-icon.png";
 
@@ -108,7 +110,7 @@ const TopBar = () => {
               aria-label="Search"
               className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
             >
-              <Search className="w-5 h-5" strokeWidth={1.8} />
+              <SearchIcon className="w-5 h-5" strokeWidth={1.8} />
             </button>
             {user && (
               <button
@@ -116,7 +118,7 @@ const TopBar = () => {
                 aria-label="Notifications"
                 className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
               >
-                <Bell className="w-5 h-5" strokeWidth={1.8} />
+                <BellIcon className="w-5 h-5" strokeWidth={1.8} />
                 {unreadCount > 0 && (
                   <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
                     {unreadCount > 99 ? "99+" : unreadCount}
@@ -164,7 +166,7 @@ const TopBar = () => {
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="max-w-[430px] mx-auto h-full flex flex-col">
             <div className="h-14 px-4 flex items-center gap-2 border-b border-border bg-card">
-              <Search className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
+              <SearchIcon className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
               <input
                 autoFocus
                 value={query}
@@ -177,7 +179,7 @@ const TopBar = () => {
                 aria-label="Close search"
                 className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted"
               >
-                <X className="w-5 h-5" strokeWidth={1.8} />
+                <CloseIcon className="w-5 h-5" strokeWidth={1.8} />
               </button>
             </div>
 
@@ -191,7 +193,7 @@ const TopBar = () => {
                   {/* Users */}
                   <section>
                     <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wide mb-2">
-                      👤 Users
+                      👤 ProfileIcon
                     </h3>
                     {results?.users.length ? (
                       <div className="space-y-1.5">

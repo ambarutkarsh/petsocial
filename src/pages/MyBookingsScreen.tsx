@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+import HubSubLayout from "@/components/HubSubLayout";
 
 const statusBadge = (s: string) => {
   if (s === "pending_vet_confirmation") return { label: "⏳ Awaiting confirmation", cls: "bg-amber-50 text-amber-900 border-amber-200" };

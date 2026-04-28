@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2 } from "lucide-react";
+
 import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -26,7 +27,7 @@ const BookingSuccessScreen = () => {
     <HubSubLayout title="Booking Confirmed" emoji="🐾">
       <div className="flex flex-col items-center text-center mt-2">
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center animate-scale-in">
-          <CheckCircle2 className="w-12 h-12 text-green-600" strokeWidth={1.8} />
+          <VerifiedIcon className="w-12 h-12 text-green-600" strokeWidth={1.8} />
         </div>
         <h2 className="mt-4 font-heading font-bold text-lg">Booking Request Sent! 🐾</h2>
       </div>

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { WarningIcon } from "@/components/icons/PetosauraIcons";
 import petCareData from "@/data/petcare-data.json";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AlertTriangle } from "lucide-react";
+
 import { appliesToPet, severityClass } from "@/lib/petCareHelpers";
 
 interface ToxicItem {
@@ -35,7 +36,7 @@ const PoisonResults = ({ petType }: Props) => {
       {/* Emergency contacts banner */}
       <div className="rounded-[18px] border-2 border-[hsl(0_70%_60%)] bg-[hsl(0_85%_96%)] p-3">
         <div className="flex items-center gap-2 mb-2">
-          <AlertTriangle className="w-4 h-4 text-[hsl(0_75%_40%)]" />
+          <WarningIcon className="w-4 h-4 text-[hsl(0_75%_40%)]" />
           <p className="text-[13px] font-heading font-bold text-[hsl(0_75%_40%)]">🚨 Suspected poisoning? Call immediately:</p>
         </div>
         <ul className="text-[12px] font-body text-[hsl(0_70%_30%)] space-y-1">

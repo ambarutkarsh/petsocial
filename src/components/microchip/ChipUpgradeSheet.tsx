@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { DOC_TYPES, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+
 import ChipDocUploadZone, { PickedFile } from "./ChipDocUploadZone";
 import AcceptedDocsInfo from "./AcceptedDocsInfo";
-import { DOC_TYPES } from "./docTypes";
 
 interface Props {
   open: boolean;
@@ -66,7 +67,7 @@ const ChipUpgradeSheet = ({ open, onClose, chipId, chipNumber, onUpgraded }: Pro
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="bottom" className="rounded-t-[24px] max-h-[90vh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle className="font-heading text-left">Upload Proof Document</SheetTitle>
+          <SheetTitle className="font-heading text-left">UploadIcon Proof Document</SheetTitle>
         </SheetHeader>
         <div className="space-y-4 mt-2 pb-6">
           <p className="text-xs text-muted-foreground font-body">
@@ -78,7 +79,7 @@ const ChipUpgradeSheet = ({ open, onClose, chipId, chipNumber, onUpgraded }: Pro
 
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground font-body mb-2">
-              Upload zone
+              UploadIcon zone
             </p>
             <ChipDocUploadZone value={picked} onChange={setPicked} />
           </div>

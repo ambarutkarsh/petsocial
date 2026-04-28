@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { X, Send, Loader2 } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { maskName } from "@/lib/maskName";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { CloseIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   postId: string;
@@ -70,7 +71,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
             <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-3" />
             <div className="flex items-center justify-between">
               <h3 className="text-base font-heading font-bold">Comments</h3>
-              <button onClick={onClose} className="text-text-hint"><X className="w-5 h-5" /></button>
+              <button onClick={onClose} className="text-text-hint"><CloseIcon className="w-5 h-5" /></button>
             </div>
           </div>
 
@@ -132,7 +133,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
                       disabled={sending}
                       className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-primary flex items-center justify-center"
                     >
-                      <Send className="w-3.5 h-3.5 text-primary-foreground" />
+                      <ShareIcon className="w-3.5 h-3.5 text-primary-foreground" />
                     </button>
                   )}
                 </div>

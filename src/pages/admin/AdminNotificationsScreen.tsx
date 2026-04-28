@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Send, Loader2 } from "lucide-react";
+import { ShareIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,7 +100,7 @@ const AdminNotificationsScreen = () => {
             {sending ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending…</>
             ) : (
-              <><Send className="w-4 h-4 mr-2" strokeWidth={2} /> Send to all real users</>
+              <><ShareIcon className="w-4 h-4 mr-2" strokeWidth={2} /> ShareIcon to all real users</>
             )}
           </Button>
         </div>

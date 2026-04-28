@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { BackIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -86,11 +87,11 @@ const StoryCreator = ({ open, onClose }: Props) => {
         {!preview ? (
           <div className="flex-1 flex flex-col items-center justify-center px-6 gap-4">
             <button onClick={handleReset} className="absolute top-4 left-4 w-8 h-8 rounded-full bg-surface-alt flex items-center justify-center">
-              <ArrowLeft className="w-4 h-4" />
+              <BackIcon className="w-4 h-4" />
             </button>
             <h2 className="text-xl font-heading font-bold">Add to Story</h2>
             <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer w-full">
-              <Upload className="w-10 h-10 text-primary" />
+              <UploadIcon className="w-10 h-10 text-primary" />
               <span className="text-sm font-heading font-bold text-primary">Select photo or video</span>
               <span className="text-xs text-muted-foreground font-body">JPG, PNG or MP4 (max 15s)</span>
               <input type="file" accept="image/*,video/mp4" className="hidden" onChange={handleFileSelect} />
@@ -99,7 +100,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
         ) : (
           <div className="flex-1 relative">
             <button onClick={handleReset} className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full bg-foreground/30 flex items-center justify-center">
-              <ArrowLeft className="w-4 h-4 text-primary-foreground" />
+              <BackIcon className="w-4 h-4 text-primary-foreground" />
             </button>
             <button
               onClick={() => setShowCaptionInput(!showCaptionInput)}

@@ -3,17 +3,18 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Sprout, Trophy, Stethoscope, Bell, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut } from "lucide-react";
+import { BellIcon, PetCareIcon, StarIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/seed", label: "Seed Data", icon: Sprout },
-  { to: "/admin/competitions", label: "Competitions", icon: Trophy },
-  { to: "/admin/vets", label: "Vets", icon: Stethoscope },
+  { to: "/admin/seed", label: "Seed Data", icon: PetCareIcon },
+  { to: "/admin/competitions", label: "Competitions", icon: StarIcon },
+  { to: "/admin/vets", label: "Vets", icon: VetIcon },
 ];
 
 const NAV_BOTTOM = [
-  { to: "/admin/notifications", label: "Push Notifications", icon: Bell },
+  { to: "/admin/notifications", label: "Push Notifications", icon: BellIcon },
 ];
 
 interface Props {

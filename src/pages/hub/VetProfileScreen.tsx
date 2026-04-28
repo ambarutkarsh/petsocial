@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, BadgeCheck, Star } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PageWrapper from "@/components/PageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { BackIcon, StarIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const VetProfileScreen = () => {
   const { vetId } = useParams<{ vetId: string }>();
@@ -106,7 +106,7 @@ const VetProfileScreen = () => {
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
+            <BackIcon className="w-5 h-5" strokeWidth={1.8} />
           </button>
           <h1 className="font-heading font-bold text-[18px] flex-1 truncate">{vet?.clinic_name ?? "Vet Profile"}</h1>
         </header>
@@ -120,12 +120,12 @@ const VetProfileScreen = () => {
             </div>
             <p className="mt-2 font-heading font-bold flex items-center gap-1.5">
               Dr. {vet?.full_name}
-              {vet?.is_verified && <BadgeCheck className="w-4 h-4 text-blue-600" />}
+              {vet?.is_verified && <VerifiedIcon className="w-4 h-4 text-blue-600" />}
             </p>
             {vet?.clinic_name && <p className="text-xs font-body">{vet.clinic_name}</p>}
             {vet?.clinic_address && <p className="text-[11px] text-muted-foreground font-body">{vet.clinic_address}</p>}
             <p className="text-xs font-body mt-1 flex items-center gap-1">
-              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <StarIcon className="w-3 h-3 fill-amber-400 text-amber-400" />
               {Number(vet?.avg_rating ?? 0).toFixed(1)} · {vet?.total_reviews ?? 0} reviews
             </p>
           </div>

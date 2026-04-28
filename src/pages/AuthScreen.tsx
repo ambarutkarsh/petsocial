@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +8,7 @@ import RegistrationFlow from "@/components/RegistrationFlow";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { isAdminEmail } from "@/lib/admin";
 
@@ -297,7 +298,7 @@ const AuthScreen = () => {
           {sheetView === "resetSent" && (
             <div className="animate-fade-in text-center py-4">
               <span className="text-5xl mb-4 block">✉️</span>
-              <h2 className="text-xl font-heading font-bold mb-2">Check your inbox</h2>
+              <h2 className="text-xl font-heading font-bold mb-2">CheckIcon your inbox</h2>
               <p className="text-sm text-text-hint mb-6 font-body">
                 We've sent a password reset link to <strong>{resetEmail}</strong>. It may take a few minutes to arrive.
               </p>

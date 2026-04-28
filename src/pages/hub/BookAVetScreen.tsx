@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { Star, MapPin, BadgeCheck } from "lucide-react";
 import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { toast } from "@/components/ui/sonner";
 import { Switch } from "@/components/ui/switch";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type ConsultType = "in_clinic" | "home" | "tele";
 
@@ -166,7 +165,7 @@ const BookAVetScreen = () => {
                 <div className="flex-1 min-w-0">
                   <p className="font-heading font-bold text-sm flex items-center gap-1.5">
                     Dr. {v.full_name}
-                    {v.is_verified && <BadgeCheck className="w-4 h-4 text-blue-600" />}
+                    {v.is_verified && <VerifiedIcon className="w-4 h-4 text-blue-600" />}
                   </p>
                   <p className="text-[11px] text-muted-foreground font-body flex items-center gap-1">
                     <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
@@ -175,7 +174,7 @@ const BookAVetScreen = () => {
                   {v.clinic_name && <p className="text-xs font-body mt-1">{v.clinic_name}</p>}
                   {v.clinic_address && (
                     <p className="text-[11px] text-muted-foreground font-body flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
+                      <LocationPinIcon className="w-3 h-3" />
                       {v.clinic_address}
                     </p>
                   )}

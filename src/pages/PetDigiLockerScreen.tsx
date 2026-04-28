@@ -1,22 +1,23 @@
-import { useState, useRef, useMemo } from "react";
-import { ArrowLeft, Plus, FileText, Trash2, Download, Eye as EyeIcon, Upload, ChevronDown, ChevronUp } from "lucide-react";
+import { Area, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ComposedChart, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, differenceInMonths, format } from "date-fns";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MobileLayout from "@/components/MobileLayout";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { format, differenceInYears, differenceInMonths } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ComposedChart, Area } from "recharts";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { trackEvent } from "@/lib/analytics";
+import { BackIcon, BookVetIcon, InfoIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
+import { differenceInYears } from "@/lib/registrationData";
+
+import MobileLayout from "@/components/MobileLayout";
 
 const mealIcons: Record<string, string> = { Breakfast: "🌅", Lunch: "☀️", Dinner: "🌙", Snack: "🍪" };
 
@@ -297,7 +298,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
         <Button variant="outline" size="sm" className="text-xs">{format(date, "MMM d, yyyy")}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
+        <BookVetIcon mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
       </PopoverContent>
     </Popover>
   );
@@ -310,7 +311,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       <Wrapper>
         <div className="px-4 py-3 flex items-center gap-3">
           {!embedded && (
-            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/mypet")}><BackIcon className="w-5 h-5" /></button>
           )}
           <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
         </div>
@@ -327,7 +328,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       <div className="pb-20">
         {!embedded && (
           <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
-            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/mypet")}><BackIcon className="w-5 h-5" /></button>
             <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
           </header>
         )}
@@ -358,7 +359,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
             {/* TAB 1: HEALTH LOG */}
             <TabsContent value="health" className="space-y-4 mt-3">
               <div className="paw-card p-4">
-                <h3 className="font-heading font-semibold text-sm mb-2">Basic Info</h3>
+                <h3 className="font-heading font-semibold text-sm mb-2">Basic InfoIcon</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div><span className="text-muted-foreground">Name:</span> {activePet.name}</div>
                   <div><span className="text-muted-foreground">Breed:</span> {activePet.species || activePet.pet_type}</div>
@@ -373,7 +374,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-heading font-semibold text-sm">Weight Log</h3>
                   <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => setShowWeightForm(!showWeightForm)}>
-                    <Plus className="w-3 h-3 mr-1" />Log Weight
+                    <PlusIcon className="w-3 h-3 mr-1" />Log Weight
                   </Button>
                 </div>
                 {showWeightForm && (
@@ -421,7 +422,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-heading font-semibold text-sm">Food Log</h3>
                   <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => setShowFoodForm(!showFoodForm)}>
-                    <Plus className="w-3 h-3 mr-1" />Log Food
+                    <PlusIcon className="w-3 h-3 mr-1" />Log Food
                   </Button>
                 </div>
                 {showFoodForm && (
@@ -487,7 +488,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
               )}
 
               <Button variant="outline" className="w-full" onClick={() => setShowVaccForm(!showVaccForm)}>
-                <Plus className="w-4 h-4 mr-1" />Add Vaccine
+                <PlusIcon className="w-4 h-4 mr-1" />Add Vaccine
               </Button>
 
               {showVaccForm && (
@@ -547,7 +548,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
             {/* TAB 3: DOCUMENTS */}
             <TabsContent value="documents" className="space-y-4 mt-3">
               <Button onClick={() => setShowDocUpload(true)} className="w-full">
-                <Upload className="w-4 h-4 mr-2" /> Upload Document
+                <UploadIcon className="w-4 h-4 mr-2" /> Upload Document
               </Button>
 
               {/* Document upload modal */}
@@ -579,7 +580,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                   <div>
                     <button onClick={() => docFileInputRef.current?.click()}
                       className="w-full border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
-                      <Upload className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
+                      <UploadIcon className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
                       <p className="text-xs text-muted-foreground">PDF, JPG, PNG · Max 500KB</p>
                     </button>
                     <input ref={docFileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={handleDocFileSelect} />

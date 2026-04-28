@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
-import { Search, Plus, MessageSquare, Eye, AlertTriangle, RotateCcw, Loader2, ExternalLink, PenSquare, CheckCircle, MapPin, Clock, DollarSign, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MobileLayout from "@/components/MobileLayout";
-import BottomNav from "@/components/BottomNav";
-import PostUploadModal from "@/components/PostUploadModal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +9,13 @@ import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
+import { RotateCcw } from "lucide-react";
+import { EditIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
+import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
 
 const filters = ["⭐ Facts", "Pet News", "All", "🚶 Walker", "✂️ Groomer", "🩺 Vet", "Urgent 🚨", "My Posts", "Solved"];
 
@@ -346,7 +348,7 @@ const ForumScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
       <div className="pb-20">
         <div className="px-4 pt-4 flex items-center justify-between mb-3">
           <h2 className="text-lg font-heading font-bold">Discussions</h2>
-          <Button size="sm" onClick={() => setShowNewPost(true)}><PenSquare className="w-4 h-4" strokeWidth={1.8} /> New Post</Button>
+          <Button size="sm" onClick={() => setShowNewPost(true)}><EditIcon className="w-4 h-4" strokeWidth={1.8} /> New Post</Button>
         </div>
 
         <div className="px-4 flex gap-2 overflow-x-auto no-scrollbar mb-4">
@@ -517,12 +519,12 @@ const ForumScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
                           )}
                           {topic.is_urgent && !svcBadge && (
                             <span className="text-[10px] font-body font-bold px-2 py-0.5 rounded-full bg-[#FFE8E8] text-[#CC3333] flex items-center gap-0.5">
-                              <AlertTriangle className="w-3 h-3" strokeWidth={1.8} /> Urgent
+                              <WarningIcon className="w-3 h-3" strokeWidth={1.8} /> Urgent
                             </span>
                           )}
                           {topic.is_solved && (
                             <span className="text-[10px] font-body font-bold px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#2A7D4F] flex items-center gap-0.5">
-                              <CheckCircle className="w-3 h-3" strokeWidth={1.8} /> Solved
+                              <VerifiedIcon className="w-3 h-3" strokeWidth={1.8} /> Solved
                             </span>
                           )}
                         </div>
@@ -535,7 +537,7 @@ const ForumScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
                           </div>
                         )}
                         <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground font-body">
-                          <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" strokeWidth={1.8} />{topic.reply_count || 0}</span>
+                          <span className="flex items-center gap-1"><CommentIcon className="w-3 h-3" strokeWidth={1.8} />{topic.reply_count || 0}</span>
                           <span className="flex items-center gap-1"><Eye className="w-3 h-3" strokeWidth={1.8} />{topic.view_count || 0}</span>
                           <span>{formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}</span>
                         </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Plus, Loader2, Trash2 } from "lucide-react";
+import { PlusIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -86,7 +87,7 @@ const AdminCompetitionsScreen = () => {
       subtitle="Create and manage photo & reel contests"
       headerRight={
         <Button size="sm" onClick={() => setShowForm(!showForm)}>
-          <Plus className="w-4 h-4 mr-1" strokeWidth={2} /> New
+          <PlusIcon className="w-4 h-4 mr-1" strokeWidth={2} /> New
         </Button>
       }
     >

@@ -1,5 +1,5 @@
-import { CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { InfoIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 export type ChipVerificationStatus = "document_verified" | "self_declared";
 
@@ -17,7 +17,7 @@ const ChipStatusBadge = ({ status, className }: Props) => {
           className
         )}
       >
-        <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2.2} />
+        <VerifiedIcon className="w-3.5 h-3.5" strokeWidth={2.2} />
         Document Verified
       </span>
     );
@@ -29,7 +29,7 @@ const ChipStatusBadge = ({ status, className }: Props) => {
         className
       )}
     >
-      <Info className="w-3.5 h-3.5" strokeWidth={2.2} />
+      <InfoIcon className="w-3.5 h-3.5" strokeWidth={2.2} />
       Self-Declared
     </span>
   );

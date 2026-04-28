@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X, Loader2 } from "lucide-react";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,7 +62,7 @@ const AddPetSheet = ({ open, onClose }: Props) => {
         <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-heading font-bold">Add a Pet</h2>
-          <button onClick={onClose}><X className="w-5 h-5 text-text-hint" /></button>
+          <button onClick={onClose}><CloseIcon className="w-5 h-5 text-text-hint" /></button>
         </div>
 
         <div className="space-y-4">

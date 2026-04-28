@@ -1,27 +1,28 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowRight, ArrowLeft, Sparkles, Heart, ShoppingBag } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { BackIcon, FeedsIcon, HeartIcon, ShopIcon } from "@/components/icons/PetosauraIcons";
 
 const STEPS = [
   {
     emoji: "📸",
-    icon: Sparkles,
+    icon: FeedsIcon,
     title: "Share pet moments",
     desc: "Reels, photos & stories — connect with millions of pet parents across India.",
     color: "from-primary to-[#243660]",
   },
   {
     emoji: "🏥",
-    icon: Heart,
+    icon: HeartIcon,
     title: "Care made simple",
     desc: "Vet near me, SOS, insurance, vaccines, budget tools — everything in one Hub.",
     color: "from-secondary to-[#FFA577]",
   },
   {
     emoji: "🛍️",
-    icon: ShoppingBag,
+    icon: ShopIcon,
     title: "Shop, learn & play",
     desc: "Curated pet products, expert articles, find mates, join pet clubs & competitions.",
     color: "from-accent to-[#7BCFC4]",
@@ -63,7 +64,7 @@ const OnboardingScreen = () => {
               className="w-9 h-9 rounded-full bg-card shadow-petosauras flex items-center justify-center"
               aria-label="Back"
             >
-              <ArrowLeft className="w-4 h-4" strokeWidth={1.8} />
+              <BackIcon className="w-4 h-4" strokeWidth={1.8} />
             </button>
           ) : <span className="w-9" />}
           <button onClick={skip} className="text-sm font-body font-semibold text-muted-foreground">

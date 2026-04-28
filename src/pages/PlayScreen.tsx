@@ -1,8 +1,19 @@
-import { useState, useEffect } from "react";
+import { GPLACES_DAILY_CAP } from "@/lib/feedPills";
+import { NEARBY_SUB_PILLS, createNotification, getActorName } from "@/lib/notifications";
+import { maskName } from "@/lib/maskName";
+import { getPostOwnerId, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, MessageCircle, Send, Bookmark, Plus, Trash2, Loader2, MapPin, Star, X, ChevronLeft, ChevronRight, Trophy, Calendar as CalIcon, Lock } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGuestPopup } from "@/contexts/GuestPopupContext";
+import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { FEED_PILLS } from "lucide-react";
+import { BookVetIcon, CommentIcon, HeartIcon, LocationPinIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
@@ -10,15 +21,6 @@ import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { toast } from "sonner";
-import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
-import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
-import { maskName } from "@/lib/maskName";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -30,7 +32,7 @@ async function attachProfiles<T extends Record<string, any>>(
   const ids = Array.from(new Set(rows.map((r) => r[fkField]).filter(Boolean) as string[]));
   if (ids.length === 0) return rows.map((r) => ({ ...r, profiles: null }));
   const { data: profs } = await supabase.from("public_profiles").select(fields).in("id", ids);
-  const map = new Map((profs || []).map((p: any) => [p.id, p]));
+  const map = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
   return rows.map((r) => ({ ...r, profiles: map.get(r[fkField] as string) || null }));
 }
 
@@ -99,7 +101,6 @@ const FeedScreen = () => {
     trackEvent("feed_pill_changed", { pill: key });
   };
 
-
   /**
    * A pill is "active" when either:
    *  - it is the directly selected pill, OR
@@ -129,7 +130,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, username, avatar_url, city")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawPosts.map((p: any) => ({ ...p, profiles: profMap.get(p.user_id) || null }));
     },
   });
@@ -184,7 +185,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, avatar_url")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawStories.map((s: any) => ({ ...s, profiles: profMap.get(s.user_id) || null }));
     },
   });
@@ -480,16 +481,16 @@ const FeedScreen = () => {
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
           <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
-            <Heart className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
+            <HeartIcon className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveLikes}</span>
           </button>
           <button onClick={guardedAction(() => setCommentPostId(post.id))} className="flex items-center gap-1.5">
-            <MessageCircle className="w-6 h-6 text-foreground" strokeWidth={1.6} />
+            <CommentIcon className="w-6 h-6 text-foreground" strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveComments}</span>
           </button>
-          <button onClick={guardedAction(() => sharePost(post))}><Send className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
+          <button onClick={guardedAction(() => sharePost(post))}><ShareIcon className="w-6 h-6 text-foreground" strokeWidth={1.6} /></button>
           <button onClick={guardedAction(() => toggleSaveMutation.mutate(post.id))} className="ml-auto">
-            <Bookmark className={`w-6 h-6 ${isSaved ? "fill-primary text-primary" : "text-foreground"}`} strokeWidth={1.6} />
+            <SaveIcon className={`w-6 h-6 ${isSaved ? "fill-primary text-primary" : "text-foreground"}`} strokeWidth={1.6} />
           </button>
         </div>
         {post.caption && <p className="px-3.5 pb-3 text-sm font-body whitespace-pre-line">{post.caption}</p>}
@@ -547,7 +548,7 @@ const FeedScreen = () => {
         {c.banner_url && <img src={c.banner_url} alt="" className="w-full aspect-video object-cover" />}
         <div className="p-4">
           <div className="flex items-center gap-2 mb-1">
-            <Trophy className="w-4 h-4 text-warning" />
+            <StarIcon className="w-4 h-4 text-warning" />
             <p className="text-[11px] text-warning font-bold uppercase">Competition</p>
           </div>
           <h3 className="font-heading font-bold text-base">{c.title}</h3>
@@ -566,7 +567,7 @@ const FeedScreen = () => {
       {e.banner_url && <img src={e.banner_url} alt="" className="w-full aspect-video object-cover" />}
       <div className="p-4">
         <div className="flex items-center gap-2 mb-1">
-          <CalIcon className="w-4 h-4 text-primary" />
+          <BookVetIcon className="w-4 h-4 text-primary" />
           <p className="text-[11px] text-primary font-bold uppercase">Pet Club Event</p>
         </div>
         <h3 className="font-heading font-bold text-base">{e.title}</h3>
@@ -588,11 +589,11 @@ const FeedScreen = () => {
         <h3 className="font-heading font-bold text-sm">{p.name}</h3>
         <p className="text-xs text-muted-foreground font-body mt-1">{p.address}</p>
         <div className="flex items-center gap-3 mt-2">
-          {p.rating > 0 && <span className="text-xs flex items-center gap-1"><Star className="w-3 h-3 fill-warning text-warning" />{p.rating}</span>}
+          {p.rating > 0 && <span className="text-xs flex items-center gap-1"><StarIcon className="w-3 h-3 fill-warning text-warning" />{p.rating}</span>}
           {p.distance_km && <span className="text-xs text-muted-foreground">{p.distance_km} km</span>}
         </div>
         <Button size="sm" variant="outline" className="mt-3 w-full" onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}&query_place_id=${p.place_id}`, "_blank")}>
-          <MapPin className="w-3 h-3" /> Get Directions
+          <LocationPinIcon className="w-3 h-3" /> Get Directions
         </Button>
       </article>
     );
@@ -624,10 +625,10 @@ const FeedScreen = () => {
           <p className="text-xs text-muted-foreground mt-1">@{pet.profiles?.username || "user"} · {pet.profiles?.city || "Nearby"}</p>
           <div className="flex gap-3 mt-4">
             <Button variant="outline" className="flex-1" onClick={() => setMateIdx(i => i + 1)}>
-              <X className="w-5 h-5" /> Skip
+              <CloseIcon className="w-5 h-5" /> Skip
             </Button>
             <Button className="flex-1" onClick={() => mateInterestMutation.mutate(pet)}>
-              <Heart className="w-5 h-5" /> Interested
+              <HeartIcon className="w-5 h-5" /> Interested
             </Button>
           </div>
         </div>
@@ -644,7 +645,7 @@ const FeedScreen = () => {
           <div className="px-5 py-3 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
             <div className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => setShowStoryCreator(true)}>
               <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
-                <Plus className="w-6 h-6 text-primary" strokeWidth={1.8} />
+                <PlusIcon className="w-6 h-6 text-primary" strokeWidth={1.8} />
               </div>
               <span className="text-[10px] font-body font-semibold text-muted-foreground">Your Story</span>
             </div>
@@ -704,7 +705,7 @@ const FeedScreen = () => {
                 }
               >
                 <span>
-                  {disabled && <Lock className="w-3 h-3 inline mr-1" />}
+                  {disabled && <LockIcon className="w-3 h-3 inline mr-1" />}
                   {p.emoji} {p.label}
                 </span>
               </button>
@@ -762,7 +763,7 @@ const FeedScreen = () => {
           {showPetClub && (
             <>
               <Button size="sm" className="w-full" onClick={() => toast.info("Use the + button to create an event")}>
-                <Plus className="w-4 h-4" /> Create Event
+                <PlusIcon className="w-4 h-4" /> Create Event
               </Button>
               {petClubEvents.length === 0 ? <p className="text-center text-muted-foreground py-8 font-body">No upcoming events. Be the first!</p> :
                 petClubEvents.map(renderEventCard)}

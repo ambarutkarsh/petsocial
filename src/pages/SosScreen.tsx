@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Phone, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Loader2, Phone } from "lucide-react";
+import { LocationPinIcon } from "@/components/icons/PetosauraIcons";
+import HubSubLayout from "@/components/HubSubLayout";
 
 const HELPLINES = [
   { name: "Blue Cross India", phone: "044-22350170" },
@@ -79,7 +80,7 @@ const SosScreen = () => {
                       )
                     }
                   >
-                    <MapPin className="w-4 h-4" /> Directions
+                    <LocationPinIcon className="w-4 h-4" /> Directions
                   </Button>
                 </div>
               </div>

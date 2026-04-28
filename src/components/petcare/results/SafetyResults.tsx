@@ -1,9 +1,10 @@
-import { useState } from "react";
-import petCareData from "@/data/petcare-data.json";
-import { ArrowLeft, Check } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { Weather } from "@/lib/petCareHelpers";
+import { Weather } from "@/lib/petCareHelpers";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BackIcon, CheckIcon } from "@/components/icons/PetosauraIcons";
+
+import petCareData from "@/data/petcare-data.json";
 
 interface Props {
   weather: Weather;
@@ -68,7 +69,7 @@ const SafetyResults = ({ weather }: Props) => {
         onClick={() => setTopic(null)}
         className="flex items-center gap-1 text-[12px] font-heading font-bold text-primary"
       >
-        <ArrowLeft className="w-3.5 h-3.5" /> Back to safety topics
+        <BackIcon className="w-3.5 h-3.5" /> Back to safety topics
       </button>
 
       <div className="text-center py-2">
@@ -193,7 +194,7 @@ const FirstAid = ({ node }: { node: { kitContents: string[]; basicProcedures: { 
               <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
                 checked[it] ? "bg-primary border-primary" : "border-border"
               }`}>
-                {checked[it] && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                {checked[it] && <CheckIcon className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
               </span>
               <span className={`text-[13px] font-body ${checked[it] ? "line-through text-muted-foreground" : ""}`}>{it}</span>
             </button>

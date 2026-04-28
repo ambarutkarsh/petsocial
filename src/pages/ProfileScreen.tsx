@@ -1,13 +1,5 @@
-import { useState } from "react";
-import { Pencil, MapPin, Calendar, Grid3X3, LogOut, Camera, Check, X, Bookmark, Plus, ChevronRight, Settings, Trash2, Star } from "lucide-react";
+import type { FeedPillKey } from "@/lib/feedPills";
 import { Button } from "@/components/ui/button";
-import MobileLayout from "@/components/MobileLayout";
-import PageWrapper from "@/components/PageWrapper";
-import BottomNav from "@/components/BottomNav";
-import PostUploadModal from "@/components/PostUploadModal";
-import AddPetSheet from "@/components/AddPetSheet";
-import EditAddressSheet from "@/components/EditAddressSheet";
-import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,8 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
-import { Coins } from "lucide-react";
-import type { FeedPillKey } from "@/lib/feedPills";
+import { useState } from "react";
+import { ChevronRight, Trash2 } from "lucide-react";
+import { BookVetIcon, CameraIcon, CheckIcon, CloseIcon, EditIcon, LocationPinIcon, PlusIcon, SaveIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
+import PageWrapper from "@/components/PageWrapper";
+import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
+import AddPetSheet from "@/components/AddPetSheet";
+import EditAddressSheet from "@/components/EditAddressSheet";
+import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },
@@ -174,7 +175,7 @@ const ProfileScreen = () => {
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
           <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
-            <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
+            <EditIcon className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
           </button>
           <button onClick={handleSignOut} className="absolute top-4 left-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.8} /> Sign Out
@@ -191,7 +192,7 @@ const ProfileScreen = () => {
               </div>
             )}
             <label className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-primary flex items-center justify-center cursor-pointer shadow-petosauras">
-              <Camera className="w-3.5 h-3.5 text-primary-foreground" />
+              <CameraIcon className="w-3.5 h-3.5 text-primary-foreground" />
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
             </label>
           </div>
@@ -208,25 +209,25 @@ const ProfileScreen = () => {
                   autoFocus
                 />
                 <button onClick={handleSaveName} className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="w-3.5 h-3.5 text-primary-foreground" />
+                  <CheckIcon className="w-3.5 h-3.5 text-primary-foreground" />
                 </button>
                 <button onClick={() => setEditingName(false)} className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
-                  <X className="w-3.5 h-3.5 text-muted-foreground" />
+                  <CloseIcon className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
               </div>
             ) : (
               <>
                 <h2 className="text-xl font-heading font-bold">{profile?.full_name || "Loading…"}</h2>
                 <button onClick={() => { setNewName(profile?.full_name || ""); setEditingName(true); }}>
-                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                  <EditIcon className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
               </>
             )}
           </div>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1 font-body">
-            {locationText && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" strokeWidth={1.8} /> {locationText}</span>}
-            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" strokeWidth={1.8} /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
+            {locationText && <span className="flex items-center gap-1"><LocationPinIcon className="w-3 h-3" strokeWidth={1.8} /> {locationText}</span>}
+            <span className="flex items-center gap-1"><BookVetIcon className="w-3 h-3" strokeWidth={1.8} /> Pet parent since {profile?.pet_parent_since || new Date().getFullYear()}</span>
           </div>
           <button onClick={() => setShowEditAddress(true)} className="text-xs text-primary font-heading font-bold mt-1">
             📍 Edit Address
@@ -270,7 +271,7 @@ const ProfileScreen = () => {
             ))}
           </div>
           <button onClick={() => setShowAddPet(true)} className="mt-2 px-4 py-2 rounded-full border-2 border-primary text-primary text-sm font-heading font-bold flex items-center gap-1">
-            <Plus className="w-4 h-4" /> Add Pet
+            <PlusIcon className="w-4 h-4" /> Add Pet
           </button>
         </div>
 
@@ -281,7 +282,7 @@ const ProfileScreen = () => {
               <Grid3X3 className="w-4 h-4" strokeWidth={1.8} /> My Posts
             </button>
             <button onClick={() => setActiveTab("saved")} className={`flex-1 pb-2 text-sm font-heading font-bold flex items-center justify-center gap-1 transition-colors ${activeTab === "saved" ? "text-primary border-b-2 border-primary" : "text-muted-foreground"}`}>
-              <Bookmark className="w-4 h-4" strokeWidth={1.8} /> Saved
+              <SaveIcon className="w-4 h-4" strokeWidth={1.8} /> Saved
             </button>
           </div>
 
@@ -342,7 +343,7 @@ const ProfileScreen = () => {
                   {savedPosts.map((post: any) => (
                     <div key={post.id} className="aspect-square relative">
                       <img src={getMediaUrl(post.media_url)} alt="" className="w-full h-full object-cover" loading="lazy" />
-                      <Bookmark className="absolute top-1 right-1 w-4 h-4 text-primary" fill="hsl(var(--primary))" />
+                      <SaveIcon className="absolute top-1 right-1 w-4 h-4 text-primary" filled />
                     </div>
                   ))}
                 </div>
@@ -353,7 +354,7 @@ const ProfileScreen = () => {
 
         {/* Preferences Section */}
         <div className="px-4 mt-6 mb-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1"><Settings className="w-3.5 h-3.5" /> Preferences</h3>
+          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1"><SettingsIcon className="w-3.5 h-3.5" /> Preferences</h3>
           <button onClick={() => { setSelectedDefaultTab(profile?.community_default_tab || "interesting_facts"); setShowDefaultTabPref(true); }}
             className="paw-card p-3 w-full flex items-center justify-between">
             <div>

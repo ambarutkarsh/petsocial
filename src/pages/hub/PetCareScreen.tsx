@@ -1,19 +1,21 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, RotateCcw, Share2 } from "lucide-react";
 import MainLayout from "@/components/MainLayout";
 import PageWrapper from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { RotateCcw } from "lucide-react";
+import { BackIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
+import { toast } from "sonner";
+
 import PetCareStepper from "@/components/petcare/PetCareStepper";
 import PetCareDisclaimer from "@/components/petcare/PetCareDisclaimer";
-import StepCategory, { type PetCareCategory, PETCARE_CATEGORIES } from "@/components/petcare/StepCategory";
-import StepPetDetails, { type PetDetails } from "@/components/petcare/StepPetDetails";
+import StepCategory, PETCARE_CATEGORIES } from "@/components/petcare/StepCategory";
+import StepPetDetails, useMemo, useState } from "react";
+
 import DietResults from "@/components/petcare/results/DietResults";
 import IllnessResults from "@/components/petcare/results/IllnessResults";
 import TrainingResults from "@/components/petcare/results/TrainingResults";
 import PoisonResults from "@/components/petcare/results/PoisonResults";
 import SafetyResults from "@/components/petcare/results/SafetyResults";
-import { toast } from "@/hooks/use-toast";
 
 const initialPetDetails: PetDetails = {
   petType: "",
@@ -75,7 +77,7 @@ const PetCareScreen = () => {
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center hover:bg-muted transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
+            <BackIcon className="w-5 h-5" strokeWidth={1.8} />
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="font-heading font-bold text-[20px] leading-tight flex items-center gap-2">
@@ -90,7 +92,7 @@ const PetCareScreen = () => {
               aria-label="Share"
               className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center hover:bg-muted transition-colors"
             >
-              <Share2 className="w-4 h-4" strokeWidth={1.8} />
+              <ShareIcon className="w-4 h-4" strokeWidth={1.8} />
             </button>
           )}
         </header>

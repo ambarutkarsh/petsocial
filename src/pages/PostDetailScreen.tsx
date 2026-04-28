@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from "react-router-dom";
+import MobileLayout from "@/components/MobileLayout";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, Heart, MessageCircle } from "lucide-react";
-import MobileLayout from "@/components/MobileLayout";
-
+import { ChevronLeft } from "lucide-react";
+import { CommentIcon, HeartIcon } from "@/components/icons/PetosauraIcons";
 
 const PostDetailScreen = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -83,10 +83,10 @@ const PostDetailScreen = () => {
         <div className="p-4">
           <div className="flex items-center gap-4 mb-3">
             <span className="flex items-center gap-1.5 text-sm font-body">
-              <Heart className="w-5 h-5" strokeWidth={1.8} /> {post.like_count || 0}
+              <HeartIcon className="w-5 h-5" strokeWidth={1.8} /> {post.like_count || 0}
             </span>
             <span className="flex items-center gap-1.5 text-sm font-body">
-              <MessageCircle className="w-5 h-5" strokeWidth={1.8} /> {post.comment_count || 0}
+              <CommentIcon className="w-5 h-5" strokeWidth={1.8} /> {post.comment_count || 0}
             </span>
           </div>
           {post.caption && (
