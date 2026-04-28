@@ -16,7 +16,6 @@ import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 
 import HubSubLayout from "@/components/HubSubLayout";
 
-} from "@/components/ui/alert-dialog";
 
 import ChipStatusBadge, { ChipVerificationStatus } from "@/components/microchip/ChipStatusBadge";
 import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";

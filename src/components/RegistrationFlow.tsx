@@ -9,7 +9,6 @@ import { breedsByType, indianStates, petTypeEmoji, petTypes } from "@/lib/regist
 
 import MobileLayout from "./MobileLayout";
 
-} from "@/lib/registrationData";
 
 interface Props {
   onComplete: () => void;
