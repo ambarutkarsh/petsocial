@@ -1,13 +1,13 @@
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PageWrapper from "@/components/PageWrapper";
-import { BackIcon, VerifiedIcon, supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useMemo, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { BackIcon, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "lucide-react";
-import { StarIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, StarIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const VetProfileScreen = () => {
   const { vetId } = useParams<{ vetId: string }>();

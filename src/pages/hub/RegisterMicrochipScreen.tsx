@@ -1,23 +1,25 @@
-import { BackIcon, Loader2, UploadIcon, ValidationResult } from "@/lib/microchipValidator";
-import ChipStepper from "@/components/microchip/ChipStepper";
-import ChipDocUploadZone, WarningIcon, docTypeLabel } from "@/components/microchip/docTypes";
-import { ArrowRight, formatChipNumber, toast } from "sonner";
-import HubSubLayout from "@/components/HubSubLayout";
+import { ValidationResult } from "@/lib/microchipValidator";
+import { formatChipNumber, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { validateMicrochip, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, validateMicrochip } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
-import { VerifiedIcon, { PickedFile } from "@/components/microchip/ChipDocUploadZone";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { { PickedFile } from "@/components/microchip/ChipDocUploadZone";
+import { BackIcon, DOC_TYPES, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import ChipStepper from "@/components/microchip/ChipStepper";
+import ChipDocUploadZone, WarningIcon, docTypeLabel } from "@/components/microchip/docTypes";
+
+import HubSubLayout from "@/components/HubSubLayout";
+
 import AcceptedDocsInfo from "@/components/microchip/AcceptedDocsInfo";
 import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";
 import ChipStatusBadge from "@/components/microchip/ChipStatusBadge";
-import { DOC_TYPES } from "@/components/icons/PetosauraIcons";
 
 const STEP_LABELS = ["Chip Number", "Link Pet", "Upload Proof", "Confirm"];
 

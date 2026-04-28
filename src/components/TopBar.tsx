@@ -1,11 +1,12 @@
-import { CloseIcon, ProfileIcon, SearchIcon, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { BellIcon } from "@/components/icons/PetosauraIcons";
+import { BellIcon, CloseIcon, ProfileIcon, SearchIcon } from "@/components/icons/PetosauraIcons";
+
 // LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-icon.png";
 

@@ -1,12 +1,12 @@
-import { CloseIcon, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { maskName } from "@/lib/maskName";
-import { Loader2, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
-import { ShareIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2, X } from "lucide-react";
+import { CloseIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   postId: string;

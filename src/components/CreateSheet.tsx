@@ -1,9 +1,9 @@
 import PostUploadModal from "./PostUploadModal";
 import AlertForm from "./AlertForm";
-import { CameraIcon, PlayIcon, SOSIcon, trackEvent } from "@/lib/analytics";
-import { Radio, useState } from "react";
-import { Camera } from "lucide-react";
-import { CloseIcon } from "@/components/icons/PetosauraIcons";
+import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
+import { Camera, Radio } from "lucide-react";
+import { CameraIcon, CloseIcon, PlayIcon, SOSIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;

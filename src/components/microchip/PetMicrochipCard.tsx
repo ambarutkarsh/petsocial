@@ -1,11 +1,12 @@
 import { ChipFormat } from "@/lib/microchipValidator";
-import { Eye, UploadIcon, VaccineIcon, supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import ChipStatusBadge, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Syringe } from "lucide-react";
-import { UploadIcon, { ChipVerificationStatus } from "./ChipStatusBadge";
-import { formatChipNumber } from "@/components/icons/PetosauraIcons";
+import { Eye, Syringe } from "lucide-react";
+import { { ChipVerificationStatus } from "./ChipStatusBadge";
+import { UploadIcon, VaccineIcon, formatChipNumber } from "@/components/icons/PetosauraIcons";
+
+import ChipStatusBadge, useQuery } from "@tanstack/react-query";
 
 interface Props {
   petId: string;

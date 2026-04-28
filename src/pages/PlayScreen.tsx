@@ -1,10 +1,19 @@
-import { ChevronRight, CloseIcon, CommentIcon, GPLACES_DAILY_CAP } from "@/lib/feedPills";
-import { createNotification, HeartIcon, Loader2, LocationPinIcon, LockIcon, NEARBY_SUB_PILLS, PlusIcon, SaveIcon, ShareIcon, StarIcon, Trash2, getActorName } from "@/lib/notifications";
+import { GPLACES_DAILY_CAP } from "@/lib/feedPills";
+import { NEARBY_SUB_PILLS, createNotification, getActorName } from "@/lib/notifications";
 import { maskName } from "@/lib/maskName";
-import { ChevronLeft, getPostOwnerId, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey, useEffect } from "react";
+import { getPostOwnerId, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGuestPopup } from "@/contexts/GuestPopupContext";
+import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { ChevronLeft, ChevronRight, FEED_PILLS, Heart, Loader2, Trash2 } from "lucide-react";
+import { BookVetIcon, CloseIcon, CommentIcon, HeartIcon, LocationPinIcon, LockIcon, PlusIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
@@ -12,14 +21,6 @@ import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { toast } from "sonner";
-import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS, useState } from "lucide-react";
-import { BookVetIcon } from "@/components/icons/PetosauraIcons";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -99,7 +100,6 @@ const FeedScreen = () => {
     setActivePill(key);
     trackEvent("feed_pill_changed", { pill: key });
   };
-
 
   /**
    * A pill is "active" when either:

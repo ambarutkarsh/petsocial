@@ -1,11 +1,12 @@
-import { FeedsIcon, HubIcon, MyPetIcon, PlusIcon, ShopIcon, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import CreateSheet from "./CreateSheet";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { HubIcon } from "@/components/icons/PetosauraIcons";
+import { FeedsIcon, HubIcon, MyPetIcon, PlusIcon, ShopIcon } from "@/components/icons/PetosauraIcons";
+
+import CreateSheet from "./CreateSheet";
 
 const navItems = [
   { icon: FeedsIcon, label: "Feeds", path: "/feeds", event: "bottom_nav_feeds_tap", match: ["/feeds", "/play", "/feed"] },

@@ -1,23 +1,23 @@
 import { Area } from "recharts";
-import { BookVetIcon } from "@/components/ui/calendar";
-import { Popover, BackIcon, BookVetIcon, CartesianGrid, ChevronUp, ComposedChart, Download, Eye as EyeIcon, InfoIcon, Line, PlusIcon, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CartesianGrid, ComposedChart, Line, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
-import { ChevronDown, ResponsiveContainer, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MobileLayout from "@/components/MobileLayout";
+import { ResponsiveContainer, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, Tooltip, Trash2, UploadIcon, XAxis, YAxis, differenceInMonths } from "date-fns";
-import { LineChart, differenceInYears, useMemo } from "react";
-import { ArrowLeft, useNavigate } from "react-router-dom";
+import { Select, Tooltip, XAxis, YAxis, differenceInMonths } from "date-fns";
+import { LineChart, differenceInYears, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, useQueryClient } from "@tanstack/react-query";
+import { Tabs, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { format, useRef, useState } from "lucide-react";
-import { DocumentIcon } from "@/components/icons/PetosauraIcons";
+import { ArrowLeft, ChevronDown, ChevronUp, Download, Eye as EyeIcon, Trash2, format } from "lucide-react";
+import { BackIcon, BookVetIcon, DocumentIcon, InfoIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
 
 const mealIcons: Record<string, string> = { Breakfast: "🌅", Lunch: "☀️", Dinner: "🌙", Snack: "🍪" };
 

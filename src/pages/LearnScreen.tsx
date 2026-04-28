@@ -3,8 +3,8 @@ import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Clock, Newspaper, useState } from "react";
-import { Search } from "lucide-react";
+import { useState } from "react";
+import { Clock, Newspaper, Search } from "lucide-react";
 import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 
 const categories = ["All", "🐕 Canine", "🐈 Feline", "🐠 Aquatic", "🦜 Avian", "🐇 Small Pets", "General"];

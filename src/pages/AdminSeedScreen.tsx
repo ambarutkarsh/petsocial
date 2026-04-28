@@ -1,13 +1,15 @@
-import { Loader2, PetCareIcon, ProfileIcon, Trash2, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import AdminLayout from "@/components/admin/AdminLayout";
 import { toast } from "sonner";
-import { Sprout, useState } from "lucide-react";
-import { DocumentIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2, Sprout, Trash2 } from "lucide-react";
+import { DocumentIcon, PetCareIcon, ProfileIcon } from "@/components/icons/PetosauraIcons";
+
+import AdminLayout from "@/components/admin/AdminLayout";
+
 const ADMIN_EMAIL = "petosauras@gmail.com";
 
 const FALLBACK_IMAGES = [

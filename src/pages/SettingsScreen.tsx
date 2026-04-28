@@ -1,9 +1,9 @@
 import MobileLayout from "@/components/MobileLayout";
-import { BackIcon, BellIcon, LocationPinIcon, LogOut, ProfileIcon, SettingsIcon, VerifiedIcon, useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { BellIcon } from "@/components/icons/PetosauraIcons";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ChevronRight, LogOut } from "lucide-react";
+import { BackIcon, BellIcon, LocationPinIcon, ProfileIcon, SettingsIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const SettingsScreen = () => {
   const navigate = useNavigate();

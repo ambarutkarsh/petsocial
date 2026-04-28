@@ -1,15 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
+import { ChevronLeft, MoreHorizontal } from "lucide-react";
+import { LocationPinIcon, PlayIcon } from "@/components/icons/PetosauraIcons";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
-import { trackEvent } from "@/lib/analytics";
-import { MoreHorizontal, useState } from "react";
-import { ChevronLeft } from "lucide-react";
-import { LocationPinIcon, PlayIcon } from "@/components/icons/PetosauraIcons";
 
 const PublicProfileScreen = () => {
   const { userId } = useParams<{ userId: string }>();

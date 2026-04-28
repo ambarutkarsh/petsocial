@@ -1,6 +1,6 @@
 import type { BudgetFilteredBreed } from "@/lib/petMatcher";
-import { BirdIcon, CatIcon, DogIcon, FishIcon, LucideIcon } from "lucide-react";
-import { BirdIcon, MyPetIcon, RabbitIcon, ReptileIcon } from "@/components/icons/PetosauraIcons";
+import { LucideIcon } from "lucide-react";
+import { BirdIcon, CatIcon, DogIcon, FishIcon, MyPetIcon, RabbitIcon, ReptileIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   result: BudgetFilteredBreed;

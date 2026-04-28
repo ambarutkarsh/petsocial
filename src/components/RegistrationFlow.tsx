@@ -1,14 +1,13 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import {
-  petTypes, breedsByType, petTypeEmoji, indianStates,
-  getPasswordStrength, validateStep1, validateStep2,
-import { ArrowRight, Loader2, useCallback } from "react";
+import { breedsByType, getPasswordStrength, import { ArrowRight, indianStates, petTypeEmoji, petTypes, useCallback, useState, validateStep1, validateStep2 } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import MobileLayout from "./MobileLayout";
-import { Upload, useState } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import { BackIcon, CheckIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "./MobileLayout";
+
 } from "@/lib/registrationData";
 
 interface Props {

@@ -1,11 +1,11 @@
-import { BackIcon, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Loader2, useState } from "react";
-import { ArrowLeft } from "lucide-react";
-import { UploadIcon } from "@/components/icons/PetosauraIcons";
+import { useState } from "react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { BackIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;

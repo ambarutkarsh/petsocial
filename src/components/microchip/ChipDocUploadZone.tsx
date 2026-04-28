@@ -1,7 +1,7 @@
-import { CloseIcon, DocumentIcon, UploadIcon, toast } from "sonner";
+import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
-import { CameraIcon } from "@/components/icons/PetosauraIcons";
+import { CameraIcon, CloseIcon, DocumentIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 
 const ACCEPTED = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_BYTES = 2 * 1024 * 1024;

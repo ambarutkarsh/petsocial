@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery, CloseIcon, UploadIcon, VerifiedIcon, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { awardCoins } from "@/lib/coins";
-import { Loader2, useState } from "react";
-import { X } from "lucide-react";
-import { CloseIcon } from "@/components/icons/PetosauraIcons";
+import { useState } from "react";
+import { Loader2, X } from "lucide-react";
+import { CloseIcon, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;

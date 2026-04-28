@@ -2,9 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MobileLayout from "@/components/MobileLayout";
-import BottomNav from "@/components/BottomNav";
-import PostUploadModal from "@/components/PostUploadModal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,9 +9,13 @@ import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Clock, ExternalLink, Eye, Loader2, RotateCcw, useEffect } from "react";
-import { Search, useState } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock, ExternalLink, Eye, Loader2, RotateCcw, Search } from "lucide-react";
 import { BudgetIcon, CommentIcon, EditIcon, LocationPinIcon, PlusIcon, StarIcon, VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
+import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
 
 const filters = ["⭐ Facts", "Pet News", "All", "🚶 Walker", "✂️ Groomer", "🩺 Vet", "Urgent 🚨", "My Posts", "Solved"];
 

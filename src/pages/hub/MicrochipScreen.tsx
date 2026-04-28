@@ -1,24 +1,24 @@
-import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, CheckIcon, Download, ExternalLink, Loader2, MoreVertical, PlusIcon, Trash2, UploadIcon, import { ChevronDown, toast } from "sonner";
-import HubSubLayout from "@/components/HubSubLayout";
+import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, import { ChevronDown, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  AlertDialog, useQueryClient } from "@tanstack/react-query";
-import {
-  PlusIcon, useState } from "react";
+import { AlertDialog, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "lucide-react";
-import { DocumentIcon } from "@/components/icons/PetosauraIcons";
-} from "@/components/ui/alert-dialog";
+import { Download, ExternalLink, Loader2, MoreVertical, Trash2 } from "lucide-react";
+import { CheckIcon, DocumentIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { validateMicrochip, formatChipNumber } from "@/lib/microchipValidator";
+import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
+import { docTypeLabel } from "@/components/microchip/docTypes";
+import HubSubLayout from "@/components/HubSubLayout";
+
+} from "@/components/ui/alert-dialog";
+
 import ChipStatusBadge, { ChipVerificationStatus } from "@/components/microchip/ChipStatusBadge";
 import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";
 import ChipUpgradeSheet from "@/components/microchip/ChipUpgradeSheet";
-import { docTypeLabel } from "@/components/microchip/docTypes";
 
 const MicrochipScreen = () => {
   const navigate = useNavigate();

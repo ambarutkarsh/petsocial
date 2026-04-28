@@ -1,20 +1,21 @@
 import MainLayout from "@/components/MainLayout";
 import PageWrapper from "@/components/PageWrapper";
-import { BackIcon, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, RotateCcw } from "lucide-react";
+import { { type PetCareCategory, { type PetDetails } from "@/components/petcare/StepPetDetails";
+import { toast } from "@/hooks/use-toast";
+import { BackIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 import PetCareStepper from "@/components/petcare/PetCareStepper";
 import PetCareDisclaimer from "@/components/petcare/PetCareDisclaimer";
 import StepCategory, PETCARE_CATEGORIES } from "@/components/petcare/StepCategory";
 import StepPetDetails, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { ShareIcon, { type PetCareCategory, { type PetDetails } from "@/components/petcare/StepPetDetails";
+
 import DietResults from "@/components/petcare/results/DietResults";
 import IllnessResults from "@/components/petcare/results/IllnessResults";
 import TrainingResults from "@/components/petcare/results/TrainingResults";
 import PoisonResults from "@/components/petcare/results/PoisonResults";
 import SafetyResults from "@/components/petcare/results/SafetyResults";
-import { toast } from "@/hooks/use-toast";
-import { RotateCcw } from "@/components/icons/PetosauraIcons";
 
 const initialPetDetails: PetDetails = {
   petType: "",

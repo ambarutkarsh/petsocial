@@ -1,9 +1,10 @@
-import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon, useQuery } from "@tanstack/react-query";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";
-import { BookVetIcon } from "@/components/icons/PetosauraIcons";
+import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon } from "@/components/icons/PetosauraIcons";
+import AdminLayout from "@/components/admin/AdminLayout";
+
 const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string; value: number | string; hint: string }) => (
   <Card className="p-5 rounded-2xl bg-white">
     <div className="flex items-center justify-between mb-3">

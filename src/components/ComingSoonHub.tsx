@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Loader2, FeedsIcon, useState } from "react";
-import { Sparkles } from "lucide-react";
-import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { useState } from "react";
+import { Loader2, Sparkles } from "lucide-react";
+import { FeedsIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   feature: string;

@@ -1,13 +1,6 @@
 import type { FeedPillKey } from "@/lib/feedPills";
-import { BudgetIcon, Button } from "@/components/ui/button";
-import MobileLayout from "@/components/MobileLayout";
-import PageWrapper from "@/components/PageWrapper";
-import BottomNav from "@/components/BottomNav";
-import PostUploadModal from "@/components/PostUploadModal";
-import AddPetSheet from "@/components/AddPetSheet";
-import EditAddressSheet from "@/components/EditAddressSheet";
-import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
-import { useQuery, CameraIcon, CheckIcon, ChevronRight, CloseIcon, EditIcon, Grid3X3, LocationPinIcon, LogOut, PlusIcon, SaveIcon, SettingsIcon, StarIcon, Trash2, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
@@ -15,9 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
-import { BudgetIcon, useState } from "react";
-import { Pencil } from "lucide-react";
-import { BookVetIcon } from "@/components/icons/PetosauraIcons";
+import { useState } from "react";
+import { ChevronRight, Grid3X3, LogOut, Pencil, Trash2 } from "lucide-react";
+import { BookVetIcon, BudgetIcon, CameraIcon, CheckIcon, CloseIcon, EditIcon, LocationPinIcon, PlusIcon, SaveIcon, SettingsIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+
+import MobileLayout from "@/components/MobileLayout";
+import PageWrapper from "@/components/PageWrapper";
+import BottomNav from "@/components/BottomNav";
+import PostUploadModal from "@/components/PostUploadModal";
+import AddPetSheet from "@/components/AddPetSheet";
+import EditAddressSheet from "@/components/EditAddressSheet";
+import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },

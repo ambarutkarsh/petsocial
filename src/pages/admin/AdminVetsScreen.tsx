@@ -1,7 +1,6 @@
 import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { PlusIcon, DialogHeader, DialogTitle, EditIcon, Loader2, PlusIcon, Power, VerifiedIcon, useQueryClient } from "@tanstack/react-query";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { DialogHeader, DialogTitle, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
@@ -10,8 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, useState } from "react";
-import { useQuery } from "lucide-react";
-import { CloseIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2, Power } from "lucide-react";
+import { CloseIcon, EditIcon, PlusIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+
+import AdminLayout from "@/components/admin/AdminLayout";
+
 const SPEC_OPTIONS = [
   "General Practice", "Surgery", "Dermatology", "Cardiology", "Ophthalmology",
   "Dentistry", "Orthopaedics", "Oncology", "Exotics",

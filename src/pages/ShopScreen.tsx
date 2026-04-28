@@ -1,22 +1,24 @@
-import { CameraIcon, CloseIcon, EditIcon, PlusIcon, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { differenceInYears, breedsByType } from "@/lib/registrationData";
-import PetDigiLockerScreen from "./PetDigiLockerScreen";
-import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
-import { useMemo, differenceInMonths, format } from "date-fns";
+import { breedsByType, differenceInYears } from "@/lib/registrationData";
+import { differenceInMonths, format } from "date-fns";
 import { petTypes, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Camera } from "lucide-react";
+import { CameraIcon, CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
+
+import PetDigiLockerScreen from "./PetDigiLockerScreen";
+import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
 import AddPetSheet from "@/components/AddPetSheet";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Camera, useState } from "lucide-react";
-import { CheckIcon } from "@/components/icons/PetosauraIcons";
 
 const MyPetScreen = () => {
   const { user } = useAuth();
