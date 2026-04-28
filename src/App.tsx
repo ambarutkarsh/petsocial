@@ -44,6 +44,7 @@ import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
 import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
 import AdminVetsScreen from "./pages/admin/AdminVetsScreen";
 import AdminDashboardScreen from "./pages/admin/AdminDashboardScreen";
+import BulkUpload from "./pages/admin/BulkUpload";
 import BookAVetScreen from "./pages/hub/BookAVetScreen";
 import BookAVetComingSoon from "./pages/hub/BookAVetComingSoon";
 import HubVetProfileScreen from "./pages/hub/VetProfileScreen";
