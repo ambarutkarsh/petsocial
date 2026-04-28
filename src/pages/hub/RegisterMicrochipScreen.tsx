@@ -1,17 +1,18 @@
 import { ValidationResult } from "@/lib/microchipValidator";
-import { formatChipNumber, toast } from "sonner";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { useEffect, useMemo, useRef, useState, validateMicrochip } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { { PickedFile } from "@/components/microchip/ChipDocUploadZone";
 import { BackIcon, DOC_TYPES, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { formatChipNumber, validateMicrochip } from "./microchipValidator";
+
 import ChipStepper from "@/components/microchip/ChipStepper";
 import ChipDocUploadZone, WarningIcon, docTypeLabel } from "@/components/microchip/docTypes";
 

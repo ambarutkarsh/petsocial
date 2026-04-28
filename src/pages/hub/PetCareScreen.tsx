@@ -3,9 +3,9 @@ import PageWrapper from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { RotateCcw } from "lucide-react";
-import { { type PetCareCategory, { type PetDetails } from "@/components/petcare/StepPetDetails";
-import { toast } from "@/hooks/use-toast";
 import { BackIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
+import { toast } from "sonner";
+
 import PetCareStepper from "@/components/petcare/PetCareStepper";
 import PetCareDisclaimer from "@/components/petcare/PetCareDisclaimer";
 import StepCategory, PETCARE_CATEGORIES } from "@/components/petcare/StepCategory";

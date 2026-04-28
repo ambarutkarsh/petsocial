@@ -1,9 +1,8 @@
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
 import CreateSheet from "@/components/CreateSheet";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ReactNode, useState } from "react";
-import { useNavigate } from "lucide-react";
 import { BackIcon, BellIcon, BookVetIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 const tabs = [

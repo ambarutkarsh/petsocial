@@ -1,6 +1,6 @@
 import { useMemo } from "react";
+import { recommend } from "./petMatcher";
 import BreedCard from "./BreedCard";
-import { recommend, type RecommendationInput } from "@/lib/petMatcher";
 
 interface Props {
   input: RecommendationInput;

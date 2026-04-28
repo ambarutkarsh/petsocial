@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { UploadIcon } from "@/components/icons/PetosauraIcons";
+import { DOC_TYPES, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+
 import ChipDocUploadZone, { PickedFile } from "./ChipDocUploadZone";
 import AcceptedDocsInfo from "./AcceptedDocsInfo";
-import { DOC_TYPES } from "./docTypes";
 
 interface Props {
   open: boolean;

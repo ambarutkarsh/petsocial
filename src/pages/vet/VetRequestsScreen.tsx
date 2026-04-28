@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import VetDashboardLayout from "@/components/vet/VetDashboardLayout";
-import VetGuard from "@/components/vet/VetGuard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+import VetDashboardLayout from "@/components/vet/VetDashboardLayout";
+import VetGuard from "@/components/vet/VetGuard";
 
 const VetRequestsInner = () => {
   const { user } = useAuth();

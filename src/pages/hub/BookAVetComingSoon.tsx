@@ -1,9 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+import HubSubLayout from "@/components/HubSubLayout";
 
 const BookAVetComingSoon = () => {
   const [params] = useSearchParams();

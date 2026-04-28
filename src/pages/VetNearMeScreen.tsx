@@ -1,4 +1,4 @@
-import { CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { trackEvent } from "@/lib/analytics";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Collapsible, useState } from "react";
+import { useState } from "react";
 import { Clock, ExternalLink, Phone } from "lucide-react";
 import { BackIcon, LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 

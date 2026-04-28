@@ -1,21 +1,21 @@
-import { Area } from "recharts";
-import { CartesianGrid, ComposedChart, Line, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Area, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { ComposedChart, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
-import { ResponsiveContainer, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, Tooltip, XAxis, YAxis, differenceInMonths } from "date-fns";
-import { LineChart, differenceInYears, useMemo, useRef, useState } from "react";
+import { Tooltip, differenceInMonths, format } from "date-fns";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { format } from "lucide-react";
 import { BackIcon, BookVetIcon, InfoIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
+import { differenceInYears } from "@/lib/registrationData";
 
 import MobileLayout from "@/components/MobileLayout";
 

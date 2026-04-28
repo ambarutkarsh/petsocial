@@ -1,8 +1,8 @@
 import MobileLayout from "@/components/MobileLayout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, useParams } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { CommentIcon, HeartIcon } from "@/components/icons/PetosauraIcons";
 
 const PostDetailScreen = () => {

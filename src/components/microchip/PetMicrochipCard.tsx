@@ -3,8 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Eye } from "lucide-react";
-import { { ChipVerificationStatus } from "./ChipStatusBadge";
-import { UploadIcon, VaccineIcon, formatChipNumber } from "@/components/icons/PetosauraIcons";
+import { UploadIcon, VaccineIcon } from "@/components/icons/PetosauraIcons";
+import { formatChipNumber } from "./microchipValidator";
 
 import ChipStatusBadge, useQuery } from "@tanstack/react-query";
 

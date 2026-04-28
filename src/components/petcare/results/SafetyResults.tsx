@@ -1,9 +1,8 @@
-import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { Weather } from "@/lib/petCareHelpers";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Weather } from "@/lib/petCareHelpers";
 import { useState } from "react";
-
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Accordion, BackIcon, CheckIcon, TabsList, TabsTrigger } from "@/components/icons/PetosauraIcons";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BackIcon, CheckIcon } from "@/components/icons/PetosauraIcons";
 
 import petCareData from "@/data/petcare-data.json";
 

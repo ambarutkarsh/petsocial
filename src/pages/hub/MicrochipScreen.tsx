@@ -1,18 +1,18 @@
-import { import { ChevronDown, toast } from "sonner";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, Loader2, MoreVertical, Trash2 } from "lucide-react";
+import { ChevronDown, Download, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { CheckIcon, DocumentIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 import { docTypeLabel } from "@/components/microchip/docTypes";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { formatChipNumber, validateMicrochip } from "./microchipValidator";
 
 import HubSubLayout from "@/components/HubSubLayout";
 

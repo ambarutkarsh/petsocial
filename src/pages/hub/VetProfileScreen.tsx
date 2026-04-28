@@ -3,10 +3,9 @@ import BottomNav from "@/components/BottomNav";
 import PageWrapper from "@/components/PageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "lucide-react";
 import { BackIcon, StarIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const VetProfileScreen = () => {
