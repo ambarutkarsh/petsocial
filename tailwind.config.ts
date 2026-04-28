@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Roboto', 'sans-serif'],
-        body: ['Roboto', 'sans-serif'],
-        display: ['Roboto', 'sans-serif'],
-        label: ['Roboto', 'sans-serif'],
+        heading: ['Nunito', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
+        display: ['Nunito', 'sans-serif'],
+        label: ['DM Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -85,11 +85,11 @@ export default {
         pill: "var(--radius-pill)",
       },
       boxShadow: {
-        petosauras: "0 2px 12px rgba(27, 42, 74, 0.08)",
-        "petosauras-md": "0 4px 20px rgba(27, 42, 74, 0.12)",
-        "petosauras-lg": "0 8px 32px rgba(27, 42, 74, 0.16)",
-        "paw": "0 2px 12px rgba(27, 42, 74, 0.08)",
-        "paw-lg": "0 4px 20px rgba(27, 42, 74, 0.12)",
+        petosauras: "0 2px 12px rgba(123, 94, 167, 0.08)",
+        "petosauras-md": "0 4px 20px rgba(123, 94, 167, 0.12)",
+        "petosauras-lg": "0 8px 32px rgba(123, 94, 167, 0.16)",
+        "paw": "0 2px 12px rgba(123, 94, 167, 0.08)",
+        "paw-lg": "0 4px 20px rgba(123, 94, 167, 0.12)",
       },
       keyframes: {
         "accordion-down": {

@@ -44,7 +44,7 @@ export const GuestPopupProvider = ({ children }: { children: ReactNode }) => {
               }}
               style={{
                 width: "100%",
-                background: "#1B2A4A",
+                background: "#7B5EA7",
                 color: "white",
                 border: "none",
                 borderRadius: 50,

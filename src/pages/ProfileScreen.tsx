@@ -171,7 +171,7 @@ const ProfileScreen = () => {
     <MobileLayout>
       <PageWrapper noPadding>
         <div style={{ paddingBottom: 20 }}>
-        <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #1B2A4A 0%, #243660 50%, #C9A84C 100%)" }}>
+        <div className="h-[155px] relative" style={{ background: "linear-gradient(135deg, #7B5EA7 0%, #7B5EA7 50%, #FF8C66 100%)" }}>
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
           <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">

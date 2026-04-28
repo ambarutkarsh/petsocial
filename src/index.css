@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,55 +6,53 @@
 
 @layer base {
   :root {
-    /* All colours stored as HSL — extracted from new Petosauras logo */
+    /* Petosauras purple theme — all colours stored as HSL */
 
-    /* Background / surfaces — warm cream tones */
-    --background: 33 41% 93%;        /* #F5EDE4 */
-    --foreground: 219 45% 15%;       /* #152238 */
+    /* Background / surfaces */
+    --background: 33 41% 97%;        /* #FBF8F4 */
+    --foreground: 250 23% 14%;       /* #1E1B2E */
 
     --card: 0 0% 100%;
-    --card-foreground: 219 45% 15%;
+    --card-foreground: 250 23% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 219 45% 15%;
+    --popover-foreground: 250 23% 14%;
 
-    /* Primary — Deep Navy #1B2A4A */
-    --primary: 220 46% 20%;
+    /* Primary — Purple #7B5EA7 */
+    --primary: 265 30% 51%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 222 24% 93%;    /* #E8EBF2 */
-    --primary-dark: 220 49% 12%;     /* #101A2E */
-    --primary-mid: 220 45% 26%;      /* #243660 */
+    --primary-light: 260 100% 95%;   /* #EDE5FF */
+    --primary-dark: 265 33% 38%;     /* #5C4080 */
+    --primary-mid: 265 30% 51%;      /* #7B5EA7 */
 
-    /* Secondary — Antique Gold #C9A84C */
-    --secondary: 44 56% 54%;
-    --secondary-foreground: 219 45% 15%;
-    --secondary-light: 47 73% 95%;   /* #FBF6E8 */
-    --secondary-dark: 43 58% 42%;    /* #A8882E */
-    --gold-mid: 43 53% 62%;          /* #D4B86A */
+    /* Secondary — Coral #FF8C66 */
+    --secondary: 16 100% 70%;
+    --secondary-foreground: 250 23% 14%;
+    --secondary-light: 18 100% 96%;  /* #FFF0EB */
+    --secondary-dark: 25 100% 40%;   /* #CC5500 */
 
-    /* Accent — Dusty Rose (kept for errors/SOS) */
-    --accent: 11 39% 62%;            /* #C4897A */
+    /* Accent — Teal #4ECDC4 */
+    --accent: 175 56% 55%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 12 47% 93%;      /* #F5E8E5 */
+    --accent-light: 175 67% 95%;     /* #E8FAF9 */
 
     /* Muted */
-    --muted: 33 35% 90%;             /* #F0E6DA */
-    --muted-foreground: 213 14% 55%; /* #7A8CA0 */
+    --muted: 33 27% 94%;             /* #F5F1EC */
+    --muted-foreground: 250 9% 64%;  /* #9B96B0 */
 
     /* Semantic */
-    --destructive: 11 39% 62%;
+    --destructive: 16 100% 70%;
     --destructive-foreground: 0 0% 100%;
-    --success: 138 37% 26%;          /* #2A5C3A */
-    --warning: 44 56% 54%;           /* gold */
-    --error: 11 39% 62%;             /* dusty rose */
-    --info: 220 46% 20%;             /* navy */
+    --success: 138 37% 26%;
+    --warning: 16 100% 70%;
+    --error: 0 70% 60%;
+    --info: 265 30% 51%;
 
     /* Borders / inputs */
-    --border: 220 46% 20% / 0.12;
-    --border-strong: 220 46% 20% / 0.25;
-    --border-gold: 44 56% 54% / 0.35;
-    --input: 33 35% 90%;             /* #F0E6DA */
-    --ring: 220 46% 20%;
+    --border: 265 30% 51% / 0.12;
+    --border-strong: 265 30% 51% / 0.25;
+    --input: 33 27% 94%;             /* #F5F1EC */
+    --ring: 265 30% 51%;
 
     --radius: 16px;
     --radius-sm: 10px;
@@ -64,31 +62,31 @@
     --radius-pill: 50px;
 
     /* Text helpers */
-    --text-primary: 219 45% 15%;     /* #152238 */
-    --text-secondary: 218 27% 33%;   /* #3D4F6B */
-    --text-hint: 213 21% 73%;        /* #B0BCCA */
-    --text-mid: 218 27% 33%;
-    --text-muted: 213 14% 55%;       /* #7A8CA0 */
+    --text-primary: 250 23% 14%;     /* #1E1B2E */
+    --text-secondary: 250 9% 46%;    /* #6B6880 */
+    --text-hint: 250 11% 69%;        /* #ABA8B8 */
+    --text-mid: 250 9% 46%;
+    --text-muted: 250 9% 64%;        /* #9B96B0 */
 
     /* Surface alternates */
-    --surface-alt: 33 35% 90%;       /* #F0E6DA */
-    --cream: 32 47% 81%;             /* #E8D5B8 */
-    --sand: 35 41% 87%;              /* #EDE0CE */
+    --surface-alt: 33 27% 94%;       /* #F5F1EC */
+    --cream: 33 27% 94%;
+    --sand: 33 27% 94%;
 
-    /* Shadows — navy tinted */
-    --shadow-sm: 0 2px 12px rgba(27, 42, 74, 0.08);
-    --shadow-md: 0 4px 20px rgba(27, 42, 74, 0.12);
-    --shadow-lg: 0 8px 32px rgba(27, 42, 74, 0.16);
+    /* Shadows — purple tinted */
+    --shadow-sm: 0 2px 12px rgba(123, 94, 167, 0.08);
+    --shadow-md: 0 4px 20px rgba(123, 94, 167, 0.12);
+    --shadow-lg: 0 8px 32px rgba(123, 94, 167, 0.16);
 
     /* Sidebar (admin) */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 218 27% 33%;
-    --sidebar-primary: 220 46% 20%;
+    --sidebar-foreground: 250 9% 46%;
+    --sidebar-primary: 265 30% 51%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 24% 93%;
-    --sidebar-accent-foreground: 220 46% 20%;
-    --sidebar-border: 220 46% 20% / 0.10;
-    --sidebar-ring: 220 46% 20%;
+    --sidebar-accent: 260 100% 95%;
+    --sidebar-accent-foreground: 265 30% 51%;
+    --sidebar-border: 265 30% 51% / 0.10;
+    --sidebar-ring: 265 30% 51%;
   }
 }
 
@@ -120,7 +118,7 @@
     width: 100%;
     margin: 0 auto;
     min-height: 100vh;
-    background: #F5EDE4;
+    background: #FBF8F4;
     position: relative;
     overflow-x: hidden;
   }
@@ -149,9 +147,9 @@
     scrollbar-width: none;
   }
 
-  /* Uppercase label utility — Raleway tracked */
+  /* Uppercase label utility */
   .label-caps {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;

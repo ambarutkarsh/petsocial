@@ -52,7 +52,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
 
   const status = (chip.verification_status as ChipVerificationStatus) || "self_declared";
   const formatted = formatChipNumber(chip.chip_number, chip.chip_format as ChipFormat);
-  const borderColor = status === "document_verified" ? "border-[#243660]" : "border-[#243660]";
+  const borderColor = status === "document_verified" ? "border-[#7B5EA7]" : "border-[#7B5EA7]";
 
   return (
     <div className={`rounded-[18px] border-2 ${borderColor} bg-card p-4`}>

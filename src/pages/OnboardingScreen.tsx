@@ -11,7 +11,7 @@ const STEPS = [
     icon: FeedsIcon,
     title: "Share pet moments",
     desc: "Reels, photos & stories — connect with millions of pet parents across India.",
-    color: "from-primary to-[#243660]",
+    color: "from-primary to-[#7B5EA7]",
   },
   {
     emoji: "🏥",
@@ -55,7 +55,7 @@ const OnboardingScreen = () => {
     <MobileLayout>
       <div
         className="min-h-screen flex flex-col"
-        style={{ background: "radial-gradient(ellipse at top, #E8EBF2 0%, #F5EDE4 50%, #FBF6E8 100%)" }}
+        style={{ background: "radial-gradient(ellipse at top, #EDE5FF 0%, #FBF8F4 50%, #FFF0EB 100%)" }}
       >
         <div className="flex justify-between items-center px-5 pt-5">
           {step > 0 ? (
@@ -74,7 +74,7 @@ const OnboardingScreen = () => {
 
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
           <div
-            className={`w-32 h-32 rounded-[40px] bg-gradient-to-br ${current.color} shadow-[0_20px_50px_rgba(27,42,74,0.3)] flex items-center justify-center text-7xl mb-8 animate-fade-in`}
+            className={`w-32 h-32 rounded-[40px] bg-gradient-to-br ${current.color} shadow-[0_20px_50px_rgba(123, 94, 167,0.3)] flex items-center justify-center text-7xl mb-8 animate-fade-in`}
             key={step}
           >
             {current.emoji}
