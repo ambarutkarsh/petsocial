@@ -1,15 +1,14 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { getPasswordStrength, useCallback, useState, validateStep1, validateStep2 } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { BackIcon, CheckIcon, CloseIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
-import { breedsByType, indianStates, petTypeEmoji, petTypes } from "@/lib/registrationData";
+import { breedsByType, getPasswordStrength, indianStates, petTypeEmoji, petTypes, validateStep1, validateStep2 } from "@/lib/registrationData";
 
 import MobileLayout from "./MobileLayout";
 
-} from "@/lib/registrationData";
 
 interface Props {
   onComplete: () => void;

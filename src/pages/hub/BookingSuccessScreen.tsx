@@ -1,4 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 import { useQuery } from "@tanstack/react-query";
 

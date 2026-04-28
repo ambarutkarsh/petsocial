@@ -3,14 +3,14 @@ import PageWrapper from "@/components/PageWrapper";
 import CreateSheet from "@/components/CreateSheet";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ReactNode, useState } from "react";
-import { BackIcon, BellIcon, BookVetIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 const tabs = [
   { path: "/vet-dashboard", label: "Today", Icon: BookVetIcon },
   { path: "/vet-dashboard/calendar", label: "Calendar", Icon: BookVetIcon },
   { path: "/vet-dashboard/requests", label: "Requests", Icon: BellIcon },
   { path: "/vet-dashboard/availability", label: "Availability", Icon: SettingsIcon },
-  { path: "/vet-dashboard/profile", label: "Profile", Icon: UserIcon },
+  { path: "/vet-dashboard/profile", label: "Profile", Icon: ProfileIcon },
 ];
 
 interface Props {
