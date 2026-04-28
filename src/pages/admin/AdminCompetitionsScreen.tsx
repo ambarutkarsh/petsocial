@@ -23,15 +23,16 @@ const AdminCompetitionsScreen = () => {
   const [status, setStatus] = useState<"draft" | "active" | "ended">("active");
   const [saving, setSaving] = useState(false);
 
-  const { data: comps = [], isLoading } = useQuery({
+  const { data: comps = [], isLoading, error: listError } = useQuery({
     queryKey: ["admin-competitions"],
     enabled: isAdminEmail(user?.email),
     queryFn: async () => {
-      const { data } = await supabase
-        .from("competitions")
-        .select("*")
-        .order("created_at", { ascending: false });
-      return data || [];
+      const { data, error } = await supabase.functions.invoke("admin-competitions", {
+        body: { action: "list" },
+      });
+      if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
+      return data?.data ?? [];
     },
   });
 
@@ -48,37 +49,52 @@ const AdminCompetitionsScreen = () => {
     setShowForm(false);
   };
 
+  const callFn = async (payload: any) => {
+    const { data, error } = await supabase.functions.invoke("admin-competitions", { body: payload });
+    if (error) throw new Error(error.message);
+    if (data?.error) throw new Error(data.error);
+    return data;
+  };
+
   const save = async () => {
     if (!title.trim()) { toast.error("Title required"); return; }
     setSaving(true);
-    const { error } = await supabase.from("competitions").insert({
-      title: title.trim(),
-      description: description.trim() || null,
-      prize: prize.trim() || null,
-      start_date: startDate || null,
-      end_date: endDate || null,
-      status,
-      created_by: user!.id,
-    });
-    setSaving(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Competition created");
-    reset();
-    qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    try {
+      await callFn({
+        action: "create",
+        values: {
+          title: title.trim(),
+          description: description.trim() || null,
+          prize: prize.trim() || null,
+          start_date: startDate || null,
+          end_date: endDate || null,
+          status,
+        },
+      });
+      toast.success("Competition created");
+      reset();
+      qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this competition?")) return;
-    const { error } = await supabase.from("competitions").delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("Deleted");
-    qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    try {
+      await callFn({ action: "delete", id });
+      toast.success("Deleted");
+      qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    } catch (e: any) { toast.error(e.message); }
   };
 
   const updateStatus = async (id: string, newStatus: string) => {
-    const { error } = await supabase.from("competitions").update({ status: newStatus }).eq("id", id);
-    if (error) { toast.error(error.message); return; }
-    qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    try {
+      await callFn({ action: "update", id, values: { status: newStatus } });
+      qc.invalidateQueries({ queryKey: ["admin-competitions"] });
+    } catch (e: any) { toast.error(e.message); }
   };
 
   return (

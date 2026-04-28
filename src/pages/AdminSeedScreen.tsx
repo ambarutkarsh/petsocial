@@ -102,12 +102,14 @@ const AdminSeedScreen = () => {
 
   const fetchStatus = async () => {
     setStatusLoading(true);
-    const [{ count: uCount }, { count: pCount }] = await Promise.all([
+    const [u, p] = await Promise.all([
       supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
       supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
     ]);
-    setSeedUsers(uCount || 0);
-    setSeedPosts(pCount || 0);
+    if (u.error) toast.error(`Profiles count failed: ${u.error.message}`);
+    if (p.error) toast.error(`Posts count failed: ${p.error.message}`);
+    setSeedUsers(u.count ?? 0);
+    setSeedPosts(p.count ?? 0);
     setStatusLoading(false);
   };
 
@@ -218,29 +220,17 @@ const AdminSeedScreen = () => {
   const handleDelete = async () => {
     if (!confirm("Delete ALL seed data? This cannot be undone.")) return;
     setDeleting(true);
-    setLog(["🗑️ Deleting all seed data..."]);
+    setLog(["🗑️ Deleting all seed data via admin-delete-seed (service role)..."]);
 
     try {
-      const { data: seedProfiles } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("is_seed_user", true);
-
-      const ids = (seedProfiles || []).map((p) => p.id);
-
-      if (ids.length > 0) {
-        await supabase.from("post_comments").delete().in("user_id", ids);
-        await supabase.from("post_likes").delete().in("user_id", ids);
-        await supabase.from("follows").delete().in("follower_id", ids);
-        await supabase.from("follows").delete().in("following_id", ids);
-        await supabase.from("stories").delete().in("user_id", ids);
-        await supabase.from("posts").delete().in("user_id", ids);
-        await supabase.from("pets").delete().in("owner_id", ids);
-        await supabase.from("profiles").delete().in("id", ids);
-      }
-
-      setLog((prev) => [...prev, `✅ Deleted ${ids.length} seed users and all their data`]);
-      toast.success("Seed data deleted");
+      const { data, error } = await supabase.functions.invoke("admin-delete-seed");
+      if (error) throw error;
+      setLog((prev) => [
+        ...prev,
+        `✅ Deleted ${data?.deleted_users ?? 0} seed users`,
+        `Details: ${JSON.stringify(data?.details ?? {})}`,
+      ]);
+      toast.success(`Deleted ${data?.deleted_users ?? 0} seed users`);
       await fetchStatus();
     } catch (err: any) {
       setLog((prev) => [...prev, `❌ Error: ${err.message}`]);
