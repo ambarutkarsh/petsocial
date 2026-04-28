@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -17,35 +18,56 @@ const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string
 );
 
 const AdminDashboardScreen = () => {
-  const { data: stats, isLoading: statsLoading, error: statsError } = useQuery({
-    queryKey: ["admin-dashboard-stats"],
+  const { user, loading: authLoading } = useAuth();
+
+  const { data: stats, isLoading: statsLoading, error: statsError, dataUpdatedAt } = useQuery({
+    queryKey: ["admin-dashboard-stats", user?.id],
+    enabled: !authLoading && !!user,
     queryFn: async () => {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const [u, p, v, b] = await Promise.all([
+      const [u, p, v, b, su, sp] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }).or("is_seed_user.eq.false,is_seed_user.is.null"),
         supabase.from("posts").select("id", { count: "exact", head: true }).or("is_seed_post.eq.false,is_seed_post.is.null"),
         supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_verified", true),
         supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
+        supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
       ]);
-      const firstErr = u.error || p.error || v.error || b.error;
-      if (firstErr) {
-        console.error("[AdminDashboard] stats query error:", firstErr);
-        throw new Error(firstErr.message);
+      const errors = [
+        u.error && `profiles(non-seed): ${u.error.message}`,
+        p.error && `posts(non-seed): ${p.error.message}`,
+        v.error && `vets: ${v.error.message}`,
+        b.error && `bookings: ${b.error.message}`,
+        su.error && `profiles(seed): ${su.error.message}`,
+        sp.error && `posts(seed): ${sp.error.message}`,
+      ].filter(Boolean) as string[];
+      if (errors.length) {
+        console.error("[AdminDashboard] errors:", errors);
+        throw new Error(errors.join(" | "));
       }
-      return { users: u.count ?? 0, posts: p.count ?? 0, vets: v.count ?? 0, bookings: b.count ?? 0 };
+      return {
+        users: u.count ?? 0,
+        posts: p.count ?? 0,
+        vets: v.count ?? 0,
+        bookings: b.count ?? 0,
+        seedUsers: su.count ?? 0,
+        seedPosts: sp.count ?? 0,
+      };
     },
     retry: 1,
   });
 
-  const { data: recent = [] } = useQuery({
-    queryKey: ["admin-recent-registrations"],
+  const { data: recent = [], error: recentError } = useQuery({
+    queryKey: ["admin-recent-registrations", user?.id],
+    enabled: !authLoading && !!user,
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("id, full_name, city, created_at")
         .or("is_seed_user.eq.false,is_seed_user.is.null")
         .order("created_at", { ascending: false })
         .limit(10);
+      if (error) throw new Error(error.message);
       const ids = (data ?? []).map((p) => p.id);
       const { data: pets } = ids.length
         ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
@@ -58,6 +80,16 @@ const AdminDashboardScreen = () => {
 
   return (
     <AdminLayout title="Dashboard" subtitle="Petosauras admin overview">
+      {/* Always-on diagnostics so 0 vs blocked is distinguishable */}
+      <div className="mb-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-body text-slate-700 space-y-0.5">
+        <div><b>Auth:</b> {authLoading ? "loading…" : user ? `signed in as ${user.email} (${user.id.slice(0,8)}…)` : "NOT signed in"}</div>
+        <div><b>Stats query:</b> {statsLoading ? "loading…" : statsError ? `ERROR: ${(statsError as Error).message}` : `OK — updated ${dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : "—"}`}</div>
+        {stats && (
+          <div><b>Counts:</b> non-seed users={stats.users}, non-seed posts={stats.posts}, seed users={stats.seedUsers}, seed posts={stats.seedPosts}, active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
+        )}
+        {recentError && <div className="text-red-700"><b>Recent error:</b> {(recentError as Error).message}</div>}
+      </div>
+
       {statsError && (
         <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-body">
           Failed to load stats: {(statsError as Error).message}
