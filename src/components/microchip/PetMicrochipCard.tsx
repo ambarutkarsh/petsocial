@@ -7,7 +7,7 @@ import { UploadIcon, VaccineIcon } from "@/components/icons/PetosauraIcons";
 import { formatChipNumber } from "@/lib/microchipValidator";
 import { useQuery } from "@tanstack/react-query";
 
-import ChipStatusBadge from "@/components/microchip/ChipStatusBadge";
+import ChipStatusBadge, { ChipVerificationStatus } from "@/components/microchip/ChipStatusBadge";
 
 interface Props {
   petId: string;

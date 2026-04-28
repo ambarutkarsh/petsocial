@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { breedsByType, differenceInYears, petTypes } from "@/lib/registrationData";
-import { differenceInMonths, format } from "date-fns";
+import { breedsByType, petTypes } from "@/lib/registrationData";
+import { differenceInMonths, differenceInYears, format } from "date-fns";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";

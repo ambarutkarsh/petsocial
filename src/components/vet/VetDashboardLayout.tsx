@@ -3,7 +3,7 @@ import PageWrapper from "@/components/PageWrapper";
 import CreateSheet from "@/components/CreateSheet";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ReactNode, useState } from "react";
-import { BackIcon, BellIcon, BookVetIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 const tabs = [
   { path: "/vet-dashboard", label: "Today", Icon: BookVetIcon },

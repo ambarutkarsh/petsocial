@@ -1,4 +1,5 @@
 import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
 
 import { cva, type VariantProps } from "class-variance-authority";
 

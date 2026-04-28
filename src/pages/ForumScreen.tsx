@@ -10,8 +10,8 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { RotateCcw } from "lucide-react";
-import { EditIcon } from "@/components/icons/PetosauraIcons";
+import { ExternalLink, Eye, Loader2, RotateCcw } from "lucide-react";
+import { CommentIcon, EditIcon, VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";

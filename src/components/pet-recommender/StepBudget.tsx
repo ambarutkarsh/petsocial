@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getTierFromPin } from "./petMatcher";
+import { getTierFromPin } from "@/lib/petMatcher";
 
 interface Props {
   pin: string;

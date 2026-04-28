@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { recommend } from "./petMatcher";
+import { recommend } from "@/lib/petMatcher";
 import BreedCard from "./BreedCard";
 
 interface Props {
