@@ -58,11 +58,16 @@ const AdminDashboardScreen = () => {
 
   return (
     <AdminLayout title="Dashboard" subtitle="Petosauras admin overview">
+      {statsError && (
+        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-body">
+          Failed to load stats: {(statsError as Error).message}
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={ProfileIcon} label="Total Users" value={stats?.users ?? "…"} hint="Profiles" />
-        <StatCard icon={DocumentIcon} label="Total Posts" value={stats?.posts ?? "…"} hint="All posts" />
-        <StatCard icon={VetIcon} label="Active Vets" value={stats?.vets ?? "…"} hint="Verified" />
-        <StatCard icon={BookVetIcon} label="Bookings" value={stats?.bookings ?? "…"} hint="This week" />
+        <StatCard icon={ProfileIcon} label="Total Users" value={statsLoading ? "…" : stats?.users ?? 0} hint="Profiles" />
+        <StatCard icon={DocumentIcon} label="Total Posts" value={statsLoading ? "…" : stats?.posts ?? 0} hint="All posts" />
+        <StatCard icon={VetIcon} label="Active Vets" value={statsLoading ? "…" : stats?.vets ?? 0} hint="Verified" />
+        <StatCard icon={BookVetIcon} label="Bookings" value={statsLoading ? "…" : stats?.bookings ?? 0} hint="This week" />
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">
