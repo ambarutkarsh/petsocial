@@ -174,14 +174,17 @@ const BulkUpload = () => {
       caption: photo.caption || null,
       hashtags: hashArr,
       location: photo.location || null,
-      post_category: photo.category,
+      post_category: photo.category || "reel",
       is_seed_post: true,
       ai_validated: true,
       like_count: Math.floor(Math.random() * 280) + 20,
       comment_count: Math.floor(Math.random() * 35) + 3,
       created_at: postDate.toISOString(),
     });
-    if (insErr) throw insErr;
+    if (insErr) {
+      console.error("Post insert error:", JSON.stringify(insErr));
+      throw new Error(insErr.message);
+    }
   };
 
   const handleUploadAll = async () => {
