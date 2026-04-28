@@ -5,7 +5,8 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { BellIcon, CloseIcon, ProfileIcon, SearchIcon } from "@/components/icons/PetosauraIcons";
+import { Bell, Search, X } from "lucide-react";
+import UserAvatar from "@/components/UserAvatar";
 
 // LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-icon.png";
@@ -110,7 +111,7 @@ const TopBar = () => {
               aria-label="Search"
               className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
             >
-              <SearchIcon className="w-5 h-5" strokeWidth={1.8} />
+              <Search size={20} strokeWidth={1.5} />
             </button>
             {user && (
               <button
@@ -118,7 +119,7 @@ const TopBar = () => {
                 aria-label="Notifications"
                 className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
               >
-                <BellIcon className="w-5 h-5" strokeWidth={1.8} />
+                <Bell size={20} strokeWidth={1.5} />
                 {unreadCount > 0 && (
                   <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
                     {unreadCount > 99 ? "99+" : unreadCount}
@@ -130,13 +131,13 @@ const TopBar = () => {
               <button
                 onClick={() => navigate("/profile")}
                 aria-label="Profile"
-                className="w-9 h-9 rounded-full bg-primary-light text-primary font-bold text-sm flex items-center justify-center overflow-hidden ml-1"
+                className="ml-1"
               >
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <span>{initials}</span>
-                )}
+                <UserAvatar
+                  name={profile?.full_name}
+                  avatarUrl={profile?.avatar_url}
+                  size={36}
+                />
               </button>
             ) : (
               <button
@@ -166,7 +167,7 @@ const TopBar = () => {
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="max-w-[430px] mx-auto h-full flex flex-col">
             <div className="h-14 px-4 flex items-center gap-2 border-b border-border bg-card">
-              <SearchIcon className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
+              <Search size={16} strokeWidth={1.5} className="text-muted-foreground" />
               <input
                 autoFocus
                 value={query}
@@ -179,7 +180,7 @@ const TopBar = () => {
                 aria-label="Close search"
                 className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted"
               >
-                <CloseIcon className="w-5 h-5" strokeWidth={1.8} />
+                <X size={20} strokeWidth={1.5} />
               </button>
             </div>
 
@@ -206,13 +207,7 @@ const TopBar = () => {
                             }}
                             className="w-full flex items-center gap-3 p-2 rounded-[14px] hover:bg-muted text-left"
                           >
-                            <div className="w-10 h-10 rounded-full bg-primary-light text-primary font-bold flex items-center justify-center overflow-hidden">
-                              {u.avatar_url ? (
-                                <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
-                              ) : (
-                                (u.full_name || "U").slice(0, 1).toUpperCase()
-                              )}
-                            </div>
+                            <UserAvatar name={u.full_name} avatarUrl={u.avatar_url} size={40} />
                             <div className="min-w-0">
                               <p className="text-sm font-body font-bold truncate">{u.full_name || "User"}</p>
                               {u.username && (

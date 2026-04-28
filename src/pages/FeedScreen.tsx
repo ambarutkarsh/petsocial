@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2 } from "lucide-react";
-import { BellIcon, CommentIcon, HeartIcon, LocationPinIcon, PlusIcon, SaveIcon, SearchIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
+import { Trash2, Heart, MessageCircle, Share2, Bookmark, Search, Bell, Plus, MapPin } from "lucide-react";
+import UserAvatar from "@/components/UserAvatar";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -205,10 +205,10 @@ const FeedScreen = () => {
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
           <div className="flex gap-2">
             <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors">
-              <SearchIcon className="w-5 h-5" strokeWidth={1.8} />
+              <Search size={20} strokeWidth={1.5} />
             </button>
             <button onClick={() => navigate("/notifications")} className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors relative">
-              <BellIcon className="w-5 h-5" strokeWidth={1.8} />
+              <Bell size={20} strokeWidth={1.5} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
             </button>
           </div>
@@ -218,7 +218,7 @@ const FeedScreen = () => {
         <div className="px-5 py-3.5 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
           <div className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => setShowStoryCreator(true)}>
             <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
-              <PlusIcon className="w-6 h-6 text-primary" strokeWidth={1.8} />
+              <Plus size={24} strokeWidth={1.5} className="text-primary" />
             </div>
             <span className="text-[10px] font-body font-semibold text-muted-foreground">Your Story</span>
           </div>
@@ -273,16 +273,12 @@ const FeedScreen = () => {
               return (
                 <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
                   <div className="flex items-center gap-3 p-3.5">
-                    <div
+                    <UserAvatar
+                      name={profile?.full_name}
+                      avatarUrl={profile?.avatar_url}
+                      size={40}
                       onClick={() => navigate(`/profile/${post.user_id}`)}
-                      className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground cursor-pointer"
-                    >
-                      {profile?.avatar_url ? (
-                        <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-                      ) : (
-                        getInitials(profile?.full_name)
-                      )}
-                    </div>
+                    />
                     <div className="flex-1 min-w-0">
                       <p
                         onClick={() => navigate(`/profile/${post.user_id}`)}
@@ -294,6 +290,12 @@ const FeedScreen = () => {
                         {pet?.name && `${pet.name} • ${pet.pet_type} • `}
                         {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                       </p>
+                      {post.location && (
+                        <p className="text-[11px] text-muted-foreground font-body flex items-center gap-1 mt-0.5">
+                          <MapPin size={10} strokeWidth={1.5} />
+                          <span className="truncate">{post.location}</span>
+                        </p>
+                      )}
                     </div>
                     {post.user_id === user?.id && (
                       <button
@@ -324,17 +326,17 @@ const FeedScreen = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
-                          <HeartIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isLiked ? "#FF6B6B" : "none") && isLiked ? "#FF6B6B" : "none" !== 'none'} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
+                          <Heart size={20} strokeWidth={1.5} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "#9B96B0"} />
                           <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>{post.like_count || 0}</span>
                         </button>
                         <button onClick={() => { setCommentPostId(post.id); trackEvent("comment_submitted", { post_id: post.id }); }} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
-                          <CommentIcon className="w-5 h-5" strokeWidth={1.8} />
+                          <MessageCircle size={20} strokeWidth={1.5} />
                           <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
                         </button>
-                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><ShareIcon className="w-5 h-5" strokeWidth={1.8} /></button>
+                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Share2 size={20} strokeWidth={1.5} /></button>
                       </div>
                       <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
-                        <SaveIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isSaved ? "hsl(var(--primary))" : "none") && isSaved ? "hsl(var(--primary))" : "none" !== 'none'} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
+                        <Bookmark size={20} strokeWidth={1.5} fill={isSaved ? "#7B5EA7" : "none"} color={isSaved ? "#7B5EA7" : "#9B96B0"} />
                       </button>
                     </div>
                     <p className="text-sm font-body">
