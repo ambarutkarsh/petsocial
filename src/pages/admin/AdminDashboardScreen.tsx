@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -17,22 +18,41 @@ const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string
 );
 
 const AdminDashboardScreen = () => {
-  const { data: stats, isLoading: statsLoading, error: statsError } = useQuery({
-    queryKey: ["admin-dashboard-stats"],
+  const { user, loading: authLoading } = useAuth();
+
+  const { data: stats, isLoading: statsLoading, error: statsError, dataUpdatedAt } = useQuery({
+    queryKey: ["admin-dashboard-stats", user?.id],
+    enabled: !authLoading && !!user,
     queryFn: async () => {
       const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      const [u, p, v, b] = await Promise.all([
+      const [u, p, v, b, su, sp] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }).or("is_seed_user.eq.false,is_seed_user.is.null"),
         supabase.from("posts").select("id", { count: "exact", head: true }).or("is_seed_post.eq.false,is_seed_post.is.null"),
         supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_verified", true),
         supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
+        supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
       ]);
-      const firstErr = u.error || p.error || v.error || b.error;
-      if (firstErr) {
-        console.error("[AdminDashboard] stats query error:", firstErr);
-        throw new Error(firstErr.message);
+      const errors = [
+        u.error && `profiles(non-seed): ${u.error.message}`,
+        p.error && `posts(non-seed): ${p.error.message}`,
+        v.error && `vets: ${v.error.message}`,
+        b.error && `bookings: ${b.error.message}`,
+        su.error && `profiles(seed): ${su.error.message}`,
+        sp.error && `posts(seed): ${sp.error.message}`,
+      ].filter(Boolean) as string[];
+      if (errors.length) {
+        console.error("[AdminDashboard] errors:", errors);
+        throw new Error(errors.join(" | "));
       }
-      return { users: u.count ?? 0, posts: p.count ?? 0, vets: v.count ?? 0, bookings: b.count ?? 0 };
+      return {
+        users: u.count ?? 0,
+        posts: p.count ?? 0,
+        vets: v.count ?? 0,
+        bookings: b.count ?? 0,
+        seedUsers: su.count ?? 0,
+        seedPosts: sp.count ?? 0,
+      };
     },
     retry: 1,
   });
