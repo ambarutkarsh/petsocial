@@ -126,6 +126,7 @@ const App = () => (
             <Route path="/learn" element={<ProtectedRoute><LearnScreen /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboardScreen /></ProtectedRoute>} />
             <Route path="/admin/seed" element={<ProtectedRoute><AdminSeedScreen /></ProtectedRoute>} />
+            <Route path="/admin/bulk-upload" element={<ProtectedRoute><BulkUpload /></ProtectedRoute>} />
             <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
             <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
