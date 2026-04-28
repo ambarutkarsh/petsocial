@@ -26,42 +26,79 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isNewGoogleUser, setIsNewGoogleUser] = useState(false);
 
   useEffect(() => {
+    // IMPORTANT: never await Supabase calls directly inside onAuthStateChange —
+    // it can deadlock the auth client and leave `loading` stuck on true,
+    // which causes ProtectedRoute / AdminLayout to render nothing.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
+      (event, newSession) => {
+        setSession(newSession);
         setLoading(false);
 
-        if (event === "SIGNED_IN" && session?.user) {
-          // Auto-link unlinked vet record by email match (uses service role
-          // via edge function because vets PII columns are not directly
-          // selectable from the client).
-          if (session.user.email) {
-            supabase.functions.invoke("link-vet-by-email").catch(() => {});
-          }
-
-          // Check if new Google user
-          const provider = session.user.app_metadata?.provider;
-          if (provider === "google") {
-            const { data: profile } = await supabase
-              .from("profiles")
-              .select("full_name, phone")
-              .eq("id", session.user.id)
-              .single();
-
-            if (!profile?.phone && (!profile?.full_name || profile.full_name === "PawSocial User" || profile.full_name?.includes("_"))) {
-              setIsNewGoogleUser(true);
+        if (event === "SIGNED_IN" && newSession?.user) {
+          // Defer any Supabase calls to a microtask so we don't block the
+          // auth state change handler.
+          setTimeout(() => {
+            if (newSession.user.email) {
+              supabase.functions.invoke("link-vet-by-email").catch(() => {});
             }
-          }
+
+            const provider = newSession.user.app_metadata?.provider;
+            if (provider === "google") {
+              supabase
+                .from("profiles")
+                .select("full_name, phone")
+                .eq("id", newSession.user.id)
+                .single()
+                .then(({ data: profile }) => {
+                  if (
+                    !profile?.phone &&
+                    (!profile?.full_name ||
+                      profile.full_name === "PawSocial User" ||
+                      profile.full_name?.includes("_"))
+                  ) {
+                    setIsNewGoogleUser(true);
+                  }
+                });
+            }
+          }, 0);
+        }
+
+        if (event === "SIGNED_OUT" || event === "TOKEN_REFRESHED" && !newSession) {
+          setIsNewGoogleUser(false);
         }
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
+    // Initial session fetch — guard against stale/invalid refresh tokens that
+    // throw and would otherwise leave loading=true forever.
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: initialSession } }) => {
+        setSession(initialSession);
+        setLoading(false);
+      })
+      .catch(async (err) => {
+        console.warn("[Auth] getSession failed, clearing stale session:", err);
+        try {
+          await supabase.auth.signOut();
+        } catch {}
+        setSession(null);
+        setLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+    // Safety net: if neither path resolves within 5s, unblock the UI so the
+    // admin panel (and other guards) don't get stuck on a blank screen.
+    const safety = setTimeout(() => {
+      setLoading((prev) => {
+        if (prev) console.warn("[Auth] safety timeout — forcing loading=false");
+        return false;
+      });
+    }, 5000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(safety);
+    };
   }, []);
 
   const signOut = async () => {
