@@ -12,7 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { docTypeLabel } from "@/components/microchip/docTypes";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { formatChipNumber, validateMicrochip } from "./microchipValidator";
+import { formatChipNumber, validateMicrochip } from "@/lib/microchipValidator";
 
 import HubSubLayout from "@/components/HubSubLayout";
 
