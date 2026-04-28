@@ -65,19 +65,17 @@ const BulkUpload = () => {
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, username")
-        .eq("is_seed_user", true);
+        .functions.invoke("admin-dashboard-stats", { body: { action: "seed-users" } });
       if (error) {
         toast.error("Failed to load seed users");
         return;
       }
       const map: Record<string, string> = {};
-      (data || []).forEach((p: any) => {
+      (data?.seedUsers || []).forEach((p: any) => {
         if (p.username) map[p.username] = p.id;
       });
       setUserIdMap(map);
-      setSeedCount((data || []).length);
+      setSeedCount((data?.seedUsers || []).length);
     })();
   }, []);
 
