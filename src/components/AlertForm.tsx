@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,7 +72,7 @@ const AlertForm = ({ open, onClose }: Props) => {
         <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-heading font-bold">🚨 Pet Alert</h2>
-          <button onClick={onClose}><X className="w-5 h-5" /></button>
+          <button onClick={onClose}><CloseIcon className="w-5 h-5" /></button>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-3">

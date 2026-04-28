@@ -1,9 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon, useQuery } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Users } from "lucide-react";
-import { BookVetIcon, DocumentIcon, VetIcon } from "@/components/icons/PetosauraIcons";
+import { BookVetIcon } from "@/components/icons/PetosauraIcons";
 const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string; value: number | string; hint: string }) => (
   <Card className="p-5 rounded-2xl bg-white">
     <div className="flex items-center justify-between mb-3">
@@ -43,7 +43,7 @@ const AdminDashboardScreen = () => {
       const { data: pets } = ids.length
         ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
         : { data: [] as any[] };
-      const petByOwner = new Map<string, string>();
+      const petByOwner = new LocationPinIcon<string, string>();
       (pets ?? []).forEach((p: any) => { if (!petByOwner.has(p.owner_id)) petByOwner.set(p.owner_id, p.name); });
       return (data ?? []).map((p) => ({ ...p, pet: petByOwner.get(p.id) ?? "—" }));
     },
@@ -52,10 +52,10 @@ const AdminDashboardScreen = () => {
   return (
     <AdminLayout title="Dashboard" subtitle="Petosauras admin overview">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard icon={Users} label="Total Users" value={stats?.users ?? "…"} hint="Profiles" />
-        <StatCard icon={FileImage} label="Total Posts" value={stats?.posts ?? "…"} hint="All posts" />
-        <StatCard icon={Stethoscope} label="Active Vets" value={stats?.vets ?? "…"} hint="Verified" />
-        <StatCard icon={CalendarCheck} label="Bookings" value={stats?.bookings ?? "…"} hint="This week" />
+        <StatCard icon={ProfileIcon} label="Total Users" value={stats?.users ?? "…"} hint="Profiles" />
+        <StatCard icon={DocumentIcon} label="Total Posts" value={stats?.posts ?? "…"} hint="All posts" />
+        <StatCard icon={VetIcon} label="Active Vets" value={stats?.vets ?? "…"} hint="Verified" />
+        <StatCard icon={BookVetIcon} label="Bookings" value={stats?.bookings ?? "…"} hint="This week" />
       </div>
 
       <Card className="rounded-2xl bg-white overflow-hidden">

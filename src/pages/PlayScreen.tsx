@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ChevronRight, CloseIcon, CommentIcon, GPLACES_DAILY_CAP } from "@/lib/feedPills";
+import { createNotification, HeartIcon, Loader2, LocationPinIcon, LockIcon, NEARBY_SUB_PILLS, PlusIcon, SaveIcon, ShareIcon, StarIcon, Trash2, getActorName } from "@/lib/notifications";
+import { maskName } from "@/lib/maskName";
+import { ChevronLeft, getPostOwnerId, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Heart, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -13,13 +18,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS, NEARBY_SUB_PILLS, type FeedPillKey, isGooglePlacesCapped, incrementGooglePlacesUsage, GPLACES_DAILY_CAP } from "@/lib/feedPills";
-import { createNotification, getPostOwnerId, getActorName } from "@/lib/notifications";
-import { maskName } from "@/lib/maskName";
-import { ChevronLeft, ChevronRight, Loader2, Trash2, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Heart, useState } from "lucide-react";
-import { BookVetIcon, CloseIcon, CommentIcon, LocationPinIcon, LockIcon, PlusIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { FEED_PILLS, useState } from "lucide-react";
+import { BookVetIcon } from "@/components/icons/PetosauraIcons";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -31,7 +31,7 @@ async function attachProfiles<T extends Record<string, any>>(
   const ids = Array.from(new Set(rows.map((r) => r[fkField]).filter(Boolean) as string[]));
   if (ids.length === 0) return rows.map((r) => ({ ...r, profiles: null }));
   const { data: profs } = await supabase.from("public_profiles").select(fields).in("id", ids);
-  const map = new Map((profs || []).map((p: any) => [p.id, p]));
+  const map = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
   return rows.map((r) => ({ ...r, profiles: map.get(r[fkField] as string) || null }));
 }
 
@@ -130,7 +130,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, username, avatar_url, city")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawPosts.map((p: any) => ({ ...p, profiles: profMap.get(p.user_id) || null }));
     },
   });
@@ -185,7 +185,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, avatar_url")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawStories.map((s: any) => ({ ...s, profiles: profMap.get(s.user_id) || null }));
     },
   });
@@ -481,7 +481,7 @@ const FeedScreen = () => {
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
           <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
-            <Heart className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
+            <HeartIcon className={`w-6 h-6 ${isLiked ? "fill-destructive text-destructive" : "text-foreground"}`} strokeWidth={1.6} />
             <span className="text-sm font-body font-bold">{liveLikes}</span>
           </button>
           <button onClick={guardedAction(() => setCommentPostId(post.id))} className="flex items-center gap-1.5">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -214,7 +215,7 @@ const HealthLogScreen = ({ embedded = false }: HealthLogScreenProps) => {
       <div className="pb-8">
         {!embedded && (
           <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
-            <button onClick={() => navigate("/mypet")} className="text-primary"><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/mypet")} className="text-primary"><BackIcon className="w-5 h-5" /></button>
             <div>
               <h1 className="text-lg font-heading font-bold">Log Health Entry</h1>
               {pet && <p className="text-xs text-text-muted">{pet.name}</p>}

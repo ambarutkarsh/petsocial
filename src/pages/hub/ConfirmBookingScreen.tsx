@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
@@ -148,7 +149,7 @@ const ConfirmBookingScreen = () => {
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
+            <BackIcon className="w-5 h-5" strokeWidth={1.8} />
           </button>
           <h1 className="font-heading font-bold text-[18px] flex-1">Confirm Booking</h1>
           <span className="text-xs font-body bg-amber-50 text-amber-900 border border-amber-200 px-2 py-1 rounded-full">

@@ -1,5 +1,5 @@
 import type { FeedPillKey } from "@/lib/feedPills";
-import { Button } from "@/components/ui/button";
+import { BudgetIcon, Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
 import BottomNav from "@/components/BottomNav";
@@ -7,7 +7,7 @@ import PostUploadModal from "@/components/PostUploadModal";
 import AddPetSheet from "@/components/AddPetSheet";
 import EditAddressSheet from "@/components/EditAddressSheet";
 import FeedPreferencesSheet from "@/components/FeedPreferencesSheet";
-import { useQuery, ChevronRight, Grid3X3, LogOut, Trash2, useQueryClient } from "@tanstack/react-query";
+import { useQuery, CameraIcon, CheckIcon, ChevronRight, CloseIcon, EditIcon, Grid3X3, LocationPinIcon, LogOut, PlusIcon, SaveIcon, SettingsIcon, StarIcon, Trash2, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
@@ -15,9 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
-import { Coins, useState } from "react";
+import { BudgetIcon, useState } from "react";
 import { Pencil } from "lucide-react";
-import { BookVetIcon, CameraIcon, CheckIcon, CloseIcon, LocationPinIcon, PlusIcon, SaveIcon, SettingsIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { BookVetIcon } from "@/components/icons/PetosauraIcons";
 
 const defaultTabOptions = [
   { value: "interesting_facts", label: "⭐ Interesting Facts" },
@@ -174,7 +174,7 @@ const ProfileScreen = () => {
           {/* LOGO LOCKED — Do not change without explicit user instruction */}
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 28, objectFit: "contain" }} className="absolute top-4 left-1/2 -translate-x-1/2 opacity-80" />
           <button className="absolute top-4 right-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
-            <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
+            <EditIcon className="w-3.5 h-3.5" strokeWidth={1.8} /> Edit Profile
           </button>
           <button onClick={handleSignOut} className="absolute top-4 left-4 bg-card/20 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center gap-1">
             <LogOut className="w-3.5 h-3.5" strokeWidth={1.8} /> Sign Out
@@ -218,7 +218,7 @@ const ProfileScreen = () => {
               <>
                 <h2 className="text-xl font-heading font-bold">{profile?.full_name || "Loading…"}</h2>
                 <button onClick={() => { setNewName(profile?.full_name || ""); setEditingName(true); }}>
-                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                  <EditIcon className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
               </>
             )}

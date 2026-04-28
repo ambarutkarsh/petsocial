@@ -2,22 +2,22 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
 import ForumScreen from "./ForumScreen";
-import { useQuery } from "@tanstack/react-query";
+import { BudgetIcon, HeartIcon, LocationPinIcon, SettingsIcon, WeightIcon, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { getCoinBalance } from "@/lib/coins";
 import { Folder, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
-import { BudgetIcon, HeartIcon, LocationPinIcon, SettingsIcon, WeightIcon } from "@/components/icons/PetosauraIcons";
+import { BudgetIcon } from "@/components/icons/PetosauraIcons";
 
 const utilityCards = [
   { icon: Folder, title: "Digital Locker", desc: "Documents & records", path: "/care/locker", color: "primary" },
-  { icon: Heart, title: "Adoption / Mating", desc: "Find a friend", path: "/shop", color: "secondary" },
-  { icon: Calculator, title: "Budget Calculator", desc: "Plan pet costs", path: "/health/budget", color: "accent" },
-  { icon: Scale, title: "Legal & Rights", desc: "Know your rights", path: "/hub/legal", color: "primary" },
-  { icon: MapPin, title: "Parks & Cafés", desc: "Pet-friendly spots", path: "/play", color: "accent" },
-  { icon: Settings, title: "Settings", desc: "Preferences & profile", path: "/hub/settings", color: "primary" },
+  { icon: HeartIcon, title: "Adoption / Mating", desc: "Find a friend", path: "/shop", color: "secondary" },
+  { icon: BudgetIcon, title: "Budget Calculator", desc: "Plan pet costs", path: "/health/budget", color: "accent" },
+  { icon: WeightIcon, title: "Legal & Rights", desc: "Know your rights", path: "/hub/legal", color: "primary" },
+  { icon: LocationPinIcon, title: "Parks & Cafés", desc: "Pet-friendly spots", path: "/play", color: "accent" },
+  { icon: SettingsIcon, title: "Settings", desc: "Preferences & profile", path: "/hub/settings", color: "primary" },
 ];
 
 const HubScreen = () => {

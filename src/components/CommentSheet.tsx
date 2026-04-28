@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CloseIcon, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
@@ -71,7 +71,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
             <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-3" />
             <div className="flex items-center justify-between">
               <h3 className="text-base font-heading font-bold">Comments</h3>
-              <button onClick={onClose} className="text-text-hint"><X className="w-5 h-5" /></button>
+              <button onClick={onClose} className="text-text-hint"><CloseIcon className="w-5 h-5" /></button>
             </div>
           </div>
 

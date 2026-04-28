@@ -1,14 +1,12 @@
-import { toast } from "sonner";
+import { AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, CheckIcon, Download, ExternalLink, Loader2, MoreVertical, PlusIcon, Trash2, UploadIcon, import { ChevronDown, toast } from "sonner";
 import HubSubLayout from "@/components/HubSubLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-import { ChevronDown, Download, ExternalLink, Loader2, MoreVertical, Trash2, useQueryClient } from "@tanstack/react-query";
+  AlertDialog, useQueryClient } from "@tanstack/react-query";
 import {
-  Plus, useState } from "react";
+  PlusIcon, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "lucide-react";
 import { DocumentIcon } from "@/components/icons/PetosauraIcons";
@@ -163,14 +161,14 @@ const MicrochipScreen = () => {
                     <div className="mt-3 rounded-[14px] border border-[#BFD8F2] bg-[#EAF3FB] p-3">
                       <p className="font-body text-sm font-semibold text-[#2D6FB8]">📄 Upgrade to Document Verified</p>
                       <p className="text-xs text-[#2D6FB8]/80 font-body mt-0.5">
-                        Upload your microchip certificate to verify this registration.
+                        UploadIcon your microchip certificate to verify this registration.
                       </p>
                       <Button
                         size="sm"
                         className="rounded-full mt-2.5 h-8 px-3"
                         onClick={() => setUpgradeChip({ id: chip.id, chipNumber: chip.chip_number })}
                       >
-                        Upload Document →
+                        UploadIcon Document →
                       </Button>
                     </div>
                   )}
@@ -226,7 +224,7 @@ const MicrochipScreen = () => {
               navigate("/hub/microchip/register");
             }}
           >
-            <Plus className="w-4 h-4 mr-1" /> Register New Chip
+            <PlusIcon className="w-4 h-4 mr-1" /> Register New Chip
           </Button>
         </section>
 
@@ -348,7 +346,7 @@ const ValidateChipSection = () => {
       <div>
         <h2 className="font-heading font-bold text-base">Validate a Chip Number</h2>
         <p className="text-xs text-muted-foreground font-body">
-          Check the format or search if it's on Petosauras.
+          CheckIcon the format or search if it's on Petosauras.
         </p>
       </div>
 

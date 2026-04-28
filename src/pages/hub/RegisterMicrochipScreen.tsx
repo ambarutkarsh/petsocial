@@ -1,4 +1,7 @@
-import { toast } from "sonner";
+import { BackIcon, Loader2, UploadIcon, ValidationResult } from "@/lib/microchipValidator";
+import ChipStepper from "@/components/microchip/ChipStepper";
+import ChipDocUploadZone, WarningIcon, docTypeLabel } from "@/components/microchip/docTypes";
+import { ArrowRight, formatChipNumber, toast } from "sonner";
 import HubSubLayout from "@/components/HubSubLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,18 +9,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
-import { validateMicrochip, formatChipNumber, ValidationResult } from "@/lib/microchipValidator";
-import ChipStepper from "@/components/microchip/ChipStepper";
-import ChipDocUploadZone, { PickedFile } from "@/components/microchip/ChipDocUploadZone";
-import AcceptedDocsInfo from "@/components/microchip/AcceptedDocsInfo";
-import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";
-import ChipStatusBadge from "@/components/microchip/ChipStatusBadge";
-import { DOC_TYPES, docTypeLabel } from "@/components/microchip/docTypes";
-import { ArrowRight, Loader2, useEffect, useMemo, useRef, useState } from "react";
+import { validateMicrochip, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
+import { VerifiedIcon, { PickedFile } from "@/components/microchip/ChipDocUploadZone";
+import AcceptedDocsInfo from "@/components/microchip/AcceptedDocsInfo";
+import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";
+import ChipStatusBadge from "@/components/microchip/ChipStatusBadge";
+import { DOC_TYPES } from "@/components/icons/PetosauraIcons";
 
 const STEP_LABELS = ["Chip Number", "Link Pet", "Upload Proof", "Confirm"];
 
@@ -392,7 +392,7 @@ const RegisterMicrochipScreen = () => {
         {step === 3 && (
           <div className="space-y-4">
             <div>
-              <h2 className="font-heading font-bold text-lg">Upload Proof Document</h2>
+              <h2 className="font-heading font-bold text-lg">UploadIcon Proof Document</h2>
               <p className="text-xs text-muted-foreground font-body mt-1">
                 Adding a document upgrades your chip to <strong>Document Verified</strong>.
               </p>
@@ -494,7 +494,7 @@ const RegisterMicrochipScreen = () => {
         <div className="fixed left-0 right-0 bottom-[64px] mx-auto max-w-[430px] px-4 py-3 bg-background/95 backdrop-blur border-t border-border">
           <div className="flex items-center gap-2">
             <Button variant="outline" className="rounded-full h-11 w-11 p-0" onClick={handleBack} disabled={submitting} aria-label="Back">
-              <ArrowLeft className="w-4 h-4" />
+              <BackIcon className="w-4 h-4" />
             </Button>
             {step < 4 && (
               <Button

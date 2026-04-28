@@ -1,19 +1,19 @@
 import type { BudgetFilteredBreed } from "@/lib/petMatcher";
-import { LucideIcon } from "lucide-react";
-import { BirdIcon, CatIcon, DogIcon, FishIcon, MyPetIcon, RabbitIcon, ReptileIcon } from "@/components/icons/PetosauraIcons";
+import { BirdIcon, CatIcon, DogIcon, FishIcon, LucideIcon } from "lucide-react";
+import { BirdIcon, MyPetIcon, RabbitIcon, ReptileIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   result: BudgetFilteredBreed;
 }
 
 const ICONS: Record<string, LucideIcon> = {
-  canine: Dog,
-  feline: Cat,
-  small_mammal: Rabbit,
-  aquatic: Fish,
-  aquatic_exotic: Fish,
-  avian: Bird,
-  reptile: Turtle,
+  canine: DogIcon,
+  feline: CatIcon,
+  small_mammal: RabbitIcon,
+  aquatic: FishIcon,
+  aquatic_exotic: FishIcon,
+  avian: BirdIcon,
+  reptile: ReptileIcon,
 };
 
 const fmt = (n: number) =>
@@ -21,7 +21,7 @@ const fmt = (n: number) =>
 
 const BreedCard = ({ result }: Props) => {
   const { breed, score, reasons, costs, overBudget } = result;
-  const Icon = ICONS[breed.category] ?? PawPrint;
+  const Icon = ICONS[breed.category] ?? MyPetIcon;
   const adoption = breed.suitabilityFlags.adoptionRecommended;
 
   return (

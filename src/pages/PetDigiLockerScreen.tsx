@@ -1,23 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Area } from "recharts";
+import { BookVetIcon } from "@/components/ui/calendar";
+import { Popover, BackIcon, BookVetIcon, CartesianGrid, ChevronUp, ComposedChart, Download, Eye as EyeIcon, InfoIcon, Line, PlusIcon, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
+import { ChevronDown, ResponsiveContainer, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Select, Tooltip, Trash2, UploadIcon, XAxis, YAxis, differenceInMonths } from "date-fns";
+import { LineChart, differenceInYears, useMemo } from "react";
+import { ArrowLeft, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { format, differenceInYears, differenceInMonths } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ComposedChart, Area } from "recharts";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { trackEvent } from "@/lib/analytics";
-import { ChevronDown, ChevronUp, Download, Eye as EyeIcon, Trash2, useMemo } from "react";
-import { ArrowLeft, useRef, useState } from "lucide-react";
-import { DocumentIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { format, useRef, useState } from "lucide-react";
+import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 
 const mealIcons: Record<string, string> = { Breakfast: "🌅", Lunch: "☀️", Dinner: "🌙", Snack: "🍪" };
 
@@ -298,7 +298,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
         <Button variant="outline" size="sm" className="text-xs">{format(date, "MMM d, yyyy")}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
+        <BookVetIcon mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
       </PopoverContent>
     </Popover>
   );
@@ -311,7 +311,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       <Wrapper>
         <div className="px-4 py-3 flex items-center gap-3">
           {!embedded && (
-            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/mypet")}><BackIcon className="w-5 h-5" /></button>
           )}
           <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
         </div>
@@ -328,7 +328,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       <div className="pb-20">
         {!embedded && (
           <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3">
-            <button onClick={() => navigate("/mypet")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/mypet")}><BackIcon className="w-5 h-5" /></button>
             <h1 className="font-heading font-bold text-lg">Pet DigiLocker</h1>
           </header>
         )}
@@ -359,7 +359,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
             {/* TAB 1: HEALTH LOG */}
             <TabsContent value="health" className="space-y-4 mt-3">
               <div className="paw-card p-4">
-                <h3 className="font-heading font-semibold text-sm mb-2">Basic Info</h3>
+                <h3 className="font-heading font-semibold text-sm mb-2">Basic InfoIcon</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div><span className="text-muted-foreground">Name:</span> {activePet.name}</div>
                   <div><span className="text-muted-foreground">Breed:</span> {activePet.species || activePet.pet_type}</div>

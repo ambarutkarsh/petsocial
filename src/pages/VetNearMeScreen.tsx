@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { BackIcon, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { trackEvent } from "@/lib/analytics";
+import { Clock, ExternalLink, Phone, SearchIcon, StarIcon, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import MobileLayout from "@/components/MobileLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { trackEvent } from "@/lib/analytics";
-import { Clock, ExternalLink, Phone, useState } from "react";
+import { Collapsible, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { LocationPinIcon } from "@/components/icons/PetosauraIcons";
 
 interface VetClinic {
   name: string; address: string; phone: string; rating: number;
@@ -78,7 +78,7 @@ const VetNearMeScreen = () => {
       <div className="pb-20 px-4">
         <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/hub")}><ArrowLeft className="w-5 h-5" /></button>
+            <button onClick={() => navigate("/hub")}><BackIcon className="w-5 h-5" /></button>
             <h1 className="font-heading font-bold text-lg">Vet Near Me</h1>
           </div>
           {results.length > 0 && (
@@ -95,7 +95,7 @@ const VetNearMeScreen = () => {
           </button>
           <button onClick={() => setMode("search")}
             className={`flex-1 text-sm font-medium py-2 px-3 rounded-full transition-colors ${mode === "search" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-            🔍 Search by PIN / City
+            🔍 SearchIcon by PIN / City
           </button>
         </div>
 
@@ -115,7 +115,7 @@ const VetNearMeScreen = () => {
             <span className="text-4xl block mb-3">🔧</span>
             <p className="text-sm text-muted-foreground mb-3">Google Maps API is not configured yet. Vet search will be available soon.</p>
             <Button variant="outline" onClick={openGoogleMapsFallback}>
-              <ExternalLink className="w-4 h-4 mr-1" /> Search on Google Maps →
+              <ExternalLink className="w-4 h-4 mr-1" /> SearchIcon on Google Maps →
             </Button>
           </div>
         )}
@@ -126,7 +126,7 @@ const VetNearMeScreen = () => {
             <div className="flex gap-2 justify-center">
               <Button variant="outline" size="sm" onClick={() => { setError(""); setSearched(false); }}>Try Again</Button>
               <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
-                <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+                <ExternalLink className="w-3 h-3 mr-1" /> SearchIcon on Google Maps
               </Button>
             </div>
           </div>
@@ -200,7 +200,7 @@ const VetNearMeScreen = () => {
             <span className="text-4xl block mb-3">🔍</span>
             <p className="text-sm text-muted-foreground mb-3">No veterinary clinics found within 5km. Try searching by city name instead.</p>
             <Button variant="outline" size="sm" onClick={openGoogleMapsFallback}>
-              <ExternalLink className="w-3 h-3 mr-1" /> Search on Google Maps
+              <ExternalLink className="w-3 h-3 mr-1" /> SearchIcon on Google Maps
             </Button>
           </div>
         )}

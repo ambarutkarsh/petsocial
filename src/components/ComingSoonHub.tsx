@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Loader2, useState } from "react";
+import { Loader2, FeedsIcon, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
@@ -48,7 +48,7 @@ const ComingSoonHub = ({ feature, headline, description, emoji, bullets }: Props
         <h2 className="mt-4 font-heading font-bold text-xl">{headline}</h2>
         <p className="mt-2 text-sm text-muted-foreground font-body">{description}</p>
         <span className="inline-flex items-center gap-1 mt-3 px-3 py-1 rounded-full bg-accent/15 text-accent text-[11px] font-bold">
-          <Sparkles className="w-3 h-3" /> Coming soon
+          <FeedsIcon className="w-3 h-3" /> Coming soon
         </span>
       </div>
 

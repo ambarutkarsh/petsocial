@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CommentIcon, HeartIcon, LocationPinIcon, PlusIcon, SaveIcon, SearchIcon, ShareIcon, Trash2, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -11,10 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { MoreVertical, Trash2, useState } from "react";
+import { MoreVertical, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { BellIcon, CommentIcon, HeartIcon, PlusIcon, SaveIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
+import { BellIcon } from "@/components/icons/PetosauraIcons";
 
 const FeedScreen = () => {
   const [showUpload, setShowUpload] = useState(false);
@@ -41,7 +41,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, username, avatar_url")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawPosts.map((p: any) => ({ ...p, profiles: profMap.get(p.user_id) || null }));
     },
   });
@@ -77,7 +77,7 @@ const FeedScreen = () => {
         .from("public_profiles")
         .select("id, full_name, avatar_url")
         .in("id", userIds);
-      const profMap = new Map((profs || []).map((p: any) => [p.id, p]));
+      const profMap = new LocationPinIcon((profs || []).map((p: any) => [p.id, p]));
       return rawStories.map((s: any) => ({ ...s, profiles: profMap.get(s.user_id) || null }));
     },
   });
@@ -204,7 +204,7 @@ const FeedScreen = () => {
           <img src="/petosauras-icon.png" alt="Petosauras" style={{ height: 36, objectFit: "contain" }} />
           <div className="flex gap-2">
             <button className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors">
-              <Search className="w-5 h-5" strokeWidth={1.8} />
+              <SearchIcon className="w-5 h-5" strokeWidth={1.8} />
             </button>
             <button onClick={() => navigate("/notifications")} className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors relative">
               <BellIcon className="w-5 h-5" strokeWidth={1.8} />

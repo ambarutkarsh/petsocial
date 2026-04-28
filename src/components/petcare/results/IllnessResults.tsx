@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { WarningIcon } from "@/components/icons/PetosauraIcons";
 import petCareData from "@/data/petcare-data.json";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ const IllnessResults = ({ petType }: Props) => {
           onClick={() => setShowEmergency((v) => !v)}
         >
           <span className="flex items-center gap-2 text-[13px] font-heading font-bold text-[hsl(0_75%_40%)]">
-            <AlertTriangle className="w-4 h-4" /> 🚨 Emergency symptoms — go to vet NOW
+            <WarningIcon className="w-4 h-4" /> 🚨 Emergency symptoms — go to vet NOW
           </span>
           <span className="text-[hsl(0_75%_40%)] text-[12px]">{showEmergency ? "Hide" : "Show"}</span>
         </button>

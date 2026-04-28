@@ -1,10 +1,10 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { Weather } from "@/lib/petCareHelpers";
 import { useState } from "react";
 import petCareData from "@/data/petcare-data.json";
 import { ArrowLeft } from "lucide-react";
-import { CheckIcon } from "@/components/icons/PetosauraIcons";
+import { CheckIcon, BackIcon, Tabs, TabsContent } from "@/components/ui/tabs";
+import { Accordion, TabsList, TabsTrigger } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   weather: Weather;
@@ -69,7 +69,7 @@ const SafetyResults = ({ weather }: Props) => {
         onClick={() => setTopic(null)}
         className="flex items-center gap-1 text-[12px] font-heading font-bold text-primary"
       >
-        <ArrowLeft className="w-3.5 h-3.5" /> Back to safety topics
+        <BackIcon className="w-3.5 h-3.5" /> Back to safety topics
       </button>
 
       <div className="text-center py-2">

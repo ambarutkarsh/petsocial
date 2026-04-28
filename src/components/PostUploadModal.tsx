@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, CloseIcon, UploadIcon, VerifiedIcon, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { awardCoins } from "@/lib/coins";
 import { Loader2, useState } from "react";
 import { X } from "lucide-react";
-import { CloseIcon, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -139,7 +139,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
         <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-heading font-bold">Share a Moment</h2>
-          <button onClick={onClose} className="text-text-hint hover:text-foreground"><X className="w-5 h-5" strokeWidth={1.8} /></button>
+          <button onClick={onClose} className="text-text-hint hover:text-foreground"><CloseIcon className="w-5 h-5" strokeWidth={1.8} /></button>
         </div>
 
         {!imagePreview ? (

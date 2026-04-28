@@ -1,4 +1,5 @@
 import { ReactNode, useState } from "react";
+import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import MobileLayout from "./MobileLayout";
@@ -26,7 +27,7 @@ const HubSubLayout = ({ title, subtitle, emoji, children }: Props) => {
             aria-label="Back to Hub"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center hover:bg-muted transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" strokeWidth={1.8} />
+            <BackIcon className="w-5 h-5" strokeWidth={1.8} />
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="font-heading font-bold text-[20px] leading-tight flex items-center gap-2">

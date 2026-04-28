@@ -8,21 +8,21 @@ import { BackIcon, FeedsIcon, HeartIcon, ShopIcon } from "@/components/icons/Pet
 const STEPS = [
   {
     emoji: "📸",
-    icon: Sparkles,
+    icon: FeedsIcon,
     title: "Share pet moments",
     desc: "Reels, photos & stories — connect with millions of pet parents across India.",
     color: "from-primary to-[#243660]",
   },
   {
     emoji: "🏥",
-    icon: Heart,
+    icon: HeartIcon,
     title: "Care made simple",
     desc: "Vet near me, SOS, insurance, vaccines, budget tools — everything in one Hub.",
     color: "from-secondary to-[#FFA577]",
   },
   {
     emoji: "🛍️",
-    icon: ShoppingBag,
+    icon: ShopIcon,
     title: "Shop, learn & play",
     desc: "Curated pet products, expert articles, find mates, join pet clubs & competitions.",
     color: "from-accent to-[#7BCFC4]",

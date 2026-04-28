@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { BackIcon, Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
@@ -87,7 +87,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
         {!preview ? (
           <div className="flex-1 flex flex-col items-center justify-center px-6 gap-4">
             <button onClick={handleReset} className="absolute top-4 left-4 w-8 h-8 rounded-full bg-surface-alt flex items-center justify-center">
-              <ArrowLeft className="w-4 h-4" />
+              <BackIcon className="w-4 h-4" />
             </button>
             <h2 className="text-xl font-heading font-bold">Add to Story</h2>
             <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer w-full">
@@ -100,7 +100,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
         ) : (
           <div className="flex-1 relative">
             <button onClick={handleReset} className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full bg-foreground/30 flex items-center justify-center">
-              <ArrowLeft className="w-4 h-4 text-primary-foreground" />
+              <BackIcon className="w-4 h-4 text-primary-foreground" />
             </button>
             <button
               onClick={() => setShowCaptionInput(!showCaptionInput)}

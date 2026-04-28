@@ -1,7 +1,7 @@
-import { toast } from "sonner";
+import { CloseIcon, DocumentIcon, UploadIcon, toast } from "sonner";
 import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
-import { CameraIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
+import { CameraIcon } from "@/components/icons/PetosauraIcons";
 
 const ACCEPTED = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -50,7 +50,7 @@ const ChipDocUploadZone = ({ value, onChange }: Props) => {
             <img src={value.previewUrl} alt="preview" className="w-[72px] h-[72px] object-cover rounded-[12px] border border-border" />
           ) : (
             <div className="w-[72px] h-[72px] rounded-[12px] bg-primary-light flex items-center justify-center">
-              <FileText className="w-7 h-7 text-primary" strokeWidth={1.6} />
+              <DocumentIcon className="w-7 h-7 text-primary" strokeWidth={1.6} />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -90,9 +90,9 @@ const ChipDocUploadZone = ({ value, onChange }: Props) => {
       }`}
     >
       <div className="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center">
-        <FileText className="w-6 h-6 text-primary" strokeWidth={1.8} />
+        <DocumentIcon className="w-6 h-6 text-primary" strokeWidth={1.8} />
       </div>
-      <p className="font-body text-sm font-semibold">Upload your proof document</p>
+      <p className="font-body text-sm font-semibold">UploadIcon your proof document</p>
       <p className="text-xs text-muted-foreground font-body">PDF, JPG or PNG · Max 2MB</p>
       <input
         ref={inputRef}

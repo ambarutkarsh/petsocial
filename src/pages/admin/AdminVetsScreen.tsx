@@ -1,6 +1,6 @@
 import { DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { Plus, DialogHeader, DialogTitle, Loader2, Power, useQueryClient } from "@tanstack/react-query";
+import { PlusIcon, DialogHeader, DialogTitle, EditIcon, Loader2, PlusIcon, Power, VerifiedIcon, useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, useState } from "react";
 import { useQuery } from "lucide-react";
-import { CloseIcon, EditIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
 const SPEC_OPTIONS = [
   "General Practice", "Surgery", "Dermatology", "Cardiology", "Ophthalmology",
   "Dentistry", "Orthopaedics", "Oncology", "Exotics",
@@ -185,7 +185,7 @@ const AdminVetsScreen = () => {
       subtitle="Manage verified vets on Petosauras"
       headerRight={
         <Button onClick={openInvite} style={{ background: "#1B2A4A" }} className="text-white hover:opacity-90">
-          <Plus className="w-4 h-4 mr-1" /> Invite New Vet
+          <PlusIcon className="w-4 h-4 mr-1" /> Invite New Vet
         </Button>
       }
     >

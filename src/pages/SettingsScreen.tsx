@@ -1,27 +1,27 @@
 import MobileLayout from "@/components/MobileLayout";
-import { useAuth } from "@/contexts/AuthContext";
+import { BackIcon, BellIcon, LocationPinIcon, LogOut, ProfileIcon, SettingsIcon, VerifiedIcon, useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, LogOut, useNavigate } from "react-router-dom";
+import { ChevronRight, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { BellIcon, LocationPinIcon, ProfileIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { BellIcon } from "@/components/icons/PetosauraIcons";
 
 const SettingsScreen = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
 
   const items = [
-    { icon: User, title: "Edit Profile", action: () => navigate("/profile") },
-    { icon: MapPin, title: "Change Address", action: () => navigate("/profile") },
-    { icon: Bell, title: "Notification Settings", action: () => {} },
-    { icon: Shield, title: "Privacy Settings", action: () => {} },
+    { icon: ProfileIcon, title: "Edit Profile", action: () => navigate("/profile") },
+    { icon: LocationPinIcon, title: "Change Address", action: () => navigate("/profile") },
+    { icon: BellIcon, title: "Notification Settings", action: () => {} },
+    { icon: VerifiedIcon, title: "Privacy Settings", action: () => {} },
   ];
 
   return (
     <MobileLayout>
       <div className="pb-10 px-4">
         <header className="pt-4 flex items-center gap-2">
-          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"><ArrowLeft className="w-5 h-5" /></button>
-          <h1 className="font-heading text-xl font-bold">⚙️ Settings</h1>
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"><BackIcon className="w-5 h-5" /></button>
+          <h1 className="font-heading text-xl font-bold">⚙️ SettingsIcon</h1>
         </header>
 
         <div className="mt-4 paw-card divide-y divide-border">

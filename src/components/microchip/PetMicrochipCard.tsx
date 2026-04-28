@@ -1,11 +1,11 @@
-import { supabase } from "@/integrations/supabase/client";
+import { ChipFormat } from "@/lib/microchipValidator";
+import { Eye, UploadIcon, VaccineIcon, supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import ChipStatusBadge, { ChipVerificationStatus } from "./ChipStatusBadge";
-import { formatChipNumber, ChipFormat } from "@/lib/microchipValidator";
-import { Eye, useQuery } from "@tanstack/react-query";
+import ChipStatusBadge, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Syringe } from "lucide-react";
-import { UploadIcon } from "@/components/icons/PetosauraIcons";
+import { UploadIcon, { ChipVerificationStatus } from "./ChipStatusBadge";
+import { formatChipNumber } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   petId: string;
@@ -35,7 +35,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
     return (
       <div className="rounded-[18px] border-2 border-dashed border-border bg-surface-alt p-4">
         <div className="flex items-center gap-2 mb-2">
-          <Syringe className="w-4 h-4 text-muted-foreground" strokeWidth={2} />
+          <VaccineIcon className="w-4 h-4 text-muted-foreground" strokeWidth={2} />
           <p className="font-body text-sm font-semibold">No Microchip Registered</p>
         </div>
         <p className="text-xs text-muted-foreground font-body mb-3">
@@ -56,7 +56,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
     <div className={`rounded-[18px] border-2 ${borderColor} bg-card p-4`}>
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-2 min-w-0">
-          <Syringe className="w-4 h-4 text-primary flex-shrink-0" strokeWidth={2} />
+          <VaccineIcon className="w-4 h-4 text-primary flex-shrink-0" strokeWidth={2} />
           <p className="font-body text-sm font-semibold">Microchip</p>
         </div>
         <ChipStatusBadge status={status} />
@@ -66,7 +66,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
       <div className="flex gap-2 mt-3">
         {status === "self_declared" && (
           <Button size="sm" className="rounded-full flex-1" onClick={() => navigate("/hub/microchip")}>
-            <UploadIcon className="w-3.5 h-3.5 mr-1" /> Upload Doc
+            <UploadIcon className="w-3.5 h-3.5 mr-1" /> UploadIcon Doc
           </Button>
         )}
         <Button

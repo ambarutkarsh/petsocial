@@ -1,4 +1,4 @@
-import { Loader2, Trash2, useEffect } from "react";
+import { Loader2, PetCareIcon, ProfileIcon, Trash2, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { toast } from "sonner";
 import { Sprout, useState } from "lucide-react";
-import { DocumentIcon, ProfileIcon } from "@/components/icons/PetosauraIcons";
+import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 const ADMIN_EMAIL = "petosauras@gmail.com";
 
 const FALLBACK_IMAGES = [
@@ -258,7 +258,7 @@ const AdminSeedScreen = () => {
             <div className="text-2xl font-bold text-foreground">
               {statusLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : seedUsers}
             </div>
-            <div className="text-xs text-muted-foreground">Seed Users</div>
+            <div className="text-xs text-muted-foreground">Seed ProfileIcon</div>
           </Card>
           <Card className="p-4 text-center rounded-2xl">
             <DocumentIcon className="w-6 h-6 mx-auto mb-1 text-accent" />
@@ -277,7 +277,7 @@ const AdminSeedScreen = () => {
           {running ? (
             <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Seeding...</>
           ) : (
-            <><Sprout className="w-5 h-5 mr-2" /> 🌱 Run Seed Data</>
+            <><PetCareIcon className="w-5 h-5 mr-2" /> 🌱 Run Seed Data</>
           )}
         </Button>
 

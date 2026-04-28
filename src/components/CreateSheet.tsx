@@ -1,9 +1,9 @@
 import PostUploadModal from "./PostUploadModal";
 import AlertForm from "./AlertForm";
-import { trackEvent } from "@/lib/analytics";
+import { CameraIcon, PlayIcon, SOSIcon, trackEvent } from "@/lib/analytics";
 import { Radio, useState } from "react";
 import { Camera } from "lucide-react";
-import { CloseIcon, PlayIcon, SOSIcon } from "@/components/icons/PetosauraIcons";
+import { CloseIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -18,7 +18,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
 
   const options = [
     {
-      icon: Camera,
+      icon: CameraIcon,
       title: "Upload Photo",
       desc: "Share a pet moment",
       color: "from-primary to-[#243660]",
@@ -29,7 +29,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
       },
     },
     {
-      icon: Video,
+      icon: PlayIcon,
       title: "Post Reel",
       desc: "Share a short video",
       color: "from-secondary to-[#FFA577]",
@@ -50,7 +50,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
       },
     },
     {
-      icon: Siren,
+      icon: SOSIcon,
       title: "Alert",
       desc: "Lost or found pet",
       color: "from-[#FF6B6B] to-[#FF9999]",

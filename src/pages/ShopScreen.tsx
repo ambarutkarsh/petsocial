@@ -1,4 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { CameraIcon, CloseIcon, EditIcon, PlusIcon, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { differenceInYears, breedsByType } from "@/lib/registrationData";
+import PetDigiLockerScreen from "./PetDigiLockerScreen";
+import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
+import { useMemo, differenceInMonths, format } from "date-fns";
+import { petTypes, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import MobileLayout from "@/components/MobileLayout";
@@ -7,16 +13,10 @@ import CreateSheet from "@/components/CreateSheet";
 import AddPetSheet from "@/components/AddPetSheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { differenceInYears, differenceInMonths, format } from "date-fns";
-import { petTypes, breedsByType } from "@/lib/registrationData";
-import PetDigiLockerScreen from "./PetDigiLockerScreen";
-import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
-import { useMemo, useRef } from "react";
+import { Tabs, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera, useState } from "lucide-react";
-import { CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
+import { CheckIcon } from "@/components/icons/PetosauraIcons";
 
 const MyPetScreen = () => {
   const { user } = useAuth();
@@ -139,7 +139,7 @@ const MyPetScreen = () => {
                       </div>
                     )}
                     <button onClick={() => fileRef.current?.click()} className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-petosauras">
-                      <Camera className="w-4 h-4 text-primary-foreground" />
+                      <CameraIcon className="w-4 h-4 text-primary-foreground" />
                     </button>
                     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
                   </div>

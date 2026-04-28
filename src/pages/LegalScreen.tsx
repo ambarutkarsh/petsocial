@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
@@ -43,7 +44,7 @@ const LegalScreen = () => {
             aria-label="Back to Hub"
             className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <BackIcon className="w-5 h-5" />
           </button>
           <h1 className="font-heading text-xl font-bold">⚖️ Legal & Rights</h1>
         </header>

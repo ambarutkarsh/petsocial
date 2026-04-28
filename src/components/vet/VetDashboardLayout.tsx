@@ -2,15 +2,15 @@ import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
 import CreateSheet from "@/components/CreateSheet";
 import { ReactNode, useLocation } from "react-router-dom";
-import { Calendar, useState } from "react";
+import { BookVetIcon, useState } from "react";
 import { useNavigate } from "lucide-react";
 import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 const tabs = [
-  { path: "/vet-dashboard", label: "Today", Icon: Calendar },
-  { path: "/vet-dashboard/calendar", label: "Calendar", Icon: CalendarDays },
-  { path: "/vet-dashboard/requests", label: "Requests", Icon: Bell },
-  { path: "/vet-dashboard/availability", label: "Availability", Icon: Settings },
+  { path: "/vet-dashboard", label: "Today", Icon: BookVetIcon },
+  { path: "/vet-dashboard/calendar", label: "Calendar", Icon: BookVetIcon },
+  { path: "/vet-dashboard/requests", label: "Requests", Icon: BellIcon },
+  { path: "/vet-dashboard/availability", label: "Availability", Icon: SettingsIcon },
   { path: "/vet-dashboard/profile", label: "Profile", Icon: UserIcon },
 ];
 

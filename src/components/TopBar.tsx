@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { CloseIcon, ProfileIcon, SearchIcon, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { BellIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
+import { BellIcon } from "@/components/icons/PetosauraIcons";
 // LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-icon.png";
 
@@ -109,7 +109,7 @@ const TopBar = () => {
               aria-label="Search"
               className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
             >
-              <Search className="w-5 h-5" strokeWidth={1.8} />
+              <SearchIcon className="w-5 h-5" strokeWidth={1.8} />
             </button>
             {user && (
               <button
@@ -165,7 +165,7 @@ const TopBar = () => {
         <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm animate-in fade-in duration-150">
           <div className="max-w-[430px] mx-auto h-full flex flex-col">
             <div className="h-14 px-4 flex items-center gap-2 border-b border-border bg-card">
-              <Search className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
+              <SearchIcon className="w-4 h-4 text-muted-foreground" strokeWidth={1.8} />
               <input
                 autoFocus
                 value={query}
@@ -192,7 +192,7 @@ const TopBar = () => {
                   {/* Users */}
                   <section>
                     <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wide mb-2">
-                      👤 Users
+                      👤 ProfileIcon
                     </h3>
                     {results?.users.length ? (
                       <div className="space-y-1.5">
