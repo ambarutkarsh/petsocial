@@ -1427,6 +1427,7 @@ export type Database = {
           media_url: string
           pet_id: string | null
           post_category: string | null
+          post_type: string | null
           save_count: number | null
           thumbnail_url: string | null
           updated_at: string | null
@@ -1446,6 +1447,7 @@ export type Database = {
           media_url: string
           pet_id?: string | null
           post_category?: string | null
+          post_type?: string | null
           save_count?: number | null
           thumbnail_url?: string | null
           updated_at?: string | null
@@ -1465,6 +1467,7 @@ export type Database = {
           media_url?: string
           pet_id?: string | null
           post_category?: string | null
+          post_type?: string | null
           save_count?: number | null
           thumbnail_url?: string | null
           updated_at?: string | null
