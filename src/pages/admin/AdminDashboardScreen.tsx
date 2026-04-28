@@ -57,15 +57,17 @@ const AdminDashboardScreen = () => {
     retry: 1,
   });
 
-  const { data: recent = [] } = useQuery({
-    queryKey: ["admin-recent-registrations"],
+  const { data: recent = [], error: recentError } = useQuery({
+    queryKey: ["admin-recent-registrations", user?.id],
+    enabled: !authLoading && !!user,
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("id, full_name, city, created_at")
         .or("is_seed_user.eq.false,is_seed_user.is.null")
         .order("created_at", { ascending: false })
         .limit(10);
+      if (error) throw new Error(error.message);
       const ids = (data ?? []).map((p) => p.id);
       const { data: pets } = ids.length
         ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
@@ -78,6 +80,16 @@ const AdminDashboardScreen = () => {
 
   return (
     <AdminLayout title="Dashboard" subtitle="Petosauras admin overview">
+      {/* Always-on diagnostics so 0 vs blocked is distinguishable */}
+      <div className="mb-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-body text-slate-700 space-y-0.5">
+        <div><b>Auth:</b> {authLoading ? "loading…" : user ? `signed in as ${user.email} (${user.id.slice(0,8)}…)` : "NOT signed in"}</div>
+        <div><b>Stats query:</b> {statsLoading ? "loading…" : statsError ? `ERROR: ${(statsError as Error).message}` : `OK — updated ${dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : "—"}`}</div>
+        {stats && (
+          <div><b>Counts:</b> non-seed users={stats.users}, non-seed posts={stats.posts}, seed users={stats.seedUsers}, seed posts={stats.seedPosts}, active vets={stats.vets}, bookings(7d)={stats.bookings}</div>
+        )}
+        {recentError && <div className="text-red-700"><b>Recent error:</b> {(recentError as Error).message}</div>}
+      </div>
+
       {statsError && (
         <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-body">
           Failed to load stats: {(statsError as Error).message}
