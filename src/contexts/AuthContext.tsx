@@ -83,8 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     supabase.auth
       .getSession()
       .then(({ data: { session: initialSession } }) => {
-        setSession(initialSession);
-        setLoading(false);
+        setSession((prev) => prev ?? initialSession);
+        markReady();
       })
       .catch(async (err) => {
         console.warn("[Auth] getSession failed, clearing stale session:", err);
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           await supabase.auth.signOut();
         } catch {}
         setSession(null);
-        setLoading(false);
+        markReady();
       });
 
     // Safety net: if neither path resolves within 5s, unblock the UI so the
