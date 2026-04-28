@@ -24,43 +24,10 @@ const AdminDashboardScreen = () => {
     queryKey: ["admin-dashboard-stats", user?.id],
     enabled: !authLoading && !!user,
     queryFn: async () => {
-      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      // Use total counts (RLS-safe, no fragile .or()) and subtract seed counts
-      // to derive non-seed numbers. This avoids PostgREST quirks with head:true + .or().
-      const [u, p, v, b, su, sp] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }),
-        supabase.from("posts").select("id", { count: "exact", head: true }),
-        supabase.from("vets").select("id", { count: "exact", head: true }).eq("is_active", true),
-        supabase.from("vet_bookings").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
-        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
-        supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
-      ]);
-      const errors = [
-        u.error && `profiles(non-seed): ${u.error.message}`,
-        p.error && `posts(non-seed): ${p.error.message}`,
-        v.error && `vets: ${v.error.message}`,
-        b.error && `bookings: ${b.error.message}`,
-        su.error && `profiles(seed): ${su.error.message}`,
-        sp.error && `posts(seed): ${sp.error.message}`,
-      ].filter(Boolean) as string[];
-      if (errors.length) {
-        console.error("[AdminDashboard] errors:", errors);
-        throw new Error(errors.join(" | "));
-      }
-      const totalUsers = u.count ?? 0;
-      const totalPosts = p.count ?? 0;
-      const seedUsers = su.count ?? 0;
-      const seedPosts = sp.count ?? 0;
-      return {
-        users: totalUsers,                          // ALL users (real signal)
-        posts: totalPosts,                          // ALL posts
-        realUsers: Math.max(0, totalUsers - seedUsers),
-        realPosts: Math.max(0, totalPosts - seedPosts),
-        vets: v.count ?? 0,                         // active (verification not required)
-        bookings: b.count ?? 0,
-        seedUsers,
-        seedPosts,
-      };
+      const { data, error } = await supabase.functions.invoke("admin-dashboard-stats");
+      if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
+      return data;
     },
     retry: 1,
   });
@@ -69,21 +36,12 @@ const AdminDashboardScreen = () => {
     queryKey: ["admin-recent-registrations", user?.id],
     enabled: !authLoading && !!user,
     queryFn: async () => {
-      // Fetch last 20 then filter out seed users client-side (avoids .or() quirks).
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, full_name, city, created_at, is_seed_user")
-        .order("created_at", { ascending: false })
-        .limit(20);
+      const { data, error } = await supabase.functions.invoke("admin-dashboard-stats", {
+        body: { action: "recent" },
+      });
       if (error) throw new Error(error.message);
-      const filtered = (data ?? []).filter((p: any) => p.is_seed_user !== true).slice(0, 10);
-      const ids = filtered.map((p) => p.id);
-      const { data: pets } = ids.length
-        ? await supabase.from("pets").select("owner_id, name").in("owner_id", ids)
-        : { data: [] as any[] };
-      const petByOwner = new Map<string, string>();
-      (pets ?? []).forEach((p: any) => { if (!petByOwner.has(p.owner_id)) petByOwner.set(p.owner_id, p.name); });
-      return filtered.map((p) => ({ ...p, pet: petByOwner.get(p.id) ?? "—" }));
+      if (data?.error) throw new Error(data.error);
+      return data?.recent ?? [];
     },
   });
 

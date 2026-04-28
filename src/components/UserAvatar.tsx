@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, Ref, forwardRef } from "react";
 
 interface UserAvatarProps {
   name?: string | null;
@@ -26,7 +26,7 @@ const getInitials = (name?: string | null): string => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-const UserAvatar = ({
+const UserAvatar = forwardRef<HTMLImageElement | HTMLDivElement, UserAvatarProps>(({
   name,
   avatarUrl,
   size = 40,
@@ -34,13 +34,14 @@ const UserAvatar = ({
   className,
   style,
   onClick,
-}: UserAvatarProps) => {
+}, ref) => {
   const idx = name ? name.charCodeAt(0) % COLOURS.length : 0;
   const [bg, text] = COLOURS[idx];
 
   if (avatarUrl) {
     return (
       <img
+        ref={ref as Ref<HTMLImageElement>}
         src={avatarUrl}
         alt={name || "User"}
         onClick={onClick}
@@ -60,6 +61,7 @@ const UserAvatar = ({
 
   return (
     <div
+      ref={ref as Ref<HTMLDivElement>}
       onClick={onClick}
       className={className}
       style={{
@@ -85,6 +87,7 @@ const UserAvatar = ({
       {getInitials(name)}
     </div>
   );
-};
+});
+UserAvatar.displayName = "UserAvatar";
 
 export default UserAvatar;

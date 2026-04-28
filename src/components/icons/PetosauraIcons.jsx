@@ -65,11 +65,12 @@ export const ShopIcon = ({ size = 24, color = defaultNavy, ...p }) => (
   </Svg>
 );
 
-export const PlusIcon = ({ size = 24, color = "#FFFFFF", ...p }) => (
-  <Svg size={size} {...p}>
+export const PlusIcon = forwardRef(({ size = 24, color = "#FFFFFF", ...p }, ref) => (
+  <Svg ref={ref} size={size} {...p}>
     <path d="M12 5v14M5 12h14" stroke={color} strokeWidth="2" strokeLinecap="round" />
   </Svg>
-);
+));
+PlusIcon.displayName = "PlusIcon";
 
 // ─── HUB SERVICE ICONS ──────────────────────────────────────────
 export const SOSIcon = ({ size = 24, color = defaultNavy, ...p }) => (
