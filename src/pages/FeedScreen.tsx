@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search, Bell, Heart, MessageCircle, Send, Bookmark, Plus, MoreVertical, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import MobileLayout from "@/components/MobileLayout";
@@ -14,6 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
+import { MoreVertical, Trash2, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
+import { BellIcon, CommentIcon, HeartIcon, PlusIcon, SaveIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 const FeedScreen = () => {
   const [showUpload, setShowUpload] = useState(false);
@@ -206,7 +207,7 @@ const FeedScreen = () => {
               <Search className="w-5 h-5" strokeWidth={1.8} />
             </button>
             <button onClick={() => navigate("/notifications")} className="w-10 h-10 rounded-[10px] bg-surface-alt flex items-center justify-center text-muted-foreground hover:bg-primary-light transition-colors relative">
-              <Bell className="w-5 h-5" strokeWidth={1.8} />
+              <BellIcon className="w-5 h-5" strokeWidth={1.8} />
               <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
             </button>
           </div>
@@ -216,7 +217,7 @@ const FeedScreen = () => {
         <div className="px-5 py-3.5 flex gap-3 overflow-x-auto no-scrollbar bg-card border-b border-border">
           <div className="flex flex-col items-center gap-1 shrink-0 cursor-pointer" onClick={() => setShowStoryCreator(true)}>
             <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-dashed border-primary bg-primary-light">
-              <Plus className="w-6 h-6 text-primary" strokeWidth={1.8} />
+              <PlusIcon className="w-6 h-6 text-primary" strokeWidth={1.8} />
             </div>
             <span className="text-[10px] font-body font-semibold text-muted-foreground">Your Story</span>
           </div>
@@ -322,17 +323,17 @@ const FeedScreen = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
-                          <Heart className="w-5 h-5" strokeWidth={1.8} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
+                          <HeartIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isLiked ? "#FF6B6B" : "none") && isLiked ? "#FF6B6B" : "none" !== 'none'} color={isLiked ? "#FF6B6B" : "hsl(var(--text-hint))"} />
                           <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>{post.like_count || 0}</span>
                         </button>
                         <button onClick={() => { setCommentPostId(post.id); trackEvent("comment_submitted", { post_id: post.id }); }} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
-                          <MessageCircle className="w-5 h-5" strokeWidth={1.8} />
+                          <CommentIcon className="w-5 h-5" strokeWidth={1.8} />
                           <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
                         </button>
-                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Send className="w-5 h-5" strokeWidth={1.8} /></button>
+                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><ShareIcon className="w-5 h-5" strokeWidth={1.8} /></button>
                       </div>
                       <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
-                        <Bookmark className="w-5 h-5" strokeWidth={1.8} fill={isSaved ? "hsl(var(--primary))" : "none"} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
+                        <SaveIcon className="w-5 h-5" strokeWidth={1.8} filled={Boolean(isSaved ? "hsl(var(--primary))" : "none") && isSaved ? "hsl(var(--primary))" : "none" !== 'none'} color={isSaved ? "hsl(var(--primary))" : "hsl(var(--text-hint))"} />
                       </button>
                     </div>
                     <p className="text-sm font-body">

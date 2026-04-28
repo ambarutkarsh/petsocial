@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Users, FileImage, Stethoscope, CalendarCheck } from "lucide-react";
-
+import { Users } from "lucide-react";
+import { BookVetIcon, DocumentIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 const StatCard = ({ icon: Icon, label, value, hint }: { icon: any; label: string; value: number | string; hint: string }) => (
   <Card className="p-5 rounded-2xl bg-white">
     <div className="flex items-center justify-between mb-3">

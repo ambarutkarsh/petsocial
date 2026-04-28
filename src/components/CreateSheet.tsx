@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Camera, Video, Radio, Siren, X } from "lucide-react";
 import PostUploadModal from "./PostUploadModal";
 import AlertForm from "./AlertForm";
 import { trackEvent } from "@/lib/analytics";
+import { Radio, useState } from "react";
+import { Camera } from "lucide-react";
+import { CloseIcon, PlayIcon, SOSIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -71,7 +72,7 @@ const CreateSheet = ({ open, onClose }: Props) => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-heading font-bold">Create</h2>
               <button onClick={onClose} className="text-text-hint hover:text-foreground">
-                <X className="w-5 h-5" strokeWidth={1.8} />
+                <CloseIcon className="w-5 h-5" strokeWidth={1.8} />
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3">

@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronRight, Coins, Folder, Heart, Calculator, Scale, MapPin, Settings } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";
@@ -9,6 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { getCoinBalance } from "@/lib/coins";
+import { Folder, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { BudgetIcon, HeartIcon, LocationPinIcon, SettingsIcon, WeightIcon } from "@/components/icons/PetosauraIcons";
 
 const utilityCards = [
   { icon: Folder, title: "Digital Locker", desc: "Documents & records", path: "/care/locker", color: "primary" },

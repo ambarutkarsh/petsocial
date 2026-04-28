@@ -1,6 +1,3 @@
-import { useState, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Camera, Pencil, Check, X, Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +13,10 @@ import { differenceInYears, differenceInMonths, format } from "date-fns";
 import { petTypes, breedsByType } from "@/lib/registrationData";
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
 import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
+import { useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Camera, useState } from "lucide-react";
+import { CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
 
 const MyPetScreen = () => {
   const { user } = useAuth();
@@ -84,7 +85,7 @@ const MyPetScreen = () => {
           <div className="text-center py-16">
             <span className="text-6xl block mb-3">🐾</span>
             <Button onClick={() => setShowAddPet(true)}>
-              <Plus className="w-4 h-4" /> Add Pet
+              <PlusIcon className="w-4 h-4" /> Add Pet
             </Button>
           </div>
         </div>
@@ -108,7 +109,7 @@ const MyPetScreen = () => {
               </button>
             ))}
             <button onClick={() => setShowAddPet(true)} className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary">
-              <Plus className="w-3 h-3 inline" /> Add
+              <PlusIcon className="w-3 h-3 inline" /> Add
             </button>
           </div>
         )}
@@ -151,13 +152,13 @@ const MyPetScreen = () => {
                     {editing === "name" ? (
                       <div className="flex gap-1">
                         <Input value={draft.name || ""} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="h-9" />
-                        <Button size="sm" onClick={() => saveField("name", draft.name)}><Check className="w-4 h-4" /></Button>
-                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                        <Button size="sm" onClick={() => saveField("name", draft.name)}><CheckIcon className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><CloseIcon className="w-4 h-4" /></Button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="font-body font-semibold">{activePet.name}</span>
-                        <button onClick={() => startEdit("name", activePet.name)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => startEdit("name", activePet.name)}><EditIcon className="w-3.5 h-3.5 text-muted-foreground" /></button>
                       </div>
                     )}
                   </Field>
@@ -169,13 +170,13 @@ const MyPetScreen = () => {
                         <select value={draft.pet_type} onChange={(e) => setDraft({ ...draft, pet_type: e.target.value })} className="flex-1 h-9 rounded-md border border-input bg-background px-2 text-sm">
                           {petTypes.map(p => <option key={p.label} value={p.label}>{p.emoji} {p.label}</option>)}
                         </select>
-                        <Button size="sm" onClick={() => saveField("pet_type", draft.pet_type)}><Check className="w-4 h-4" /></Button>
-                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                        <Button size="sm" onClick={() => saveField("pet_type", draft.pet_type)}><CheckIcon className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><CloseIcon className="w-4 h-4" /></Button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="font-body">{activePet.avatar_emoji || "🐾"} {activePet.pet_type}</span>
-                        <button onClick={() => startEdit("pet_type", activePet.pet_type)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => startEdit("pet_type", activePet.pet_type)}><EditIcon className="w-3.5 h-3.5 text-muted-foreground" /></button>
                       </div>
                     )}
                   </Field>
@@ -188,13 +189,13 @@ const MyPetScreen = () => {
                           <option value="">Select</option>
                           {(breedsByType[activePet.pet_type] || []).map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
-                        <Button size="sm" onClick={() => saveField("species", draft.species)}><Check className="w-4 h-4" /></Button>
-                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                        <Button size="sm" onClick={() => saveField("species", draft.species)}><CheckIcon className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><CloseIcon className="w-4 h-4" /></Button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="font-body">{activePet.species || "Not set"}</span>
-                        <button onClick={() => startEdit("species", activePet.species)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => startEdit("species", activePet.species)}><EditIcon className="w-3.5 h-3.5 text-muted-foreground" /></button>
                       </div>
                     )}
                   </Field>
@@ -204,8 +205,8 @@ const MyPetScreen = () => {
                     {editing === "date_of_birth" ? (
                       <div className="flex gap-1">
                         <Input type="date" value={draft.date_of_birth || ""} onChange={(e) => setDraft({ ...draft, date_of_birth: e.target.value })} className="h-9" />
-                        <Button size="sm" onClick={() => saveField("date_of_birth", draft.date_of_birth)}><Check className="w-4 h-4" /></Button>
-                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                        <Button size="sm" onClick={() => saveField("date_of_birth", draft.date_of_birth)}><CheckIcon className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><CloseIcon className="w-4 h-4" /></Button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
@@ -213,7 +214,7 @@ const MyPetScreen = () => {
                           <p className="font-body">{activePet.date_of_birth ? format(new Date(activePet.date_of_birth), "dd MMM yyyy") : "Not set"}</p>
                           <p className="text-[11px] text-muted-foreground">{petAge}</p>
                         </div>
-                        <button onClick={() => startEdit("date_of_birth", activePet.date_of_birth || "")}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => startEdit("date_of_birth", activePet.date_of_birth || "")}><EditIcon className="w-3.5 h-3.5 text-muted-foreground" /></button>
                       </div>
                     )}
                   </Field>
@@ -224,13 +225,13 @@ const MyPetScreen = () => {
                       <div className="flex gap-1">
                         <button onClick={() => setDraft({ ...draft, gender: "Male" })} className={`flex-1 h-9 rounded-md text-sm ${draft.gender === "Male" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>Male</button>
                         <button onClick={() => setDraft({ ...draft, gender: "Female" })} className={`flex-1 h-9 rounded-md text-sm ${draft.gender === "Female" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>Female</button>
-                        <Button size="sm" onClick={() => saveField("gender", draft.gender)}><Check className="w-4 h-4" /></Button>
-                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><X className="w-4 h-4" /></Button>
+                        <Button size="sm" onClick={() => saveField("gender", draft.gender)}><CheckIcon className="w-4 h-4" /></Button>
+                        <Button size="sm" variant="outline" onClick={() => setEditing(null)}><CloseIcon className="w-4 h-4" /></Button>
                       </div>
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="font-body">{activePet.gender || "Not set"}</span>
-                        <button onClick={() => startEdit("gender", activePet.gender)}><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => startEdit("gender", activePet.gender)}><EditIcon className="w-3.5 h-3.5 text-muted-foreground" /></button>
                       </div>
                     )}
                   </Field>

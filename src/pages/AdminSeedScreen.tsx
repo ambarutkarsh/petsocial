@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Loader2, Trash2, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { toast } from "sonner";
-import { Sprout, Trash2, Users, FileImage, Loader2 } from "lucide-react";
-
+import { Sprout, useState } from "lucide-react";
+import { DocumentIcon, ProfileIcon } from "@/components/icons/PetosauraIcons";
 const ADMIN_EMAIL = "petosauras@gmail.com";
 
 const FALLBACK_IMAGES = [
@@ -254,14 +254,14 @@ const AdminSeedScreen = () => {
       <div className="max-w-3xl">
         <div className="grid grid-cols-2 gap-3 mb-6">
           <Card className="p-4 text-center rounded-2xl">
-            <Users className="w-6 h-6 mx-auto mb-1 text-primary" />
+            <ProfileIcon className="w-6 h-6 mx-auto mb-1 text-primary" />
             <div className="text-2xl font-bold text-foreground">
               {statusLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : seedUsers}
             </div>
             <div className="text-xs text-muted-foreground">Seed Users</div>
           </Card>
           <Card className="p-4 text-center rounded-2xl">
-            <FileImage className="w-6 h-6 mx-auto mb-1 text-accent" />
+            <DocumentIcon className="w-6 h-6 mx-auto mb-1 text-accent" />
             <div className="text-2xl font-bold text-foreground">
               {statusLoading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : seedPosts}
             </div>

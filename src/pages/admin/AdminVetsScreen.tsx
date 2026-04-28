@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Plus, DialogHeader, DialogTitle, Loader2, Power, useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,10 +9,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
-import { Plus, CheckCircle2, Pencil, Ban, Power, Loader2 } from "lucide-react";
-
+import { Dialog, useState } from "react";
+import { useQuery } from "lucide-react";
+import { CloseIcon, EditIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 const SPEC_OPTIONS = [
   "General Practice", "Surgery", "Dermatology", "Cardiology", "Ophthalmology",
   "Dentistry", "Orthopaedics", "Oncology", "Exotics",
@@ -229,15 +229,15 @@ const AdminVetsScreen = () => {
                     <div className="flex justify-end gap-2 flex-wrap">
                       {!v.is_verified && (
                         <button onClick={() => verify(v)} className="text-[11px] px-2.5 py-1 rounded-full bg-green-600 text-white font-bold inline-flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Verify
+                          <VerifiedIcon className="w-3 h-3" /> Verify
                         </button>
                       )}
                       <button onClick={() => openEdit(v)} className="text-[11px] px-2.5 py-1 rounded-full border bg-white inline-flex items-center gap-1" style={{ borderColor: "#E8D5B8" }}>
-                        <Pencil className="w-3 h-3" /> Edit
+                        <EditIcon className="w-3 h-3" /> Edit
                       </button>
                       {v.is_active ? (
                         <button onClick={() => setActive(v, false)} className="text-[11px] px-2.5 py-1 rounded-full border border-red-300 text-red-700 font-bold inline-flex items-center gap-1">
-                          <Ban className="w-3 h-3" /> Deactivate
+                          <CloseIcon className="w-3 h-3" /> Deactivate
                         </button>
                       ) : (
                         <button onClick={() => setActive(v, true)} className="text-[11px] px-2.5 py-1 rounded-full border border-green-300 text-green-700 font-bold inline-flex items-center gap-1">

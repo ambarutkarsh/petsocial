@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { X, Send, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { maskName } from "@/lib/maskName";
+import { Loader2, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
+import { ShareIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   postId: string;
@@ -132,7 +133,7 @@ const CommentSheet = ({ postId, open, onClose }: Props) => {
                       disabled={sending}
                       className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-primary flex items-center justify-center"
                     >
-                      <Send className="w-3.5 h-3.5 text-primary-foreground" />
+                      <ShareIcon className="w-3.5 h-3.5 text-primary-foreground" />
                     </button>
                   )}
                 </div>

@@ -1,10 +1,10 @@
-import { ReactNode, useEffect } from "react";
+import { LogOut, ReactNode, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Sprout, Trophy, Stethoscope, Bell, LogOut } from "lucide-react";
-
+import { LayoutDashboard } from "lucide-react";
+import { BellIcon, PetCareIcon, StarIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/seed", label: "Seed Data", icon: Sprout },

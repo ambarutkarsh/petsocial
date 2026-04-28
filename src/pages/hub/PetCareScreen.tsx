@@ -1,6 +1,3 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, RotateCcw, Share2 } from "lucide-react";
 import MainLayout from "@/components/MainLayout";
 import PageWrapper from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
@@ -14,6 +11,10 @@ import TrainingResults from "@/components/petcare/results/TrainingResults";
 import PoisonResults from "@/components/petcare/results/PoisonResults";
 import SafetyResults from "@/components/petcare/results/SafetyResults";
 import { toast } from "@/hooks/use-toast";
+import { RotateCcw, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { ShareIcon } from "@/components/icons/PetosauraIcons";
 
 const initialPetDetails: PetDetails = {
   petType: "",
@@ -90,7 +91,7 @@ const PetCareScreen = () => {
               aria-label="Share"
               className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center hover:bg-muted transition-colors"
             >
-              <Share2 className="w-4 h-4" strokeWidth={1.8} />
+              <ShareIcon className="w-4 h-4" strokeWidth={1.8} />
             </button>
           )}
         </header>

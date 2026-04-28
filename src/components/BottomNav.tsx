@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Sparkles, HeartHandshake, Plus, PawPrint, ShoppingBag } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import CreateSheet from "./CreateSheet";
+import { useState } from "react";
+import { Sparkles } from "lucide-react";
+import { HubIcon, MyPetIcon, PlusIcon, ShopIcon } from "@/components/icons/PetosauraIcons";
 
 const navItems = [
   { icon: Sparkles, label: "Feeds", path: "/feeds", event: "bottom_nav_feeds_tap", match: ["/feeds", "/play", "/feed"] },

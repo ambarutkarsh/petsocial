@@ -1,4 +1,3 @@
-import { ChevronLeft, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MobileLayout from "@/components/MobileLayout";
@@ -6,6 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatDistanceToNow } from "date-fns";
+import { ChevronLeft } from "lucide-react";
+import { CheckIcon } from "@/components/icons/PetosauraIcons";
 
 const typeIcons: Record<string, string> = {
   like: "❤️", comment: "💬", follow: "👥", forum_reply: "🔔", mention: "📢",
@@ -58,7 +59,7 @@ const NotificationsScreen = () => {
             <h1 className="text-xl font-heading font-bold">Notifications</h1>
           </div>
           <Button variant="ghost" size="sm" className="text-primary text-xs font-body" onClick={() => markAllRead.mutate()}>
-            <Check className="w-3 h-3 mr-1" strokeWidth={1.8} /> Mark all read
+            <CheckIcon className="w-3 h-3 mr-1" strokeWidth={1.8} /> Mark all read
           </Button>
         </header>
 

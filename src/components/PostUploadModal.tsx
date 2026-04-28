@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { X, Upload, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +5,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { awardCoins } from "@/lib/coins";
+import { Loader2, useState } from "react";
+import { X } from "lucide-react";
+import { CloseIcon, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -143,7 +144,7 @@ const PostUploadModal = ({ open, onClose }: Props) => {
 
         {!imagePreview ? (
           <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer hover:bg-primary/10 transition-colors">
-            <Upload className="w-10 h-10 text-primary" strokeWidth={1.8} />
+            <UploadIcon className="w-10 h-10 text-primary" strokeWidth={1.8} />
             <span className="text-sm font-heading font-bold text-primary">Tap to upload photo</span>
             <span className="text-xs text-muted-foreground font-body">JPG, PNG or video</span>
             <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileSelect} />
@@ -153,8 +154,8 @@ const PostUploadModal = ({ open, onClose }: Props) => {
             <img src={imagePreview} alt="Preview" className="w-full aspect-square object-cover rounded-[22px]" />
             <div className="flex items-center gap-2 text-sm font-body">
               {validationStatus === "checking" && <><Loader2 className="w-4 h-4 animate-spin text-accent" /><span className="text-muted-foreground">Checking for pet content…</span></>}
-              {validationStatus === "valid" && <><CheckCircle className="w-4 h-4 text-success" strokeWidth={1.8} /><span className="text-success font-bold">Pet detected!</span></>}
-              {validationStatus === "invalid" && <><XCircle className="w-4 h-4 text-destructive" strokeWidth={1.8} /><span className="text-destructive font-bold">No pet found — please upload a pet photo</span></>}
+              {validationStatus === "valid" && <><VerifiedIcon className="w-4 h-4 text-success" strokeWidth={1.8} /><span className="text-success font-bold">Pet detected!</span></>}
+              {validationStatus === "invalid" && <><CloseIcon className="w-4 h-4 text-destructive" strokeWidth={1.8} /><span className="text-destructive font-bold">No pet found — please upload a pet photo</span></>}
             </div>
           </div>
         )}

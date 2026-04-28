@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Sparkles, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { Loader2, useState } from "react";
+import { Sparkles } from "lucide-react";
+import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   feature: string;
@@ -57,7 +58,7 @@ const ComingSoonHub = ({ feature, headline, description, emoji, bullets }: Props
           <ul className="space-y-1.5">
             {bullets.map((b) => (
               <li key={b} className="flex items-start gap-2 text-sm font-body text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary shrink-0" strokeWidth={2} />
+                <VerifiedIcon className="w-4 h-4 mt-0.5 text-primary shrink-0" strokeWidth={2} />
                 <span>{b}</span>
               </li>
             ))}

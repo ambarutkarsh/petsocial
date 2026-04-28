@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronRight, LogOut, User, Bell, MapPin, Shield } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { ChevronRight, LogOut, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { BellIcon, LocationPinIcon, ProfileIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const SettingsScreen = () => {
   const navigate = useNavigate();

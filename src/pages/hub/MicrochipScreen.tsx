@@ -1,9 +1,3 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Plus, ChevronDown, Trash2, MoreVertical, FileText, Download, ExternalLink, Loader2,
-} from "lucide-react";
 import { toast } from "sonner";
 import HubSubLayout from "@/components/HubSubLayout";
 import { Button } from "@/components/ui/button";
@@ -12,6 +6,12 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+import { ChevronDown, Download, ExternalLink, Loader2, MoreVertical, Trash2, useQueryClient } from "@tanstack/react-query";
+import {
+  Plus, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "lucide-react";
+import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -196,7 +196,7 @@ const MicrochipScreen = () => {
                         <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">Document</p>
                         <div className="flex items-center justify-between gap-2 rounded-[12px] bg-card border border-border px-3 py-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <FileText className="w-4 h-4 text-primary flex-shrink-0" />
+                            <DocumentIcon className="w-4 h-4 text-primary flex-shrink-0" />
                             <div className="min-w-0">
                               <p className="text-sm truncate">{chip.document_name}</p>
                               <p className="text-[10px] text-muted-foreground">

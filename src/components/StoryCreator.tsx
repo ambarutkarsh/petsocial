@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Loader2, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { UploadIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -90,7 +91,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
             </button>
             <h2 className="text-xl font-heading font-bold">Add to Story</h2>
             <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer w-full">
-              <Upload className="w-10 h-10 text-primary" />
+              <UploadIcon className="w-10 h-10 text-primary" />
               <span className="text-sm font-heading font-bold text-primary">Select photo or video</span>
               <span className="text-xs text-muted-foreground font-body">JPG, PNG or MP4 (max 15s)</span>
               <input type="file" accept="image/*,video/mp4" className="hidden" onChange={handleFileSelect} />

@@ -1,5 +1,6 @@
-import { X, Copy, Share2, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
+import { Copy } from "lucide-react";
+import { CloseIcon, CommentIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   open: boolean;
@@ -20,7 +21,7 @@ const ShareSheet = ({ open, onClose, url, title = "Petosauras", text = "Check th
       key: "whatsapp",
       label: "WhatsApp",
       bg: "bg-[#25D366]",
-      icon: <MessageCircle className="w-6 h-6 text-white" />,
+      icon: <CommentIcon className="w-6 h-6 text-white" />,
       onClick: () => window.open(`https://wa.me/?text=${encodedText}%20${encodedUrl}`, "_blank"),
     },
     {
@@ -41,14 +42,14 @@ const ShareSheet = ({ open, onClose, url, title = "Petosauras", text = "Check th
       key: "telegram",
       label: "Telegram",
       bg: "bg-[#0088CC]",
-      icon: <Share2 className="w-6 h-6 text-white" />,
+      icon: <ShareIcon className="w-6 h-6 text-white" />,
       onClick: () => window.open(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`, "_blank"),
     },
     {
       key: "native",
       label: "More",
       bg: "bg-primary",
-      icon: <Share2 className="w-6 h-6 text-primary-foreground" />,
+      icon: <ShareIcon className="w-6 h-6 text-primary-foreground" />,
       onClick: async () => {
         if ((navigator as any).share) {
           try {
@@ -86,7 +87,7 @@ const ShareSheet = ({ open, onClose, url, title = "Petosauras", text = "Check th
           <div className="flex items-center justify-between">
             <h3 className="text-base font-heading font-bold">Share</h3>
             <button onClick={onClose} aria-label="Close" className="text-text-hint">
-              <X className="w-5 h-5" />
+              <CloseIcon className="w-5 h-5" />
             </button>
           </div>
         </div>

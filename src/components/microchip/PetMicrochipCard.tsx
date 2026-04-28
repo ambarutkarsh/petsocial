@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { Syringe, Upload, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import ChipStatusBadge, { ChipVerificationStatus } from "./ChipStatusBadge";
 import { formatChipNumber, ChipFormat } from "@/lib/microchipValidator";
+import { Eye, useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { Syringe } from "lucide-react";
+import { UploadIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   petId: string;
@@ -65,7 +66,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
       <div className="flex gap-2 mt-3">
         {status === "self_declared" && (
           <Button size="sm" className="rounded-full flex-1" onClick={() => navigate("/hub/microchip")}>
-            <Upload className="w-3.5 h-3.5 mr-1" /> Upload Doc
+            <UploadIcon className="w-3.5 h-3.5 mr-1" /> Upload Doc
           </Button>
         )}
         <Button

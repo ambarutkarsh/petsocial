@@ -1,7 +1,3 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import HubSubLayout from "@/components/HubSubLayout";
 import { Button } from "@/components/ui/button";
@@ -17,6 +13,11 @@ import AcceptedDocsInfo from "@/components/microchip/AcceptedDocsInfo";
 import ChipDisclaimer from "@/components/microchip/ChipDisclaimer";
 import ChipStatusBadge from "@/components/microchip/ChipStatusBadge";
 import { DOC_TYPES, docTypeLabel } from "@/components/microchip/docTypes";
+import { ArrowRight, Loader2, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
+import { VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
 
 const STEP_LABELS = ["Chip Number", "Link Pet", "Upload Proof", "Confirm"];
 
@@ -225,7 +226,7 @@ const RegisterMicrochipScreen = () => {
         <div className="space-y-5 pb-8">
           <div className="flex flex-col items-center text-center pt-4">
             <div className="w-20 h-20 rounded-full bg-[#E6F7EE] flex items-center justify-center animate-fade-up">
-              <CheckCircle2 className="w-12 h-12 text-[#1F8A4D]" strokeWidth={2.2} />
+              <VerifiedIcon className="w-12 h-12 text-[#1F8A4D]" strokeWidth={2.2} />
             </div>
             <h2 className="font-heading font-bold text-xl mt-4">
               {success.status === "document_verified" ? "Chip Registered & Verified!" : "Chip Registered"}
@@ -303,7 +304,7 @@ const RegisterMicrochipScreen = () => {
                 <Pill tone="green">✅ {validation.formatName} — Valid format</Pill>
                 {validation.isLegacy && (
                   <div className="rounded-[14px] border border-[#F2C46B] bg-[#FFF8E6] p-3 flex gap-2">
-                    <AlertTriangle className="w-4 h-4 text-[#A36A00] mt-0.5 flex-shrink-0" strokeWidth={2} />
+                    <WarningIcon className="w-4 h-4 text-[#A36A00] mt-0.5 flex-shrink-0" strokeWidth={2} />
                     <p className="text-xs font-body text-[#7A4F00] leading-relaxed">
                       This is a legacy format chip. It may not be readable by all modern scanners. Ask your vet about re-chipping with an ISO 15-digit chip.
                     </p>
@@ -519,7 +520,7 @@ const RegisterMicrochipScreen = () => {
           <div className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowSkipConfirm(false)}>
             <div className="bg-card rounded-[20px] p-5 w-full max-w-sm space-y-3 shadow-petosauras-md" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-[#A36A00]" />
+                <WarningIcon className="w-5 h-5 text-[#A36A00]" />
                 <h3 className="font-heading font-bold">Registering without document</h3>
               </div>
               <p className="text-sm text-muted-foreground font-body">

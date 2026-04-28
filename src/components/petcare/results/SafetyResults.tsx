@@ -1,9 +1,10 @@
-import { useState } from "react";
-import petCareData from "@/data/petcare-data.json";
-import { ArrowLeft, Check } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { Weather } from "@/lib/petCareHelpers";
+import { useState } from "react";
+import petCareData from "@/data/petcare-data.json";
+import { ArrowLeft } from "lucide-react";
+import { CheckIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {
   weather: Weather;
@@ -193,7 +194,7 @@ const FirstAid = ({ node }: { node: { kitContents: string[]; basicProcedures: { 
               <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
                 checked[it] ? "bg-primary border-primary" : "border-border"
               }`}>
-                {checked[it] && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                {checked[it] && <CheckIcon className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
               </span>
               <span className={`text-[13px] font-body ${checked[it] ? "line-through text-muted-foreground" : ""}`}>{it}</span>
             </button>

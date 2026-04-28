@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Search, Clock, BookOpen, Newspaper } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Clock, Newspaper, useState } from "react";
+import { Search } from "lucide-react";
+import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 
 const categories = ["All", "🐕 Canine", "🐈 Feline", "🐠 Aquatic", "🦜 Avian", "🐇 Small Pets", "General"];
 
@@ -40,7 +41,7 @@ const LearnScreen = () => {
         <div className="px-4 mb-4 pt-4">
           <div className="flex bg-muted rounded-full p-1">
             <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
-              <BookOpen className="w-4 h-4" strokeWidth={1.8} /> Knowledge Base
+              <DocumentIcon className="w-4 h-4" strokeWidth={1.8} /> Knowledge Base
             </button>
             <button onClick={() => setTab("news")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "news" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
               <Newspaper className="w-4 h-4" strokeWidth={1.8} /> Pet News

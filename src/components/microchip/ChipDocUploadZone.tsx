@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
-import { FileText, Image as ImageIcon, X } from "lucide-react";
 import { toast } from "sonner";
+import { useRef, useState } from "react";
+import { FileText } from "lucide-react";
+import { CameraIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
 
 const ACCEPTED = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -63,7 +64,7 @@ const ChipDocUploadZone = ({ value, onChange }: Props) => {
             aria-label="Remove file"
             className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-border transition-colors"
           >
-            <X className="w-4 h-4" strokeWidth={2} />
+            <CloseIcon className="w-4 h-4" strokeWidth={2} />
           </button>
         </div>
       </div>

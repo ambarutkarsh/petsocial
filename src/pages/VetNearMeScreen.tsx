@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { ArrowLeft, MapPin, Search, Star, Phone, Clock, ExternalLink, Map } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +7,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { trackEvent } from "@/lib/analytics";
+import { Clock, ExternalLink, Phone, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 interface VetClinic {
   name: string; address: string; phone: string; rating: number;
@@ -82,7 +83,7 @@ const VetNearMeScreen = () => {
           </div>
           {results.length > 0 && (
             <Button size="sm" variant="ghost" onClick={() => setShowMap(!showMap)}>
-              <Map className="w-4 h-4 mr-1" />{showMap ? "List" : "Map"}
+              <LocationPinIcon className="w-4 h-4 mr-1" />{showMap ? "List" : "Map"}
             </Button>
           )}
         </header>
@@ -105,7 +106,7 @@ const VetNearMeScreen = () => {
         ) : (
           <div className="flex gap-2 mb-4">
             <Input placeholder="Enter PIN code or city name" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSearch()} />
-            <Button onClick={handleSearch} disabled={loading}><Search className="w-4 h-4" /></Button>
+            <Button onClick={handleSearch} disabled={loading}><SearchIcon className="w-4 h-4" /></Button>
           </div>
         )}
 
@@ -155,12 +156,12 @@ const VetNearMeScreen = () => {
                   <h3 className="font-heading font-bold text-sm flex-1">🏥 {clinic.name}</h3>
                   {clinic.rating > 0 && (
                     <span className="flex items-center gap-1 text-xs font-semibold text-amber-600">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />{clinic.rating}
+                      <StarIcon className="w-3 h-3 fill-amber-400 text-amber-400" />{clinic.rating}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />{clinic.address} · {clinic.distance_km.toFixed(1)} km away
+                  <LocationPinIcon className="w-3 h-3" />{clinic.address} · {clinic.distance_km.toFixed(1)} km away
                 </p>
                 <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
@@ -176,7 +177,7 @@ const VetNearMeScreen = () => {
                         <div className="flex items-center gap-2 text-xs">
                           <span className="font-semibold">{r.author_name}</span>
                           <span className="flex items-center text-amber-500">
-                            {Array.from({ length: r.rating }).map((_, j) => <Star key={j} className="w-2.5 h-2.5 fill-current" />)}
+                            {Array.from({ length: r.rating }).map((_, j) => <StarIcon key={j} className="w-2.5 h-2.5 fill-current" />)}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{r.text}</p>

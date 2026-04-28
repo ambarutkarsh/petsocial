@@ -1,13 +1,14 @@
-import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import MobileLayout from "./MobileLayout";
-import { Upload, ArrowLeft, ArrowRight, Loader2, Check, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   petTypes, breedsByType, petTypeEmoji, indianStates,
   getPasswordStrength, validateStep1, validateStep2,
+import { ArrowRight, Loader2, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import MobileLayout from "./MobileLayout";
+import { Upload, useState } from "lucide-react";
+import { BackIcon, CheckIcon, CloseIcon } from "@/components/icons/PetosauraIcons";
 } from "@/lib/registrationData";
 
 interface Props {
@@ -296,7 +297,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
       onClick={onBack}
       className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 mb-4"
     >
-      <ArrowLeft className="w-4 h-4" /> {label || "Back"}
+      <BackIcon className="w-4 h-4" /> {label || "Back"}
     </button>
   );
 
@@ -328,8 +329,8 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                 className="h-12 rounded-xl bg-muted/50 border-0 pr-10" />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 {emailChecking && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
-                {emailChecked && !emailExists && <Check className="w-4 h-4 text-green-500" />}
-                {emailExists && <X className="w-4 h-4 text-destructive" />}
+                {emailChecked && !emailExists && <CheckIcon className="w-4 h-4 text-green-500" />}
+                {emailExists && <CloseIcon className="w-4 h-4 text-destructive" />}
               </div>
               {touched1.email && step1Errors.email && <p className="text-xs text-destructive mt-1">{step1Errors.email}</p>}
               {emailExists && (
@@ -426,8 +427,8 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                   className="h-12 rounded-xl bg-muted/50 border-0 pr-10" />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                   {speciesValidating && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
-                  {speciesValid === true && <Check className="w-4 h-4 text-green-500" />}
-                  {speciesValid === false && <X className="w-4 h-4 text-destructive" />}
+                  {speciesValid === true && <CheckIcon className="w-4 h-4 text-green-500" />}
+                  {speciesValid === false && <CloseIcon className="w-4 h-4 text-destructive" />}
                 </div>
                 {speciesError && <p className="text-xs text-destructive mt-1">{speciesError}</p>}
                 {touched2.breed && !customBreed.trim() && <p className="text-xs text-destructive mt-1">Species/breed is required</p>}
@@ -448,8 +449,8 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
                       className="h-12 rounded-xl bg-muted/50 border-0 pr-10" />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {speciesValidating && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
-                      {speciesValid === true && <Check className="w-4 h-4 text-green-500" />}
-                      {speciesValid === false && <X className="w-4 h-4 text-destructive" />}
+                      {speciesValid === true && <CheckIcon className="w-4 h-4 text-green-500" />}
+                      {speciesValid === false && <CloseIcon className="w-4 h-4 text-destructive" />}
                     </div>
                     {speciesError && <p className="text-xs text-destructive mt-1">{speciesError}</p>}
                   </div>

@@ -1,5 +1,3 @@
-import { useState, useRef, useMemo } from "react";
-import { ArrowLeft, Plus, FileText, Trash2, Download, Eye as EyeIcon, Upload, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +15,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { ChevronDown, ChevronUp, Download, Eye as EyeIcon, Trash2, useMemo } from "react";
+import { ArrowLeft, useRef, useState } from "lucide-react";
+import { DocumentIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 
 const mealIcons: Record<string, string> = { Breakfast: "🌅", Lunch: "☀️", Dinner: "🌙", Snack: "🍪" };
 
@@ -373,7 +374,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-heading font-semibold text-sm">Weight Log</h3>
                   <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => setShowWeightForm(!showWeightForm)}>
-                    <Plus className="w-3 h-3 mr-1" />Log Weight
+                    <PlusIcon className="w-3 h-3 mr-1" />Log Weight
                   </Button>
                 </div>
                 {showWeightForm && (
@@ -421,7 +422,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-heading font-semibold text-sm">Food Log</h3>
                   <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => setShowFoodForm(!showFoodForm)}>
-                    <Plus className="w-3 h-3 mr-1" />Log Food
+                    <PlusIcon className="w-3 h-3 mr-1" />Log Food
                   </Button>
                 </div>
                 {showFoodForm && (
@@ -487,7 +488,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
               )}
 
               <Button variant="outline" className="w-full" onClick={() => setShowVaccForm(!showVaccForm)}>
-                <Plus className="w-4 h-4 mr-1" />Add Vaccine
+                <PlusIcon className="w-4 h-4 mr-1" />Add Vaccine
               </Button>
 
               {showVaccForm && (
@@ -547,7 +548,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
             {/* TAB 3: DOCUMENTS */}
             <TabsContent value="documents" className="space-y-4 mt-3">
               <Button onClick={() => setShowDocUpload(true)} className="w-full">
-                <Upload className="w-4 h-4 mr-2" /> Upload Document
+                <UploadIcon className="w-4 h-4 mr-2" /> Upload Document
               </Button>
 
               {/* Document upload modal */}
@@ -579,7 +580,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                   <div>
                     <button onClick={() => docFileInputRef.current?.click()}
                       className="w-full border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
-                      <Upload className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
+                      <UploadIcon className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
                       <p className="text-xs text-muted-foreground">PDF, JPG, PNG · Max 500KB</p>
                     </button>
                     <input ref={docFileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={handleDocFileSelect} />

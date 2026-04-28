@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowRight, ArrowLeft, Sparkles, Heart, ShoppingBag } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { BackIcon, FeedsIcon, HeartIcon, ShopIcon } from "@/components/icons/PetosauraIcons";
 
 const STEPS = [
   {
@@ -63,7 +64,7 @@ const OnboardingScreen = () => {
               className="w-9 h-9 rounded-full bg-card shadow-petosauras flex items-center justify-center"
               aria-label="Back"
             >
-              <ArrowLeft className="w-4 h-4" strokeWidth={1.8} />
+              <BackIcon className="w-4 h-4" strokeWidth={1.8} />
             </button>
           ) : <span className="w-9" />}
           <button onClick={skip} className="text-sm font-body font-semibold text-muted-foreground">
