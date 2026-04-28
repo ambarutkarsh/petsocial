@@ -3,12 +3,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, ImagePlus } from "lucide-react";
 import { BellIcon, PetCareIcon, StarIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/seed", label: "Seed Data", icon: PetCareIcon },
+  { to: "/admin/bulk-upload", label: "Bulk Upload", icon: ImagePlus },
   { to: "/admin/competitions", label: "Competitions", icon: StarIcon },
   { to: "/admin/vets", label: "Vets", icon: VetIcon },
 ];
