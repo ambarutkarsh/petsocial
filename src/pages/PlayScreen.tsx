@@ -1,7 +1,7 @@
-import { GPLACES_DAILY_CAP } from "@/lib/feedPills";
-import { NEARBY_SUB_PILLS, createNotification, getActorName } from "@/lib/notifications";
+import { FEED_PILLS, GPLACES_DAILY_CAP, NEARBY_SUB_PILLS, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey } from "@/lib/feedPills";
+import { createNotification, getActorName, getPostOwnerId } from "@/lib/notifications";
 import { maskName } from "@/lib/maskName";
-import { getPostOwnerId, incrementGooglePlacesUsage, isGooglePlacesCapped, type FeedPillKey, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
@@ -11,8 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { FEED_PILLS } from "lucide-react";
-import { BookVetIcon, CommentIcon, HeartIcon, LocationPinIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { Loader2, Trash2 } from "lucide-react";
+import { BookVetIcon, CloseIcon, CommentIcon, HeartIcon, LocationPinIcon, LockIcon, PlusIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";

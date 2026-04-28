@@ -1,5 +1,5 @@
-import { Area, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { ComposedChart, Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,15 +7,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, differenceInMonths, format } from "date-fns";
+import { differenceInMonths, differenceInYears, format } from "date-fns";
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { BackIcon, BookVetIcon, InfoIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
-import { differenceInYears } from "@/lib/registrationData";
+import { ChevronDown, ChevronUp, Eye, Trash2 } from "lucide-react";
+import { BackIcon, BookVetIcon, InfoIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 
