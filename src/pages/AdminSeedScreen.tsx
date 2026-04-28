@@ -102,14 +102,12 @@ const AdminSeedScreen = () => {
 
   const fetchStatus = async () => {
     setStatusLoading(true);
-    const [u, p] = await Promise.all([
-      supabase.from("profiles").select("id", { count: "exact", head: true }).eq("is_seed_user", true),
-      supabase.from("posts").select("id", { count: "exact", head: true }).eq("is_seed_post", true),
-    ]);
-    if (u.error) toast.error(`Profiles count failed: ${u.error.message}`);
-    if (p.error) toast.error(`Posts count failed: ${p.error.message}`);
-    setSeedUsers(u.count ?? 0);
-    setSeedPosts(p.count ?? 0);
+    const { data, error } = await supabase.functions.invoke("admin-dashboard-stats", {
+      body: { action: "seed-status" },
+    });
+    if (error || data?.error) toast.error(`Seed status failed: ${error?.message ?? data?.error}`);
+    setSeedUsers(data?.seedUsers ?? 0);
+    setSeedPosts(data?.seedPosts ?? 0);
     setStatusLoading(false);
   };
 
@@ -117,102 +115,23 @@ const AdminSeedScreen = () => {
     setRunning(true);
     setLog(["🌱 Starting seed..."]);
 
-    let usersCreated = 0;
-    let postsCreated = 0;
-    const createdUserIds: string[] = [];
-
-    for (let i = 0; i < USERS.length; i++) {
-      const u = USERS[i];
-      setLog((prev) => [...prev, `👤 Creating user ${i + 1}/${USERS.length}: ${u.name}...`]);
-
-      try {
-        const seedUserId = crypto.randomUUID();
-
-        const { error: profileError } = await supabase.from("profiles").insert({
-          id: seedUserId,
-          full_name: u.name,
-          username: u.username,
-          bio: u.bio,
-          city: u.city,
-          state: u.state,
-          is_seed_user: true,
-          pet_parent_since: 2021,
-          post_count: u.captions.length,
-          follower_count: Math.floor(Math.random() * 200) + 20,
-          following_count: Math.floor(Math.random() * 100) + 10,
-        });
-
-        if (profileError) {
-          setLog((prev) => [...prev, `⚠️ Profile error for ${u.name}: ${profileError.message}`]);
-          continue;
-        }
-        createdUserIds.push(seedUserId);
-
-        const { data: pet } = await supabase
-          .from("pets")
-          .insert({
-            owner_id: seedUserId,
-            name: u.petName,
-            pet_type: u.petType,
-            species: u.species,
-            gender: u.gender,
-            age_years: u.age,
-            is_primary: true,
-            avatar_emoji: emojiFor(u.petType),
-          })
-          .select("id")
-          .single();
-
-        for (let p = 0; p < u.captions.length; p++) {
-          const daysBack = Math.floor(Math.random() * 30);
-          const hoursBack = Math.floor(Math.random() * 24);
-          const postDate = new Date();
-          postDate.setDate(postDate.getDate() - daysBack);
-          postDate.setHours(postDate.getHours() - hoursBack);
-
-          const { error: postError } = await supabase.from("posts").insert({
-            user_id: seedUserId,
-            pet_id: pet?.id || null,
-            media_url: randomImage(),
-            media_type: "image",
-            caption: u.captions[p],
-            hashtags: u.captions[p].match(/#\w+/g) || [],
-            ai_validated: true,
-            like_count: Math.floor(Math.random() * 300) + 15,
-            comment_count: Math.floor(Math.random() * 30) + 3,
-            is_seed_post: true,
-            created_at: postDate.toISOString(),
-          });
-
-          if (!postError) postsCreated++;
-        }
-
-        usersCreated++;
-        setLog((prev) => [...prev, `✅ ${u.name} created with pet ${u.petName}`]);
-      } catch (err: any) {
-        setLog((prev) => [...prev, `❌ Failed for ${u.name}: ${err.message}`]);
-      }
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-seed-demo");
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setLog((prev) => [
+        ...prev,
+        `✅ Profiles: ${data?.profiles ?? 0}`,
+        `✅ Pets: ${data?.pets ?? 0}`,
+        `✅ Posts: ${data?.posts ?? 0}`,
+        `✅ Follows: ${data?.follows ?? 0}`,
+        `🎉 Done! Seed data committed via service role.`,
+      ]);
+      toast.success(`✅ ${data?.profiles ?? 0} users and ${data?.posts ?? 0} posts created successfully!`);
+    } catch (err: any) {
+      setLog((prev) => [...prev, `❌ Seed failed: ${err.message}`]);
+      toast.error("Seed failed: " + err.message);
     }
-
-    setLog((prev) => [...prev, "🔗 Adding follows between users..."]);
-    const followRows: { follower_id: string; following_id: string }[] = [];
-    for (let i = 0; i < createdUserIds.length; i++) {
-      const followTargets = createdUserIds.filter((_, j) => j !== i).slice(0, 5);
-      for (const targetId of followTargets) {
-        followRows.push({ follower_id: createdUserIds[i], following_id: targetId });
-      }
-    }
-    if (followRows.length > 0) {
-      const { error: followsErr } = await supabase.functions.invoke("admin-seed-follows", {
-        body: { follows: followRows },
-      });
-      if (followsErr) {
-        setLog((prev) => [...prev, `⚠️ Failed to add follows: ${followsErr.message}`]);
-      }
-    }
-
-    setLog((prev) => [...prev, `🎉 Done! ${usersCreated} users and ${postsCreated} posts created!`]);
-    toast.success(`✅ ${usersCreated} users and ${postsCreated} posts created successfully!`);
     await fetchStatus();
     setRunning(false);
   };
