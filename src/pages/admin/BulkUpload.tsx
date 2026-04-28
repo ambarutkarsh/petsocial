@@ -167,23 +167,34 @@ const BulkUpload = () => {
       .filter(Boolean)
       .map((h) => "#" + h);
 
-    const { error: insErr } = await supabase.from("posts").insert({
-      user_id: photo.userId,
-      media_url: publicUrl,
-      media_type: "image",
-      caption: photo.caption || null,
-      hashtags: hashArr,
-      location: photo.location || null,
-      post_category: photo.category || "reel",
-      is_seed_post: true,
-      ai_validated: true,
-      like_count: Math.floor(Math.random() * 280) + 20,
-      comment_count: Math.floor(Math.random() * 35) + 3,
-      created_at: postDate.toISOString(),
-    });
-    if (insErr) {
-      console.error("Post insert error:", JSON.stringify(insErr));
-      throw new Error(insErr.message);
+    const { data: fnData, error: fnErr } = await supabase.functions.invoke(
+      "admin-bulk-insert-posts",
+      {
+        body: {
+          posts: [
+            {
+              user_id: photo.userId,
+              media_url: publicUrl,
+              media_type: "image",
+              caption: photo.caption || null,
+              hashtags: hashArr,
+              location: photo.location || null,
+              post_category: photo.category || "reel",
+              like_count: Math.floor(Math.random() * 280) + 20,
+              comment_count: Math.floor(Math.random() * 35) + 3,
+              created_at: postDate.toISOString(),
+            },
+          ],
+        },
+      },
+    );
+    if (fnErr) {
+      console.error("Edge function error:", JSON.stringify(fnErr), fnData);
+      throw new Error(fnErr.message || "Bulk insert failed");
+    }
+    if (fnData?.error) {
+      console.error("Insert error from function:", fnData.error);
+      throw new Error(fnData.error);
     }
   };
 
