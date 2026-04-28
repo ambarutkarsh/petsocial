@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { CloseIcon } from "@/components/icons/PetosauraIcons";
-import { X, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";

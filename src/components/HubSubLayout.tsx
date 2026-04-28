@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
-import { BackIcon } from "@/components/icons/PetosauraIcons";
+
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+
 import MobileLayout from "./MobileLayout";
 import BottomNav from "./BottomNav";
 import CreateSheet from "./CreateSheet";

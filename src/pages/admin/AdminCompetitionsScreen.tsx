@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PlusIcon } from "@/components/icons/PetosauraIcons";
-import { Plus, Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";

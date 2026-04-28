@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
+
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2 } from "lucide-react";
+
 import HubSubLayout from "@/components/HubSubLayout";
 import { supabase } from "@/integrations/supabase/client";
 

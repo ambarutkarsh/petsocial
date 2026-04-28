@@ -9,7 +9,7 @@ import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { useEffect, useMemo, useRef, useState, validateMicrochip } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { { PickedFile } from "@/components/microchip/ChipDocUploadZone";
 import { BackIcon, DOC_TYPES, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 import ChipStepper from "@/components/microchip/ChipStepper";

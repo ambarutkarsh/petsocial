@@ -5,7 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { maskName } from "@/lib/maskName";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { CloseIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {

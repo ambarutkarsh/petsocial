@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MoreVertical, Search, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { BellIcon, CommentIcon, HeartIcon, LocationPinIcon, PlusIcon, SaveIcon, SearchIcon, ShareIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";

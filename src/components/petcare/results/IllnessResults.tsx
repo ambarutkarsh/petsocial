@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { WarningIcon } from "@/components/icons/PetosauraIcons";
+
 import petCareData from "@/data/petcare-data.json";
-import { AlertTriangle } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 interface Props {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LockIcon } from "@/components/icons/PetosauraIcons";
 import { useNavigate } from "react-router-dom";
-import { Lock } from "lucide-react";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import CreateSheet from "@/components/CreateSheet";

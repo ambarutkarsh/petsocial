@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronDown, ChevronUp, Download, Eye as EyeIcon, Trash2, format } from "lucide-react";
-import { BackIcon, BookVetIcon, DocumentIcon, InfoIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { format } from "lucide-react";
+import { BackIcon, BookVetIcon, InfoIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 

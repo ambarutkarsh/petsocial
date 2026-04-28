@@ -2,7 +2,7 @@ import PostUploadModal from "./PostUploadModal";
 import AlertForm from "./AlertForm";
 import { trackEvent } from "@/lib/analytics";
 import { useState } from "react";
-import { Camera, Radio } from "lucide-react";
+import { Radio } from "lucide-react";
 import { CameraIcon, CloseIcon, PlayIcon, SOSIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {

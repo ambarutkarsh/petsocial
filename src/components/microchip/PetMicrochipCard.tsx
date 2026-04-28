@@ -2,7 +2,7 @@ import { ChipFormat } from "@/lib/microchipValidator";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Eye, Syringe } from "lucide-react";
+import { Eye } from "lucide-react";
 import { { ChipVerificationStatus } from "./ChipStatusBadge";
 import { UploadIcon, VaccineIcon, formatChipNumber } from "@/components/icons/PetosauraIcons";
 

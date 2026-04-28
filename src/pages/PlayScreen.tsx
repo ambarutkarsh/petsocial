@@ -11,8 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { ChevronLeft, ChevronRight, FEED_PILLS, Heart, Loader2, Trash2 } from "lucide-react";
-import { BookVetIcon, CloseIcon, CommentIcon, HeartIcon, LocationPinIcon, LockIcon, PlusIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { FEED_PILLS } from "lucide-react";
+import { BookVetIcon, CommentIcon, HeartIcon, LocationPinIcon, SaveIcon, ShareIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";

@@ -1,7 +1,7 @@
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { Weather } from "@/lib/petCareHelpers";
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Accordion, BackIcon, CheckIcon, TabsList, TabsTrigger } from "@/components/icons/PetosauraIcons";
 

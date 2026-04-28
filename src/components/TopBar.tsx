@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+
 import { BellIcon, CloseIcon, ProfileIcon, SearchIcon } from "@/components/icons/PetosauraIcons";
 
 // LOGO LOCKED — Do not change without explicit user instruction

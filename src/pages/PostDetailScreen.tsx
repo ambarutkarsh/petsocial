@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, useParams } from "lucide-react";
 import { CommentIcon, HeartIcon } from "@/components/icons/PetosauraIcons";
 
-
 const PostDetailScreen = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();

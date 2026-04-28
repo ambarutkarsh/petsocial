@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera } from "lucide-react";
+
 import { CameraIcon, CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
 
 import PetDigiLockerScreen from "./PetDigiLockerScreen";

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { BackIcon, BudgetIcon } from "@/components/icons/PetosauraIcons";
-import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

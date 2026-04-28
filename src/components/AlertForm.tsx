@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CloseIcon } from "@/components/icons/PetosauraIcons";
-import { X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { BackIcon } from "@/components/icons/PetosauraIcons";
+
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PageWrapper from "@/components/PageWrapper";

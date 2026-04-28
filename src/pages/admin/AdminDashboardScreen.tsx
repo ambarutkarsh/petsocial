@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Users } from "lucide-react";
+
 import { BookVetIcon, DocumentIcon, LocationPinIcon, ProfileIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 import AdminLayout from "@/components/admin/AdminLayout";
 

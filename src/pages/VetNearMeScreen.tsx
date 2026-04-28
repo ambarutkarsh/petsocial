@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Collapsible, useState } from "react";
-import { ArrowLeft, Clock, ExternalLink, Phone } from "lucide-react";
+import { Clock, ExternalLink, Phone } from "lucide-react";
 import { BackIcon, LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";

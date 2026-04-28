@@ -9,8 +9,8 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { getCoinBalance } from "@/lib/coins";
 import { useState } from "react";
-import { ChevronRight, Grid3X3, LogOut, Pencil, Trash2 } from "lucide-react";
-import { BookVetIcon, BudgetIcon, CameraIcon, CheckIcon, CloseIcon, EditIcon, LocationPinIcon, PlusIcon, SaveIcon, SettingsIcon, StarIcon } from "@/components/icons/PetosauraIcons";
+import { ChevronRight, Trash2 } from "lucide-react";
+import { BookVetIcon, CameraIcon, CheckIcon, CloseIcon, EditIcon, LocationPinIcon, PlusIcon, SaveIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";

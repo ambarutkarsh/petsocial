@@ -2,7 +2,7 @@ import MainLayout from "@/components/MainLayout";
 import PageWrapper from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { { type PetCareCategory, { type PetDetails } from "@/components/petcare/StepPetDetails";
 import { toast } from "@/hooks/use-toast";
 import { BackIcon, ShareIcon } from "@/components/icons/PetosauraIcons";

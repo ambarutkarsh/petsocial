@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Download, ExternalLink, Loader2, MoreVertical, Trash2 } from "lucide-react";
+import { Download, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { CheckIcon, DocumentIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";

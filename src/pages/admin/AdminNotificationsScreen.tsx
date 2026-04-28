@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ShareIcon } from "@/components/icons/PetosauraIcons";
-import { Send, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

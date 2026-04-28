@@ -3,7 +3,6 @@ import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-reac
 import { ArrowRight } from "lucide-react";
 import { BackIcon } from "@/components/icons/PetosauraIcons";
 
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 

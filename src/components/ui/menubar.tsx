@@ -3,7 +3,6 @@ import * as MenubarPrimitive from "@radix-ui/react-menubar";
 import { ChevronRight, Circle } from "lucide-react";
 import { CheckIcon } from "@/components/icons/PetosauraIcons";
 
-
 import { cn } from "@/lib/utils";
 
 const MenubarMenu = MenubarPrimitive.Menu;

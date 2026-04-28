@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { awardCoins } from "@/lib/coins";
 import { useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { CloseIcon, UploadIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 interface Props {

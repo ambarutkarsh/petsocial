@@ -2,7 +2,7 @@ import MobileLayout from "@/components/MobileLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronRight, LogOut } from "lucide-react";
+import { ChevronRight, LogOut } from "lucide-react";
 import { BackIcon, BellIcon, LocationPinIcon, ProfileIcon, SettingsIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 const SettingsScreen = () => {

@@ -3,7 +3,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+
 import { FeedsIcon, HubIcon, MyPetIcon, PlusIcon, ShopIcon } from "@/components/icons/PetosauraIcons";
 
 import CreateSheet from "./CreateSheet";

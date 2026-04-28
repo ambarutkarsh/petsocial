@@ -3,7 +3,7 @@ import { WarningIcon } from "@/components/icons/PetosauraIcons";
 import petCareData from "@/data/petcare-data.json";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AlertTriangle } from "lucide-react";
+
 import { appliesToPet, severityClass } from "@/lib/petCareHelpers";
 
 interface ToxicItem {

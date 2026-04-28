@@ -4,7 +4,7 @@ import CreateSheet from "@/components/CreateSheet";
 import { useLocation } from "react-router-dom";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "lucide-react";
-import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, BellIcon, BookVetIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
 
 const tabs = [
   { path: "/vet-dashboard", label: "Today", Icon: BookVetIcon },

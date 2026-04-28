@@ -7,8 +7,6 @@ import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Star } from "lucide-react";
-import { LocationPinIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 type ConsultType = "in_clinic" | "home" | "tele";
 

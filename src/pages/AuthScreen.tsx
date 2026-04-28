@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CheckIcon } from "@/components/icons/PetosauraIcons";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import RegistrationFlow from "@/components/RegistrationFlow";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { isAdminEmail } from "@/lib/admin";
 
