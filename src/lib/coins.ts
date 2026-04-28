@@ -77,7 +77,7 @@ export function showCoinAnimation(amount: number) {
   el.textContent = `+${amount} 🪙`;
   el.setAttribute(
     "style",
-    "position:fixed;top:30%;left:50%;transform:translateX(-50%);z-index:9999;font-family:'Cormorant Garamond',serif;font-weight:900;font-size:32px;color:#7B5EA7;text-shadow:0 2px 8px rgba(123, 94, 167,0.3);pointer-events:none;animation:coinPop 1.5s ease-out forwards;",
+    "position:fixed;top:30%;left:50%;transform:translateX(-50%);z-index:9999;font-family:'Nunito',sans-serif;font-weight:900;font-size:32px;color:#7B5EA7;text-shadow:0 2px 8px rgba(123, 94, 167,0.3);pointer-events:none;animation:coinPop 1.5s ease-out forwards;",
   );
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1500);

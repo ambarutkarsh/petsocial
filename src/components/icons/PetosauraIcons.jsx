@@ -574,7 +574,7 @@ export default function PetosauraIconLibrary() {
     <div style={{
       background: "#FBF8F4",
       minHeight: "100vh",
-      fontFamily: "'Raleway', sans-serif",
+      fontFamily: "'DM Sans', sans-serif",
       padding: "32px 24px",
     }}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -589,7 +589,7 @@ export default function PetosauraIconLibrary() {
           <div style={{ width: 40, height: 2, background: "#FF8C66" }} />
         </div>
         <h1 style={{
-          fontFamily: "'Cormorant Garamond', serif",
+          fontFamily: "'Nunito', sans-serif",
           fontSize: 36, fontWeight: 600,
           color: "#7B5EA7", margin: "0 0 6px"
         }}>
@@ -626,7 +626,7 @@ export default function PetosauraIconLibrary() {
         <div key={group.label} style={{ marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <h2 style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'Nunito', sans-serif",
               fontSize: 20, fontWeight: 600,
               color: "#7B5EA7", margin: 0
             }}>
