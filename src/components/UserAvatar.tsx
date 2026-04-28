@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef } from "react";
+import { CSSProperties, Ref, forwardRef } from "react";
 
 interface UserAvatarProps {
   name?: string | null;
@@ -41,7 +41,7 @@ const UserAvatar = forwardRef<HTMLImageElement | HTMLDivElement, UserAvatarProps
   if (avatarUrl) {
     return (
       <img
-        ref={ref as React.Ref<HTMLImageElement>}
+        ref={ref as Ref<HTMLImageElement>}
         src={avatarUrl}
         alt={name || "User"}
         onClick={onClick}
@@ -61,7 +61,7 @@ const UserAvatar = forwardRef<HTMLImageElement | HTMLDivElement, UserAvatarProps
 
   return (
     <div
-      ref={ref as React.Ref<HTMLDivElement>}
+      ref={ref as Ref<HTMLDivElement>}
       onClick={onClick}
       className={className}
       style={{
