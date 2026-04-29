@@ -31,8 +31,13 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
 
   useEffect(() => {
     if (loading) return;
-    if (!user || !isAdminEmail(user.email)) {
+    if (!user) {
       navigate("/auth", { replace: true });
+      return;
+    }
+    if (!isAdminEmail(user.email)) {
+      // Regular users have no business here — send them to feeds.
+      navigate("/feeds", { replace: true });
     }
   }, [user, loading, navigate]);
 
