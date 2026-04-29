@@ -56,26 +56,8 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
       setSelectedFile(file);
       const url = URL.createObjectURL(file);
       setImagePreview(url);
-      setValidationStatus("checking");
-
-      try {
-        const reader = new FileReader();
-        const dataUrl = await new Promise<string>((resolve) => {
-          reader.onload = (ev) => resolve(ev.target?.result as string);
-          reader.readAsDataURL(file);
-        });
-        const base64 = dataUrl.split(",")[1];
-        const { data, error } = await supabase.functions.invoke("validate-pet", {
-          body: { type: "photo", imageBase64: base64, mimeType: file.type },
-        });
-        if (error) {
-          setValidationStatus("valid");
-          return;
-        }
-        setValidationStatus(data?.result === "YES" ? "valid" : "invalid");
-      } catch {
-        setValidationStatus("valid");
-      }
+      // Pet validation removed — allow any image/video upload
+      setValidationStatus("valid");
     }
   };
 
