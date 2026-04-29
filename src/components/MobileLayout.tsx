@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 import TopBar from "./TopBar";
+import { useAuth } from "@/contexts/AuthContext";
+import { isAdminEmail } from "@/lib/admin";
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -18,6 +21,11 @@ interface MobileLayoutProps {
  *   page content is never overlapped by the fixed TopBar.
  */
 const MobileLayout = ({ children, className = "", hideTopBar = false }: MobileLayoutProps) => {
+  const { user } = useAuth();
+  // Admin must never see the consumer app shell (top bar, stories, feed, bottom nav).
+  if (user && isAdminEmail(user.email)) {
+    return <Navigate to="/admin" replace />;
+  }
   return (
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
       <div className={`app-root ${className}`}>

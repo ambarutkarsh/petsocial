@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { useState } from "react";
 import { Rss, LayoutGrid, PawPrint, ShoppingBag, Plus } from "lucide-react";
+import { isAdminEmail } from "@/lib/admin";
 
 import CreateSheet from "./CreateSheet";
 
