@@ -122,7 +122,7 @@ const App = () => (
             <Route path="/mypet/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
 
             {/* Other screens */}
-            <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
+            <Route path="/profile" element={<RegularUserRoute><ProtectedRoute><ProfileScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/profile/:userId" element={<ProtectedRoute><PublicProfileScreen /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsScreen /></ProtectedRoute>} />
             <Route path="/forum" element={<ProtectedRoute><ForumScreen /></ProtectedRoute>} />
