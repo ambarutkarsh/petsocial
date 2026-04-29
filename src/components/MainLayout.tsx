@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 import TopBar from "./TopBar";
+import { useAuth } from "@/contexts/AuthContext";
+import { isAdminEmail } from "@/lib/admin";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -13,6 +16,11 @@ interface MainLayoutProps {
  * reserves 56px top padding so content never sits under the bar.
  */
 const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
+  const { user } = useAuth();
+  // Admin must never see the consumer app shell.
+  if (user && isAdminEmail(user.email)) {
+    return <Navigate to="/admin" replace />;
+  }
   if (hideTopBar) return <>{children}</>;
   return (
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>

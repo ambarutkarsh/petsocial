@@ -2625,6 +2625,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      is_admin: { Args: never; Returns: boolean }
       lookup_microchip: {
         Args: { _chip_number: string }
         Returns: {
