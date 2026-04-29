@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RegularUserRoute from "@/components/RegularUserRoute";
 import AuthScreen from "./pages/AuthScreen";
 import PlayScreen from "./pages/PlayScreen";
 import CareScreen from "./pages/CareScreen";
@@ -85,15 +86,17 @@ const App = () => (
           <Routes>
             <Route path="/" element={<RootRedirect />} />
             <Route path="/auth" element={<AuthScreen />} />
-            <Route path="/onboarding" element={<OnboardingScreen />} />
+            <Route path="/onboarding" element={<RegularUserRoute><OnboardingScreen /></RegularUserRoute>} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
-            <Route path="/complete-registration" element={<CompleteRegistrationScreen />} />
+            <Route path="/complete-registration" element={<RegularUserRoute><CompleteRegistrationScreen /></RegularUserRoute>} />
 
-            {/* Public to guests with feature gating: Feeds, Hub, Shop */}
-            <Route path="/feeds" element={<PlayScreen />} />
-            <Route path="/hub" element={<CareScreen />} />
-            <Route path="/mypet" element={<ProtectedRoute><ShopScreen /></ProtectedRoute>} />
-            <Route path="/shop" element={<ShopComingSoonScreen />} />
+            {/* Public to guests with feature gating: Feeds, Hub, Shop. Admin is redirected to /admin. */}
+            <Route path="/feeds" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
+            <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
+            <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
+            <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
+
+            {/* /profile also gated so admin doesn't see consumer profile */}
 
             {/* Hub sub-pages — Vet Near Me & SOS are public; rest require auth */}
             <Route path="/hub/sos" element={<SosScreen />} />
