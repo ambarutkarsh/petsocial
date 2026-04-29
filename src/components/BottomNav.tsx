@@ -30,6 +30,9 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
   const isPathActive = (matches: string[]) =>
     matches.some((m) => location.pathname === m || location.pathname.startsWith(m + "/"));
 
+  // Admin never sees the consumer bottom nav.
+  if (user && isAdminEmail(user.email)) return null;
+
   return (
     <>
       <nav
