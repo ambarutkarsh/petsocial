@@ -16,7 +16,7 @@ import { BookVetIcon, CloseIcon, CommentIcon, HeartIcon, LocationPinIcon, LockIc
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
@@ -781,7 +781,7 @@ const FeedScreen = () => {
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
       {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}

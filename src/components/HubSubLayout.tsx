@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import MobileLayout from "./MobileLayout";
 import BottomNav from "./BottomNav";
-import CreateSheet from "./CreateSheet";
+import PostUploadModal from "./PostUploadModal";
 import PageWrapper from "./PageWrapper";
 
 interface Props {
@@ -43,7 +43,7 @@ const HubSubLayout = ({ title, subtitle, emoji, children }: Props) => {
       </PageWrapper>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -113,7 +113,7 @@ const ShopComingSoonScreen = () => {
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };

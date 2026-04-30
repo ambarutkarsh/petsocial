@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 
@@ -108,7 +108,7 @@ const HubScreen = () => {
       </div>
 
       <BottomNav onPostClick={() => (isGuest ? triggerGuestPopup() : setShowCreate(true))} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };

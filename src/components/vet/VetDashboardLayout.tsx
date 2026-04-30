@@ -1,6 +1,6 @@
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ReactNode, useState } from "react";
 import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/components/icons/PetosauraIcons";
@@ -60,7 +60,7 @@ const VetDashboardLayout = ({ title, children }: Props) => {
         </div>
       </nav>
 
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };
