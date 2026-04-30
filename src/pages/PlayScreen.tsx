@@ -677,6 +677,105 @@ const FeedScreen = () => {
     </article>
   );
 
+  const getRestaurantImage = (index: number) => {
+    const queries = [
+      "pet+friendly+cafe+india",
+      "dog+cafe+outdoor",
+      "pet+cafe+restaurant",
+      "outdoor+dining+pets",
+      "cafe+dog+friendly",
+      "restaurant+outdoor+seating",
+      "coffee+shop+pet",
+      "bistro+outdoor+dog",
+    ];
+    const q = queries[index % queries.length];
+    return `https://source.unsplash.com/800x400/?${q}&sig=${index}`;
+  };
+
+  const renderRestaurantCard = (r: any, idx: number) => {
+    const dots = Array(5).fill(0).map((_, i) => i < (r.pet_comfort_index || 0) ? "●" : "○").join("");
+    const mapsUrl = (r.lat && r.lng)
+      ? `https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${r.name} ${r.location || ""} ${r.city}`)}`;
+    const handleShare = async () => {
+      const shareData = {
+        title: r.name,
+        text: `Check out this pet-friendly place: ${r.name} in ${r.location || ""}, ${r.city}`,
+        url: mapsUrl,
+      };
+      try {
+        if (navigator.share) await navigator.share(shareData);
+        else {
+          await navigator.clipboard.writeText(mapsUrl);
+          toast.success("Link copied!");
+        }
+      } catch {}
+    };
+    return (
+      <article
+        key={r.id || idx}
+        className="bg-card overflow-hidden animate-fade-up mb-3"
+        style={{
+          borderRadius: 22,
+          border: "1px solid rgba(123,94,167,0.10)",
+          boxShadow: "0 2px 12px rgba(123,94,167,0.08)",
+          animationDelay: `${idx * 40}ms`,
+        }}
+      >
+        <div className="relative">
+          <img
+            src={r.image_url || getRestaurantImage(idx)}
+            alt={r.name}
+            loading="lazy"
+            style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = getRestaurantImage(idx + 7); }}
+          />
+          <div className="absolute" style={{ bottom: 10, left: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
+            {r.pet_menu && (
+              <span style={{ background: "rgba(123,94,167,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🍖 Pet Menu
+              </span>
+            )}
+            {r.play_area && (
+              <span style={{ background: "rgba(255,140,102,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🎮 Play Area
+              </span>
+            )}
+            {r.off_leash && (
+              <span style={{ background: "rgba(78,205,196,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🐕 Off Leash
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-heading font-bold text-base flex-1">🍽️ {r.name}</h3>
+            {r.rating != null && (
+              <span style={{ color: "#FF8C66", fontWeight: 700, fontSize: 14 }}>⭐ {Number(r.rating).toFixed(1)}</span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground font-body mt-1">
+            📍 {[r.location, r.city].filter(Boolean).join(", ")}
+          </p>
+          <p className="text-xs font-body mt-2" style={{ color: "#7B5EA7" }}>
+            <span className="text-muted-foreground mr-1">Pet Comfort:</span>
+            <span style={{ letterSpacing: 2 }}>{dots}</span>
+            <span className="text-muted-foreground ml-1">({r.pet_comfort_index || 0}/5)</span>
+          </p>
+          <div className="flex gap-2 mt-3">
+            <Button size="sm" className="flex-1" onClick={() => window.open(mapsUrl, "_blank")}>
+              Get Directions
+            </Button>
+            <Button size="sm" variant="outline" className="flex-1" onClick={handleShare}>
+              Share
+            </Button>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
   const renderPlaceCard = (p: any, idx: number) => {
     if (p.isTopic) return renderTopicCard(p, idx);
     return (
