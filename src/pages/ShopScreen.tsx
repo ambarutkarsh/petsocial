@@ -16,7 +16,7 @@ import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import AddPetSheet from "@/components/AddPetSheet";
 
 const MyPetScreen = () => {
@@ -91,7 +91,7 @@ const MyPetScreen = () => {
           </div>
         </div>
         <BottomNav onPostClick={() => setShowCreate(true)} />
-        <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+        <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
         <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
       </MobileLayout>
     );
@@ -255,7 +255,7 @@ const MyPetScreen = () => {
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
       <AddPetSheet open={showAddPet} onClose={() => setShowAddPet(false)} />
     </MobileLayout>
   );
