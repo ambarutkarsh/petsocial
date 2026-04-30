@@ -968,7 +968,67 @@ const FeedScreen = () => {
           {showFindMates && renderMateCard()}
 
           {/* Nearby */}
-          {showNearby && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
+          {showNearby && nearbySub === "restaurants" && (
+            <>
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-heading font-bold text-base">🍽️ Pet-Friendly Restaurants</h3>
+                  <p className="text-xs text-muted-foreground font-body mt-0.5">
+                    {restaurantsLoading
+                      ? "Loading…"
+                      : `${restaurants.length} place${restaurants.length === 1 ? "" : "s"} ${
+                          restaurantCityLabel === "across India" ? "across India" : `in ${restaurantCityLabel}`
+                        }`}
+                  </p>
+                </div>
+                <select
+                  value={restaurantCity || "AUTO"}
+                  onChange={(e) => setRestaurantCity(e.target.value === "AUTO" ? null : e.target.value)}
+                  className="text-xs font-body font-bold bg-card border border-border rounded-full px-3 py-1.5 text-foreground"
+                >
+                  <option value="AUTO">Auto</option>
+                  <option value="ALL">All Cities</option>
+                  {RESTAURANT_CITIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {restaurantsLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-card overflow-hidden animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                      <div className="bg-muted" style={{ height: 200 }} />
+                      <div className="p-4 space-y-2">
+                        <div className="h-4 bg-muted rounded w-2/3" />
+                        <div className="h-3 bg-muted rounded w-1/2" />
+                        <div className="h-3 bg-muted rounded w-1/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : restaurantsError ? (
+                <div className="text-center py-12">
+                  <p className="text-sm text-muted-foreground font-body">Unable to load restaurants right now.</p>
+                  <Button size="sm" className="mt-3" onClick={() => fetchRestaurants(restaurantCity || "AUTO")}>Retry</Button>
+                </div>
+              ) : restaurants.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-5xl mb-2 opacity-60">🍽️</div>
+                  <p className="text-sm font-heading font-bold">
+                    No pet-friendly restaurants found in {restaurantCityLabel || "your area"} yet.
+                  </p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">We're adding more cities soon!</p>
+                  <Button size="sm" className="mt-3" onClick={() => setRestaurantCity("ALL")}>
+                    Browse All Cities →
+                  </Button>
+                </div>
+              ) : (
+                restaurants.map(renderRestaurantCard)
+              )}
+            </>
+          )}
+          {showNearby && nearbySub !== "restaurants" && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
             nearbyPlaces.length === 0 ? <p className="text-center text-muted-foreground py-8 font-body">No results. Try another category.</p> :
             nearbyPlaces.map(renderPlaceCard))}
         </div>
