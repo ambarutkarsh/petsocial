@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Rss, LayoutGrid, PawPrint, ShoppingBag, Plus } from "lucide-react";
 import { isAdminEmail } from "@/lib/admin";
 
-import CreateSheet from "./CreateSheet";
+import PostUploadModal from "./PostUploadModal";
 
 const navItems = [
   { icon: Rss, label: "Feeds", path: "/feeds", event: "bottom_nav_feeds_tap", match: ["/feeds", "/play", "/feed"] },
@@ -87,7 +87,7 @@ const BottomNav = ({ onPostClick }: BottomNavProps) => {
           })}
         </div>
       </nav>
-      <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
+      <PostUploadModal open={createOpen} onClose={() => setCreateOpen(false)} />
     </>
   );
 };
