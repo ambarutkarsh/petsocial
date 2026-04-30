@@ -2586,6 +2586,14 @@ export type Database = {
         Args: { _amount: number; _reason: string; _user_id: string }
         Returns: undefined
       }
+      can_manage_prescription_object: {
+        Args: { _object_name: string; _user_id: string }
+        Returns: boolean
+      }
+      can_read_prescription_object: {
+        Args: { _object_name: string; _user_id: string }
+        Returns: boolean
+      }
       get_my_vet_profile: {
         Args: never
         Returns: {
@@ -2626,6 +2634,7 @@ export type Database = {
         }
       }
       is_admin: { Args: never; Returns: boolean }
+      is_vet_user: { Args: { _user_id: string }; Returns: boolean }
       lookup_microchip: {
         Args: { _chip_number: string }
         Returns: {
