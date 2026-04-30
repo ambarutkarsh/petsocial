@@ -1,6 +1,6 @@
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
-import CreateSheet from "@/components/CreateSheet";
+import PostUploadModal from "@/components/PostUploadModal";
 import ForumScreen from "./ForumScreen";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,7 +93,7 @@ const HubScreen = () => {
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
-      <CreateSheet open={showCreate} onClose={() => setShowCreate(false)} />
+      <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
     </MobileLayout>
   );
 };
