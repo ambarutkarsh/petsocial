@@ -53,9 +53,15 @@ const FeedScreen = () => {
   const [showStoryCreator, setShowStoryCreator] = useState(false);
   const [activePill, setActivePill] = useState<FeedPillKey>("reels");
   const [savedPrefs, setSavedPrefs] = useState<FeedPillKey[]>([]);
-  const [nearbySub, setNearbySub] = useState<string>("parks");
+  const [nearbySub, setNearbySub] = useState<string>("restaurants");
   const [nearbyPlaces, setNearbyPlaces] = useState<any[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
+  const [nearbyError, setNearbyError] = useState(false);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [restaurantsLoading, setRestaurantsLoading] = useState(false);
+  const [restaurantsError, setRestaurantsError] = useState(false);
+  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from profile, "ALL" = all
+  const [restaurantCityLabel, setRestaurantCityLabel] = useState<string>("");
 
   // Profile (load saved feed_preferences)
   const { data: profile } = useQuery({
