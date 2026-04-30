@@ -53,9 +53,15 @@ const FeedScreen = () => {
   const [showStoryCreator, setShowStoryCreator] = useState(false);
   const [activePill, setActivePill] = useState<FeedPillKey>("reels");
   const [savedPrefs, setSavedPrefs] = useState<FeedPillKey[]>([]);
-  const [nearbySub, setNearbySub] = useState<string>("parks");
+  const [nearbySub, setNearbySub] = useState<string>("restaurants");
   const [nearbyPlaces, setNearbyPlaces] = useState<any[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
+  const [nearbyError, setNearbyError] = useState(false);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [restaurantsLoading, setRestaurantsLoading] = useState(false);
+  const [restaurantsError, setRestaurantsError] = useState(false);
+  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from profile, "ALL" = all
+  const [restaurantCityLabel, setRestaurantCityLabel] = useState<string>("");
 
   // Profile (load saved feed_preferences)
   const { data: profile } = useQuery({
@@ -292,7 +298,86 @@ const FeedScreen = () => {
 
   // ============= NEARBY =============
   const showNearby = activePill === "nearby"; // never auto-included by Curated
+
+  const RESTAURANT_CITIES = ["Chennai", "Delhi NCR", "Mumbai", "Pune", "Bangalore", "Hyderabad", "Goa"];
+  const CITY_MAP: Record<string, string> = {
+    "chennai": "Chennai",
+    "delhi": "Delhi NCR",
+    "new delhi": "Delhi NCR",
+    "gurgaon": "Delhi NCR",
+    "gurugram": "Delhi NCR",
+    "noida": "Delhi NCR",
+    "ghaziabad": "Delhi NCR",
+    "faridabad": "Delhi NCR",
+    "mumbai": "Mumbai",
+    "navi mumbai": "Mumbai",
+    "thane": "Mumbai",
+    "pune": "Pune",
+    "bangalore": "Bangalore",
+    "bengaluru": "Bangalore",
+    "hyderabad": "Hyderabad",
+    "secunderabad": "Hyderabad",
+    "goa": "Goa",
+    "panaji": "Goa",
+  };
+
+  const resolveDbCity = (rawCity?: string | null): string | null => {
+    if (!rawCity) return null;
+    const lc = rawCity.toLowerCase();
+    const key = Object.keys(CITY_MAP).find((k) => lc.includes(k));
+    return key ? CITY_MAP[key] : null;
+  };
+
+  const fetchRestaurants = async (overrideCity?: string | null) => {
+    setRestaurantsLoading(true);
+    setRestaurantsError(false);
+    try {
+      // Determine city: explicit override > selector > profile match
+      let dbCity: string | null = null;
+      let label = "";
+      if (overrideCity === "ALL") {
+        dbCity = null;
+        label = "across India";
+      } else if (overrideCity && overrideCity !== "AUTO") {
+        dbCity = overrideCity;
+        label = overrideCity;
+      } else {
+        dbCity = resolveDbCity(profile?.city);
+        label = dbCity || "across India";
+      }
+
+      let query = supabase
+        .from("pet_friendly_places")
+        .select("*")
+        .eq("place_type", "restaurant")
+        .eq("is_active", true)
+        .order("pet_comfort_index", { ascending: false })
+        .order("rating", { ascending: false });
+
+      if (dbCity) {
+        query = query.eq("city", dbCity);
+      } else {
+        query = query.limit(20);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      setRestaurants(data || []);
+      setRestaurantCityLabel(label);
+    } catch (e) {
+      setRestaurantsError(true);
+      setRestaurants([]);
+    } finally {
+      setRestaurantsLoading(false);
+    }
+  };
+
   const fetchNearby = async (subKey: string) => {
+    if (subKey === "restaurants") {
+      // Restaurants come from Supabase, not Google Places.
+      await fetchRestaurants(restaurantCity || "AUTO");
+      return;
+    }
     if (subKey === "lost_found") {
       const { data: rawTopics } = await supabase.from("forum_topics").select("*").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
       const data = await attachProfiles(rawTopics || []);
@@ -304,6 +389,7 @@ const FeedScreen = () => {
       return;
     }
     setNearbyLoading(true);
+    setNearbyError(false);
     try {
       const sub = NEARBY_SUB_PILLS.find(s => s.key === subKey);
       if (!sub) return;
@@ -327,6 +413,7 @@ const FeedScreen = () => {
       setNearbyPlaces(data?.places || []);
     } catch {
       toast.error("Could not load nearby places");
+      setNearbyError(true);
     } finally {
       setNearbyLoading(false);
     }
@@ -336,6 +423,14 @@ const FeedScreen = () => {
     if (showNearby) fetchNearby(nearbySub);
     // eslint-disable-next-line
   }, [showNearby, nearbySub]);
+
+  // Re-fetch restaurants when user picks a different city from the dropdown.
+  useEffect(() => {
+    if (showNearby && nearbySub === "restaurants") {
+      fetchRestaurants(restaurantCity || "AUTO");
+    }
+    // eslint-disable-next-line
+  }, [restaurantCity]);
 
   // ============= MUTATIONS =============
   const toggleLikeMutation = useMutation({
@@ -582,6 +677,105 @@ const FeedScreen = () => {
     </article>
   );
 
+  const getRestaurantImage = (index: number) => {
+    const queries = [
+      "pet+friendly+cafe+india",
+      "dog+cafe+outdoor",
+      "pet+cafe+restaurant",
+      "outdoor+dining+pets",
+      "cafe+dog+friendly",
+      "restaurant+outdoor+seating",
+      "coffee+shop+pet",
+      "bistro+outdoor+dog",
+    ];
+    const q = queries[index % queries.length];
+    return `https://source.unsplash.com/800x400/?${q}&sig=${index}`;
+  };
+
+  const renderRestaurantCard = (r: any, idx: number) => {
+    const dots = Array(5).fill(0).map((_, i) => i < (r.pet_comfort_index || 0) ? "●" : "○").join("");
+    const mapsUrl = (r.lat && r.lng)
+      ? `https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${r.name} ${r.location || ""} ${r.city}`)}`;
+    const handleShare = async () => {
+      const shareData = {
+        title: r.name,
+        text: `Check out this pet-friendly place: ${r.name} in ${r.location || ""}, ${r.city}`,
+        url: mapsUrl,
+      };
+      try {
+        if (navigator.share) await navigator.share(shareData);
+        else {
+          await navigator.clipboard.writeText(mapsUrl);
+          toast.success("Link copied!");
+        }
+      } catch {}
+    };
+    return (
+      <article
+        key={r.id || idx}
+        className="bg-card overflow-hidden animate-fade-up mb-3"
+        style={{
+          borderRadius: 22,
+          border: "1px solid rgba(123,94,167,0.10)",
+          boxShadow: "0 2px 12px rgba(123,94,167,0.08)",
+          animationDelay: `${idx * 40}ms`,
+        }}
+      >
+        <div className="relative">
+          <img
+            src={r.image_url || getRestaurantImage(idx)}
+            alt={r.name}
+            loading="lazy"
+            style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = getRestaurantImage(idx + 7); }}
+          />
+          <div className="absolute" style={{ bottom: 10, left: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
+            {r.pet_menu && (
+              <span style={{ background: "rgba(123,94,167,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🍖 Pet Menu
+              </span>
+            )}
+            {r.play_area && (
+              <span style={{ background: "rgba(255,140,102,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🎮 Play Area
+              </span>
+            )}
+            {r.off_leash && (
+              <span style={{ background: "rgba(78,205,196,0.85)", color: "white", padding: "3px 10px", borderRadius: 50, fontSize: 11, fontWeight: 700, backdropFilter: "blur(4px)" }}>
+                🐕 Off Leash
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-heading font-bold text-base flex-1">🍽️ {r.name}</h3>
+            {r.rating != null && (
+              <span style={{ color: "#FF8C66", fontWeight: 700, fontSize: 14 }}>⭐ {Number(r.rating).toFixed(1)}</span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground font-body mt-1">
+            📍 {[r.location, r.city].filter(Boolean).join(", ")}
+          </p>
+          <p className="text-xs font-body mt-2" style={{ color: "#7B5EA7" }}>
+            <span className="text-muted-foreground mr-1">Pet Comfort:</span>
+            <span style={{ letterSpacing: 2 }}>{dots}</span>
+            <span className="text-muted-foreground ml-1">({r.pet_comfort_index || 0}/5)</span>
+          </p>
+          <div className="flex gap-2 mt-3">
+            <Button size="sm" className="flex-1" onClick={() => window.open(mapsUrl, "_blank")}>
+              Get Directions
+            </Button>
+            <Button size="sm" variant="outline" className="flex-1" onClick={handleShare}>
+              Share
+            </Button>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
   const renderPlaceCard = (p: any, idx: number) => {
     if (p.isTopic) return renderTopicCard(p, idx);
     return (
@@ -774,7 +968,67 @@ const FeedScreen = () => {
           {showFindMates && renderMateCard()}
 
           {/* Nearby */}
-          {showNearby && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
+          {showNearby && nearbySub === "restaurants" && (
+            <>
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-heading font-bold text-base">🍽️ Pet-Friendly Restaurants</h3>
+                  <p className="text-xs text-muted-foreground font-body mt-0.5">
+                    {restaurantsLoading
+                      ? "Loading…"
+                      : `${restaurants.length} place${restaurants.length === 1 ? "" : "s"} ${
+                          restaurantCityLabel === "across India" ? "across India" : `in ${restaurantCityLabel}`
+                        }`}
+                  </p>
+                </div>
+                <select
+                  value={restaurantCity || "AUTO"}
+                  onChange={(e) => setRestaurantCity(e.target.value === "AUTO" ? null : e.target.value)}
+                  className="text-xs font-body font-bold bg-card border border-border rounded-full px-3 py-1.5 text-foreground"
+                >
+                  <option value="AUTO">Auto</option>
+                  <option value="ALL">All Cities</option>
+                  {RESTAURANT_CITIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {restaurantsLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="bg-card overflow-hidden animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                      <div className="bg-muted" style={{ height: 200 }} />
+                      <div className="p-4 space-y-2">
+                        <div className="h-4 bg-muted rounded w-2/3" />
+                        <div className="h-3 bg-muted rounded w-1/2" />
+                        <div className="h-3 bg-muted rounded w-1/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : restaurantsError ? (
+                <div className="text-center py-12">
+                  <p className="text-sm text-muted-foreground font-body">Unable to load restaurants right now.</p>
+                  <Button size="sm" className="mt-3" onClick={() => fetchRestaurants(restaurantCity || "AUTO")}>Retry</Button>
+                </div>
+              ) : restaurants.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-5xl mb-2 opacity-60">🍽️</div>
+                  <p className="text-sm font-heading font-bold">
+                    No pet-friendly restaurants found in {restaurantCityLabel || "your area"} yet.
+                  </p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">We're adding more cities soon!</p>
+                  <Button size="sm" className="mt-3" onClick={() => setRestaurantCity("ALL")}>
+                    Browse All Cities →
+                  </Button>
+                </div>
+              ) : (
+                restaurants.map(renderRestaurantCard)
+              )}
+            </>
+          )}
+          {showNearby && nearbySub !== "restaurants" && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
             nearbyPlaces.length === 0 ? <p className="text-center text-muted-foreground py-8 font-body">No results. Try another category.</p> :
             nearbyPlaces.map(renderPlaceCard))}
         </div>

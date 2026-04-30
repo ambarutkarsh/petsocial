@@ -1095,6 +1095,63 @@ export type Database = {
         }
         Relationships: []
       }
+      pet_friendly_places: {
+        Row: {
+          city: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          lat: number | null
+          lng: number | null
+          location: string | null
+          name: string
+          off_leash: boolean | null
+          pet_comfort_index: number | null
+          pet_menu: boolean | null
+          place_type: string | null
+          play_area: boolean | null
+          rating: number | null
+        }
+        Insert: {
+          city: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name: string
+          off_leash?: boolean | null
+          pet_comfort_index?: number | null
+          pet_menu?: boolean | null
+          place_type?: string | null
+          play_area?: boolean | null
+          rating?: number | null
+        }
+        Update: {
+          city?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          location?: string | null
+          name?: string
+          off_leash?: boolean | null
+          pet_comfort_index?: number | null
+          pet_menu?: boolean | null
+          place_type?: string | null
+          play_area?: boolean | null
+          rating?: number | null
+        }
+        Relationships: []
+      }
       pet_microchips: {
         Row: {
           chip_format: string
