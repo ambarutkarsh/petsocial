@@ -155,7 +155,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-[430px] bg-card rounded-t-[28px] p-6 animate-slide-up max-h-[85vh] overflow-y-auto">
+      <div className="relative w-full max-w-[430px] bg-card rounded-t-[28px] p-6 pb-28 animate-slide-up max-h-[85vh] overflow-y-auto">
         <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-heading font-bold">Share a Moment</h2>
