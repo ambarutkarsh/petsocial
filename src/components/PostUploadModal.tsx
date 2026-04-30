@@ -108,16 +108,21 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
 
     const ext = selectedFile.name.split(".").pop();
     const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
-    const { error: uploadError } = await supabase.storage.from("posts").upload(path, selectedFile);
+    const { error: uploadError } = await supabase.storage.from("posts").upload(path, selectedFile, {
+      contentType: selectedFile.type,
+      upsert: false,
+    });
     if (uploadError) {
       toast.error("Upload failed: " + uploadError.message);
       setPosting(false);
       return;
     }
 
+    const { data: pub } = supabase.storage.from("posts").getPublicUrl(path);
+
     const { error } = await supabase.from("posts").insert({
       user_id: user.id,
-      media_url: path,
+      media_url: pub.publicUrl,
       media_type: selectedFile.type.startsWith("video") ? "video" : "image",
       caption,
       hashtags: hashtags.map((h) => h.replace(/^#/, "")),
