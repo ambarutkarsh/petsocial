@@ -298,7 +298,86 @@ const FeedScreen = () => {
 
   // ============= NEARBY =============
   const showNearby = activePill === "nearby"; // never auto-included by Curated
+
+  const RESTAURANT_CITIES = ["Chennai", "Delhi NCR", "Mumbai", "Pune", "Bangalore", "Hyderabad", "Goa"];
+  const CITY_MAP: Record<string, string> = {
+    "chennai": "Chennai",
+    "delhi": "Delhi NCR",
+    "new delhi": "Delhi NCR",
+    "gurgaon": "Delhi NCR",
+    "gurugram": "Delhi NCR",
+    "noida": "Delhi NCR",
+    "ghaziabad": "Delhi NCR",
+    "faridabad": "Delhi NCR",
+    "mumbai": "Mumbai",
+    "navi mumbai": "Mumbai",
+    "thane": "Mumbai",
+    "pune": "Pune",
+    "bangalore": "Bangalore",
+    "bengaluru": "Bangalore",
+    "hyderabad": "Hyderabad",
+    "secunderabad": "Hyderabad",
+    "goa": "Goa",
+    "panaji": "Goa",
+  };
+
+  const resolveDbCity = (rawCity?: string | null): string | null => {
+    if (!rawCity) return null;
+    const lc = rawCity.toLowerCase();
+    const key = Object.keys(CITY_MAP).find((k) => lc.includes(k));
+    return key ? CITY_MAP[key] : null;
+  };
+
+  const fetchRestaurants = async (overrideCity?: string | null) => {
+    setRestaurantsLoading(true);
+    setRestaurantsError(false);
+    try {
+      // Determine city: explicit override > selector > profile match
+      let dbCity: string | null = null;
+      let label = "";
+      if (overrideCity === "ALL") {
+        dbCity = null;
+        label = "across India";
+      } else if (overrideCity && overrideCity !== "AUTO") {
+        dbCity = overrideCity;
+        label = overrideCity;
+      } else {
+        dbCity = resolveDbCity(profile?.city);
+        label = dbCity || "across India";
+      }
+
+      let query = supabase
+        .from("pet_friendly_places")
+        .select("*")
+        .eq("place_type", "restaurant")
+        .eq("is_active", true)
+        .order("pet_comfort_index", { ascending: false })
+        .order("rating", { ascending: false });
+
+      if (dbCity) {
+        query = query.eq("city", dbCity);
+      } else {
+        query = query.limit(20);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      setRestaurants(data || []);
+      setRestaurantCityLabel(label);
+    } catch (e) {
+      setRestaurantsError(true);
+      setRestaurants([]);
+    } finally {
+      setRestaurantsLoading(false);
+    }
+  };
+
   const fetchNearby = async (subKey: string) => {
+    if (subKey === "restaurants") {
+      // Restaurants come from Supabase, not Google Places.
+      await fetchRestaurants(restaurantCity || "AUTO");
+      return;
+    }
     if (subKey === "lost_found") {
       const { data: rawTopics } = await supabase.from("forum_topics").select("*").eq("pet_category", "lost_found").order("created_at", { ascending: false }).limit(20);
       const data = await attachProfiles(rawTopics || []);
@@ -310,6 +389,7 @@ const FeedScreen = () => {
       return;
     }
     setNearbyLoading(true);
+    setNearbyError(false);
     try {
       const sub = NEARBY_SUB_PILLS.find(s => s.key === subKey);
       if (!sub) return;
@@ -333,6 +413,7 @@ const FeedScreen = () => {
       setNearbyPlaces(data?.places || []);
     } catch {
       toast.error("Could not load nearby places");
+      setNearbyError(true);
     } finally {
       setNearbyLoading(false);
     }
@@ -342,6 +423,14 @@ const FeedScreen = () => {
     if (showNearby) fetchNearby(nearbySub);
     // eslint-disable-next-line
   }, [showNearby, nearbySub]);
+
+  // Re-fetch restaurants when user picks a different city from the dropdown.
+  useEffect(() => {
+    if (showNearby && nearbySub === "restaurants") {
+      fetchRestaurants(restaurantCity || "AUTO");
+    }
+    // eslint-disable-next-line
+  }, [restaurantCity]);
 
   // ============= MUTATIONS =============
   const toggleLikeMutation = useMutation({
