@@ -12,6 +12,7 @@ import UserAvatar from "@/components/UserAvatar";
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
+import FeedVideoPlayer from "@/components/FeedVideoPlayer";
 import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
