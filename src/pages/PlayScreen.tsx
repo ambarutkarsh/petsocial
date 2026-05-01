@@ -342,12 +342,12 @@ const FeedScreen = () => {
     return key ? CITY_MAP[key] : null;
   };
 
-  const fetchRestaurants = async (overrideCity?: string | null) => {
+  const fetchRestaurants = async (overrideCity?: string | null, rawCityHint?: string | null) => {
     setRestaurantsLoading(true);
     setRestaurantsError(false);
     setCityNotInDb(null);
     try {
-      // Determine city: explicit override > selector > profile match
+      // Determine city: explicit override > selector > GPS hint > profile city
       let dbCity: string | null = null;
       let label = "";
       let rawInput: string | null = null;
@@ -358,8 +358,8 @@ const FeedScreen = () => {
         dbCity = overrideCity;
         label = overrideCity;
       } else {
-        // AUTO: prefer GPS-detected city if available, otherwise profile city
-        rawInput = gpsRawCity || profile?.city || null;
+        // AUTO: prefer the freshly-detected GPS hint, then any stored gps city, then profile city.
+        rawInput = rawCityHint ?? gpsRawCity ?? profile?.city ?? null;
         dbCity = resolveDbCity(rawInput);
         label = dbCity || "across India";
       }
@@ -383,10 +383,10 @@ const FeedScreen = () => {
       setRestaurants(data || []);
       setRestaurantCityLabel(label);
 
-      // If user has a raw city but it didn't match any of our 7 cities, surface a friendly note.
+      // If we had a raw city but it didn't match any of our 7 supported cities,
+      // surface a friendly "no listings for {city}" note above the all-cities fallback.
       if (overrideCity !== "ALL" && rawInput && !dbCity) {
         setCityNotInDb(rawInput);
-        // Fall back to showing all (no city filter) — already done above since dbCity is null
       }
     } catch (e) {
       setRestaurantsError(true);
@@ -404,43 +404,39 @@ const FeedScreen = () => {
       await fetchRestaurants(restaurantCity);
       return;
     }
-    if (!navigator.geolocation) {
-      await fetchRestaurants("AUTO");
-      return;
-    }
-    setDetectingLocation(true);
-    try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          timeout: 5000,
-          maximumAge: 300000,
-        });
-      });
+    let detectedRaw: string | null = null;
+    if (navigator.geolocation) {
+      setDetectingLocation(true);
       try {
-        const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&addressdetails=1`,
-          { headers: { "Accept-Language": "en" } }
-        );
-        const data = await res.json();
-        const a = data.address || {};
-        const detected: string =
-          a.city || a.town || a.state_district || a.county || a.suburb || "";
-        if (detected) {
-          setGpsRawCity(detected);
-          const matched = resolveDbCity(detected);
-          setGpsDetectedCity(matched);
+        const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            timeout: 5000,
+            maximumAge: 300000,
+          });
+        });
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          const data = await res.json();
+          const a = data.address || {};
+          detectedRaw =
+            a.city || a.town || a.state_district || a.county || a.suburb || null;
+          if (detectedRaw) {
+            setGpsRawCity(detectedRaw);
+            setGpsDetectedCity(resolveDbCity(detectedRaw));
+          }
+        } catch {
+          /* reverse geocode failed — fall through */
         }
       } catch {
-        // reverse geocode failed — fall through to profile city
+        /* GPS denied or timeout — fall through to profile city */
+      } finally {
+        setDetectingLocation(false);
       }
-    } catch {
-      // GPS denied or timeout — silently fall back
-    } finally {
-      setDetectingLocation(false);
     }
-    // Now fetch with whatever we resolved (gpsRawCity is read inside fetchRestaurants via closure;
-    // but state updates above are async, so pass through directly)
-    await fetchRestaurants("AUTO");
+    await fetchRestaurants("AUTO", detectedRaw);
   };
 
   const fetchNearby = async (subKey: string) => {
