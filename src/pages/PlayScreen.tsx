@@ -794,7 +794,7 @@ const FeedScreen = () => {
             src={r.image_url || getRestaurantImage(idx)}
             alt={r.name}
             loading="lazy"
-            style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
+            style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = getRestaurantImage(idx + 7); }}
           />
           <div className="absolute" style={{ bottom: 10, left: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
