@@ -1,18 +1,77 @@
+import { useState } from "react";
 import ReelViewer from "@/components/ReelViewer";
 
-// Update this page (the content is just a fallback if you fail to update the page)
+type Post = {
+  id: number;
+  media_type: "image" | "video";
+  media_url: string;
+};
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  // 🔹 Mock data (replace later with Supabase)
+  const [posts] = useState<Post[]>([
+    {
+      id: 1,
+      media_type: "image",
+      media_url: "https://placekitten.com/400/500",
+    },
+    {
+      id: 2,
+      media_type: "video",
+      media_url: "https://www.w3schools.com/html/mov_bbb.mp4",
+    },
+    {
+      id: 3,
+      media_type: "image",
+      media_url: "https://placekitten.com/500/500",
+    },
+  ]);
+
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-white p-4">
+      {/* 🔹 Feed Grid */}
+      <div className="grid grid-cols-2 gap-4">
+        {posts.map((post, index) => (
+          <div
+            key={post.id}
+            className="cursor-pointer overflow-hidden rounded-xl border"
+            onClick={() => {
+              setSelectedIndex(index);
+              setIsViewerOpen(true);
+            }}
+          >
+            {post.media_type === "image" ? (
+              <img
+                src={post.media_url}
+                className="h-60 w-full object-cover"
+              />
+            ) : (
+              <video
+                src={post.media_url}
+                className="h-60 w-full object-cover"
+                muted
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* 🔹 Reel Viewer Overlay */}
+      {isViewerOpen && (
+        <ReelViewer
+          reels={posts.map((p) => ({
+            type: p.media_type,
+            url: p.media_url,
+          }))}
+          index={selectedIndex}
+          onClose={() => setIsViewerOpen(false)}
+        />
+      )}
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
