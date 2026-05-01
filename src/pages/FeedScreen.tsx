@@ -382,11 +382,10 @@ const FeedScreen = () => {
       )}
       <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
       {activeReelIndex !== null && (
-  <ReelViewer
-    posts={posts}
-    initialIndex={activeReelIndex}
-    onClose={() => setActiveReelIndex(null)}
-  />
+  <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "black", color: "white", zIndex: 9999 }}>
+    REEL OPENED
+    <button onClick={() => setActiveReelIndex(null)}>Close</button>
+  </div>
 )}
     </MobileLayout>
   );
