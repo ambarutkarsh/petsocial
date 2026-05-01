@@ -1,21 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function ReelViewer({ reels, index, onClose }) {
+interface Reel {
+  type: "image" | "video";
+  url: string;
+}
+
+export default function ReelViewer({
+  reels,
+  index,
+  onClose,
+}: {
+  reels: Reel[];
+  index: number;
+  onClose: () => void;
+}) {
   const [current, setCurrent] = useState(index);
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const touchStartY = useRef(0);
 
   const reel = reels[current];
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "auto");
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, []);
 
   useEffect(() => {
     if (!reel) return;
 
-    let timer;
+    let timer: any;
 
     if (reel.type === "image") {
       timer = setTimeout(() => next(), 10000);
@@ -32,11 +47,11 @@ export default function ReelViewer({ reels, index, onClose }) {
     if (current > 0) setCurrent((p) => p - 1);
   };
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     const delta = touchStartY.current - e.changedTouches[0].clientY;
 
     if (delta > 50) next();
@@ -55,7 +70,9 @@ export default function ReelViewer({ reels, index, onClose }) {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <button style={styles.back} onClick={onClose}>←</button>
+      <button style={styles.back} onClick={onClose}>
+        ←
+      </button>
 
       {reel.type === "image" ? (
         <img src={reel.url} style={styles.media} />
@@ -80,7 +97,7 @@ export default function ReelViewer({ reels, index, onClose }) {
   );
 }
 
-const styles = {
+const styles: any = {
   container: {
     position: "fixed",
     inset: 0,
