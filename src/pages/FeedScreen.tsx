@@ -313,23 +313,35 @@ const FeedScreen = () => {
                       </button>
                     )}
                   </div>
-                  <div 
-                    className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0] cursor-pointer"
-  onClick={() => setActiveReelIndex(idx)}
->
-                    {post.media_type === "video" ? (
-                      <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
-                    ) : (
-                      <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
-                    )}
-                    {post.hashtags && post.hashtags.length > 0 && (
-                      <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
-                        {post.hashtags.map((tag: string) => (
-                          <span key={tag} className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white">
-                            #{tag.replace(/^#/, "")}
-                          </span>
-                        ))}
-                      </div>
+                 <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+
+  {/* ✅ CLICK LAYER (NEW - THIS FIXES YOUR ISSUE) */}
+  <div
+    className="absolute inset-0 z-10"
+    onClick={() => setActiveReelIndex(idx)}
+  />
+
+  {post.media_type === "video" ? (
+    <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
+  ) : (
+    <img
+      src={getMediaUrl(post.media_url)}
+      alt={post.caption || ""}
+      className="w-full h-full object-cover"
+      loading="lazy"
+    />
+  )}
+
+  {post.hashtags && post.hashtags.length > 0 && (
+    <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
+      {post.hashtags.map((tag: string) => (
+        <span key={tag} className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white">
+          #{tag.replace(/^#/, "")}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
                     )}
                   </div>
                   <div className="p-3.5">
