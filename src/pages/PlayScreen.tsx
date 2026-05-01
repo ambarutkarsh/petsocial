@@ -441,8 +441,8 @@ const FeedScreen = () => {
 
   const fetchNearby = async (subKey: string) => {
     if (subKey === "restaurants") {
-      // Restaurants come from Supabase, not Google Places.
-      await fetchRestaurants(restaurantCity || "AUTO");
+      // Restaurants: GPS → profile → all (Supabase, never Google Places).
+      await detectAndFetchRestaurants();
       return;
     }
     if (subKey === "lost_found") {
