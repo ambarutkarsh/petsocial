@@ -60,8 +60,13 @@ const FeedScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [restaurantsLoading, setRestaurantsLoading] = useState(false);
   const [restaurantsError, setRestaurantsError] = useState(false);
-  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from profile, "ALL" = all
+  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from GPS/profile, "ALL" = all
   const [restaurantCityLabel, setRestaurantCityLabel] = useState<string>("");
+  // GPS detection state for restaurants
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [gpsDetectedCity, setGpsDetectedCity] = useState<string | null>(null); // matched DB city from GPS
+  const [gpsRawCity, setGpsRawCity] = useState<string | null>(null); // raw reverse-geocoded city name
+  const [cityNotInDb, setCityNotInDb] = useState<string | null>(null); // raw city when no match
 
   // Profile (load saved feed_preferences)
   const { data: profile } = useQuery({
@@ -302,6 +307,7 @@ const FeedScreen = () => {
   const RESTAURANT_CITIES = ["Chennai", "Delhi NCR", "Mumbai", "Pune", "Bangalore", "Hyderabad", "Goa"];
   const CITY_MAP: Record<string, string> = {
     "chennai": "Chennai",
+    "madras": "Chennai",
     "delhi": "Delhi NCR",
     "new delhi": "Delhi NCR",
     "gurgaon": "Delhi NCR",
@@ -310,31 +316,41 @@ const FeedScreen = () => {
     "ghaziabad": "Delhi NCR",
     "faridabad": "Delhi NCR",
     "mumbai": "Mumbai",
+    "bombay": "Mumbai",
     "navi mumbai": "Mumbai",
     "thane": "Mumbai",
     "pune": "Pune",
+    "pimpri": "Pune",
+    "chinchwad": "Pune",
     "bangalore": "Bangalore",
     "bengaluru": "Bangalore",
+    "blr": "Bangalore",
     "hyderabad": "Hyderabad",
     "secunderabad": "Hyderabad",
+    "cyberabad": "Hyderabad",
     "goa": "Goa",
     "panaji": "Goa",
+    "margao": "Goa",
+    "anjuna": "Goa",
+    "calangute": "Goa",
   };
 
   const resolveDbCity = (rawCity?: string | null): string | null => {
     if (!rawCity) return null;
-    const lc = rawCity.toLowerCase();
+    const lc = rawCity.toLowerCase().trim();
     const key = Object.keys(CITY_MAP).find((k) => lc.includes(k));
     return key ? CITY_MAP[key] : null;
   };
 
-  const fetchRestaurants = async (overrideCity?: string | null) => {
+  const fetchRestaurants = async (overrideCity?: string | null, rawCityHint?: string | null) => {
     setRestaurantsLoading(true);
     setRestaurantsError(false);
+    setCityNotInDb(null);
     try {
-      // Determine city: explicit override > selector > profile match
+      // Determine city: explicit override > selector > GPS hint > profile city
       let dbCity: string | null = null;
       let label = "";
+      let rawInput: string | null = null;
       if (overrideCity === "ALL") {
         dbCity = null;
         label = "across India";
@@ -342,7 +358,9 @@ const FeedScreen = () => {
         dbCity = overrideCity;
         label = overrideCity;
       } else {
-        dbCity = resolveDbCity(profile?.city);
+        // AUTO: prefer the freshly-detected GPS hint, then any stored gps city, then profile city.
+        rawInput = rawCityHint ?? gpsRawCity ?? profile?.city ?? null;
+        dbCity = resolveDbCity(rawInput);
         label = dbCity || "across India";
       }
 
@@ -364,6 +382,12 @@ const FeedScreen = () => {
       if (error) throw error;
       setRestaurants(data || []);
       setRestaurantCityLabel(label);
+
+      // If we had a raw city but it didn't match any of our 7 supported cities,
+      // surface a friendly "no listings for {city}" note above the all-cities fallback.
+      if (overrideCity !== "ALL" && rawInput && !dbCity) {
+        setCityNotInDb(rawInput);
+      }
     } catch (e) {
       setRestaurantsError(true);
       setRestaurants([]);
@@ -372,10 +396,53 @@ const FeedScreen = () => {
     }
   };
 
+  // Run GPS → reverse geocode → set state, then fetch.
+  // Falls through to profile city / all-cities per the priority chain.
+  const detectAndFetchRestaurants = async () => {
+    // Skip GPS if user already picked an explicit city.
+    if (restaurantCity && restaurantCity !== "AUTO") {
+      await fetchRestaurants(restaurantCity);
+      return;
+    }
+    let detectedRaw: string | null = null;
+    if (navigator.geolocation) {
+      setDetectingLocation(true);
+      try {
+        const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            timeout: 5000,
+            maximumAge: 300000,
+          });
+        });
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          const data = await res.json();
+          const a = data.address || {};
+          detectedRaw =
+            a.city || a.town || a.state_district || a.county || a.suburb || null;
+          if (detectedRaw) {
+            setGpsRawCity(detectedRaw);
+            setGpsDetectedCity(resolveDbCity(detectedRaw));
+          }
+        } catch {
+          /* reverse geocode failed — fall through */
+        }
+      } catch {
+        /* GPS denied or timeout — fall through to profile city */
+      } finally {
+        setDetectingLocation(false);
+      }
+    }
+    await fetchRestaurants("AUTO", detectedRaw);
+  };
+
   const fetchNearby = async (subKey: string) => {
     if (subKey === "restaurants") {
-      // Restaurants come from Supabase, not Google Places.
-      await fetchRestaurants(restaurantCity || "AUTO");
+      // Restaurants: GPS → profile → all (Supabase, never Google Places).
+      await detectAndFetchRestaurants();
       return;
     }
     if (subKey === "lost_found") {
@@ -727,7 +794,7 @@ const FeedScreen = () => {
             src={r.image_url || getRestaurantImage(idx)}
             alt={r.name}
             loading="lazy"
-            style={{ width: "100%", height: 200, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
+            style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: "22px 22px 0 0" }}
             onError={(e) => { (e.currentTarget as HTMLImageElement).src = getRestaurantImage(idx + 7); }}
           />
           <div className="absolute" style={{ bottom: 10, left: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
@@ -970,11 +1037,11 @@ const FeedScreen = () => {
           {/* Nearby */}
           {showNearby && nearbySub === "restaurants" && (
             <>
-              <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex items-start justify-between gap-3 mb-1">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-heading font-bold text-base">🍽️ Pet-Friendly Restaurants</h3>
                   <p className="text-xs text-muted-foreground font-body mt-0.5">
-                    {restaurantsLoading
+                    {restaurantsLoading || detectingLocation
                       ? "Loading…"
                       : `${restaurants.length} place${restaurants.length === 1 ? "" : "s"} ${
                           restaurantCityLabel === "across India" ? "across India" : `in ${restaurantCityLabel}`
@@ -984,7 +1051,8 @@ const FeedScreen = () => {
                 <select
                   value={restaurantCity || "AUTO"}
                   onChange={(e) => setRestaurantCity(e.target.value === "AUTO" ? null : e.target.value)}
-                  className="text-xs font-body font-bold bg-card border border-border rounded-full px-3 py-1.5 text-foreground"
+                  style={{ color: "#7B5EA7" }}
+                  className="text-xs font-body font-bold bg-transparent border-0 px-2 py-1.5 cursor-pointer outline-none"
                 >
                   <option value="AUTO">Auto</option>
                   <option value="ALL">All Cities</option>
@@ -994,11 +1062,36 @@ const FeedScreen = () => {
                 </select>
               </div>
 
-              {restaurantsLoading ? (
+              {/* GPS-detected location indicator */}
+              {!restaurantCity && gpsDetectedCity && !detectingLocation && (
+                <p className="text-xs text-muted-foreground font-body mb-2" style={{ fontSize: 12 }}>
+                  📍 Near {gpsDetectedCity}
+                </p>
+              )}
+
+              {/* "City not in DB" friendly notice — shown above the all-cities fallback */}
+              {!restaurantsLoading && !detectingLocation && cityNotInDb && !restaurantCity && (
+                <div className="bg-card text-center py-5 px-4 mb-3" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                  <div className="text-4xl mb-1 opacity-70">🗺️</div>
+                  <p className="text-sm font-heading font-bold">
+                    No restaurants listed for {cityNotInDb} yet.
+                  </p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">
+                    Showing pet-friendly restaurants from nearby cities
+                  </p>
+                </div>
+              )}
+
+              {detectingLocation ? (
+                <div className="bg-card text-center py-10 px-4 animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                  <div className="text-2xl mb-2" style={{ color: "#7B5EA7" }}>📍</div>
+                  <p className="text-sm font-heading font-bold">Finding restaurants near you…</p>
+                </div>
+              ) : restaurantsLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="bg-card overflow-hidden animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
-                      <div className="bg-muted" style={{ height: 200 }} />
+                      <div className="bg-muted" style={{ height: 220 }} />
                       <div className="p-4 space-y-2">
                         <div className="h-4 bg-muted rounded w-2/3" />
                         <div className="h-3 bg-muted rounded w-1/2" />
@@ -1015,10 +1108,8 @@ const FeedScreen = () => {
               ) : restaurants.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-5xl mb-2 opacity-60">🍽️</div>
-                  <p className="text-sm font-heading font-bold">
-                    No pet-friendly restaurants found in {restaurantCityLabel || "your area"} yet.
-                  </p>
-                  <p className="text-xs text-muted-foreground font-body mt-1">We're adding more cities soon!</p>
+                  <p className="text-sm font-heading font-bold">No pet-friendly restaurants found</p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">Try selecting a different city</p>
                   <Button size="sm" className="mt-3" onClick={() => setRestaurantCity("ALL")}>
                     Browse All Cities →
                   </Button>

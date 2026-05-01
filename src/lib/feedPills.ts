@@ -36,8 +36,8 @@ export const CURATABLE_PILLS: FeedPill[] = FEED_PILLS.filter((p) => p.key !== "n
 
 
 export const NEARBY_SUB_PILLS = [
+  { key: "restaurants", emoji: "🍽️", label: "Pet Restaurants", query: "pet friendly restaurant" },
   { key: "walker", emoji: "🚶", label: "Walker", query: "pet walker" },
-  { key: "restaurants", emoji: "🍽️", label: "Restaurants", query: "pet friendly restaurant" },
   { key: "cafe", emoji: "☕", label: "Pet Café", query: "pet café" },
   { key: "spa", emoji: "💆", label: "Spa", query: "pet spa" },
   { key: "groomer", emoji: "✂️", label: "Groomer", query: "pet grooming" },
