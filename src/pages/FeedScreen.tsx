@@ -311,10 +311,14 @@ const FeedScreen = () => {
                       </button>
                     )}
                   </div>
-                  <div className="relative aspect-square bg-gradient-to-br from-primary-light to-[#C8B8F0]">
-                    <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
+                  <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+                    {post.media_type === "video" ? (
+                      <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
+                    ) : (
+                      <img src={getMediaUrl(post.media_url)} alt={post.caption || ""} className="w-full h-full object-cover" loading="lazy" />
+                    )}
                     {post.hashtags && post.hashtags.length > 0 && (
-                      <div className="absolute bottom-3 left-3 flex gap-1.5">
+                      <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
                         {post.hashtags.map((tag: string) => (
                           <span key={tag} className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white">
                             #{tag.replace(/^#/, "")}
