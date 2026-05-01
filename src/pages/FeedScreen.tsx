@@ -17,8 +17,10 @@ import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
+import ReelViewer from "@/components/ReelViewer";
 
 const FeedScreen = () => {
+  const [activeReelIndex, setActiveReelIndex] = useState<number | null>(null);
   const [showUpload, setShowUpload] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
@@ -311,7 +313,10 @@ const FeedScreen = () => {
                       </button>
                     )}
                   </div>
-                  <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+                  <div 
+                    className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0] cursor-pointer"
+  onClick={() => setActiveReelIndex(idx)}
+>
                     {post.media_type === "video" ? (
                       <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
                     ) : (
@@ -363,7 +368,13 @@ const FeedScreen = () => {
       {showStoryViewer && stories.length > 0 && (
         <StoryViewer stories={stories} initialIndex={storyStartIndex} onClose={() => { setShowStoryViewer(false); queryClient.invalidateQueries({ queryKey: ["viewed-stories"] }); }} />
       )}
-      <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
+      <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator({activeReelIndex !== null && (
+  <ReelViewer
+    posts={posts}
+    initialIndex={activeReelIndex}
+    onClose={() => setActiveReelIndex(null)}
+  />
+)}
     </MobileLayout>
   );
 };
