@@ -307,6 +307,7 @@ const FeedScreen = () => {
   const RESTAURANT_CITIES = ["Chennai", "Delhi NCR", "Mumbai", "Pune", "Bangalore", "Hyderabad", "Goa"];
   const CITY_MAP: Record<string, string> = {
     "chennai": "Chennai",
+    "madras": "Chennai",
     "delhi": "Delhi NCR",
     "new delhi": "Delhi NCR",
     "gurgaon": "Delhi NCR",
@@ -315,20 +316,28 @@ const FeedScreen = () => {
     "ghaziabad": "Delhi NCR",
     "faridabad": "Delhi NCR",
     "mumbai": "Mumbai",
+    "bombay": "Mumbai",
     "navi mumbai": "Mumbai",
     "thane": "Mumbai",
     "pune": "Pune",
+    "pimpri": "Pune",
+    "chinchwad": "Pune",
     "bangalore": "Bangalore",
     "bengaluru": "Bangalore",
+    "blr": "Bangalore",
     "hyderabad": "Hyderabad",
     "secunderabad": "Hyderabad",
+    "cyberabad": "Hyderabad",
     "goa": "Goa",
     "panaji": "Goa",
+    "margao": "Goa",
+    "anjuna": "Goa",
+    "calangute": "Goa",
   };
 
   const resolveDbCity = (rawCity?: string | null): string | null => {
     if (!rawCity) return null;
-    const lc = rawCity.toLowerCase();
+    const lc = rawCity.toLowerCase().trim();
     const key = Object.keys(CITY_MAP).find((k) => lc.includes(k));
     return key ? CITY_MAP[key] : null;
   };
