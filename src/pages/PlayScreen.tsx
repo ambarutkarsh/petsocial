@@ -1037,11 +1037,11 @@ const FeedScreen = () => {
           {/* Nearby */}
           {showNearby && nearbySub === "restaurants" && (
             <>
-              <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex items-start justify-between gap-3 mb-1">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-heading font-bold text-base">🍽️ Pet-Friendly Restaurants</h3>
                   <p className="text-xs text-muted-foreground font-body mt-0.5">
-                    {restaurantsLoading
+                    {restaurantsLoading || detectingLocation
                       ? "Loading…"
                       : `${restaurants.length} place${restaurants.length === 1 ? "" : "s"} ${
                           restaurantCityLabel === "across India" ? "across India" : `in ${restaurantCityLabel}`
@@ -1051,7 +1051,8 @@ const FeedScreen = () => {
                 <select
                   value={restaurantCity || "AUTO"}
                   onChange={(e) => setRestaurantCity(e.target.value === "AUTO" ? null : e.target.value)}
-                  className="text-xs font-body font-bold bg-card border border-border rounded-full px-3 py-1.5 text-foreground"
+                  style={{ color: "#7B5EA7" }}
+                  className="text-xs font-body font-bold bg-transparent border-0 px-2 py-1.5 cursor-pointer outline-none"
                 >
                   <option value="AUTO">Auto</option>
                   <option value="ALL">All Cities</option>
@@ -1061,11 +1062,36 @@ const FeedScreen = () => {
                 </select>
               </div>
 
-              {restaurantsLoading ? (
+              {/* GPS-detected location indicator */}
+              {!restaurantCity && gpsDetectedCity && !detectingLocation && (
+                <p className="text-xs text-muted-foreground font-body mb-2" style={{ fontSize: 12 }}>
+                  📍 Near {gpsDetectedCity}
+                </p>
+              )}
+
+              {/* "City not in DB" friendly notice — shown above the all-cities fallback */}
+              {!restaurantsLoading && !detectingLocation && cityNotInDb && !restaurantCity && (
+                <div className="bg-card text-center py-5 px-4 mb-3" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                  <div className="text-4xl mb-1 opacity-70">🗺️</div>
+                  <p className="text-sm font-heading font-bold">
+                    No restaurants listed for {cityNotInDb} yet.
+                  </p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">
+                    Showing pet-friendly restaurants from nearby cities
+                  </p>
+                </div>
+              )}
+
+              {detectingLocation ? (
+                <div className="bg-card text-center py-10 px-4 animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
+                  <div className="text-2xl mb-2" style={{ color: "#7B5EA7" }}>📍</div>
+                  <p className="text-sm font-heading font-bold">Finding restaurants near you…</p>
+                </div>
+              ) : restaurantsLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="bg-card overflow-hidden animate-pulse" style={{ borderRadius: 22, border: "1px solid rgba(123,94,167,0.10)" }}>
-                      <div className="bg-muted" style={{ height: 200 }} />
+                      <div className="bg-muted" style={{ height: 220 }} />
                       <div className="p-4 space-y-2">
                         <div className="h-4 bg-muted rounded w-2/3" />
                         <div className="h-3 bg-muted rounded w-1/2" />
@@ -1082,10 +1108,8 @@ const FeedScreen = () => {
               ) : restaurants.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-5xl mb-2 opacity-60">🍽️</div>
-                  <p className="text-sm font-heading font-bold">
-                    No pet-friendly restaurants found in {restaurantCityLabel || "your area"} yet.
-                  </p>
-                  <p className="text-xs text-muted-foreground font-body mt-1">We're adding more cities soon!</p>
+                  <p className="text-sm font-heading font-bold">No pet-friendly restaurants found</p>
+                  <p className="text-xs text-muted-foreground font-body mt-1">Try selecting a different city</p>
                   <Button size="sm" className="mt-3" onClick={() => setRestaurantCity("ALL")}>
                     Browse All Cities →
                   </Button>
