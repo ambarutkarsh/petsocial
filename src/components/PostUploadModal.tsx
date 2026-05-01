@@ -52,13 +52,35 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
-      // Pet validation removed — allow any image/video upload
-      setValidationStatus("valid");
+    if (!file) return;
+
+    // Enforce 30s max for videos (matches feed playback cap).
+    if (file.type.startsWith("video")) {
+      const ok = await new Promise<boolean>((resolve) => {
+        const v = document.createElement("video");
+        v.preload = "metadata";
+        v.onloadedmetadata = () => {
+          URL.revokeObjectURL(v.src);
+          if (v.duration > 30.5) {
+            toast.error("Videos must be 30 seconds or shorter");
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        };
+        v.onerror = () => resolve(true); // don't block on metadata read failure
+        v.src = URL.createObjectURL(file);
+      });
+      if (!ok) {
+        e.target.value = "";
+        return;
+      }
     }
+
+    setSelectedFile(file);
+    const url = URL.createObjectURL(file);
+    setImagePreview(url);
+    setValidationStatus("valid");
   };
 
   const detectLocation = () => {
@@ -172,9 +194,9 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
         ) : (
           <div className="space-y-3">
             {selectedFile?.type.startsWith("video") ? (
-              <video src={imagePreview} controls className="w-full aspect-square object-cover rounded-[22px] bg-black" />
+              <video src={imagePreview} controls className="w-full aspect-[9/16] object-cover rounded-[22px] bg-black" />
             ) : (
-              <img src={imagePreview} alt="Preview" className="w-full aspect-square object-cover rounded-[22px]" />
+              <img src={imagePreview} alt="Preview" className="w-full aspect-[9/16] object-cover rounded-[22px]" />
             )}
             <div className="flex items-center gap-2 text-sm font-body">
               {validationStatus === "checking" && <><Loader2 className="w-4 h-4 animate-spin text-accent" /><span className="text-muted-foreground">Checking for pet content…</span></>}
