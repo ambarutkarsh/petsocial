@@ -380,7 +380,8 @@ const FeedScreen = () => {
       {showStoryViewer && stories.length > 0 && (
         <StoryViewer stories={stories} initialIndex={storyStartIndex} onClose={() => { setShowStoryViewer(false); queryClient.invalidateQueries({ queryKey: ["viewed-stories"] }); }} />
       )}
-      <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator({activeReelIndex !== null && (
+      <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
+      {activeReelIndex !== null && (
   <ReelViewer
     posts={posts}
     initialIndex={activeReelIndex}
