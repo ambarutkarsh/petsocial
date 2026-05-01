@@ -60,8 +60,13 @@ const FeedScreen = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [restaurantsLoading, setRestaurantsLoading] = useState(false);
   const [restaurantsError, setRestaurantsError] = useState(false);
-  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from profile, "ALL" = all
+  const [restaurantCity, setRestaurantCity] = useState<string | null>(null); // null = auto from GPS/profile, "ALL" = all
   const [restaurantCityLabel, setRestaurantCityLabel] = useState<string>("");
+  // GPS detection state for restaurants
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [gpsDetectedCity, setGpsDetectedCity] = useState<string | null>(null); // matched DB city from GPS
+  const [gpsRawCity, setGpsRawCity] = useState<string | null>(null); // raw reverse-geocoded city name
+  const [cityNotInDb, setCityNotInDb] = useState<string | null>(null); // raw city when no match
 
   // Profile (load saved feed_preferences)
   const { data: profile } = useQuery({
