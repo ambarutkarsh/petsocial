@@ -273,102 +273,139 @@ const FeedScreen = () => {
               const isLiked = likedPostIds.includes(post.id);
               const isSaved = savedPostIds.includes(post.id);
 
-              return (
-                <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
-  
-                  <div className="flex items-center gap-3 p-3.5">
-                    <UserAvatar
-                      name={profile?.full_name}
-                      avatarUrl={profile?.avatar_url}
-                      size={40}
-                      onClick={() => navigate(`/profile/${post.user_id}`)}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p
-                        onClick={() => navigate(`/profile/${post.user_id}`)}
-                        className="text-sm font-heading font-bold truncate cursor-pointer hover:text-primary transition-colors"
-                      >
-                        {profile?.full_name || "User"}
-                      </p>
-                      <p className="text-xs text-muted-foreground font-body">
-                        {pet?.name && `${pet.name} • ${pet.pet_type} • `}
-                        {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                      </p>
-                      {post.location && (
-                        <p className="text-[11px] text-muted-foreground font-body flex items-center gap-1 mt-0.5">
-                          <MapPin size={10} strokeWidth={1.5} />
-                          <span className="truncate">{post.location}</span>
-                        </p>
-                      )}
-                    </div>
-                    {post.user_id === user?.id && (
-                      <button
-                        onClick={() => {
-                          if (confirm("Delete this post? This cannot be undone.")) {
-                            deletePostMutation.mutate(post.id);
-                          }
-                        }}
-                        className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" strokeWidth={1.8} />
-                      </button>
-                    )}
-                  </div>
-                 <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+return (
+  <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
+    
+    <div className="flex items-center gap-3 p-3.5">
+      <UserAvatar
+        name={profile?.full_name}
+        avatarUrl={profile?.avatar_url}
+        size={40}
+        onClick={() => navigate(`/profile/${post.user_id}`)}
+      />
+      <div className="flex-1 min-w-0">
+        <p
+          onClick={() => navigate(`/profile/${post.user_id}`)}
+          className="text-sm font-heading font-bold truncate cursor-pointer hover:text-primary transition-colors"
+        >
+          {profile?.full_name || "User"}
+        </p>
+        <p className="text-xs text-muted-foreground font-body">
+          {pet?.name && `${pet.name} • ${pet.pet_type} • `}
+          {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+        </p>
+        {post.location && (
+          <p className="text-[11px] text-muted-foreground font-body flex items-center gap-1 mt-0.5">
+            <MapPin size={10} strokeWidth={1.5} />
+            <span className="truncate">{post.location}</span>
+          </p>
+        )}
+      </div>
 
-  {/* ✅ CLICK LAYER (NEW - THIS FIXES YOUR ISSUE) */}
-  <div
-    className="absolute inset-0 z-10"
-    onClick={() => setActiveReelIndex(idx)}
-  />
-
-  {post.media_type === "video" ? (
-    <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
-  ) : (
-    <img
-      src={getMediaUrl(post.media_url)}
-      alt={post.caption || ""}
-      className="w-full h-full object-cover"
-      loading="lazy"
-    />
-  )}
-
-  {post.hashtags && post.hashtags.length > 0 && (
-    <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
-      {post.hashtags.map((tag: string) => (
-        <span key={tag} className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white">
-          #{tag.replace(/^#/, "")}
-        </span>
-      ))}
+      {post.user_id === user?.id && (
+        <button
+          onClick={() => {
+            if (confirm("Delete this post? This cannot be undone.")) {
+              deletePostMutation.mutate(post.id);
+            }
+          }}
+          className="w-8 h-8 rounded-[10px] flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+        >
+          <Trash2 className="w-4 h-4" strokeWidth={1.8} />
+        </button>
+      )}
     </div>
-  )}
-</div>
-                    )}
-                  </div>
-                  <div className="p-3.5">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-4">
-                        <button onClick={() => toggleLikeMutation.mutate(post.id)} className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}>
-                          <Heart size={20} strokeWidth={1.5} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "#9B96B0"} />
-                          <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>{post.like_count || 0}</span>
-                        </button>
-                        <button onClick={() => { setCommentPostId(post.id); trackEvent("comment_submitted", { post_id: post.id }); }} className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors">
-                          <MessageCircle size={20} strokeWidth={1.5} />
-                          <span className="text-[13px] font-body font-semibold text-muted-foreground">{post.comment_count || 0}</span>
-                        </button>
-                        <button onClick={() => sharePost(post)} className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"><Share2 size={20} strokeWidth={1.5} /></button>
-                      </div>
-                      <button onClick={() => toggleSaveMutation.mutate(post.id)} className="rounded-[10px] p-1 hover:bg-primary-light transition-colors">
-                        <Bookmark size={20} strokeWidth={1.5} fill={isSaved ? "#7B5EA7" : "none"} color={isSaved ? "#7B5EA7" : "#9B96B0"} />
-                      </button>
-                    </div>
-                    <p className="text-sm font-body">
-                      <span className="font-heading font-bold cursor-pointer" onClick={() => navigate(`/profile/${post.user_id}`)}>@{profile?.username || "user"}</span>{" "}
-                      <span className="text-muted-foreground">{post.caption}</span>
-                    </p>
-                  </div>
-                </article>
-              );
+
+    {/* MEDIA BLOCK */}
+    <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
+
+      {/* CLICK LAYER */}
+      <div
+        className="absolute inset-0 z-10"
+        onClick={() => setActiveReelIndex(idx)}
+      />
+
+      {post.media_type === "video" ? (
+        <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
+      ) : (
+        <img
+          src={getMediaUrl(post.media_url)}
+          alt={post.caption || ""}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+      )}
+
+      {post.hashtags && post.hashtags.length > 0 && (
+        <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
+          {post.hashtags.map((tag: string) => (
+            <span
+              key={tag}
+              className="text-[11px] font-body font-bold bg-white/20 backdrop-blur-[10px] border border-white/30 px-2.5 py-1 rounded-full text-white"
+            >
+              #{tag.replace(/^#/, "")}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* ACTIONS */}
+    <div className="p-3.5">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => toggleLikeMutation.mutate(post.id)}
+            className={`flex items-center gap-1.5 transition-all rounded-[10px] px-1.5 py-1 hover:bg-primary-light ${isLiked ? "animate-heart-pop" : ""}`}
+          >
+            <Heart size={20} strokeWidth={1.5} fill={isLiked ? "#FF6B6B" : "none"} color={isLiked ? "#FF6B6B" : "#9B96B0"} />
+            <span className={`text-[13px] font-body font-semibold ${isLiked ? "text-primary" : "text-muted-foreground"}`}>
+              {post.like_count || 0}
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setCommentPostId(post.id);
+              trackEvent("comment_submitted", { post_id: post.id });
+            }}
+            className="flex items-center gap-1.5 text-text-hint rounded-[10px] px-1.5 py-1 hover:bg-primary-light hover:text-primary transition-colors"
+          >
+            <MessageCircle size={20} strokeWidth={1.5} />
+            <span className="text-[13px] font-body font-semibold text-muted-foreground">
+              {post.comment_count || 0}
+            </span>
+          </button>
+
+          <button
+            onClick={() => sharePost(post)}
+            className="text-text-hint rounded-[10px] p-1 hover:bg-primary-light hover:text-primary transition-colors"
+          >
+            <Share2 size={20} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        <button
+          onClick={() => toggleSaveMutation.mutate(post.id)}
+          className="rounded-[10px] p-1 hover:bg-primary-light transition-colors"
+        >
+          <Bookmark size={20} strokeWidth={1.5} fill={isSaved ? "#7B5EA7" : "none"} color={isSaved ? "#7B5EA7" : "#9B96B0"} />
+        </button>
+      </div>
+
+      <p className="text-sm font-body">
+        <span
+          className="font-heading font-bold cursor-pointer"
+          onClick={() => navigate(`/profile/${post.user_id}`)}
+        >
+          @{profile?.username || "user"}
+        </span>{" "}
+        <span className="text-muted-foreground">{post.caption}</span>
+      </p>
+    </div>
+
+  </article>
+);
             })}
           </div>
         )}
