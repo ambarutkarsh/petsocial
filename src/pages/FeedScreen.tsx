@@ -275,11 +275,7 @@ const FeedScreen = () => {
 
               return (
                 <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 60}ms` }}>
-                  {activeReelIndex === idx && (
-  <div style={{ color: "red", fontWeight: "bold" }}>
-    CLICK DETECTED
-  </div>
-)}
+  
                   <div className="flex items-center gap-3 p-3.5">
                     <UserAvatar
                       name={profile?.full_name}
