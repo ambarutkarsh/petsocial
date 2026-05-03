@@ -38,14 +38,16 @@ const ReelMedia = ({
   active,
   muted,
   onAdvance,
+  imageDurationMs,
 }: {
   item: ReelItem;
   active: boolean;
   muted: boolean;
   onAdvance: () => void;
+  imageDurationMs: number;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
   const url = resolveUrl(item.media_url);
 
   useEffect(() => {
@@ -63,9 +65,9 @@ const ReelMedia = ({
   // Image auto-advance
   useEffect(() => {
     if (!active || item.media_type !== "image") return;
-    const t = setTimeout(onAdvance, 10000);
+    const t = setTimeout(onAdvance, imageDurationMs);
     return () => clearTimeout(t);
-  }, [active, item.media_type, onAdvance]);
+  }, [active, imageDurationMs, item.media_type, onAdvance]);
 
   const toggle = () => {
     const v = videoRef.current;
@@ -92,7 +94,7 @@ const ReelMedia = ({
           className="w-full h-full object-contain bg-black"
           onEnded={onAdvance}
         />
-        {paused && (
+        {paused && active && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-20 h-20 rounded-full bg-black/55 flex items-center justify-center">
               <Play size={36} className="text-white ml-1" fill="white" />
