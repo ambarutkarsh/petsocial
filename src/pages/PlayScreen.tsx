@@ -22,6 +22,7 @@ import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import ReelViewer from "@/components/ReelViewer";
+import FeedVideoPlayer from "@/components/FeedVideoPlayer";
 import NearbyListings from "@/components/nearby/NearbyListings";
 import AddNearbyListingSheet from "@/components/nearby/AddNearbyListingSheet";
 
@@ -659,13 +660,22 @@ const FeedScreen = () => {
           )}
         </div>
         {post.media_url && (
-          <div className="relative cursor-pointer" onClick={() => setActiveReelIndex(idx)}>
-            {post.media_type === "video" ? (
-              <video src={getMediaUrl(post.media_url)} controls className="w-full aspect-square object-cover bg-black" />
-            ) : (
+          post.media_type === "video" ? (
+            <div className="relative w-full aspect-square bg-black">
+              <FeedVideoPlayer src={getMediaUrl(post.media_url)} poster={post.thumbnail_url ? getMediaUrl(post.thumbnail_url) : undefined} maxDuration={30} autoLoops={3} />
+              <button
+                aria-label="Open reel"
+                onClick={() => setActiveReelIndex(idx)}
+                className="absolute top-2 right-2 z-10 px-2.5 py-1 rounded-full bg-black/55 text-white text-[11px] font-bold backdrop-blur"
+              >
+                Open reel
+              </button>
+            </div>
+          ) : (
+            <div className="relative cursor-pointer" onClick={() => setActiveReelIndex(idx)}>
               <img src={getMediaUrl(post.media_url)} alt="" className="w-full aspect-square object-cover" loading="lazy" />
-            )}
-          </div>
+            </div>
+          )
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
           <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
