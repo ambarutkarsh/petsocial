@@ -5,7 +5,8 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Bell, Search, X } from "lucide-react";
+import { Bell, Search, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
 import UserAvatar from "@/components/UserAvatar";
 
 // LOGO LOCKED — Do not change without explicit user instruction
@@ -17,6 +18,7 @@ const TopBar = () => {
   const { profile } = useUserProfile();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const { theme, toggleTheme } = useTheme();
   const [debounced, setDebounced] = useState("");
 
   // Unread notifications count, polled every 60s
@@ -106,6 +108,18 @@ const TopBar = () => {
             <img src={logo} alt="Petosauras" className="h-8 w-auto" />
           </button>
           <div className="flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Light mode" : "Dark mode"}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-all duration-300"
+            >
+              {theme === "dark" ? (
+                <Sun size={20} strokeWidth={1.5} className="transition-transform duration-300" />
+              ) : (
+                <Moon size={20} strokeWidth={1.5} className="transition-transform duration-300" />
+              )}
+            </button>
             <button
               onClick={() => setSearchOpen(true)}
               aria-label="Search"

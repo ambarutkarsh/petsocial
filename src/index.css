@@ -93,6 +93,66 @@
     --reel-foreground: 0 0% 100%;
     --reel-control: 0 0% 0% / 0.48;
   }
+
+  .dark {
+    --background: 250 23% 8%;
+    --foreground: 33 41% 97%;
+
+    --card: 250 22% 12%;
+    --card-foreground: 33 41% 97%;
+
+    --popover: 250 22% 12%;
+    --popover-foreground: 33 41% 97%;
+
+    --primary: 265 60% 70%;
+    --primary-foreground: 250 23% 10%;
+    --primary-light: 265 30% 22%;
+    --primary-dark: 265 60% 80%;
+    --primary-mid: 265 60% 70%;
+
+    --secondary: 16 90% 65%;
+    --secondary-foreground: 250 23% 10%;
+    --secondary-light: 16 30% 20%;
+    --secondary-dark: 25 100% 55%;
+
+    --accent: 175 56% 55%;
+    --accent-foreground: 250 23% 10%;
+    --accent-light: 175 30% 20%;
+
+    --muted: 250 18% 18%;
+    --muted-foreground: 250 11% 70%;
+
+    --destructive: 16 90% 65%;
+    --destructive-foreground: 250 23% 10%;
+
+    --border: 0 0% 100% / 0.10;
+    --border-strong: 0 0% 100% / 0.20;
+    --input: 250 18% 18%;
+    --ring: 265 60% 70%;
+
+    --text-primary: 33 41% 97%;
+    --text-secondary: 250 11% 78%;
+    --text-hint: 250 11% 60%;
+    --text-mid: 250 11% 78%;
+    --text-muted: 250 11% 70%;
+
+    --surface-alt: 250 18% 18%;
+    --cream: 250 18% 18%;
+    --sand: 250 18% 18%;
+
+    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+
+    --sidebar-background: 250 22% 12%;
+    --sidebar-foreground: 250 11% 78%;
+    --sidebar-primary: 265 60% 70%;
+    --sidebar-primary-foreground: 250 23% 10%;
+    --sidebar-accent: 250 18% 18%;
+    --sidebar-accent-foreground: 33 41% 97%;
+    --sidebar-border: 0 0% 100% / 0.08;
+    --sidebar-ring: 265 60% 70%;
+  }
 }
 
 @layer base {
@@ -106,9 +166,13 @@
   }
 
   body {
-    @apply text-foreground font-body antialiased;
-    background: #EFEFEF;
+    @apply text-foreground font-body antialiased bg-background;
     letter-spacing: 0.02em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .app-root {
+    transition: background-color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -123,7 +187,7 @@
     width: 100%;
     margin: 0 auto;
     min-height: 100vh;
-    background: #FBF8F4;
+    background: hsl(var(--background));
     position: relative;
     overflow-x: hidden;
   }
