@@ -22,6 +22,7 @@ import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import ReelViewer from "@/components/ReelViewer";
+import FeedVideoPlayer from "@/components/FeedVideoPlayer";
 import NearbyListings from "@/components/nearby/NearbyListings";
 import AddNearbyListingSheet from "@/components/nearby/AddNearbyListingSheet";
 
