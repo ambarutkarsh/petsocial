@@ -4,9 +4,22 @@ import { toast } from "sonner";
 import { Loader2, MapPin, Phone, MessageCircle, Globe, ExternalLink, Star, Plus, ShieldCheck } from "lucide-react";
 import { buildDirectionsUrl, NearbyCategory, NormalizedListing, seedListingId, trackNearby } from "@/lib/nearbyHelpers";
 import seedSpa from "@/data/spaGroomingSeed.json";
+import seedParksBoarding from "@/data/petParksBoardingSeed.json";
 import NearbyCommentsSheet from "./NearbyCommentsSheet";
 import NearbyRatingSheet from "./NearbyRatingSheet";
 import AddNearbyListingSheet from "./AddNearbyListingSheet";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
+import {
+  NEARBY_CITY_OPTIONS,
+  detectCityViaGeolocation,
+  getStoredCity,
+  isLocationDenied,
+  persistCityToProfile,
+  resolveInitialCity,
+  setStoredCity,
+} from "@/lib/nearbyCity";
+import { Locate } from "lucide-react";
 
 interface Props {
   category: Exclude<NearbyCategory, "pet_restaurant">;
@@ -45,6 +58,42 @@ function normalizeSpaSeed(records: any[]): NormalizedListing[] {
   } as NormalizedListing));
 }
 
+function petAcceptanceList(pa: any): string[] {
+  if (!pa) return [];
+  if (Array.isArray(pa)) return pa;
+  const out: string[] = [];
+  if (pa.dogs) out.push("Dogs");
+  if (pa.cats) out.push("Cats");
+  if (pa.birds) out.push("Birds");
+  if (pa.small_pets) out.push("Small Pets");
+  if (pa.reptiles) out.push("Reptiles");
+  return out;
+}
+
+function normalizeParksBoardingSeed(records: any[], cat: "pet_park" | "boarding"): NormalizedListing[] {
+  return records.filter((r) => r.category === cat && r.is_active !== false).map((r) => ({
+    id: seedListingId([r.source_name, r.name, r.city, r.locality]),
+    isDb: false,
+    category: cat,
+    title: r.name,
+    description: r.notes || r.pet_acceptance?.acceptance_notes || null,
+    city: r.city,
+    state: r.state,
+    locality: r.locality,
+    address: r.address || r.location_for_direction,
+    latitude: r.latitude,
+    longitude: r.longitude,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: petAcceptanceList(r.pet_acceptance),
+    isVerified: !!r.is_verified,
+    source: r.source_name || null,
+    sourceUrl: r.source_url || r.image_source_url || null,
+    metadata: { data_confidence: r.data_confidence, location_for_direction: r.location_for_direction },
+  } as NormalizedListing));
+}
+
 function normalizeDbRow(row: any): NormalizedListing {
   return {
     id: row.id,
@@ -74,11 +123,13 @@ function normalizeDbRow(row: any): NormalizedListing {
   };
 }
 
-const CITY_OPTIONS = ["All", "Chennai", "Bengaluru", "Mumbai", "Pune", "Delhi NCR", "Hyderabad", "Goa", "Kolkata", "Ahmedabad", "Kochi"];
+const CITY_OPTIONS = ["All", ...NEARBY_CITY_OPTIONS];
 
 const NearbyListings = ({ category }: Props) => {
   const meta = TITLES[category];
-  const [city, setCity] = useState<string>("All");
+  const { user } = useAuth();
+  const { profile } = useUserProfile();
+  const [city, setCity] = useState<string>(() => resolveInitialCity(profile?.city));
   const [dbRows, setDbRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
@@ -86,6 +137,40 @@ const NearbyListings = ({ category }: Props) => {
   const [commentFor, setCommentFor] = useState<NormalizedListing | null>(null);
   const [rateFor, setRateFor] = useState<NormalizedListing | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  // Auto-detect city once on mount if no profile city and no stored city
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (profile?.city) return;
+      if (getStoredCity()) return;
+      if (isLocationDenied()) return;
+      const detected = await detectCityViaGeolocation();
+      if (cancelled || !detected) return;
+      setCity(detected);
+      setStoredCity(detected);
+      trackNearby("nearby_city_autodetected", { city: detected, category });
+      if (user?.id) persistCityToProfile(user.id, detected);
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleCityChange = (next: string) => {
+    setCity(next);
+    if (next !== "All") setStoredCity(next);
+    trackNearby("nearby_city_changed", { city: next, category });
+  };
+
+  const retryLocation = async () => {
+    try { localStorage.removeItem("petosauras_location_denied"); } catch {}
+    const detected = await detectCityViaGeolocation();
+    if (detected) {
+      setCity(detected);
+      setStoredCity(detected);
+      if (user?.id) persistCityToProfile(user.id, detected);
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -116,23 +201,30 @@ const NearbyListings = ({ category }: Props) => {
   useEffect(() => {
     trackNearby("nearby_category_clicked", { category });
     if (category === "spa_grooming") trackNearby("nearby_spa_grooming_opened");
+    if (category === "pet_park") trackNearby("nearby_pet_parks_opened");
+    if (category === "boarding") trackNearby("nearby_boarding_opened");
   }, [category]);
 
   const merged = useMemo<NormalizedListing[]>(() => {
     const dbItems = dbRows.map(normalizeDbRow);
-    const seedItems = category === "spa_grooming" ? normalizeSpaSeed((seedSpa as any).records || []) : [];
-    // Dedupe seed items if a DB row has the same title+city
+    let seedItems: NormalizedListing[] = [];
+    if (category === "spa_grooming") {
+      seedItems = normalizeSpaSeed((seedSpa as any).records || []);
+    } else if (category === "pet_park" || category === "boarding") {
+      seedItems = normalizeParksBoardingSeed((seedParksBoarding as any).records || [], category);
+    }
     const dbKey = new Set(dbItems.map((x) => `${x.title.toLowerCase()}|${x.city.toLowerCase()}`));
     const filteredSeeds = seedItems.filter((s) => !dbKey.has(`${s.title.toLowerCase()}|${s.city.toLowerCase()}`));
     let all = [...dbItems, ...filteredSeeds];
-    if (city !== "All") all = all.filter((x) => x.city.toLowerCase().includes(city.toLowerCase()) || (city === "Delhi NCR" && /delhi|gurgaon|noida|gurugram/i.test(x.city)));
-    // sort: verified -> rating -> newer
+    if (city !== "All") all = all.filter((x) => x.city.toLowerCase().includes(city.toLowerCase()) || (city === "Delhi NCR" && /delhi|gurgaon|noida|gurugram/i.test(x.city)) || (city === "Bengaluru" && /bangalore/i.test(x.city)));
     all.sort((a, b) => Number(!!b.isVerified) - Number(!!a.isVerified) || (Number(b.rating || 0) - Number(a.rating || 0)));
     return all;
   }, [dbRows, category, city]);
 
   const onDirections = (l: NormalizedListing) => {
     trackNearby("nearby_direction_clicked", { category });
+    if (category === "pet_park") trackNearby("nearby_pet_park_direction_clicked");
+    if (category === "boarding") trackNearby("nearby_boarding_direction_clicked");
     window.open(buildDirectionsUrl(l), "_blank", "noopener");
   };
 
@@ -143,13 +235,20 @@ const NearbyListings = ({ category }: Props) => {
           <h3 className="font-heading font-bold text-base">{meta.emoji} {meta.title}</h3>
           <p className="text-xs text-muted-foreground font-body mt-0.5">{meta.subtitle}</p>
         </div>
-        <select
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="text-xs font-body font-bold bg-transparent border-0 px-2 py-1.5 cursor-pointer outline-none text-primary"
-        >
-          {CITY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
+        <div className="flex items-center gap-1">
+          {isLocationDenied() && (
+            <button onClick={retryLocation} title="Use current location" className="text-primary p-1">
+              <Locate size={14} />
+            </button>
+          )}
+          <select
+            value={city}
+            onChange={(e) => handleCityChange(e.target.value)}
+            className="text-xs font-body font-bold bg-transparent border-0 px-2 py-1.5 cursor-pointer outline-none text-primary"
+          >
+            {CITY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
       </div>
 
       <button
