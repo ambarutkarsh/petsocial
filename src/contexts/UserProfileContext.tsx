@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -33,8 +33,10 @@ export const UserProfileProvider = ({ children }: { children: ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const profileRequestIdRef = useRef(0);
 
   const fetchProfile = useCallback(async (userId: string) => {
+    const requestId = ++profileRequestIdRef.current;
     console.info("[Profile] fetch", userId);
     const { data, error } = await supabase
       .from("profiles")
@@ -45,6 +47,8 @@ export const UserProfileProvider = ({ children }: { children: ReactNode }) => {
       .maybeSingle();
 
     if (error) console.warn("[Profile] fetch failed", error);
+
+    if (requestId !== profileRequestIdRef.current) return;
 
     if (data) {
       setProfile(data as UserProfile);
@@ -62,6 +66,7 @@ export const UserProfileProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (authLoading) return;
     if (!user?.id) {
+      profileRequestIdRef.current += 1;
       setProfile(null);
       setLoading(false);
       try { localStorage.removeItem(CACHE_KEY); } catch {}
