@@ -166,9 +166,13 @@
   }
 
   body {
-    @apply text-foreground font-body antialiased;
-    background: #EFEFEF;
+    @apply text-foreground font-body antialiased bg-background;
     letter-spacing: 0.02em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .app-root {
+    transition: background-color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
