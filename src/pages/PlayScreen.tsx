@@ -22,6 +22,8 @@ import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import ReelViewer from "@/components/ReelViewer";
+import NearbyListings from "@/components/nearby/NearbyListings";
+import AddNearbyListingSheet from "@/components/nearby/AddNearbyListingSheet";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -47,6 +49,8 @@ const FeedScreen = () => {
   const isGuest = !user;
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
+  const [showCreateChoice, setShowCreateChoice] = useState(false);
+  const [showAddNearby, setShowAddNearby] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
@@ -489,7 +493,8 @@ const FeedScreen = () => {
   };
 
   useEffect(() => {
-    if (showNearby) fetchNearby(nearbySub);
+    // Only the legacy "restaurants" path uses fetchNearby; new categories use NearbyListings component.
+    if (showNearby && nearbySub === "restaurants_legacy_unused") fetchNearby(nearbySub);
     // eslint-disable-next-line
   }, [showNearby, nearbySub]);
 
@@ -1140,14 +1145,51 @@ const FeedScreen = () => {
               )}
             </>
           )}
-          {showNearby && nearbySub !== "restaurants" && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
-            nearbyPlaces.length === 0 ? <p className="text-center text-muted-foreground py-8 font-body">No results. Try another category.</p> :
-            nearbyPlaces.map(renderPlaceCard))}
+          {showNearby && nearbySub !== "restaurants" && (
+            <NearbyListings category={nearbySub as any} />
+          )}
         </div>
       </div>
 
-      <BottomNav onPostClick={() => setShowCreate(true)} />
+      <BottomNav onPostClick={() => setShowCreateChoice(true)} />
       <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
+      {showCreateChoice && (
+        <div className="fixed inset-0 z-[1100] flex items-end justify-center">
+          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => setShowCreateChoice(false)} />
+          <div className="relative w-full max-w-[480px] bg-card rounded-t-[28px] p-5">
+            <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
+            <h2 className="text-lg font-heading font-bold mb-3">Create</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { setShowCreateChoice(false); setShowCreate(true); }}
+                className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary"
+              >
+                <span className="text-3xl">📸</span>
+                <span className="text-sm font-heading font-bold">Feed Post</span>
+                <span className="text-[11px] text-muted-foreground">Share a photo or reel</span>
+              </button>
+              <button
+                onClick={() => { setShowCreateChoice(false); setShowAddNearby(true); }}
+                className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary"
+              >
+                <span className="text-3xl">📍</span>
+                <span className="text-sm font-heading font-bold">NearBy Listing</span>
+                <span className="text-[11px] text-muted-foreground">Add a place or post</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showAddNearby && (
+        <AddNearbyListingSheet
+          open={showAddNearby}
+          onClose={() => setShowAddNearby(false)}
+          onCreated={(cat) => {
+            setActivePill("nearby");
+            setNearbySub(cat === "pet_restaurant" ? "restaurants" : cat);
+          }}
+        />
+      )}
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
       {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
