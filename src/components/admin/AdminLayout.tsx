@@ -2,7 +2,6 @@ import { ReactNode, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
-import { supabase } from "@/integrations/supabase/client";
 import { LayoutDashboard, LogOut, ImagePlus } from "lucide-react";
 import { BellIcon, PetCareIcon, StarIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 
@@ -26,7 +25,7 @@ interface Props {
 }
 
 const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,9 +41,7 @@ const AdminLayout = ({ children, title, subtitle, headerRight }: Props) => {
   }, [user, loading, navigate]);
 
   const handleSignOut = async () => {
-    try { localStorage.clear(); } catch {}
-    await supabase.auth.signOut();
-    navigate("/auth", { replace: true });
+    await signOut();
   };
 
   if (loading || !user) return null;
