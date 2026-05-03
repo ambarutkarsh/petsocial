@@ -14,9 +14,11 @@ import { isAdminEmail } from "@/lib/admin";
 const RegularUserRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
-  if (loading) return null;
-
-  if (user && isAdminEmail(user.email)) {
+  // Don't block paint on auth hydration. When the user returns with a stale
+  // JWT, supabase.auth.getSession() can stall on a slow token refresh. Render
+  // the page immediately as a guest view; once auth resolves, the admin
+  // redirect (below) and per-query gating (enabled: !!user) take over.
+  if (!loading && user && isAdminEmail(user.email)) {
     return <Navigate to="/admin" replace />;
   }
 
