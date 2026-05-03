@@ -37,16 +37,23 @@ export const CURATABLE_PILLS: FeedPill[] = FEED_PILLS.filter((p) => p.key !== "n
 
 export const NEARBY_SUB_PILLS = [
   { key: "restaurants", emoji: "🍽️", label: "Pet Restaurants", query: "pet friendly restaurant" },
-  { key: "walker", emoji: "🚶", label: "Walker", query: "pet walker" },
-  { key: "cafe", emoji: "☕", label: "Pet Café", query: "pet café" },
-  { key: "spa", emoji: "💆", label: "Spa", query: "pet spa" },
-  { key: "groomer", emoji: "✂️", label: "Groomer", query: "pet grooming" },
-  { key: "parks", emoji: "🌳", label: "Parks", query: "dog park" },
-  { key: "shows", emoji: "🎪", label: "Pet Shows", query: "pet show" },
+  { key: "spa_grooming", emoji: "💆", label: "Spa & Grooming", query: "pet spa grooming" },
+  { key: "pet_park", emoji: "🌳", label: "Pet Parks", query: "dog park" },
+  { key: "pet_show", emoji: "🎪", label: "Pet Shows", query: "pet show" },
   { key: "boarding", emoji: "🏠", label: "Boarding", query: "pet boarding" },
-  { key: "stray", emoji: "🐾", label: "Help Stray", query: "animal shelter" },
+  { key: "help_stray", emoji: "🐾", label: "Help Stray", query: "animal shelter" },
   { key: "lost_found", emoji: "🚨", label: "Lost & Found", query: "" },
 ] as const;
+
+/** Maps a NEARBY_SUB_PILLS key (excluding restaurants) to nearby_listings.category enum. */
+export const NEARBY_CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "help_stray" | "lost_found"> = {
+  spa_grooming: "spa_grooming",
+  pet_park: "pet_park",
+  pet_show: "pet_show",
+  boarding: "boarding",
+  help_stray: "help_stray",
+  lost_found: "lost_found",
+};
 
 export const POST_CATEGORIES = [
   { key: "reel", emoji: "🎬", label: "Reel" },
