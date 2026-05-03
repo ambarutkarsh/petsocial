@@ -72,6 +72,7 @@ const AdminCompetitionsScreen = lazy(() => import("./pages/admin/AdminCompetitio
 const AdminVetsScreen = lazy(() => import("./pages/admin/AdminVetsScreen"));
 const AdminDashboardScreen = lazy(() => import("./pages/admin/AdminDashboardScreen"));
 const BulkUpload = lazy(() => import("./pages/admin/BulkUpload"));
+const AdminWelcomeEmailScreen = lazy(() => import("./pages/admin/AdminWelcomeEmailScreen"));
 const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
 const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
 const HubVetProfileScreen = lazy(() => import("./pages/hub/VetProfileScreen"));
@@ -196,6 +197,7 @@ const App = () => (
             <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
             <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
+            <Route path="/admin/welcome-email" element={<ProtectedRoute><AdminWelcomeEmailScreen /></ProtectedRoute>} />
 
             {/* Book a Vet flow */}
             <Route path="/hub/book-a-vet" element={<BookAVetScreen />} />
