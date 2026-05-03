@@ -59,6 +59,8 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
     if (!file) return;
     setUploadError(null);
     setValidationStatus("checking");
+    setSelectedFile(null);
+    setImagePreview(null);
 
     if (!acceptVideo && file.type.startsWith("video")) {
       const message = "Only photos are allowed here.";
@@ -212,6 +214,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
     setSelectedPetId("");
     setCategory(defaultCategory);
     setPostLocation("");
+    setUploadError(null);
     onClose();
   };
 
