@@ -32,6 +32,7 @@ const SeoInfo = {
   Contact: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.ContactLanding }))),
   Privacy: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PrivacyLanding }))),
   Terms: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.TermsLanding }))),
+  Features: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.FeaturesLanding }))),
 };
 
 // Lazy — everything else is code-split so the feed renders first.
@@ -143,6 +144,8 @@ const App = () => (
             <Route path="/contact-us" element={<SeoInfo.Contact />} />
             <Route path="/privacy-policy" element={<SeoInfo.Privacy />} />
             <Route path="/terms-of-service" element={<SeoInfo.Terms />} />
+            <Route path="/features" element={<SeoInfo.Features />} />
+            <Route path="/settings" element={<SettingsScreen />} />
 
             <Route path="/auth" element={<AuthScreen />} />
             <Route path="/onboarding" element={<RegularUserRoute><OnboardingScreen /></RegularUserRoute>} />
