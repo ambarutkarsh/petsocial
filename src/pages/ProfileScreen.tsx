@@ -33,7 +33,7 @@ const defaultTabOptions = [
 const defaultTabLabels: Record<string, string> = Object.fromEntries(defaultTabOptions.map(o => [o.value, o.label]));
 
 const ProfileScreen = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { refreshProfile } = useUserProfile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -116,29 +116,7 @@ const ProfileScreen = () => {
   };
 
   const handleSignOut = async () => {
-    try {
-      // Clear local caches first so a new session never inherits prior state.
-      try {
-        localStorage.removeItem("feed_prefs");
-        localStorage.removeItem("user_profile");
-        localStorage.removeItem("communityDefaultTab");
-        localStorage.removeItem("communityDefaultTabSet");
-        localStorage.removeItem("onboardingComplete");
-        localStorage.removeItem("gplaces_calls_" + new Date().toDateString());
-      } catch {}
-
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Sign out error:", error);
-        // Force-clear local session even if remote revoke failed.
-        await supabase.auth.signOut({ scope: "local" });
-      }
-    } catch (err) {
-      console.error("Sign out failed:", err);
-    } finally {
-      // Nuclear redirect — guarantees a fresh app state.
-      window.location.href = "/";
-    }
+    await signOut();
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
