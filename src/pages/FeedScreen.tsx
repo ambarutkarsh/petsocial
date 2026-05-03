@@ -318,13 +318,6 @@ return (
 
     {/* MEDIA BLOCK */}
     <div className="relative aspect-[9/16] bg-gradient-to-br from-primary-light to-[#C8B8F0]">
-
-      {/* CLICK LAYER */}
-      <div
-        className="absolute inset-0 z-10"
-        onClick={() => setActiveReelIndex(idx)}
-      />
-
       {post.media_type === "video" ? (
         <FeedVideoPlayer src={getMediaUrl(post.media_url)} maxDuration={30} autoLoops={3} />
       ) : (
@@ -337,7 +330,7 @@ return (
       )}
 
       {post.hashtags && post.hashtags.length > 0 && (
-        <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none">
+        <div className="absolute bottom-3 left-3 flex gap-1.5 pointer-events-none z-20">
           {post.hashtags.map((tag: string) => (
             <span
               key={tag}
@@ -348,6 +341,14 @@ return (
           ))}
         </div>
       )}
+
+      {/* CLICK LAYER — opens fullscreen reel viewer. Last in DOM with high z to win over video element */}
+      <button
+        type="button"
+        aria-label="Open reel"
+        className="absolute inset-0 z-30 cursor-pointer bg-transparent"
+        onClick={() => setActiveReelIndex(idx)}
+      />
     </div>
 
     {/* ACTIONS */}
