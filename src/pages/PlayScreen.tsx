@@ -22,6 +22,8 @@ import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
 import ReelViewer from "@/components/ReelViewer";
+import NearbyListings from "@/components/nearby/NearbyListings";
+import AddNearbyListingSheet from "@/components/nearby/AddNearbyListingSheet";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -1140,9 +1142,9 @@ const FeedScreen = () => {
               )}
             </>
           )}
-          {showNearby && nearbySub !== "restaurants" && (nearbyLoading ? <p className="text-center py-8 text-muted-foreground"><Loader2 className="w-5 h-5 animate-spin inline mr-2" />Loading…</p> :
-            nearbyPlaces.length === 0 ? <p className="text-center text-muted-foreground py-8 font-body">No results. Try another category.</p> :
-            nearbyPlaces.map(renderPlaceCard))}
+          {showNearby && nearbySub !== "restaurants" && (
+            <NearbyListings category={nearbySub as any} />
+          )}
         </div>
       </div>
 
