@@ -285,7 +285,11 @@ const BulkUpload = () => {
                 }`}
               >
                 <div className="relative rounded-lg overflow-hidden bg-muted aspect-square mb-3">
-                  <img src={photo.preview} alt="" className="w-full h-full object-cover" />
+                  {photo.file.type.startsWith("video") ? (
+                    <video src={photo.preview} className="w-full h-full object-cover" muted playsInline />
+                  ) : (
+                    <img src={photo.preview} alt="" className="w-full h-full object-cover" />
+                  )}
                   {photo.status === "uploading" && (
                     <div className="absolute inset-0 bg-[#7B5EA7]/70 flex items-center justify-center animate-pulse">
                       <div className="text-white text-xs font-body flex items-center gap-1.5">
