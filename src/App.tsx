@@ -7,6 +7,7 @@ import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RegularUserRoute from "@/components/RegularUserRoute";
+import { supabase } from "@/integrations/supabase/client";
 
 // Eager — landing/auth screens that must render instantly on session restore.
 import PlayScreen from "./pages/PlayScreen";
@@ -74,10 +75,16 @@ const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      throwOnError: false,
       retry: (failureCount, error: any) => {
         // Don't retry auth/permission errors — fail fast instead of looping
         const status = error?.status ?? error?.code;
-        if (status === 401 || status === 403 || status === "PGRST301") return false;
+        if (status === 401 || status === 403 || status === "PGRST301") {
+          console.warn("[Query] auth failure, clearing stale session", error);
+          supabase.auth.signOut({ scope: "local" }).catch(() => {});
+          return false;
+        }
+        if (failureCount === 0) console.warn("[Query] request failed", error);
         return failureCount < 1;
       },
     },
