@@ -128,7 +128,8 @@ const App = () => (
           <PageTracker />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
-            <Route path="/" element={<HomeLanding />} />
+            <Route path="/" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
+            <Route path="/welcome" element={<HomeLanding />} />
             <Route path="/dog-care" element={<CarePage slug="dog-care" />} />
             <Route path="/cat-care" element={<CarePage slug="cat-care" />} />
             <Route path="/fish-care" element={<CarePage slug="fish-care" />} />
