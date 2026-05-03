@@ -109,6 +109,18 @@ const TopBar = () => {
           </button>
           <div className="flex items-center gap-1">
             <button
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? "Light mode" : "Dark mode"}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-all duration-300"
+            >
+              {theme === "dark" ? (
+                <Sun size={20} strokeWidth={1.5} className="transition-transform duration-300" />
+              ) : (
+                <Moon size={20} strokeWidth={1.5} className="transition-transform duration-300" />
+              )}
+            </button>
+            <button
               onClick={() => setSearchOpen(true)}
               aria-label="Search"
               className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
