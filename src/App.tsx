@@ -72,6 +72,7 @@ const AdminCompetitionsScreen = lazy(() => import("./pages/admin/AdminCompetitio
 const AdminVetsScreen = lazy(() => import("./pages/admin/AdminVetsScreen"));
 const AdminDashboardScreen = lazy(() => import("./pages/admin/AdminDashboardScreen"));
 const BulkUpload = lazy(() => import("./pages/admin/BulkUpload"));
+const AdminWelcomeEmailScreen = lazy(() => import("./pages/admin/AdminWelcomeEmailScreen"));
 const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
 const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
 const HubVetProfileScreen = lazy(() => import("./pages/hub/VetProfileScreen"));
