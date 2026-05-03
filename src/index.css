@@ -87,6 +87,11 @@
     --sidebar-accent-foreground: 265 30% 51%;
     --sidebar-border: 265 30% 51% / 0.10;
     --sidebar-ring: 265 30% 51%;
+
+    /* Fullscreen reel viewer */
+    --reel-background: 0 0% 0%;
+    --reel-foreground: 0 0% 100%;
+    --reel-control: 0 0% 0% / 0.48;
   }
 }
 
