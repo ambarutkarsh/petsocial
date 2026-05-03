@@ -1152,6 +1152,20 @@ const FeedScreen = () => {
       {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
       {showStoryCreator && <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />}
+      {activeReelIndex !== null && reelItems.length > 0 && (
+        <ReelViewer
+          items={reelItems}
+          initialIndex={activeReelIndex}
+          isLiked={(id) => likedPostIds.includes(id)}
+          onClose={() => setActiveReelIndex(null)}
+          onLike={(id) => requireAuth(() => toggleLikeMutation.mutate(id))}
+          onComment={(id) => requireAuth(() => setCommentPostId(id))}
+          onShare={(item) => {
+            const post = posts.find((p: any) => p.id === item.id);
+            if (post) sharePost(post);
+          }}
+        />
+      )}
     </MobileLayout>
   );
 };
