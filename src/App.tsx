@@ -197,6 +197,7 @@ const App = () => (
             <Route path="/admin/notifications" element={<ProtectedRoute><AdminNotificationsScreen /></ProtectedRoute>} />
             <Route path="/admin/competitions" element={<ProtectedRoute><AdminCompetitionsScreen /></ProtectedRoute>} />
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
+            <Route path="/admin/welcome-email" element={<ProtectedRoute><AdminWelcomeEmailScreen /></ProtectedRoute>} />
 
             {/* Book a Vet flow */}
             <Route path="/hub/book-a-vet" element={<BookAVetScreen />} />
