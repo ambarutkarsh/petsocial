@@ -106,12 +106,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Safety net: if neither path resolves within 5s, unblock the UI so the
     // admin panel (and other guards) don't get stuck on a blank screen.
+    // Safety net: unblock UI fast (1.5s) so a slow token refresh on return
+    // visits doesn't keep the app on a blank screen. Session keeps resolving
+    // in the background; queries gated by `enabled: !!user` will pick it up.
     const safety = setTimeout(() => {
       setLoading((prev) => {
         if (prev) console.warn("[Auth] safety timeout — forcing loading=false");
         return false;
       });
-    }, 5000);
+    }, 1500);
 
     return () => {
       subscription.unsubscribe();
