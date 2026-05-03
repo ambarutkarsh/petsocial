@@ -193,7 +193,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
           <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer hover:bg-primary/10 transition-colors">
             <Upload size={40} strokeWidth={1.5} className="text-primary" />
             <span className="text-sm font-heading font-bold text-primary">Tap to upload {acceptVideo ? "media" : "photo"}</span>
-            <span className="text-xs text-muted-foreground font-body">{acceptVideo ? "JPG, PNG or video" : "JPG or PNG"}</span>
+            <span className="text-xs text-muted-foreground font-body text-center">{acceptVideo ? "JPG, PNG or video • Videos: max 30s, ≤ 5 MB" : "JPG or PNG"}</span>
             <input type="file" accept={acceptVideo ? "image/*,video/*" : "image/*"} className="hidden" onChange={handleFileSelect} />
           </label>
         ) : (
