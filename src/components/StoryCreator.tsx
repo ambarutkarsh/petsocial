@@ -82,8 +82,8 @@ const StoryCreator = ({ open, onClose }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-foreground flex items-center justify-center">
-      <div className="w-full max-w-[430px] h-full relative flex flex-col bg-card">
+    <div className="fixed inset-0 z-[60] bg-foreground flex items-center justify-center overflow-hidden">
+      <div className="w-full max-w-[430px] h-[100dvh] relative flex flex-col bg-card overflow-hidden">
         {!preview ? (
           <div className="flex-1 flex flex-col items-center justify-center px-6 gap-4">
             <button onClick={handleReset} className="absolute top-4 left-4 w-8 h-8 rounded-full bg-surface-alt flex items-center justify-center">
@@ -130,7 +130,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
               </div>
             )}
 
-            <div className="absolute bottom-4 inset-x-0 px-6 z-20">
+            <div className="absolute bottom-0 inset-x-0 px-6 pb-6 pt-4 z-20 bg-gradient-to-t from-foreground/70 to-transparent" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}>
               <Button onClick={handlePost} disabled={posting} className="w-full" size="lg">
                 {posting ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Posting...</> : "Add to Story 🦕"}
               </Button>
