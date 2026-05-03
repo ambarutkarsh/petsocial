@@ -420,11 +420,28 @@ return (
       )}
       <StoryCreator open={showStoryCreator} onClose={() => setShowStoryCreator(false)} />
       {activeReelIndex !== null && (
-  <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "black", color: "white", zIndex: 9999 }}>
-    REEL OPENED
-    <button onClick={() => setActiveReelIndex(null)}>Close</button>
-  </div>
-)}
+        <ReelViewer
+          items={posts.map((p: any) => ({
+            id: p.id,
+            media_type: p.media_type === "video" ? "video" : "image",
+            media_url: p.media_url,
+            caption: p.caption,
+            like_count: p.like_count,
+            comment_count: p.comment_count,
+            author_name: p.profiles?.username || p.profiles?.full_name,
+            author_avatar: p.profiles?.avatar_url,
+          }))}
+          initialIndex={activeReelIndex}
+          isLiked={(id) => likedPostIds.includes(id)}
+          onClose={() => setActiveReelIndex(null)}
+          onLike={(id) => toggleLikeMutation.mutate(id)}
+          onComment={(id) => setCommentPostId(id)}
+          onShare={(item) => {
+            const post = posts.find((p: any) => p.id === item.id);
+            if (post) sharePost(post);
+          }}
+        />
+      )}
     </MobileLayout>
   );
 };

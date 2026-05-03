@@ -54,8 +54,13 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Enforce 30s max for videos (matches feed playback cap).
+    // Enforce 30s max + 5MB max for videos.
     if (file.type.startsWith("video")) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Videos must be 5 MB or smaller");
+        e.target.value = "";
+        return;
+      }
       const ok = await new Promise<boolean>((resolve) => {
         const v = document.createElement("video");
         v.preload = "metadata";
@@ -68,7 +73,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
             resolve(true);
           }
         };
-        v.onerror = () => resolve(true); // don't block on metadata read failure
+        v.onerror = () => resolve(true);
         v.src = URL.createObjectURL(file);
       });
       if (!ok) {
@@ -188,7 +193,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
           <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer hover:bg-primary/10 transition-colors">
             <Upload size={40} strokeWidth={1.5} className="text-primary" />
             <span className="text-sm font-heading font-bold text-primary">Tap to upload {acceptVideo ? "media" : "photo"}</span>
-            <span className="text-xs text-muted-foreground font-body">{acceptVideo ? "JPG, PNG or video" : "JPG or PNG"}</span>
+            <span className="text-xs text-muted-foreground font-body text-center">{acceptVideo ? "JPG, PNG or video • Videos: max 30s, ≤ 5 MB" : "JPG or PNG"}</span>
             <input type="file" accept={acceptVideo ? "image/*,video/*" : "image/*"} className="hidden" onChange={handleFileSelect} />
           </label>
         ) : (
