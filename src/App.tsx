@@ -7,61 +7,65 @@ import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RegularUserRoute from "@/components/RegularUserRoute";
-import AuthScreen from "./pages/AuthScreen";
+
+// Eager — landing/auth screens that must render instantly on session restore.
 import PlayScreen from "./pages/PlayScreen";
-import CareScreen from "./pages/CareScreen";
-import ShopScreen from "./pages/ShopScreen";
-import ShopComingSoonScreen from "./pages/ShopComingSoonScreen";
-import HubScreen from "./pages/HubScreen";
-import SosScreen from "./pages/SosScreen";
-import LegalScreen from "./pages/LegalScreen";
-import SettingsScreen from "./pages/SettingsScreen";
-import ForumScreen from "./pages/ForumScreen";
-import HealthScreen from "./pages/HealthScreen";
-import HealthLogScreen from "./pages/HealthLogScreen";
-import LearnScreen from "./pages/LearnScreen";
-import ProfileScreen from "./pages/ProfileScreen";
-import PublicProfileScreen from "./pages/PublicProfileScreen";
-import PostDetailScreen from "./pages/PostDetailScreen";
-import NotificationsScreen from "./pages/NotificationsScreen";
-import ResetPasswordScreen from "./pages/ResetPasswordScreen";
-import VetNearMeScreen from "./pages/VetNearMeScreen";
-import PetDigiLockerScreen from "./pages/PetDigiLockerScreen";
-import BudgetCalculatorScreen from "./pages/BudgetCalculatorScreen";
-import OrderNowScreen from "./pages/OrderNowScreen";
-import CompleteRegistrationScreen from "./pages/CompleteRegistrationScreen";
-import AdminSeedScreen from "./pages/AdminSeedScreen";
-import OnboardingScreen from "./pages/OnboardingScreen";
-import InsuranceScreen from "./pages/hub/InsuranceScreen";
-import NgoScreen from "./pages/hub/NgoScreen";
-import PickupScreen from "./pages/hub/PickupScreen";
-import RecommenderScreen from "./pages/hub/RecommenderScreen";
-import PetcationScreen from "./pages/hub/PetcationScreen";
-import PetMovingScreen from "./pages/hub/PetMovingScreen";
-import MicrochipScreen from "./pages/hub/MicrochipScreen";
-import RegisterMicrochipScreen from "./pages/hub/RegisterMicrochipScreen";
-import PetCareScreen from "./pages/hub/PetCareScreen";
-import AdminNotificationsScreen from "./pages/admin/AdminNotificationsScreen";
-import AdminCompetitionsScreen from "./pages/admin/AdminCompetitionsScreen";
-import AdminVetsScreen from "./pages/admin/AdminVetsScreen";
-import AdminDashboardScreen from "./pages/admin/AdminDashboardScreen";
-import BulkUpload from "./pages/admin/BulkUpload";
-import BookAVetScreen from "./pages/hub/BookAVetScreen";
-import BookAVetComingSoon from "./pages/hub/BookAVetComingSoon";
-import HubVetProfileScreen from "./pages/hub/VetProfileScreen";
-import ConfirmBookingScreen from "./pages/hub/ConfirmBookingScreen";
-import BookingSuccessScreen from "./pages/hub/BookingSuccessScreen";
-import MyBookingsScreen from "./pages/MyBookingsScreen";
-import VetDashboardLayout from "./components/vet/VetDashboardLayout";
-import VetGuard from "./components/vet/VetGuard";
-import VetTodayScreen from "./pages/vet/VetTodayScreen";
-import VetCalendarScreen from "./pages/vet/VetCalendarScreen";
-import VetRequestsScreen from "./pages/vet/VetRequestsScreen";
-import VetAvailabilityScreen from "./pages/vet/VetAvailabilityScreen";
-import VetDashProfileScreen from "./pages/vet/VetProfileScreen";
+import AuthScreen from "./pages/AuthScreen";
 import NotFound from "./pages/NotFound";
-import { useEffect } from "react";
+
+import { lazy, Suspense, useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
+
+// Lazy — everything else is code-split so the feed renders first.
+const CareScreen = lazy(() => import("./pages/CareScreen"));
+const ShopScreen = lazy(() => import("./pages/ShopScreen"));
+const ShopComingSoonScreen = lazy(() => import("./pages/ShopComingSoonScreen"));
+const SosScreen = lazy(() => import("./pages/SosScreen"));
+const LegalScreen = lazy(() => import("./pages/LegalScreen"));
+const SettingsScreen = lazy(() => import("./pages/SettingsScreen"));
+const ForumScreen = lazy(() => import("./pages/ForumScreen"));
+const HealthScreen = lazy(() => import("./pages/HealthScreen"));
+const HealthLogScreen = lazy(() => import("./pages/HealthLogScreen"));
+const LearnScreen = lazy(() => import("./pages/LearnScreen"));
+const ProfileScreen = lazy(() => import("./pages/ProfileScreen"));
+const PublicProfileScreen = lazy(() => import("./pages/PublicProfileScreen"));
+const PostDetailScreen = lazy(() => import("./pages/PostDetailScreen"));
+const NotificationsScreen = lazy(() => import("./pages/NotificationsScreen"));
+const ResetPasswordScreen = lazy(() => import("./pages/ResetPasswordScreen"));
+const VetNearMeScreen = lazy(() => import("./pages/VetNearMeScreen"));
+const PetDigiLockerScreen = lazy(() => import("./pages/PetDigiLockerScreen"));
+const BudgetCalculatorScreen = lazy(() => import("./pages/BudgetCalculatorScreen"));
+const OrderNowScreen = lazy(() => import("./pages/OrderNowScreen"));
+const CompleteRegistrationScreen = lazy(() => import("./pages/CompleteRegistrationScreen"));
+const AdminSeedScreen = lazy(() => import("./pages/AdminSeedScreen"));
+const OnboardingScreen = lazy(() => import("./pages/OnboardingScreen"));
+const InsuranceScreen = lazy(() => import("./pages/hub/InsuranceScreen"));
+const NgoScreen = lazy(() => import("./pages/hub/NgoScreen"));
+const PickupScreen = lazy(() => import("./pages/hub/PickupScreen"));
+const RecommenderScreen = lazy(() => import("./pages/hub/RecommenderScreen"));
+const PetcationScreen = lazy(() => import("./pages/hub/PetcationScreen"));
+const PetMovingScreen = lazy(() => import("./pages/hub/PetMovingScreen"));
+const MicrochipScreen = lazy(() => import("./pages/hub/MicrochipScreen"));
+const RegisterMicrochipScreen = lazy(() => import("./pages/hub/RegisterMicrochipScreen"));
+const PetCareScreen = lazy(() => import("./pages/hub/PetCareScreen"));
+const AdminNotificationsScreen = lazy(() => import("./pages/admin/AdminNotificationsScreen"));
+const AdminCompetitionsScreen = lazy(() => import("./pages/admin/AdminCompetitionsScreen"));
+const AdminVetsScreen = lazy(() => import("./pages/admin/AdminVetsScreen"));
+const AdminDashboardScreen = lazy(() => import("./pages/admin/AdminDashboardScreen"));
+const BulkUpload = lazy(() => import("./pages/admin/BulkUpload"));
+const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
+const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
+const HubVetProfileScreen = lazy(() => import("./pages/hub/VetProfileScreen"));
+const ConfirmBookingScreen = lazy(() => import("./pages/hub/ConfirmBookingScreen"));
+const BookingSuccessScreen = lazy(() => import("./pages/hub/BookingSuccessScreen"));
+const MyBookingsScreen = lazy(() => import("./pages/MyBookingsScreen"));
+const VetDashboardLayout = lazy(() => import("./components/vet/VetDashboardLayout"));
+const VetGuard = lazy(() => import("./components/vet/VetGuard"));
+const VetTodayScreen = lazy(() => import("./pages/vet/VetTodayScreen"));
+const VetCalendarScreen = lazy(() => import("./pages/vet/VetCalendarScreen"));
+const VetRequestsScreen = lazy(() => import("./pages/vet/VetRequestsScreen"));
+const VetAvailabilityScreen = lazy(() => import("./pages/vet/VetAvailabilityScreen"));
+const VetDashProfileScreen = lazy(() => import("./pages/vet/VetProfileScreen"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -98,6 +102,7 @@ const App = () => (
         <BrowserRouter>
           <GuestPopupProvider>
           <PageTracker />
+          <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
             <Route path="/" element={<RootRedirect />} />
             <Route path="/auth" element={<AuthScreen />} />
@@ -187,6 +192,7 @@ const App = () => (
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
           </GuestPopupProvider>
         </BrowserRouter>
         </UserProfileProvider>
