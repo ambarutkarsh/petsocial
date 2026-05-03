@@ -90,24 +90,33 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (profile.welcome_email_sent) {
+    if (profile.welcome_email_sent && !test && !preview) {
       return new Response(JSON.stringify({ ok: true, skipped: "already_sent" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    let email = profile.email as string | null;
+    let email = (override_email as string | undefined) || (profile.email as string | null);
     if (!email) {
       const { data: u } = await admin.auth.admin.getUserById(user_id);
       email = u?.user?.email ?? null;
     }
-    if (!email) {
+    if (!email && !preview) {
       return new Response(JSON.stringify({ error: "no email on file" }), {
         status: 422, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const firstName = (profile.full_name || "there").split(" ")[0];
+    const html = buildHtml(firstName);
+    const text = buildText(firstName);
+    const subject = "Welcome to Petosauras — your all-in-one pet hub 🦕🐾";
+
+    if (preview) {
+      return new Response(JSON.stringify({ ok: true, preview: true, to: email, subject, html, text }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const RESEND_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_KEY) {
@@ -120,13 +129,7 @@ Deno.serve(async (req) => {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: email,
-        subject: "Welcome to Petosauras — your all-in-one pet hub 🦕🐾",
-        html: buildHtml(firstName),
-        text: buildText(firstName),
-      }),
+      body: JSON.stringify({ from: FROM_EMAIL, to: email, subject, html, text }),
     });
 
     if (!res.ok) {
@@ -137,12 +140,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    await admin
-      .from("profiles")
-      .update({ welcome_email_sent: true, welcome_email_sent_at: new Date().toISOString() })
-      .eq("id", user_id);
+    if (!test) {
+      await admin
+        .from("profiles")
+        .update({ welcome_email_sent: true, welcome_email_sent_at: new Date().toISOString() })
+        .eq("id", user_id);
+    }
 
-    return new Response(JSON.stringify({ ok: true, sent: true }), {
+    return new Response(JSON.stringify({ ok: true, sent: true, test: !!test, to: email }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e: any) {
