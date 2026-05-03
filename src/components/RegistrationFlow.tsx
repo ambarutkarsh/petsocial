@@ -283,6 +283,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
       }
 
       toast.success("Welcome to Petosauras! 🦕");
+      sendWelcomeEmail(userId);
       onComplete();
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong");
