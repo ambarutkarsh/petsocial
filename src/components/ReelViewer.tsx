@@ -115,7 +115,7 @@ const ReelMedia = ({
   );
 };
 
-const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, isLiked }: Props) => {
+const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, isLiked, imageDurationMs = 10000 }: Props) => {
   const [index, setIndex] = useState(initialIndex);
   const [muted, setMuted] = useState(true);
   const [dragY, setDragY] = useState(0);
@@ -194,7 +194,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           {items.map((it, i) => (
             <div key={it.id} className="w-full h-full" style={{ height: "100%" }}>
               {visible.includes(i) ? (
-                <ReelMedia item={it} active={i === index} muted={muted} onAdvance={advance} />
+                <ReelMedia item={it} active={i === index} muted={muted} onAdvance={advance} imageDurationMs={imageDurationMs} />
               ) : null}
             </div>
           ))}
