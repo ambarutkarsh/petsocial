@@ -599,6 +599,11 @@ const FeedScreen = () => {
     trackEvent("post_share_opened", { post_id: post.id });
   };
 
+  const requireAuth = (fn: () => void) => {
+    if (isGuest) { triggerGuestPopup(); return; }
+    fn();
+  };
+
   const reelItems = posts.map((post: any) => ({
     id: post.id,
     media_type: post.media_type === "video" ? "video" as const : "image" as const,
@@ -622,12 +627,17 @@ const FeedScreen = () => {
       if (isGuest) { triggerGuestPopup(); return; }
       navigate(`/profile/${post.user_id}`);
     };
+    const openReelViewer = (event: React.MouseEvent<HTMLElement>) => {
+      const target = event.target as HTMLElement;
+      if (target.closest("button,a,input,textarea,select")) return;
+      setActiveReelIndex(idx);
+    };
     const guardedAction = (fn: () => void) => () => {
       if (isGuest) { triggerGuestPopup(); return; }
       fn();
     };
     return (
-      <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
+      <article key={post.id} onClick={openReelViewer} className="paw-card overflow-hidden animate-fade-up cursor-pointer" style={{ animationDelay: `${idx * 40}ms` }}>
         <div className="flex items-center gap-3 p-3.5">
           <button onClick={profileClick} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
             {!isGuest && post.profiles?.avatar_url ? (
