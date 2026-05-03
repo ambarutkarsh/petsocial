@@ -18,6 +18,7 @@ const TopBar = () => {
   const { profile } = useUserProfile();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const { theme, toggleTheme } = useTheme();
   const [debounced, setDebounced] = useState("");
 
   // Unread notifications count, polled every 60s
