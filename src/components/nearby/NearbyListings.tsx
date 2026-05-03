@@ -247,7 +247,8 @@ const NearbyListings = ({ category }: Props) => {
             className="text-xs font-body font-bold bg-transparent border-0 px-2 py-1.5 cursor-pointer outline-none text-primary"
           >
             {CITY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
+          </select>
+        </div>
       </div>
 
       <button
