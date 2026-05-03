@@ -21,19 +21,15 @@ const AdminWelcomeEmailScreen = () => {
     );
   }
 
-  const lookupByEmail = async (val: string): Promise<string | null> => {
-    if (!val.includes("@")) return val.trim() || null;
-    const { data } = await supabase.from("profiles").select("id").eq("email", val.trim()).maybeSingle();
-    return data?.id ?? null;
-  };
-
   const run = async (mode: "preview" | "send") => {
-    const id = await lookupByEmail(userId);
-    if (!id) { toast.error("Provide a user_id or a profile email"); return; }
+    const val = userId.trim();
+    if (!val) { toast.error("Provide a user_id or a profile email"); return; }
     setLoading(mode);
     setPreview(null);
     try {
-      const body: any = { user_id: id };
+      const body: any = {};
+      if (val.includes("@")) body.email = val;
+      else body.user_id = val;
       if (mode === "preview") body.preview = true;
       else body.test = true;
       if (overrideEmail.trim()) body.override_email = overrideEmail.trim();
