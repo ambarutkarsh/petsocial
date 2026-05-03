@@ -164,19 +164,19 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
   const visible = [index - 1, index, index + 1].filter((i) => i >= 0 && i < items.length);
 
   const node = (
-    <div className="fixed inset-0 z-[10000] bg-black text-white" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[10000] bg-reel text-reel-foreground" role="dialog" aria-modal="true">
       {/* Top bar */}
       <button
         onClick={onClose}
         aria-label="Close"
-        className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center"
+        className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-reel-control backdrop-blur flex items-center justify-center"
       >
         <ArrowLeft size={22} />
       </button>
       <button
         onClick={() => setMuted((m) => !m)}
         aria-label={muted ? "Unmute" : "Mute"}
-        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center"
+        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-reel-control backdrop-blur flex items-center justify-center"
       >
         {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </button>
@@ -206,7 +206,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Like"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <Heart
               size={26}
               fill={isLiked?.(current.id) ? "#FF6B6B" : "none"}
@@ -220,7 +220,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Comment"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <MessageCircle size={26} />
           </div>
           <span className="text-xs">{current.comment_count || 0}</span>
@@ -230,7 +230,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Share"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <Share2 size={26} />
           </div>
         </button>
