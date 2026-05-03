@@ -49,6 +49,8 @@ const FeedScreen = () => {
   const isGuest = !user;
   const queryClient = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
+  const [showCreateChoice, setShowCreateChoice] = useState(false);
+  const [showAddNearby, setShowAddNearby] = useState(false);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [sharePostData, setSharePostData] = useState<{ url: string; text: string } | null>(null);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
@@ -1148,8 +1150,45 @@ const FeedScreen = () => {
         </div>
       </div>
 
-      <BottomNav onPostClick={() => setShowCreate(true)} />
+      <BottomNav onPostClick={() => setShowCreateChoice(true)} />
       <PostUploadModal open={showCreate} onClose={() => setShowCreate(false)} />
+      {showCreateChoice && (
+        <div className="fixed inset-0 z-[1100] flex items-end justify-center">
+          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => setShowCreateChoice(false)} />
+          <div className="relative w-full max-w-[480px] bg-card rounded-t-[28px] p-5">
+            <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
+            <h2 className="text-lg font-heading font-bold mb-3">Create</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { setShowCreateChoice(false); setShowCreate(true); }}
+                className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary"
+              >
+                <span className="text-3xl">📸</span>
+                <span className="text-sm font-heading font-bold">Feed Post</span>
+                <span className="text-[11px] text-muted-foreground">Share a photo or reel</span>
+              </button>
+              <button
+                onClick={() => { setShowCreateChoice(false); setShowAddNearby(true); }}
+                className="flex flex-col items-center gap-2 p-5 rounded-2xl bg-muted/40 border border-border hover:border-primary"
+              >
+                <span className="text-3xl">📍</span>
+                <span className="text-sm font-heading font-bold">NearBy Listing</span>
+                <span className="text-[11px] text-muted-foreground">Add a place or post</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showAddNearby && (
+        <AddNearbyListingSheet
+          open={showAddNearby}
+          onClose={() => setShowAddNearby(false)}
+          onCreated={(cat) => {
+            setActivePill("nearby");
+            setNearbySub(cat === "pet_restaurant" ? "restaurants" : cat);
+          }}
+        />
+      )}
       {commentPostId && <CommentSheet postId={commentPostId} open={!!commentPostId} onClose={() => setCommentPostId(null)} />}
       {sharePostData && <ShareSheet open={!!sharePostData} url={sharePostData.url} text={sharePostData.text} onClose={() => setSharePostData(null)} />}
       {showStoryViewer && stories.length > 0 && <StoryViewer stories={stories as any} initialIndex={storyStartIndex} onClose={() => setShowStoryViewer(false)} />}
