@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { user_id } = await req.json().catch(() => ({}));
+    const { user_id, preview, test, override_email } = await req.json().catch(() => ({}));
     if (!user_id || typeof user_id !== "string") {
       return new Response(JSON.stringify({ error: "user_id required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
