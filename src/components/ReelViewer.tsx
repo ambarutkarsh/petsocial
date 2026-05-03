@@ -38,15 +38,18 @@ const ReelMedia = ({
   active,
   muted,
   onAdvance,
+  imageDurationMs,
 }: {
   item: ReelItem;
   active: boolean;
   muted: boolean;
   onAdvance: () => void;
+  imageDurationMs: number;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
   const url = resolveUrl(item.media_url);
+  const poster = item.thumbnail_url ? resolveUrl(item.thumbnail_url) : undefined;
 
   useEffect(() => {
     const v = videoRef.current;
@@ -63,9 +66,9 @@ const ReelMedia = ({
   // Image auto-advance
   useEffect(() => {
     if (!active || item.media_type !== "image") return;
-    const t = setTimeout(onAdvance, 10000);
+    const t = setTimeout(onAdvance, imageDurationMs);
     return () => clearTimeout(t);
-  }, [active, item.media_type, onAdvance]);
+  }, [active, imageDurationMs, item.media_type, onAdvance]);
 
   const toggle = () => {
     const v = videoRef.current;
@@ -85,14 +88,14 @@ const ReelMedia = ({
         <video
           ref={videoRef}
           src={url}
-          poster={item.thumbnail_url || undefined}
+          poster={poster}
           muted={muted}
           playsInline
           preload={active ? "auto" : "metadata"}
           className="w-full h-full object-contain bg-black"
           onEnded={onAdvance}
         />
-        {paused && (
+        {paused && active && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-20 h-20 rounded-full bg-black/55 flex items-center justify-center">
               <Play size={36} className="text-white ml-1" fill="white" />
@@ -113,7 +116,7 @@ const ReelMedia = ({
   );
 };
 
-const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, isLiked }: Props) => {
+const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, isLiked, imageDurationMs = 10000 }: Props) => {
   const [index, setIndex] = useState(initialIndex);
   const [muted, setMuted] = useState(true);
   const [dragY, setDragY] = useState(0);
@@ -161,42 +164,39 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
   const visible = [index - 1, index, index + 1].filter((i) => i >= 0 && i < items.length);
 
   const node = (
-    <div className="fixed inset-0 z-[10000] bg-black text-white" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[10000] bg-reel text-reel-foreground" role="dialog" aria-modal="true">
       {/* Top bar */}
       <button
         onClick={onClose}
         aria-label="Close"
-        className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center"
+        className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-reel-control backdrop-blur flex items-center justify-center"
       >
         <ArrowLeft size={22} />
       </button>
       <button
         onClick={() => setMuted((m) => !m)}
         aria-label={muted ? "Unmute" : "Mute"}
-        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center"
+        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-reel-control backdrop-blur flex items-center justify-center"
       >
         {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </button>
 
       {/* Slides */}
       <div
-        className="absolute inset-0 touch-none"
+        className="absolute inset-0 touch-none overflow-hidden"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <div
-          className="w-full h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateY(calc(${-index * 100}% + ${dragY}px))` }}
-        >
-          {items.map((it, i) => (
-            <div key={it.id} className="w-full h-full" style={{ height: "100%" }}>
-              {visible.includes(i) ? (
-                <ReelMedia item={it} active={i === index} muted={muted} onAdvance={advance} />
-              ) : null}
-            </div>
-          ))}
-        </div>
+        {visible.map((i) => (
+          <div
+            key={items[i].id}
+            className="absolute inset-0 transition-transform duration-300 ease-out"
+            style={{ transform: `translateY(calc(${(i - index) * 100}% + ${dragY}px))` }}
+          >
+            <ReelMedia item={items[i]} active={i === index} muted={muted} onAdvance={advance} imageDurationMs={imageDurationMs} />
+          </div>
+        ))}
       </div>
 
       {/* Right action stack */}
@@ -206,7 +206,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Like"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <Heart
               size={26}
               fill={isLiked?.(current.id) ? "#FF6B6B" : "none"}
@@ -220,7 +220,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Comment"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <MessageCircle size={26} />
           </div>
           <span className="text-xs">{current.comment_count || 0}</span>
@@ -230,7 +230,7 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
           className="flex flex-col items-center gap-1"
           aria-label="Share"
         >
-          <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-reel-control backdrop-blur flex items-center justify-center">
             <Share2 size={26} />
           </div>
         </button>

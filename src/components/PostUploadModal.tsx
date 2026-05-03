@@ -24,6 +24,9 @@ const CATEGORIES: { key: string; label: string }[] = [
   { key: "find_mates", label: "💕 Find Mates" },
 ];
 
+const MAX_VIDEO_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_VIDEO_DURATION_SECONDS = 30;
+
 const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo = true }: Props) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -38,6 +41,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
   const [posting, setPosting] = useState(false);
   const [postLocation, setPostLocation] = useState("");
   const [detectingLocation, setDetectingLocation] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const { data: myPets = [] } = useQuery({
     queryKey: ["my-pets", user?.id],
@@ -53,30 +57,64 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setUploadError(null);
+    setValidationStatus("checking");
+    setSelectedFile(null);
+    setImagePreview(null);
 
-    // Enforce 30s max + 5MB max for videos.
+    if (!acceptVideo && file.type.startsWith("video")) {
+      const message = "Only photos are allowed here.";
+      setUploadError(message);
+      setValidationStatus("invalid");
+      toast.error(message);
+      e.target.value = "";
+      return;
+    }
+
+    // Enforce 30s max + 5MB max for videos before upload.
     if (file.type.startsWith("video")) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("Videos must be 5 MB or smaller");
+      if (file.size > MAX_VIDEO_SIZE_BYTES) {
+        const message = "Video is too large. Maximum allowed size is 5 MB.";
+        setUploadError(message);
+        setValidationStatus("invalid");
+        toast.error(message);
         e.target.value = "";
         return;
       }
-      const ok = await new Promise<boolean>((resolve) => {
+      const duration = await new Promise<number | null>((resolve) => {
         const v = document.createElement("video");
+        const objectUrl = URL.createObjectURL(file);
+        const timer = window.setTimeout(() => {
+          URL.revokeObjectURL(objectUrl);
+          resolve(null);
+        }, 6000);
         v.preload = "metadata";
         v.onloadedmetadata = () => {
-          URL.revokeObjectURL(v.src);
-          if (v.duration > 30.5) {
-            toast.error("Videos must be 30 seconds or shorter");
-            resolve(false);
-          } else {
-            resolve(true);
-          }
+          window.clearTimeout(timer);
+          const seconds = Number.isFinite(v.duration) ? v.duration : null;
+          URL.revokeObjectURL(objectUrl);
+          resolve(seconds);
         };
-        v.onerror = () => resolve(true);
-        v.src = URL.createObjectURL(file);
+        v.onerror = () => {
+          window.clearTimeout(timer);
+          URL.revokeObjectURL(objectUrl);
+          resolve(null);
+        };
+        v.src = objectUrl;
       });
-      if (!ok) {
+      if (duration === null) {
+        const message = "Could not read video duration. Please choose a different video.";
+        setUploadError(message);
+        setValidationStatus("invalid");
+        toast.error(message);
+        e.target.value = "";
+        return;
+      }
+      if (duration > MAX_VIDEO_DURATION_SECONDS) {
+        const message = "Video is too long. Maximum allowed duration is 30 seconds.";
+        setUploadError(message);
+        setValidationStatus("invalid");
+        toast.error(message);
         e.target.value = "";
         return;
       }
@@ -176,6 +214,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
     setSelectedPetId("");
     setCategory(defaultCategory);
     setPostLocation("");
+    setUploadError(null);
     onClose();
   };
 
@@ -193,7 +232,7 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
           <label className="border-2 border-dashed border-primary/30 rounded-[22px] p-12 flex flex-col items-center gap-3 bg-primary-light cursor-pointer hover:bg-primary/10 transition-colors">
             <Upload size={40} strokeWidth={1.5} className="text-primary" />
             <span className="text-sm font-heading font-bold text-primary">Tap to upload {acceptVideo ? "media" : "photo"}</span>
-            <span className="text-xs text-muted-foreground font-body text-center">{acceptVideo ? "JPG, PNG or video • Videos: max 30s, ≤ 5 MB" : "JPG or PNG"}</span>
+            <span className="text-xs text-muted-foreground font-body text-center">{acceptVideo ? "JPG, PNG or video • Videos must be 30 seconds or less and 5 MB or smaller" : "JPG or PNG"}</span>
             <input type="file" accept={acceptVideo ? "image/*,video/*" : "image/*"} className="hidden" onChange={handleFileSelect} />
           </label>
         ) : (
@@ -208,6 +247,11 @@ const PostUploadModal = ({ open, onClose, defaultCategory = "reel", acceptVideo 
               {validationStatus === "valid" && <><CheckCircle2 size={16} strokeWidth={1.5} className="text-success" /><span className="text-success font-bold">Pet detected!</span></>}
               {validationStatus === "invalid" && <><X size={16} strokeWidth={1.5} className="text-destructive" /><span className="text-destructive font-bold">No pet found — please upload a pet photo</span></>}
             </div>
+          </div>
+        )}
+        {uploadError && (
+          <div className="mt-3 rounded-[16px] border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-body font-semibold text-destructive">
+            {uploadError}
           </div>
         )}
 
