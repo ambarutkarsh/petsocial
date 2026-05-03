@@ -627,17 +627,12 @@ const FeedScreen = () => {
       if (isGuest) { triggerGuestPopup(); return; }
       navigate(`/profile/${post.user_id}`);
     };
-    const openReelViewer = (event: React.MouseEvent<HTMLElement>) => {
-      const target = event.target as HTMLElement;
-      if (target.closest("button,a,input,textarea,select")) return;
-      setActiveReelIndex(idx);
-    };
     const guardedAction = (fn: () => void) => () => {
       if (isGuest) { triggerGuestPopup(); return; }
       fn();
     };
     return (
-      <article key={post.id} onClick={openReelViewer} className="paw-card overflow-hidden animate-fade-up cursor-pointer" style={{ animationDelay: `${idx * 40}ms` }}>
+      <article key={post.id} className="paw-card overflow-hidden animate-fade-up" style={{ animationDelay: `${idx * 40}ms` }}>
         <div className="flex items-center gap-3 p-3.5">
           <button onClick={profileClick} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-primary flex items-center justify-center text-sm font-heading font-extrabold text-primary-foreground overflow-hidden">
             {!isGuest && post.profiles?.avatar_url ? (
@@ -659,11 +654,13 @@ const FeedScreen = () => {
           )}
         </div>
         {post.media_url && (
-          post.media_type === "video" ? (
-            <video src={getMediaUrl(post.media_url)} controls className="w-full aspect-square object-cover bg-black" />
-          ) : (
-            <img src={getMediaUrl(post.media_url)} alt="" className="w-full aspect-square object-cover" loading="lazy" />
-          )
+          <div className="relative cursor-pointer" onClick={() => setActiveReelIndex(idx)}>
+            {post.media_type === "video" ? (
+              <video src={getMediaUrl(post.media_url)} controls className="w-full aspect-square object-cover bg-black" />
+            ) : (
+              <img src={getMediaUrl(post.media_url)} alt="" className="w-full aspect-square object-cover" loading="lazy" />
+            )}
+          </div>
         )}
         <div className="px-3.5 pt-3 pb-2 flex items-center gap-4">
           <button onClick={guardedAction(() => toggleLikeMutation.mutate(post.id))} className="flex items-center gap-1.5">
