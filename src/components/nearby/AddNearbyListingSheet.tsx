@@ -183,6 +183,77 @@ const AddNearbyListingSheet = ({ open, initialCategory, onClose, onCreated }: Pr
     if (category === "pet_show") {
       return <input type="date" value={extra.event_date || ""} onChange={(e) => setEx("event_date", e.target.value)} className="w-full h-11 px-4 rounded-2xl border border-border bg-muted/30 text-sm" />;
     }
+    if (category === "pet_park") {
+      const pa = extra.pet_acceptance || [];
+      const togglePa = (k: string) => setEx("pet_acceptance", pa.includes(k) ? pa.filter((x: string) => x !== k) : [...pa, k]);
+      return (
+        <>
+          <div>
+            <p className="text-xs font-body font-bold text-muted-foreground mb-1">Pet acceptance</p>
+            <div className="flex flex-wrap gap-2">
+              {["Dogs", "Cats", "Small Pets", "All Pets"].map((k) => (
+                <button type="button" key={k} onClick={() => togglePa(k)} className={`text-xs px-3 py-1.5 rounded-full border ${pa.includes(k) ? "bg-primary text-primary-foreground border-primary" : "bg-muted/30 border-border"}`}>{k}</button>
+              ))}
+            </div>
+          </div>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Off-leash allowed
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.off_leash_allowed || ""} onChange={(e) => setEx("off_leash_allowed", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Entry fee
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.entry_fee || ""} onChange={(e) => setEx("entry_fee", e.target.value)}>
+              <option value="">Unknown</option><option value="free">Free</option><option value="paid">Paid</option>
+            </select>
+          </label>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Play area available
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.play_area_available || ""} onChange={(e) => setEx("play_area_available", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <input placeholder="Timings (optional)" value={extra.timings || ""} onChange={(e) => setEx("timings", e.target.value)}
+            className="w-full h-11 px-4 rounded-2xl border border-border bg-muted/30 text-sm" />
+        </>
+      );
+    }
+    if (category === "boarding") {
+      const pa = extra.pet_acceptance || [];
+      const togglePa = (k: string) => setEx("pet_acceptance", pa.includes(k) ? pa.filter((x: string) => x !== k) : [...pa, k]);
+      return (
+        <>
+          <div>
+            <p className="text-xs font-body font-bold text-muted-foreground mb-1">Pet types accepted *</p>
+            <div className="flex flex-wrap gap-2">
+              {["Dogs", "Cats", "Birds", "Small Pets", "Reptiles"].map((k) => (
+                <button type="button" key={k} onClick={() => togglePa(k)} className={`text-xs px-3 py-1.5 rounded-full border ${pa.includes(k) ? "bg-primary text-primary-foreground border-primary" : "bg-muted/30 border-border"}`}>{k}</button>
+              ))}
+            </div>
+          </div>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Overnight stay
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.overnight_stay_available || ""} onChange={(e) => setEx("overnight_stay_available", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Day care
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.day_care_available || ""} onChange={(e) => setEx("day_care_available", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Vaccination required
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.vaccination_required || ""} onChange={(e) => setEx("vaccination_required", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <label className="block text-xs font-body font-bold text-muted-foreground">Pickup/drop available
+            <select className="mt-1 w-full h-11 px-3 rounded-2xl border border-border bg-muted/30 text-sm" value={extra.pickup_drop_available || ""} onChange={(e) => setEx("pickup_drop_available", e.target.value)}>
+              <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option>
+            </select>
+          </label>
+          <input placeholder="Price range (optional)" value={extra.price_range || ""} onChange={(e) => setEx("price_range", e.target.value)}
+            className="w-full h-11 px-4 rounded-2xl border border-border bg-muted/30 text-sm" />
+        </>
+      );
+    }
     return null;
   };
 
