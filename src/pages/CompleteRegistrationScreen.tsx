@@ -9,6 +9,7 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { toast } from "sonner";
 import { petTypes, breedsByType, indianStates } from "@/lib/registrationData";
 import { trackEvent } from "@/lib/analytics";
+import { sendWelcomeEmail } from "@/lib/welcomeEmail";
 
 const CompleteRegistrationScreen = () => {
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ const CompleteRegistrationScreen = () => {
 
       trackEvent("signup_completed", { method: "google" });
       await refreshProfile();
+      sendWelcomeEmail(user.id);
       toast.success("Welcome to Petosauras! 🦕");
       navigate("/feed", { replace: true });
     } catch (e: any) {

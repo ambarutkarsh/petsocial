@@ -8,6 +8,7 @@ import { BackIcon, CheckIcon, CloseIcon, UploadIcon } from "@/components/icons/P
 import { breedsByType, getPasswordStrength, indianStates, petTypeEmoji, petTypes, validateStep1, validateStep2 } from "@/lib/registrationData";
 
 import MobileLayout from "./MobileLayout";
+import { sendWelcomeEmail } from "@/lib/welcomeEmail";
 
 
 interface Props {
@@ -283,6 +284,7 @@ const RegistrationFlow = ({ onComplete, onBackToLogin, initialStep = 0 }: Props)
       }
 
       toast.success("Welcome to Petosauras! 🦕");
+      sendWelcomeEmail(userId);
       onComplete();
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong");

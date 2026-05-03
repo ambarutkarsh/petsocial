@@ -1717,6 +1717,8 @@ export type Database = {
           state: string | null
           updated_at: string | null
           username: string | null
+          welcome_email_sent: boolean | null
+          welcome_email_sent_at: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -1739,6 +1741,8 @@ export type Database = {
           state?: string | null
           updated_at?: string | null
           username?: string | null
+          welcome_email_sent?: boolean | null
+          welcome_email_sent_at?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -1761,6 +1765,8 @@ export type Database = {
           state?: string | null
           updated_at?: string | null
           username?: string | null
+          welcome_email_sent?: boolean | null
+          welcome_email_sent_at?: string | null
         }
         Relationships: []
       }
