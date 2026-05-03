@@ -140,10 +140,11 @@ const BulkUpload = () => {
     const ext = (photo.file.name.split(".").pop() || "jpg").toLowerCase();
     const filePath = `${photo.userId}/bulk-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
 
+    const isVideo = (photo.file.type || "").startsWith("video");
     const { error: upErr } = await supabase.storage
       .from("posts")
       .upload(filePath, photo.file, {
-        contentType: photo.file.type || "image/jpeg",
+        contentType: photo.file.type || (isVideo ? "video/mp4" : "image/jpeg"),
         upsert: false,
       });
     if (upErr) {
@@ -171,7 +172,7 @@ const BulkUpload = () => {
       .insert({
         user_id: photo.userId,
         media_url: publicUrl,
-        media_type: "image",
+        media_type: isVideo ? "video" : "image",
         caption: photo.caption || null,
         hashtags: hashArr,
         location: photo.location || null,
@@ -235,12 +236,12 @@ const BulkUpload = () => {
           }}
         >
           <ImagePlus className="w-10 h-10 mx-auto mb-2 text-[#7B5EA7]" strokeWidth={1.5} />
-          <p className="font-heading font-semibold text-foreground">Tap to select photos from your device</p>
-          <p className="text-xs font-body text-muted-foreground mt-1">Select multiple photos at once</p>
+          <p className="font-heading font-semibold text-foreground">Tap to select photos or videos from your device</p>
+          <p className="text-xs font-body text-muted-foreground mt-1">Select multiple files at once (images & videos)</p>
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             multiple
             className="hidden"
             onChange={(e) => {
@@ -284,7 +285,11 @@ const BulkUpload = () => {
                 }`}
               >
                 <div className="relative rounded-lg overflow-hidden bg-muted aspect-square mb-3">
-                  <img src={photo.preview} alt="" className="w-full h-full object-cover" />
+                  {photo.file.type.startsWith("video") ? (
+                    <video src={photo.preview} className="w-full h-full object-cover" muted playsInline />
+                  ) : (
+                    <img src={photo.preview} alt="" className="w-full h-full object-cover" />
+                  )}
                   {photo.status === "uploading" && (
                     <div className="absolute inset-0 bg-[#7B5EA7]/70 flex items-center justify-center animate-pulse">
                       <div className="text-white text-xs font-body flex items-center gap-1.5">
