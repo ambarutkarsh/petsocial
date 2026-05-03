@@ -140,10 +140,11 @@ const BulkUpload = () => {
     const ext = (photo.file.name.split(".").pop() || "jpg").toLowerCase();
     const filePath = `${photo.userId}/bulk-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
 
+    const isVideo = (photo.file.type || "").startsWith("video");
     const { error: upErr } = await supabase.storage
       .from("posts")
       .upload(filePath, photo.file, {
-        contentType: photo.file.type || "image/jpeg",
+        contentType: photo.file.type || (isVideo ? "video/mp4" : "image/jpeg"),
         upsert: false,
       });
     if (upErr) {
