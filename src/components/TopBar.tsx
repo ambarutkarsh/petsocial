@@ -5,16 +5,23 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Bell, Search, X, Sun, Moon } from "lucide-react";
+import { Bell, Search, X, Sun, Moon, User as UserIcon, Settings as SettingsLucide, LogOut } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import UserAvatar from "@/components/UserAvatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // LOGO LOCKED — Do not change without explicit user instruction
 import logo from "@/assets/petosauras-icon.png";
 
 const TopBar = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { profile } = useUserProfile();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
