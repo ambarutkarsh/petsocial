@@ -58,6 +58,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        reel: {
+          DEFAULT: "hsl(var(--reel-background))",
+          foreground: "hsl(var(--reel-foreground))",
+          control: "hsl(var(--reel-control))",
+        },
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         error: "hsl(var(--error))",
