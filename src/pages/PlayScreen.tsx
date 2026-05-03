@@ -493,7 +493,8 @@ const FeedScreen = () => {
   };
 
   useEffect(() => {
-    if (showNearby) fetchNearby(nearbySub);
+    // Only the legacy "restaurants" path uses fetchNearby; new categories use NearbyListings component.
+    if (showNearby && nearbySub === "restaurants_legacy_unused") fetchNearby(nearbySub);
     // eslint-disable-next-line
   }, [showNearby, nearbySub]);
 
