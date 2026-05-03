@@ -21,6 +21,7 @@ import CommentSheet from "@/components/CommentSheet";
 import ShareSheet from "@/components/ShareSheet";
 import StoryViewer from "@/components/StoryViewer";
 import StoryCreator from "@/components/StoryCreator";
+import ReelViewer from "@/components/ReelViewer";
 
 // Helper: attach public_profiles to a list of rows by user_id field.
 async function attachProfiles<T extends Record<string, any>>(
@@ -51,6 +52,7 @@ const FeedScreen = () => {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyStartIndex, setStoryStartIndex] = useState(0);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
+  const [activeReelIndex, setActiveReelIndex] = useState<number | null>(null);
   const [activePill, setActivePill] = useState<FeedPillKey>("reels");
   const [savedPrefs, setSavedPrefs] = useState<FeedPillKey[]>([]);
   const [nearbySub, setNearbySub] = useState<string>("restaurants");
@@ -596,6 +598,18 @@ const FeedScreen = () => {
     setSharePostData({ url, text });
     trackEvent("post_share_opened", { post_id: post.id });
   };
+
+  const reelItems = posts.map((post: any) => ({
+    id: post.id,
+    media_type: post.media_type === "video" ? "video" as const : "image" as const,
+    media_url: post.media_url,
+    thumbnail_url: post.thumbnail_url,
+    caption: post.caption,
+    like_count: (liveCounts as any)?.likes?.[post.id] ?? post.like_count ?? 0,
+    comment_count: (liveCounts as any)?.comments?.[post.id] ?? post.comment_count ?? 0,
+    author_name: post.profiles?.username || post.profiles?.full_name,
+    author_avatar: post.profiles?.avatar_url,
+  }));
 
   // ============= RENDER HELPERS =============
   const renderPostCard = (post: any, idx: number) => {
