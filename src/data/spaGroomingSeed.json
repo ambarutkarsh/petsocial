@@ -1,0 +1,1801 @@
+{
+  "dataset_name": "Petosauras India Pet Spa & Grooming Seed Dataset",
+  "version": "2026-05-03-v1",
+  "generated_at": "2026-05-03T06:51:59Z",
+  "important_notes": [
+    "This is a web-researched seed dataset for ingestion and validation, not a fully verified commercial directory.",
+    "Images are represented as source-page references, not copied image files, to avoid copyright/licensing issues. Replace image_url with owned/licensed images before public display.",
+    "Ratings and review counts are included only where visible in public search/source snippets; null means not reliably available from the checked source.",
+    "Pet acceptance should be verified with each business before booking."
+  ],
+  "schema_hint": {
+    "name": "text",
+    "category": "spa|groomer",
+    "city": "text",
+    "state": "text",
+    "locality": "text",
+    "rating": "number|null",
+    "review_count": "integer|null",
+    "location_for_direction.google_maps_search_url": "text",
+    "pet_acceptance.accepted_pet_types": "array",
+    "image.image_url": "text|null",
+    "image.image_source_url": "text",
+    "source.source_url": "text"
+  },
+  "records": [
+    {
+      "name": "Happipets",
+      "category": "spa",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "locality": "Thoraipakkam",
+      "address": null,
+      "location_for_direction": {
+        "display": "Thoraipakkam, Chennai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Happipets%20Thoraipakkam%20Chennai%20India"
+      },
+      "rating": 4.9,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Happipets pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Chennai guide",
+        "source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Zane Pet Spa",
+      "category": "spa",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "locality": "Velachery",
+      "address": null,
+      "location_for_direction": {
+        "display": "Velachery, Chennai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Zane%20Pet%20Spa%20Velachery%20Chennai%20India"
+      },
+      "rating": 4.9,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Zane Pet Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Chennai guide",
+        "source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pampered Paws",
+      "category": "spa",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "locality": "Anna Nagar",
+      "address": null,
+      "location_for_direction": {
+        "display": "Anna Nagar, Chennai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pampered%20Paws%20Anna%20Nagar%20Chennai%20India"
+      },
+      "rating": 4.8,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pampered Paws pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Chennai guide",
+        "source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails",
+      "category": "spa",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "locality": "Nungambakkam",
+      "address": null,
+      "location_for_direction": {
+        "display": "Nungambakkam, Chennai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Nungambakkam%20Chennai%20India"
+      },
+      "rating": 4.6,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Chennai guide / HUFT",
+        "source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "PAWSUP",
+      "category": "spa",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "locality": "Chetpet",
+      "address": null,
+      "location_for_direction": {
+        "display": "Chetpet, Chennai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=PAWSUP%20Chetpet%20Chennai%20India"
+      },
+      "rating": 5.0,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "PAWSUP pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Chennai guide",
+        "source_url": "https://lbb.in/chennai/top-dog-spas-in-chennai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Fuzzy Wuzzy Pet Styling Studio and Spa",
+      "category": "groomer",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "locality": "Bengaluru",
+      "address": null,
+      "location_for_direction": {
+        "display": "Bengaluru, Bengaluru, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Fuzzy%20Wuzzy%20Pet%20Styling%20Studio%20and%20Spa%20Bengaluru%20Bengaluru%20India"
+      },
+      "rating": 5.0,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Bangalore/Pet-Parlours/nct-10945058",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Fuzzy Wuzzy Pet Styling Studio and Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Bangalore",
+        "source_url": "https://www.justdial.com/Bangalore/Pet-Parlours/nct-10945058"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Store & Spa",
+      "category": "spa",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "locality": "Indiranagar",
+      "address": null,
+      "location_for_direction": {
+        "display": "Indiranagar, Bengaluru, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Store%20%26%20Spa%20Indiranagar%20Bengaluru%20India"
+      },
+      "rating": 4.8,
+      "review_count": 548,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Bangalore/Heads-Up-For-Tails-12Th-Main-Road-Domlur-Indiranagar-Indiranagar/080PXX80-XX80-191116090158-F6R3_BZDET",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Store & Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial / HUFT",
+        "source_url": "https://www.justdial.com/Bangalore/Heads-Up-For-Tails-12Th-Main-Road-Domlur-Indiranagar-Indiranagar/080PXX80-XX80-191116090158-F6R3_BZDET"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Shevar",
+      "category": "groomer",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "locality": "Bengaluru",
+      "address": null,
+      "location_for_direction": {
+        "display": "Bengaluru, Bengaluru, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Shevar%20Bengaluru%20Bengaluru%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/bangalore/dog-grooming-parlours/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Shevar pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Bengaluru guide",
+        "source_url": "https://lbb.in/bangalore/dog-grooming-parlours/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "The Dog Studio Pet Spa",
+      "category": "spa",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "locality": "Bengaluru",
+      "address": null,
+      "location_for_direction": {
+        "display": "Bengaluru, Bengaluru, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=The%20Dog%20Studio%20Pet%20Spa%20Bengaluru%20Bengaluru%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/bangalore/dog-grooming-parlours/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "The Dog Studio Pet Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Bengaluru guide",
+        "source_url": "https://lbb.in/bangalore/dog-grooming-parlours/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "PawSpace At-Home Pet Grooming",
+      "category": "groomer",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "locality": "Bengaluru",
+      "address": null,
+      "location_for_direction": {
+        "display": "Bengaluru, Bengaluru, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=PawSpace%20At-Home%20Pet%20Grooming%20Bengaluru%20Bengaluru%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://pawspace.in/pet-grooming-service-bangalore/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "PawSpace At-Home Pet Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "PawSpace",
+        "source_url": "https://pawspace.in/pet-grooming-service-bangalore/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Fur N Tails",
+      "category": "groomer",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "locality": "Ghatkopar East",
+      "address": null,
+      "location_for_direction": {
+        "display": "Ghatkopar East, Mumbai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Fur%20N%20Tails%20Ghatkopar%20East%20Mumbai%20India"
+      },
+      "rating": 4.7,
+      "review_count": 144,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Fur N Tails pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Mumbai guide",
+        "source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pet Pamperer",
+      "category": "groomer",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "locality": "Andheri West",
+      "address": null,
+      "location_for_direction": {
+        "display": "Andheri West, Mumbai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pet%20Pamperer%20Andheri%20West%20Mumbai%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pet Pamperer pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Mumbai guide",
+        "source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pet Grooming Tales",
+      "category": "groomer",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "locality": "Mumbai",
+      "address": null,
+      "location_for_direction": {
+        "display": "Mumbai, Mumbai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pet%20Grooming%20Tales%20Mumbai%20Mumbai%20India"
+      },
+      "rating": 4.5,
+      "review_count": 193,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pet Grooming Tales pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Mumbai guide",
+        "source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "The Bark Tub",
+      "category": "spa",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "locality": "Mumbai",
+      "address": null,
+      "location_for_direction": {
+        "display": "Mumbai, Mumbai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=The%20Bark%20Tub%20Mumbai%20Mumbai%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "The Bark Tub pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Mumbai guide",
+        "source_url": "https://lbb.in/mumbai/pet-grooming-mumbai/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Pet Store & Spa",
+      "category": "spa",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "locality": "Asha Nagar",
+      "address": null,
+      "location_for_direction": {
+        "display": "Asha Nagar, Mumbai, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Pet%20Store%20%26%20Spa%20Asha%20Nagar%20Mumbai%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://stores.headsupfortails.com/pet-spa-in-maharashtra-mumbai-asha-nagar-98679/home",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Pet Store & Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "HUFT Mumbai store page",
+        "source_url": "https://stores.headsupfortails.com/pet-spa-in-maharashtra-mumbai-asha-nagar-98679/home"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Twix & Butch",
+      "category": "spa",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "locality": "Kalyani Nagar",
+      "address": null,
+      "location_for_direction": {
+        "display": "Kalyani Nagar, Pune, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Twix%20%26%20Butch%20Kalyani%20Nagar%20Pune%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/pune/pet-spas-in-pune/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Twix & Butch pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Pune guide",
+        "source_url": "https://lbb.in/pune/pet-spas-in-pune/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Gordon Just Fur Dogs",
+      "category": "spa",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "locality": "Wanowrie",
+      "address": null,
+      "location_for_direction": {
+        "display": "Wanowrie, Pune, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Gordon%20Just%20Fur%20Dogs%20Wanowrie%20Pune%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/pune/pet-spas-in-pune/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Gordon Just Fur Dogs pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Pune guide",
+        "source_url": "https://lbb.in/pune/pet-spas-in-pune/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "The Pawsh - Pets & More",
+      "category": "spa",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "locality": "Pashan",
+      "address": null,
+      "location_for_direction": {
+        "display": "Pashan, Pune, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=The%20Pawsh%20-%20Pets%20%26%20More%20Pashan%20Pune%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/pune/pet-spas-in-pune/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "The Pawsh - Pets & More pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Pune guide",
+        "source_url": "https://lbb.in/pune/pet-spas-in-pune/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Groomingdale Pet Salon",
+      "category": "groomer",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "locality": "Prabhat Road / Deccan Gymkhana",
+      "address": null,
+      "location_for_direction": {
+        "display": "Prabhat Road / Deccan Gymkhana, Pune, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Groomingdale%20Pet%20Salon%20Prabhat%20Road%20/%20Deccan%20Gymkhana%20Pune%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/pune/groomingdale-pet-salon-81ebf1/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Groomingdale Pet Salon pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Pune profile",
+        "source_url": "https://lbb.in/pune/groomingdale-pet-salon-81ebf1/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "ThePetNest Mobile Pet Grooming",
+      "category": "groomer",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "locality": "Pune",
+      "address": null,
+      "location_for_direction": {
+        "display": "Pune, Pune, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=ThePetNest%20Mobile%20Pet%20Grooming%20Pune%20Pune%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://thepetnest.com/pet-grooming/pune",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "ThePetNest Mobile Pet Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "ThePetNest",
+        "source_url": "https://thepetnest.com/pet-grooming/pune"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Red Paws Pet Spa & Shop",
+      "category": "spa",
+      "city": "Delhi NCR",
+      "state": "Delhi",
+      "locality": "Hauz Khas Village",
+      "address": null,
+      "location_for_direction": {
+        "display": "Hauz Khas Village, Delhi NCR, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Red%20Paws%20Pet%20Spa%20%26%20Shop%20Hauz%20Khas%20Village%20Delhi%20NCR%20India"
+      },
+      "rating": 3.9,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Red Paws Pet Spa & Shop pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Delhi guide / WhatsHot",
+        "source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pet Lover's Hut",
+      "category": "groomer",
+      "city": "Delhi NCR",
+      "state": "Delhi",
+      "locality": "Chhattarpur",
+      "address": null,
+      "location_for_direction": {
+        "display": "Chhattarpur, Delhi NCR, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pet%20Lover%27s%20Hut%20Chhattarpur%20Delhi%20NCR%20India"
+      },
+      "rating": 4.7,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pet Lover's Hut pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Delhi guide",
+        "source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Zigly Petcare - Kailash Colony",
+      "category": "groomer",
+      "city": "Delhi NCR",
+      "state": "Delhi",
+      "locality": "Kailash Colony",
+      "address": null,
+      "location_for_direction": {
+        "display": "Kailash Colony, Delhi NCR, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Zigly%20Petcare%20-%20Kailash%20Colony%20Kailash%20Colony%20Delhi%20NCR%20India"
+      },
+      "rating": 4.7,
+      "review_count": 499,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://zigly.com/blogs/all/best-pet-grooming-centers-in-delhi-ncr",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Zigly Petcare - Kailash Colony pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Zigly Delhi NCR guide",
+        "source_url": "https://zigly.com/blogs/all/best-pet-grooming-centers-in-delhi-ncr"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Zigly Petcare - Green Park",
+      "category": "groomer",
+      "city": "Delhi NCR",
+      "state": "Delhi",
+      "locality": "Green Park",
+      "address": null,
+      "location_for_direction": {
+        "display": "Green Park, Delhi NCR, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Zigly%20Petcare%20-%20Green%20Park%20Green%20Park%20Delhi%20NCR%20India"
+      },
+      "rating": 4.8,
+      "review_count": 402,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://zigly.com/blogs/all/best-pet-grooming-centers-in-delhi-ncr",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Zigly Petcare - Green Park pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Zigly Delhi NCR guide",
+        "source_url": "https://zigly.com/blogs/all/best-pet-grooming-centers-in-delhi-ncr"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Woofly At-Home Pet Grooming",
+      "category": "groomer",
+      "city": "Delhi NCR",
+      "state": "Delhi NCR",
+      "locality": "Delhi NCR",
+      "address": null,
+      "location_for_direction": {
+        "display": "Delhi NCR, Delhi NCR, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Woofly%20At-Home%20Pet%20Grooming%20Delhi%20NCR%20Delhi%20NCR%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Woofly At-Home Pet Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Delhi guide",
+        "source_url": "https://lbb.in/delhi/dog-grooming-parlours-in-delhi/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Happy Tails Pet Grooming & Spa",
+      "category": "spa",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "locality": "Banjara Hills",
+      "address": null,
+      "location_for_direction": {
+        "display": "Banjara Hills, Hyderabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Happy%20Tails%20Pet%20Grooming%20%26%20Spa%20Banjara%20Hills%20Hyderabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/hyderabad/pet-spas-hyderabad/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Happy Tails Pet Grooming & Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Hyderabad guide",
+        "source_url": "https://lbb.in/hyderabad/pet-spas-hyderabad/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Scoopy Scrub",
+      "category": "groomer",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "locality": "Ameerpet",
+      "address": null,
+      "location_for_direction": {
+        "display": "Ameerpet, Hyderabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Scoopy%20Scrub%20Ameerpet%20Hyderabad%20India"
+      },
+      "rating": 4.8,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://scoopyscrub.com/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Scoopy Scrub pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Scoopy Scrub website / LBB",
+        "source_url": "https://scoopyscrub.com/"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Just Groom",
+      "category": "spa",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "locality": "Hyderabad",
+      "address": null,
+      "location_for_direction": {
+        "display": "Hyderabad, Hyderabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Just%20Groom%20Hyderabad%20Hyderabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://justgroom.in/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Just Groom pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Just Groom website",
+        "source_url": "https://justgroom.in/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Sreenivasa Petspa & Grooming",
+      "category": "spa",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "locality": "Vittalwadi",
+      "address": null,
+      "location_for_direction": {
+        "display": "Vittalwadi, Hyderabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Sreenivasa%20Petspa%20%26%20Grooming%20Vittalwadi%20Hyderabad%20India"
+      },
+      "rating": 5.0,
+      "review_count": 1,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Hyderabad/Sreenivasa-Petspa-Grooming-Near-Narayana-College-Vittalwadi/040PXX40-XX40-220404103306-I5U4_BZDET",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Sreenivasa Petspa & Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Hyderabad",
+        "source_url": "https://www.justdial.com/Hyderabad/Sreenivasa-Petspa-Grooming-Near-Narayana-College-Vittalwadi/040PXX40-XX40-220404103306-I5U4_BZDET"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pet Gully",
+      "category": "groomer",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "locality": "Hyderabad",
+      "address": null,
+      "location_for_direction": {
+        "display": "Hyderabad, Hyderabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pet%20Gully%20Hyderabad%20Hyderabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://lbb.in/hyderabad/pet-spas-hyderabad/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pet Gully pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "LBB Hyderabad guide",
+        "source_url": "https://lbb.in/hyderabad/pet-spas-hyderabad/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pawfect Pet Shop",
+      "category": "groomer",
+      "city": "Goa",
+      "state": "Goa",
+      "locality": "Mollar, Corlim / Panaji",
+      "address": null,
+      "location_for_direction": {
+        "display": "Mollar, Corlim / Panaji, Goa, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pawfect%20Pet%20Shop%20Mollar%2C%20Corlim%20/%20Panaji%20Goa%20India"
+      },
+      "rating": 4.6,
+      "review_count": 31,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Goa/Dog-Grooming-Services/nct-11301531",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pawfect Pet Shop pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Goa",
+        "source_url": "https://www.justdial.com/Goa/Dog-Grooming-Services/nct-11301531"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Fairy Tails Pet Boarding And Training",
+      "category": "groomer",
+      "city": "Goa",
+      "state": "Goa",
+      "locality": "Chimbel",
+      "address": null,
+      "location_for_direction": {
+        "display": "Chimbel, Goa, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Fairy%20Tails%20Pet%20Boarding%20And%20Training%20Chimbel%20Goa%20India"
+      },
+      "rating": 4.2,
+      "review_count": 29,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Goa/Dog-Grooming-Services/nct-11301531",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Fairy Tails Pet Boarding And Training pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Goa",
+        "source_url": "https://www.justdial.com/Goa/Dog-Grooming-Services/nct-11301531"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pawsh Goa",
+      "category": "spa",
+      "city": "Goa",
+      "state": "Goa",
+      "locality": "Porvorim / Margao / Old Goa",
+      "address": null,
+      "location_for_direction": {
+        "display": "Porvorim / Margao / Old Goa, Goa, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pawsh%20Goa%20Porvorim%20/%20Margao%20/%20Old%20Goa%20Goa%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.instagram.com/pawshgoa/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pawsh Goa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Pawsh Goa Instagram",
+        "source_url": "https://www.instagram.com/pawshgoa/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "ThePetNest Pet Grooming Goa",
+      "category": "groomer",
+      "city": "Goa",
+      "state": "Goa",
+      "locality": "Goa",
+      "address": null,
+      "location_for_direction": {
+        "display": "Goa, Goa, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=ThePetNest%20Pet%20Grooming%20Goa%20Goa%20Goa%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.petbacker.com/s/pet-grooming/goa--india",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "ThePetNest Pet Grooming Goa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "PetBacker Goa listing page",
+        "source_url": "https://www.petbacker.com/s/pet-grooming/goa--india"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "PetBacker Grooming Goa",
+      "category": "groomer",
+      "city": "Goa",
+      "state": "Goa",
+      "locality": "Goa",
+      "address": null,
+      "location_for_direction": {
+        "display": "Goa, Goa, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=PetBacker%20Grooming%20Goa%20Goa%20Goa%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.petbacker.com/s/pet-grooming/goa--india",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "PetBacker Grooming Goa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "PetBacker Goa listing page",
+        "source_url": "https://www.petbacker.com/s/pet-grooming/goa--india"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pink Paws Grooming",
+      "category": "groomer",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "locality": "Kolkata",
+      "address": null,
+      "location_for_direction": {
+        "display": "Kolkata, Kolkata, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pink%20Paws%20Grooming%20Kolkata%20Kolkata%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://grooming.pinkpaws.co.in/",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pink Paws Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Pink Paws",
+        "source_url": "https://grooming.pinkpaws.co.in/"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Shreya's Pet Clinic & Spa",
+      "category": "spa",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "locality": "Beliaghata",
+      "address": null,
+      "location_for_direction": {
+        "display": "Beliaghata, Kolkata, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Shreya%27s%20Pet%20Clinic%20%26%20Spa%20Beliaghata%20Kolkata%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Kolkata/Dog-Grooming-Services/nct-11301531",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Shreya's Pet Clinic & Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Kolkata",
+        "source_url": "https://www.justdial.com/Kolkata/Dog-Grooming-Services/nct-11301531"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Pet Store & Spa",
+      "category": "spa",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "locality": "New Alipore",
+      "address": null,
+      "location_for_direction": {
+        "display": "New Alipore, Kolkata, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Pet%20Store%20%26%20Spa%20New%20Alipore%20Kolkata%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://headsupfortails.com/pages/pet-store-near-me-kolkata",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Pet Store & Spa pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "HUFT Kolkata",
+        "source_url": "https://headsupfortails.com/pages/pet-store-near-me-kolkata"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Pet Store",
+      "category": "groomer",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "locality": "Wood Burn Park Road",
+      "address": null,
+      "location_for_direction": {
+        "display": "Wood Burn Park Road, Kolkata, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Pet%20Store%20Wood%20Burn%20Park%20Road%20Kolkata%20India"
+      },
+      "rating": 4.9,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://headsupfortails.com/pages/pet-store-near-me-kolkata",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Pet Store pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "HUFT Kolkata",
+        "source_url": "https://headsupfortails.com/pages/pet-store-near-me-kolkata"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "PetBacker Grooming Kolkata",
+      "category": "groomer",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "locality": "Kolkata",
+      "address": null,
+      "location_for_direction": {
+        "display": "Kolkata, Kolkata, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=PetBacker%20Grooming%20Kolkata%20Kolkata%20Kolkata%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Kolkata/Pet-Grooming-Services/nct-11002277",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "PetBacker Grooming Kolkata pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Kolkata",
+        "source_url": "https://www.justdial.com/Kolkata/Pet-Grooming-Services/nct-11002277"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Pet Store & Spa - Motera",
+      "category": "spa",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "locality": "Motera",
+      "address": null,
+      "location_for_direction": {
+        "display": "Motera, Ahmedabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Pet%20Store%20%26%20Spa%20-%20Motera%20Motera%20Ahmedabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://stores.headsupfortails.com/pet-spa-in-gujarat-motera-next-to-pvr-cinemas-41489/home",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Pet Store & Spa - Motera pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "HUFT Ahmedabad",
+        "source_url": "https://stores.headsupfortails.com/pet-spa-in-gujarat-motera-next-to-pvr-cinemas-41489/home"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Heads Up For Tails Pet Store & Spa - Satellite Road",
+      "category": "spa",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "locality": "Satellite Road",
+      "address": null,
+      "location_for_direction": {
+        "display": "Satellite Road, Ahmedabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Heads%20Up%20For%20Tails%20Pet%20Store%20%26%20Spa%20-%20Satellite%20Road%20Satellite%20Road%20Ahmedabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://stores.headsupfortails.com/pet-spa-in-gujarat-ahmedabad-satellite-road-47358/home",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Heads Up For Tails Pet Store & Spa - Satellite Road pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "HUFT Ahmedabad",
+        "source_url": "https://stores.headsupfortails.com/pet-spa-in-gujarat-ahmedabad-satellite-road-47358/home"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Petspa & Grooming",
+      "category": "spa",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "locality": "Paldi",
+      "address": null,
+      "location_for_direction": {
+        "display": "Paldi, Ahmedabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Petspa%20%26%20Grooming%20Paldi%20Ahmedabad%20India"
+      },
+      "rating": 0.0,
+      "review_count": 0,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Ahmedabad/Petspa-Grooming-Ramesh-Corporations-Paldi/079PXX79-XX79-180404235507-V3F4_BZDET",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Petspa & Grooming pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Ahmedabad",
+        "source_url": "https://www.justdial.com/Ahmedabad/Petspa-Grooming-Ramesh-Corporations-Paldi/079PXX79-XX79-180404235507-V3F4_BZDET"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "ThePetNest Pet Grooming Ahmedabad",
+      "category": "groomer",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "locality": "Ahmedabad",
+      "address": null,
+      "location_for_direction": {
+        "display": "Ahmedabad, Ahmedabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=ThePetNest%20Pet%20Grooming%20Ahmedabad%20Ahmedabad%20Ahmedabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://thepetnest.com/pet-grooming/ahmedabad",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "ThePetNest Pet Grooming Ahmedabad pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "ThePetNest",
+        "source_url": "https://thepetnest.com/pet-grooming/ahmedabad"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Pandya Pets",
+      "category": "groomer",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "locality": "Chandkheda",
+      "address": null,
+      "location_for_direction": {
+        "display": "Chandkheda, Ahmedabad, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Pandya%20Pets%20Chandkheda%20Ahmedabad%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Ahmedabad/Pet-Grooming-Services/nct-11002277",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Pandya Pets pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Ahmedabad",
+        "source_url": "https://www.justdial.com/Ahmedabad/Pet-Grooming-Services/nct-11002277"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "International Dog Bazar",
+      "category": "groomer",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "locality": "C Scheme",
+      "address": null,
+      "location_for_direction": {
+        "display": "C Scheme, Jaipur, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=International%20Dog%20Bazar%20C%20Scheme%20Jaipur%20India"
+      },
+      "rating": 4.4,
+      "review_count": 2050,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Jaipur/Pet-Grooming-Services/nct-11002277",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "International Dog Bazar pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Jaipur",
+        "source_url": "https://www.justdial.com/Jaipur/Pet-Grooming-Services/nct-11002277"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "Dog Cilnic",
+      "category": "groomer",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "locality": "Pratap Nagar",
+      "address": null,
+      "location_for_direction": {
+        "display": "Pratap Nagar, Jaipur, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=Dog%20Cilnic%20Pratap%20Nagar%20Jaipur%20India"
+      },
+      "rating": 4.5,
+      "review_count": 1034,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Jaipur/Pet-Grooming-Services/nct-11002277",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "Dog Cilnic pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Jaipur",
+        "source_url": "https://www.justdial.com/Jaipur/Pet-Grooming-Services/nct-11002277"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "The Petfort",
+      "category": "groomer",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "locality": "Jaipur",
+      "address": null,
+      "location_for_direction": {
+        "display": "Jaipur, Jaipur, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=The%20Petfort%20Jaipur%20Jaipur%20India"
+      },
+      "rating": 5.0,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://www.justdial.com/Jaipur/Dog-Grooming-Services/nct-11301531",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "The Petfort pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Justdial Jaipur",
+        "source_url": "https://www.justdial.com/Jaipur/Dog-Grooming-Services/nct-11301531"
+      },
+      "data_confidence": "medium",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "ThePetNest Pet Grooming Jaipur",
+      "category": "groomer",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "locality": "Jaipur",
+      "address": null,
+      "location_for_direction": {
+        "display": "Jaipur, Jaipur, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=ThePetNest%20Pet%20Grooming%20Jaipur%20Jaipur%20Jaipur%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs",
+          "cats"
+        ],
+        "acceptance_confidence": "high",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://thepetnest.com/pet-grooming/jaipur",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "ThePetNest Pet Grooming Jaipur pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "ThePetNest",
+        "source_url": "https://thepetnest.com/pet-grooming/jaipur"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    },
+    {
+      "name": "sploot Dog Grooming Jaipur",
+      "category": "groomer",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "locality": "Jaipur",
+      "address": null,
+      "location_for_direction": {
+        "display": "Jaipur, Jaipur, India",
+        "google_maps_search_url": "https://www.google.com/maps/search/?api=1&query=sploot%20Dog%20Grooming%20Jaipur%20Jaipur%20Jaipur%20India"
+      },
+      "rating": null,
+      "review_count": null,
+      "pet_acceptance": {
+        "accepted_pet_types": [
+          "dogs"
+        ],
+        "acceptance_confidence": "medium",
+        "notes": "Verify directly before booking; listing source indicates pet/dog/cat grooming but policies may vary by breed, size, temperament and vaccination status."
+      },
+      "image": {
+        "image_url": null,
+        "image_source_url": "https://sploot.space/dog-grooming/jaipur",
+        "image_status": "source_page_has_or_may_have_image; use only after confirming reuse rights or replace with licensed/own image",
+        "alt_text": "sploot Dog Grooming Jaipur pet grooming/spa listing image"
+      },
+      "source": {
+        "source_name": "Sploot",
+        "source_url": "https://sploot.space/dog-grooming/jaipur"
+      },
+      "data_confidence": "low",
+      "is_active": true,
+      "is_verified": false,
+      "last_scraped_at": "2026-05-03T06:51:59Z"
+    }
+  ]
+}
