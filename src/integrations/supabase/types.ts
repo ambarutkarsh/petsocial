@@ -927,6 +927,147 @@ export type Database = {
           },
         ]
       }
+      nearby_comments: {
+        Row: {
+          comment: string
+          created_at: string | null
+          id: string
+          listing_id: string
+          listing_type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          comment: string
+          created_at?: string | null
+          id?: string
+          listing_id: string
+          listing_type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          comment?: string
+          created_at?: string | null
+          id?: string
+          listing_id?: string
+          listing_type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      nearby_listings: {
+        Row: {
+          address: string | null
+          category: string
+          city: string
+          comment_count: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          latitude: number | null
+          locality: string | null
+          longitude: number | null
+          metadata: Json | null
+          phone: string | null
+          rating: number | null
+          rating_count: number | null
+          source: string | null
+          state: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string | null
+          website: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          category: string
+          city: string
+          comment_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          locality?: string | null
+          longitude?: number | null
+          metadata?: Json | null
+          phone?: string | null
+          rating?: number | null
+          rating_count?: number | null
+          source?: string | null
+          state?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string
+          city?: string
+          comment_count?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          locality?: string | null
+          longitude?: number | null
+          metadata?: Json | null
+          phone?: string | null
+          rating?: number | null
+          rating_count?: number | null
+          source?: string | null
+          state?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      nearby_ratings: {
+        Row: {
+          created_at: string | null
+          id: string
+          listing_id: string
+          listing_type: string
+          rating: number
+          review: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          listing_id: string
+          listing_type: string
+          rating: number
+          review?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          listing_id?: string
+          listing_type?: string
+          rating?: number
+          review?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
