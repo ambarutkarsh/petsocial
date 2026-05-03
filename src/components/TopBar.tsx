@@ -5,7 +5,8 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Bell, Search, X } from "lucide-react";
+import { Bell, Search, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
 import UserAvatar from "@/components/UserAvatar";
 
 // LOGO LOCKED — Do not change without explicit user instruction
