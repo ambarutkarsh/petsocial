@@ -65,17 +65,32 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { user_id, preview, test, override_email } = await req.json().catch(() => ({}));
-    if (!user_id || typeof user_id !== "string") {
-      return new Response(JSON.stringify({ error: "user_id required" }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const body = await req.json().catch(() => ({}));
+    const { preview, test, override_email } = body;
+    let user_id: string | undefined = body.user_id;
+    const email_lookup: string | undefined = body.email;
 
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
+
+    // Resolve user_id from email if needed (profiles.email, then auth.users)
+    if (!user_id && email_lookup) {
+      const { data: p } = await admin.from("profiles").select("id").eq("email", email_lookup).maybeSingle();
+      if (p?.id) user_id = p.id;
+      else {
+        const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+        const match = list?.users?.find((u) => u.email?.toLowerCase() === email_lookup.toLowerCase());
+        if (match) user_id = match.id;
+      }
+    }
+
+    if (!user_id || typeof user_id !== "string") {
+      return new Response(JSON.stringify({ error: "user_id or email required" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const { data: profile, error: profErr } = await admin
       .from("profiles")
