@@ -49,6 +49,7 @@ const ReelMedia = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(true);
   const url = resolveUrl(item.media_url);
+  const poster = item.thumbnail_url ? resolveUrl(item.thumbnail_url) : undefined;
 
   useEffect(() => {
     const v = videoRef.current;
@@ -87,7 +88,7 @@ const ReelMedia = ({
         <video
           ref={videoRef}
           src={url}
-          poster={item.thumbnail_url || undefined}
+          poster={poster}
           muted={muted}
           playsInline
           preload={active ? "auto" : "metadata"}
@@ -182,23 +183,20 @@ const ReelViewer = ({ items, initialIndex, onClose, onLike, onComment, onShare, 
 
       {/* Slides */}
       <div
-        className="absolute inset-0 touch-none"
+        className="absolute inset-0 touch-none overflow-hidden"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <div
-          className="w-full h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateY(calc(${-index * 100}% + ${dragY}px))` }}
-        >
-          {items.map((it, i) => (
-            <div key={it.id} className="w-full h-full" style={{ height: "100%" }}>
-              {visible.includes(i) ? (
-                <ReelMedia item={it} active={i === index} muted={muted} onAdvance={advance} imageDurationMs={imageDurationMs} />
-              ) : null}
-            </div>
-          ))}
-        </div>
+        {visible.map((i) => (
+          <div
+            key={items[i].id}
+            className="absolute inset-0 transition-transform duration-300 ease-out"
+            style={{ transform: `translateY(calc(${(i - index) * 100}% + ${dragY}px))` }}
+          >
+            <ReelMedia item={items[i]} active={i === index} muted={muted} onAdvance={advance} imageDurationMs={imageDurationMs} />
+          </div>
+        ))}
       </div>
 
       {/* Right action stack */}
