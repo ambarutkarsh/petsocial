@@ -130,7 +130,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
               </div>
             )}
 
-            <div className="absolute bottom-4 inset-x-0 px-6 z-20">
+            <div className="absolute bottom-0 inset-x-0 px-6 pb-6 pt-4 z-20 bg-gradient-to-t from-foreground/70 to-transparent" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}>
               <Button onClick={handlePost} disabled={posting} className="w-full" size="lg">
                 {posting ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Posting...</> : "Add to Story 🦕"}
               </Button>
