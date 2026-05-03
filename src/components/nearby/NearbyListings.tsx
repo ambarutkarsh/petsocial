@@ -4,9 +4,22 @@ import { toast } from "sonner";
 import { Loader2, MapPin, Phone, MessageCircle, Globe, ExternalLink, Star, Plus, ShieldCheck } from "lucide-react";
 import { buildDirectionsUrl, NearbyCategory, NormalizedListing, seedListingId, trackNearby } from "@/lib/nearbyHelpers";
 import seedSpa from "@/data/spaGroomingSeed.json";
+import seedParksBoarding from "@/data/petParksBoardingSeed.json";
 import NearbyCommentsSheet from "./NearbyCommentsSheet";
 import NearbyRatingSheet from "./NearbyRatingSheet";
 import AddNearbyListingSheet from "./AddNearbyListingSheet";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUserProfile } from "@/contexts/UserProfileContext";
+import {
+  NEARBY_CITY_OPTIONS,
+  detectCityViaGeolocation,
+  getStoredCity,
+  isLocationDenied,
+  persistCityToProfile,
+  resolveInitialCity,
+  setStoredCity,
+} from "@/lib/nearbyCity";
+import { Locate } from "lucide-react";
 
 interface Props {
   category: Exclude<NearbyCategory, "pet_restaurant">;
@@ -42,6 +55,42 @@ function normalizeSpaSeed(records: any[]): NormalizedListing[] {
     source: r.source?.source_name || null,
     sourceUrl: r.source?.source_url || null,
     metadata: { data_confidence: r.data_confidence, sub_category: r.category },
+  } as NormalizedListing));
+}
+
+function petAcceptanceList(pa: any): string[] {
+  if (!pa) return [];
+  if (Array.isArray(pa)) return pa;
+  const out: string[] = [];
+  if (pa.dogs) out.push("Dogs");
+  if (pa.cats) out.push("Cats");
+  if (pa.birds) out.push("Birds");
+  if (pa.small_pets) out.push("Small Pets");
+  if (pa.reptiles) out.push("Reptiles");
+  return out;
+}
+
+function normalizeParksBoardingSeed(records: any[], cat: "pet_park" | "boarding"): NormalizedListing[] {
+  return records.filter((r) => r.category === cat && r.is_active !== false).map((r) => ({
+    id: seedListingId([r.source_name, r.name, r.city, r.locality]),
+    isDb: false,
+    category: cat,
+    title: r.name,
+    description: r.notes || r.pet_acceptance?.acceptance_notes || null,
+    city: r.city,
+    state: r.state,
+    locality: r.locality,
+    address: r.address || r.location_for_direction,
+    latitude: r.latitude,
+    longitude: r.longitude,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: petAcceptanceList(r.pet_acceptance),
+    isVerified: !!r.is_verified,
+    source: r.source_name || null,
+    sourceUrl: r.source_url || r.image_source_url || null,
+    metadata: { data_confidence: r.data_confidence, location_for_direction: r.location_for_direction },
   } as NormalizedListing));
 }
 
