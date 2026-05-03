@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MdWbSunny, MdNightsStay } from 'react-icons/md';
+import { Sun, Moon } from 'lucide-react';
 
 const ThemeToggle = () => {
     const [isDark, setIsDark] = useState(false);
@@ -11,7 +11,7 @@ const ThemeToggle = () => {
 
     return (
         <button onClick={toggleTheme} style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer' }}>
-            {isDark ? <MdWbSunny size={24} /> : <MdNightsStay size={24} />}
+            {isDark ? <Sun size={24} /> : <Moon size={24} />}
         </button>
     );
 };
