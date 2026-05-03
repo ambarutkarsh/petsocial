@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface UserProfile {
   id: string;
@@ -29,17 +30,25 @@ const UserProfileContext = createContext<UserProfileContextValue>({
 const CACHE_KEY = "user_profile";
 
 export const UserProfileProvider = ({ children }: { children: ReactNode }) => {
+  const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const profileRequestIdRef = useRef(0);
 
   const fetchProfile = useCallback(async (userId: string) => {
-    const { data } = await supabase
+    const requestId = ++profileRequestIdRef.current;
+    console.info("[Profile] fetch", userId);
+    const { data, error } = await supabase
       .from("profiles")
       .select(
         "id, full_name, username, avatar_url, city, state, bio, feed_preferences, is_seed_user, community_default_tab"
       )
       .eq("id", userId)
       .maybeSingle();
+
+    if (error) console.warn("[Profile] fetch failed", error);
+
+    if (requestId !== profileRequestIdRef.current) return;
 
     if (data) {
       setProfile(data as UserProfile);
@@ -51,44 +60,40 @@ export const UserProfileProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      await fetchProfile(session.user.id);
-    }
-  }, [fetchProfile]);
+    if (user?.id) await fetchProfile(user.id);
+  }, [fetchProfile, user?.id]);
 
   useEffect(() => {
-    // Hydrate from cache for instant render
+    if (authLoading) return;
+    if (!user?.id) {
+      profileRequestIdRef.current += 1;
+      setProfile(null);
+      setLoading(false);
+      try { localStorage.removeItem(CACHE_KEY); } catch {}
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
     try {
       const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) setProfile(JSON.parse(cached));
-    } catch {}
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
-        setLoading(false);
+      if (cached) {
+        const parsed = JSON.parse(cached) as UserProfile;
+        if (parsed?.id === user.id) setProfile(parsed);
       }
+    } catch (error) {
+      console.warn("[Profile] cached profile parse failed", error);
+      try { localStorage.removeItem(CACHE_KEY); } catch {}
+    }
+
+    fetchProfile(user.id).finally(() => {
+      if (!cancelled) setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === "SIGNED_IN" && session?.user) {
-          await fetchProfile(session.user.id);
-        }
-        if (event === "SIGNED_OUT") {
-          setProfile(null);
-          try {
-            localStorage.removeItem(CACHE_KEY);
-          } catch {}
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, [fetchProfile]);
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoading, fetchProfile, user?.id]);
 
   return (
     <UserProfileContext.Provider value={{ profile, loading, refreshProfile }}>
