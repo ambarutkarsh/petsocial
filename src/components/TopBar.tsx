@@ -149,17 +149,29 @@ const TopBar = () => {
               </button>
             )}
             {user ? (
-              <button
-                onClick={() => navigate("/profile")}
-                aria-label="Profile"
-                className="ml-1"
-              >
-                <UserAvatar
-                  name={profile?.full_name}
-                  avatarUrl={profile?.avatar_url}
-                  size={36}
-                />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button aria-label="Account menu" className="ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40">
+                    <UserAvatar
+                      name={profile?.full_name}
+                      avatarUrl={profile?.avatar_url}
+                      size={36}
+                    />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" sideOffset={8} className="w-48">
+                  <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer gap-2">
+                    <UserIcon className="w-4 h-4" /> Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer gap-2">
+                    <SettingsLucide className="w-4 h-4" /> Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
+                    <LogOut className="w-4 h-4" /> Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <button
                 onClick={() => navigate("/auth")}
