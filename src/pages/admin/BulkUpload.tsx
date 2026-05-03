@@ -236,12 +236,12 @@ const BulkUpload = () => {
           }}
         >
           <ImagePlus className="w-10 h-10 mx-auto mb-2 text-[#7B5EA7]" strokeWidth={1.5} />
-          <p className="font-heading font-semibold text-foreground">Tap to select photos from your device</p>
-          <p className="text-xs font-body text-muted-foreground mt-1">Select multiple photos at once</p>
+          <p className="font-heading font-semibold text-foreground">Tap to select photos or videos from your device</p>
+          <p className="text-xs font-body text-muted-foreground mt-1">Select multiple files at once (images & videos)</p>
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             multiple
             className="hidden"
             onChange={(e) => {
