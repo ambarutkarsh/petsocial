@@ -63,7 +63,22 @@ import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 min — avoid refetch storms when user returns
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: (failureCount, error: any) => {
+        // Don't retry auth/permission errors — fail fast instead of looping
+        const status = error?.status ?? error?.code;
+        if (status === 401 || status === 403 || status === "PGRST301") return false;
+        return failureCount < 1;
+      },
+    },
+  },
+});
 
 const PageTracker = () => {
   const location = useLocation();

@@ -72,8 +72,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }, 0);
         }
 
-        if (event === "SIGNED_OUT" || event === "TOKEN_REFRESHED" && !newSession) {
+        if (event === "SIGNED_OUT") {
           setIsNewGoogleUser(false);
+        }
+
+        // Stale/expired refresh token — Supabase emits this when refresh fails.
+        // Force sign-out so the app doesn't hang in a 401 retry loop on return.
+        if ((event as string) === "TOKEN_REFRESHED" && !newSession) {
+          setIsNewGoogleUser(false);
+          setTimeout(() => {
+            supabase.auth.signOut().catch(() => {});
+          }, 0);
         }
       }
     );
