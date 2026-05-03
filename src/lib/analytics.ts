@@ -13,3 +13,15 @@ export const trackPageView = (pagePath: string) => {
     window.gtag('config', 'G-9KE1HT989P', { page_path: pagePath });
   }
 };
+
+/** Standard CTA event names used across the public SEO pages. */
+export type CtaName =
+  | 'join_petosauras'
+  | 'find_vet_near_me'
+  | 'open_digilocker'
+  | 'calculate_budget'
+  | 'join_community';
+
+export const trackCta = (cta: CtaName, params?: Record<string, any>) => {
+  trackEvent('cta_click', { cta, ...params });
+};

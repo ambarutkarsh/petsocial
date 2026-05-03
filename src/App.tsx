@@ -13,9 +13,26 @@ import { supabase } from "@/integrations/supabase/client";
 import PlayScreen from "./pages/PlayScreen";
 import AuthScreen from "./pages/AuthScreen";
 import NotFound from "./pages/NotFound";
+import HomeLanding from "./pages/seo/HomeLanding";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import { lazy, Suspense, useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
+
+// Public SEO pages (lazy)
+const CarePage = lazy(() => import("./pages/seo/carePages"));
+const SeoInfo = {
+  VetNearMe: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.VetNearMeLanding }))),
+  DigiLocker: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PetDigiLockerLanding }))),
+  Budget: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.BudgetLanding }))),
+  Community: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.CommunityLanding }))),
+  PetFacts: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PetFactsLanding }))),
+  Faq: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.FaqLanding }))),
+  About: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.AboutLanding }))),
+  Contact: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.ContactLanding }))),
+  Privacy: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PrivacyLanding }))),
+  Terms: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.TermsLanding }))),
+};
 
 // Lazy — everything else is code-split so the feed renders first.
 const CareScreen = lazy(() => import("./pages/CareScreen"));
@@ -97,10 +114,9 @@ const PageTracker = () => {
   return null;
 };
 
-// Default landing is always /feeds (works for guests and logged-in users)
-const RootRedirect = () => <Navigate to="/feeds" replace />;
-
+// Public marketing landing at "/"; the app itself lives at /feeds.
 const App = () => (
+  <ErrorBoundary>
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
@@ -111,7 +127,23 @@ const App = () => (
           <PageTracker />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
-            <Route path="/" element={<RootRedirect />} />
+            <Route path="/" element={<HomeLanding />} />
+            <Route path="/dog-care" element={<CarePage slug="dog-care" />} />
+            <Route path="/cat-care" element={<CarePage slug="cat-care" />} />
+            <Route path="/fish-care" element={<CarePage slug="fish-care" />} />
+            <Route path="/bird-care" element={<CarePage slug="bird-care" />} />
+            <Route path="/reptile-care" element={<CarePage slug="reptile-care" />} />
+            <Route path="/vet-near-me" element={<SeoInfo.VetNearMe />} />
+            <Route path="/pet-digilocker" element={<SeoInfo.DigiLocker />} />
+            <Route path="/pet-budget-calculator" element={<SeoInfo.Budget />} />
+            <Route path="/community" element={<SeoInfo.Community />} />
+            <Route path="/pet-facts" element={<SeoInfo.PetFacts />} />
+            <Route path="/faq" element={<SeoInfo.Faq />} />
+            <Route path="/about-us" element={<SeoInfo.About />} />
+            <Route path="/contact-us" element={<SeoInfo.Contact />} />
+            <Route path="/privacy-policy" element={<SeoInfo.Privacy />} />
+            <Route path="/terms-of-service" element={<SeoInfo.Terms />} />
+
             <Route path="/auth" element={<AuthScreen />} />
             <Route path="/onboarding" element={<RegularUserRoute><OnboardingScreen /></RegularUserRoute>} />
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
@@ -206,6 +238,8 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
+  </ErrorBoundary>
+
 );
 
 export default App;
