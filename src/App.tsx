@@ -13,9 +13,26 @@ import { supabase } from "@/integrations/supabase/client";
 import PlayScreen from "./pages/PlayScreen";
 import AuthScreen from "./pages/AuthScreen";
 import NotFound from "./pages/NotFound";
+import HomeLanding from "./pages/seo/HomeLanding";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import { lazy, Suspense, useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
+
+// Public SEO pages (lazy)
+const CarePage = lazy(() => import("./pages/seo/carePages"));
+const SeoInfo = {
+  VetNearMe: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.VetNearMeLanding }))),
+  DigiLocker: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PetDigiLockerLanding }))),
+  Budget: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.BudgetLanding }))),
+  Community: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.CommunityLanding }))),
+  PetFacts: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PetFactsLanding }))),
+  Faq: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.FaqLanding }))),
+  About: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.AboutLanding }))),
+  Contact: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.ContactLanding }))),
+  Privacy: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.PrivacyLanding }))),
+  Terms: lazy(() => import("./pages/seo/infoPages").then(m => ({ default: m.TermsLanding }))),
+};
 
 // Lazy — everything else is code-split so the feed renders first.
 const CareScreen = lazy(() => import("./pages/CareScreen"));
