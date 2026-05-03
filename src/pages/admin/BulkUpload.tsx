@@ -172,7 +172,7 @@ const BulkUpload = () => {
       .insert({
         user_id: photo.userId,
         media_url: publicUrl,
-        media_type: "image",
+        media_type: isVideo ? "video" : "image",
         caption: photo.caption || null,
         hashtags: hashArr,
         location: photo.location || null,
