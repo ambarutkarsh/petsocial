@@ -1159,10 +1159,10 @@ const FeedScreen = () => {
           isLiked={(id) => likedPostIds.includes(id)}
           onClose={() => setActiveReelIndex(null)}
           onLike={(id) => requireAuth(() => toggleLikeMutation.mutate(id))}
-          onComment={(id) => requireAuth(() => setCommentPostId(id))}
+          onComment={(id) => requireAuth(() => { setActiveReelIndex(null); setCommentPostId(id); })}
           onShare={(item) => {
             const post = posts.find((p: any) => p.id === item.id);
-            if (post) sharePost(post);
+            if (post) { setActiveReelIndex(null); sharePost(post); }
           }}
         />
       )}
