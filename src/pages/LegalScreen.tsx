@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { ExternalLink } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
 import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 const RIGHTS = [
   {
