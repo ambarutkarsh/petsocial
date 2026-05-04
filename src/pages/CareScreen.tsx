@@ -63,10 +63,14 @@ const HubScreen = () => {
 
         <div className="mt-3">
           {tab === "budget" && (
-            <Suspense fallback={<div className="px-4 py-12 text-center text-sm text-muted-foreground">Loading…</div>}>
-              {/* Reuse existing screen embedded as content */}
-              <BudgetCalculatorScreen />
-            </Suspense>
+            <div className="px-4">
+              <div className="paw-card p-6 text-center">
+                <Calculator className="w-10 h-10 mx-auto text-primary mb-2" strokeWidth={1.5} />
+                <h3 className="font-heading font-bold text-base">Budget Calculator</h3>
+                <p className="text-xs text-muted-foreground font-body mt-1">Estimate the monthly and annual cost of caring for your pet.</p>
+                <Button className="mt-4" onClick={() => navigate("/hub/budget")}>Open Calculator</Button>
+              </div>
+            </div>
           )}
 
           {tab === "recommender" && (
