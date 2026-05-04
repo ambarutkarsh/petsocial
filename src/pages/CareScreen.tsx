@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calculator, Sparkles, ShoppingBag } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
@@ -7,8 +7,6 @@ import PostUploadModal from "@/components/PostUploadModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { Button } from "@/components/ui/button";
-
-const BudgetCalculatorScreen = lazy(() => import("./BudgetCalculatorScreen"));
 
 type Tab = "budget" | "recommender" | "shop";
 
