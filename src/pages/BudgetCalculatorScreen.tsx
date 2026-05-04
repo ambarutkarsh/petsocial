@@ -25,7 +25,11 @@ interface BudgetResult {
   notes: string;
 }
 
-const BudgetCalculatorScreen = () => {
+interface BudgetCalculatorScreenProps {
+  embedded?: boolean;
+}
+
+const BudgetCalculatorScreen = ({ embedded = false }: BudgetCalculatorScreenProps = {}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -137,15 +141,21 @@ const BudgetCalculatorScreen = () => {
     { emoji: "✂️", label: "Grooming", data: result.grooming },
   ] : [];
 
-  return (
-    <MobileLayout>
-      <div className="pb-20 px-4">
+  const inner = (
+    <div className="pb-20 px-4">
+      {!embedded && (
         <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-40 py-3 flex items-center gap-3">
           <button onClick={() => step > 1 && step < 5 ? setStep(step - 1) : navigate("/hub")}>
             <BackIcon className="w-5 h-5" />
           </button>
-          <h1 className="font-heading font-bold text-lg">Budget BudgetIcon</h1>
+          <h1 className="font-heading font-bold text-lg">Budget Calculator</h1>
         </header>
+      )}
+      {embedded && step > 1 && step < 5 && (
+        <div className="pt-3">
+          <button onClick={() => setStep(step - 1)} className="text-xs font-body font-semibold text-primary">← Back</button>
+        </div>
+      )}
 
         {/* STEP 1: Location */}
         {step === 1 && (
