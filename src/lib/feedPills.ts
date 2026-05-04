@@ -2,7 +2,6 @@
 export type FeedPillKey =
   | "curated"
   | "reels"
-  | "nearby"
   | "news"
   | "facts"
   | "adopt"
@@ -21,7 +20,6 @@ export interface FeedPill {
 /** Pills excluding Curated — Curated is conditionally prepended at runtime. */
 export const FEED_PILLS: FeedPill[] = [
   { key: "reels", emoji: "🎬", label: "Reels", desc: "Trending pet reels" },
-  { key: "nearby", emoji: "📍", label: "Nearby", desc: "Pet-friendly places" },
   { key: "news", emoji: "📰", label: "News", desc: "Pet news in your state" },
   { key: "facts", emoji: "⭐", label: "Facts", desc: "Daily pet facts" },
   { key: "adopt", emoji: "🐾", label: "Adopt", desc: "Pets looking for homes" },
@@ -31,8 +29,8 @@ export const FEED_PILLS: FeedPill[] = [
   { key: "find_mates", emoji: "💕", label: "Find Mates", desc: "Mating connections" },
 ];
 
-/** Pills eligible for the Curated multi-select editor (excludes nearby + curated itself). */
-export const CURATABLE_PILLS: FeedPill[] = FEED_PILLS.filter((p) => p.key !== "nearby");
+/** Pills eligible for the Curated multi-select editor. */
+export const CURATABLE_PILLS: FeedPill[] = FEED_PILLS;
 
 
 export const NEARBY_SUB_PILLS = [

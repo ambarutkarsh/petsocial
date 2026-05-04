@@ -127,7 +127,7 @@ const FeedScreen = () => {
    */
   const isPillActive = (key: FeedPillKey): boolean => {
     if (activePill === key) return true;
-    if (activePill === "curated" && key !== "nearby" && savedPrefs.includes(key)) return true;
+    if (activePill === "curated" && (key as string) !== "nearby" && savedPrefs.includes(key)) return true;
     return false;
   };
 
@@ -309,7 +309,7 @@ const FeedScreen = () => {
   const [mateIdx, setMateIdx] = useState(0);
 
   // ============= NEARBY =============
-  const showNearby = activePill === "nearby"; // never auto-included by Curated
+  const showNearby = (activePill as string) === "nearby"; // never auto-included by Curated
 
   const RESTAURANT_CITIES = ["Chennai", "Delhi NCR", "Mumbai", "Pune", "Bangalore", "Hyderabad", "Goa"];
   const CITY_MAP: Record<string, string> = {
@@ -1195,7 +1195,7 @@ const FeedScreen = () => {
           open={showAddNearby}
           onClose={() => setShowAddNearby(false)}
           onCreated={(cat) => {
-            setActivePill("nearby");
+            setActivePill("nearby" as any);
             setNearbySub(cat === "pet_restaurant" ? "restaurants" : cat);
           }}
         />
