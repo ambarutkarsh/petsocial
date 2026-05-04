@@ -32,8 +32,6 @@ const RIGHTS = [
 ];
 
 const LegalScreen = () => {
-  const navigate = useNavigate();
-
   return (
     <MobileLayout>
       <PageWrapper>
