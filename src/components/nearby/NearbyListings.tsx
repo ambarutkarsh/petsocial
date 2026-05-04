@@ -98,6 +98,70 @@ function normalizeParksBoardingSeed(records: any[], cat: "pet_park" | "boarding"
   } as NormalizedListing));
 }
 
+function normalizeVetsSeed(records: any[]): NormalizedListing[] {
+  return records.map((r) => ({
+    id: seedListingId(["vets", r.id || r.name, r.city, r.location]),
+    isDb: false,
+    category: "vets",
+    title: r.name,
+    description: r.description || null,
+    city: r.city,
+    state: r.state,
+    locality: r.location,
+    address: r.address,
+    latitude: r.lat ?? null,
+    longitude: r.lng ?? null,
+    phone: r.phone || null,
+    website: r.website || null,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: r.pet_types_supported || [],
+    isVerified: r.verification_status === "verified",
+    source: r.source || "seed_json",
+    sourceUrl: r.google_maps_url || null,
+    metadata: {
+      services: r.services,
+      emergency_available: r.emergency_available,
+      home_visit: r.home_visit,
+      online_consultation: r.online_consultation,
+    },
+  } as NormalizedListing));
+}
+
+function normalizePetRestaurantsSeed(records: any[]): NormalizedListing[] {
+  return records.map((r) => ({
+    id: seedListingId(["pet_restaurants", r.id || r.name, r.city, r.location]),
+    isDb: false,
+    category: "pet_restaurants",
+    title: r.name,
+    description: r.description || null,
+    city: r.city,
+    state: r.state,
+    locality: r.location,
+    address: r.address,
+    latitude: r.lat ?? null,
+    longitude: r.lng ?? null,
+    phone: r.phone || null,
+    website: r.website || null,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: r.best_for || [],
+    isVerified: r.verification_status === "verified",
+    source: r.source || "seed_json",
+    sourceUrl: r.google_maps_url || null,
+    metadata: {
+      pet_menu: r.pet_menu,
+      play_area: r.play_area,
+      off_leash: r.off_leash,
+      outdoor_seating: r.outdoor_seating,
+      water_bowl_available: r.water_bowl_available,
+      pet_comfort_index: r.pet_comfort_index,
+    },
+  } as NormalizedListing));
+}
+
 function normalizeDbRow(row: any): NormalizedListing {
   return {
     id: row.id,
