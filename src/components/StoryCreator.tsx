@@ -82,7 +82,7 @@ const StoryCreator = ({ open, onClose }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-foreground flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[1200] bg-foreground flex items-center justify-center overflow-hidden">
       <div className="w-full max-w-[430px] h-[100dvh] relative flex flex-col bg-card overflow-hidden">
         {!preview ? (
           <div className="flex-1 flex flex-col items-center justify-center px-6 gap-4">
