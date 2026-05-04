@@ -129,7 +129,9 @@ const App = () => (
         <UserProfileProvider>
         <BrowserRouter>
           <GuestPopupProvider>
+          <ChatbotProvider>
           <PageTracker />
+          <Chatbot />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
             <Route path="/" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
