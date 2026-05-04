@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CameraIcon, CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
+import { HeartPulse } from "lucide-react";
 
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
 import PetMicrochipCard from "@/components/microchip/PetMicrochipCard";
@@ -81,13 +82,20 @@ const MyPetScreen = () => {
     return (
       <MobileLayout>
         <div className="px-5 pt-4 pb-20">
-          <h1 className="font-heading font-bold text-xl mb-1">MyPet</h1>
-          <p className="text-xs text-muted-foreground font-body">Add your first pet to get started</p>
+          <h1 className="font-heading font-bold text-xl mb-1">My Pet</h1>
+          <p className="text-xs text-muted-foreground font-body">Manage your pets, care records and health details.</p>
           <div className="text-center py-16">
             <span className="text-6xl block mb-3">🐾</span>
-            <Button onClick={() => setShowAddPet(true)}>
-              <PlusIcon className="w-4 h-4" /> Add Pet
-            </Button>
+            <h2 className="font-heading font-bold text-base mb-1">No pets added yet</h2>
+            <p className="text-xs text-muted-foreground font-body mb-4">Add your first pet to start managing care, records and health.</p>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={() => setShowAddPet(true)}>
+                <PlusIcon className="w-4 h-4" /> Add Pet
+              </Button>
+              <Button variant="outline" onClick={() => navigate("/hub/pet-care")}>
+                <HeartPulse className="w-4 h-4" /> Pet Care
+              </Button>
+            </div>
           </div>
         </div>
         <BottomNav onPostClick={() => setShowCreate(true)} />
@@ -100,20 +108,27 @@ const MyPetScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
-        {/* Pet selector */}
-        {pets.length > 1 && (
-          <div className="px-4 pt-3 flex gap-2 overflow-x-auto no-scrollbar">
-            {pets.map((p: any) => (
-              <button key={p.id} onClick={() => setSelectedPetId(p.id)}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${p.id === activePet?.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                {p.avatar_emoji || "🐾"} {p.name}
-              </button>
-            ))}
-            <button onClick={() => setShowAddPet(true)} className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary">
-              <PlusIcon className="w-3 h-3 inline" /> Add
+        {/* Header */}
+        <div className="px-5 pt-4 pb-2">
+          <h1 className="font-heading font-bold text-xl">My Pet</h1>
+          <p className="text-xs text-muted-foreground font-body">Manage your pets, care records and health details.</p>
+        </div>
+
+        {/* Pet selector with Add + Pet Care CTAs */}
+        <div className="px-4 pt-3 flex gap-2 overflow-x-auto no-scrollbar items-center">
+          {pets.map((p: any) => (
+            <button key={p.id} onClick={() => setSelectedPetId(p.id)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${p.id === activePet?.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+              {p.avatar_emoji || "🐾"} {p.name}
             </button>
-          </div>
-        )}
+          ))}
+          <button onClick={() => setShowAddPet(true)} className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary">
+            <PlusIcon className="w-3 h-3 inline" /> Add Pet
+          </button>
+          <button onClick={() => navigate("/hub/pet-care")} className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary inline-flex items-center gap-1">
+            <HeartPulse className="w-3.5 h-3.5" /> Pet Care
+          </button>
+        </div>
 
         <div className="px-4 mt-3">
           <Tabs defaultValue="profile">
