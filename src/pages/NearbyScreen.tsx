@@ -6,7 +6,7 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import NearbyListings from "@/components/nearby/NearbyListings";
-import VetNearMeScreen from "@/pages/VetNearMeScreen";
+import NearbyEmptyView from "@/components/nearby/NearbyEmptyView";
 
 // Restaurants reuses the existing handcrafted PlayScreen restaurants UI is too coupled,
 // so we render a NearbyListings-shaped placeholder powered by pet_friendly_places via a
