@@ -1,111 +1,80 @@
-import { useState } from "react";
-import {
-  AlertCircle,
-  Sparkles,
-  Stethoscope,
-  Calculator,
-  ShieldCheck,
-  MapPin,
-  CalendarCheck,
-  Cpu,
-  PlaneTakeoff,
-  Truck,
-  Heart,
-  Car,
-  Lock,
-  ShoppingBag,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
+import ShopComingSoonScreen from "./ShopComingSoonScreen";
+import BudgetCalculatorScreen from "./BudgetCalculatorScreen";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 
-type ServiceItem = {
-  Icon: typeof AlertCircle;
-  label: string;
-  path: string;
-  publicOk?: boolean;
-  iconColor?: string;
-};
-
-const services: ServiceItem[] = [
-  { Icon: AlertCircle, label: "SOS", path: "/hub/sos", publicOk: true, iconColor: "#FF6B6B" },
-  { Icon: Sparkles, label: "Pet Recommender", path: "/hub/pet-recommender", publicOk: true },
-  { Icon: Stethoscope, label: "Pet Care", path: "/hub/pet-care", publicOk: true },
-  { Icon: Calculator, label: "Budget Calc", path: "/hub/budget" },
-  { Icon: ShieldCheck, label: "Insurance", path: "/hub/insurance" },
-  { Icon: MapPin, label: "Vet Near Me", path: "/hub/vet-near-me", publicOk: true },
-  { Icon: Cpu, label: "Microchip", path: "/hub/microchip" },
-  { Icon: PlaneTakeoff, label: "Petcation", path: "/hub/petcation" },
-  { Icon: Truck, label: "Pet Moving", path: "/hub/pet-moving" },
-  { Icon: Heart, label: "NGO Connect", path: "/hub/ngo" },
-  { Icon: Car, label: "Pet Pick & Drop", path: "/hub/pickup" },
-  { Icon: CalendarCheck, label: "Book a Vet", path: "/hub/book-a-vet" },
-  { Icon: ShoppingBag, label: "Shop", path: "/shop", publicOk: true },
-];
+type HubTab = "shop" | "budget";
 
 const HubScreen = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { triggerGuestPopup } = useGuestPopup();
   const [showCreate, setShowCreate] = useState(false);
   const isGuest = !user;
+
+  const initialTab: HubTab = useMemo(() => {
+    if (location.pathname.startsWith("/hub/budget")) return "budget";
+    return "shop";
+  }, [location.pathname]);
+
+  const [tab, setTab] = useState<HubTab>(initialTab);
+
+  const switchTab = (next: HubTab) => {
+    setTab(next);
+    const target = next === "budget" ? "/hub/budget" : "/hub/shop";
+    if (location.pathname !== target) {
+      navigate(target, { replace: true });
+    }
+  };
 
   return (
     <MobileLayout>
       <div className="pb-20">
         <div className="px-5 pt-4 pb-2">
           <h1 className="font-heading font-bold text-xl">Hub</h1>
-          <p className="text-xs text-muted-foreground font-body">All your pet services in one place</p>
         </div>
 
-        <div className="px-4 mt-3">
-          <div className="grid grid-cols-3 gap-3">
-            {services.map((s, idx) => {
-              const locked = isGuest && !s.publicOk;
-              const Icon = s.Icon;
+        {/* Pill tabs */}
+        <div className="px-4 sticky top-0 z-30 bg-background/90 backdrop-blur py-2">
+          <div className="flex gap-2">
+            {([
+              { key: "shop" as HubTab, label: "Shop" },
+              { key: "budget" as HubTab, label: "Budget Calc" },
+            ]).map((t) => {
+              const active = tab === t.key;
               return (
                 <button
-                  key={s.path}
+                  key={t.key}
                   onClick={() => {
-                    if (locked) {
+                    if (t.key === "budget" && isGuest) {
                       triggerGuestPopup();
                       return;
                     }
-                    navigate(s.path);
+                    switchTab(t.key);
                   }}
-                  className="relative flex flex-col items-center gap-2 p-3 rounded-[18px] bg-card border border-border shadow-petosauras hover:shadow-petosauras-md active:scale-[0.97] transition-all animate-fade-up"
-                  style={{
-                    animationDelay: `${idx * 40}ms`,
-                    opacity: locked ? 0.45 : 1,
-                    cursor: locked ? "not-allowed" : "pointer",
-                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-body font-semibold border transition-all ${
+                    active
+                      ? "bg-primary text-primary-foreground border-primary shadow-petosauras"
+                      : "bg-card text-muted-foreground border-border"
+                  }`}
                 >
-                  {locked && (
-                    <span
-                      className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-card border border-border flex items-center justify-center"
-                      aria-hidden
-                    >
-                      <Lock className="w-3 h-3 text-muted-foreground" strokeWidth={1.5} />
-                    </span>
-                  )}
-                  <div
-                    className="w-12 h-12 rounded-[14px] flex items-center justify-center"
-                    style={{
-                      background: "#EDE5FF",
-                      border: "1px solid rgba(123,94,167,0.12)",
-                    }}
-                  >
-                    <Icon size={22} strokeWidth={1.5} color={s.iconColor || "#7B5EA7"} />
-                  </div>
-                  <span className="text-[11px] font-body font-semibold text-center text-muted-foreground leading-tight">{s.label}</span>
+                  {t.label}
                 </button>
               );
             })}
           </div>
+        </div>
+
+        <div className="mt-2">
+          {tab === "shop" && <ShopComingSoonScreen embedded />}
+          {tab === "budget" && <BudgetCalculatorScreen embedded />}
         </div>
       </div>
 

@@ -164,6 +164,7 @@ const App = () => (
             <Route path="/nearby" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
             <Route path="/nearby/:category" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
             <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
+            <Route path="/hub/shop" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
             <Route path="/sos" element={<SosScreen />} />
@@ -172,7 +173,7 @@ const App = () => (
             {/* Hub sub-pages — Vet Near Me & SOS are public; rest require auth */}
             <Route path="/hub/sos" element={<SosScreen />} />
             <Route path="/hub/vet-near-me" element={<VetNearMeScreen />} />
-            <Route path="/hub/budget" element={<ProtectedRoute><BudgetCalculatorScreen /></ProtectedRoute>} />
+            <Route path="/hub/budget" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/hub/legal" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/license" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
             <Route path="/hub/rights" element={<ProtectedRoute><LegalScreen /></ProtectedRoute>} />
@@ -180,7 +181,7 @@ const App = () => (
             <Route path="/hub/ngo" element={<ProtectedRoute><NgoScreen /></ProtectedRoute>} />
             <Route path="/hub/pickup" element={<ProtectedRoute><PickupScreen /></ProtectedRoute>} />
             <Route path="/hub/recommender" element={<RecommenderScreen />} />
-            <Route path="/hub/pet-recommender" element={<RecommenderScreen />} />
+            <Route path="/hub/pet-recommender" element={<Navigate to="/mypet/pet-recommender" replace />} />
             <Route path="/hub/pet-care" element={<PetCareScreen />} />
             <Route path="/hub/petcation" element={<ProtectedRoute><PetcationScreen /></ProtectedRoute>} />
             <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
@@ -191,8 +192,12 @@ const App = () => (
             {/* MyPet sub-pages */}
             <Route path="/mypet/health" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
             <Route path="/mypet/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
-            <Route path="/mypet/book-a-vet" element={<Navigate to="/hub/book-a-vet" replace />} />
-            <Route path="/mypet/pet-recommender" element={<Navigate to="/hub/recommender" replace />} />
+            <Route path="/mypet/book-a-vet" element={<BookAVetScreen />} />
+            <Route path="/mypet/book-a-vet/coming-soon" element={<BookAVetComingSoon />} />
+            <Route path="/mypet/book-a-vet/:vetId" element={<HubVetProfileScreen />} />
+            <Route path="/mypet/book-a-vet/:vetId/confirm" element={<ProtectedRoute><ConfirmBookingScreen /></ProtectedRoute>} />
+            <Route path="/mypet/book-a-vet/success/:bookingId" element={<ProtectedRoute><BookingSuccessScreen /></ProtectedRoute>} />
+            <Route path="/mypet/pet-recommender" element={<RecommenderScreen />} />
 
             {/* Other screens */}
             <Route path="/profile" element={<RegularUserRoute><ProtectedRoute><ProfileScreen /></ProtectedRoute></RegularUserRoute>} />
@@ -208,12 +213,12 @@ const App = () => (
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
             <Route path="/admin/welcome-email" element={<ProtectedRoute><AdminWelcomeEmailScreen /></ProtectedRoute>} />
 
-            {/* Book a Vet flow */}
-            <Route path="/hub/book-a-vet" element={<BookAVetScreen />} />
-            <Route path="/hub/book-a-vet/coming-soon" element={<BookAVetComingSoon />} />
-            <Route path="/hub/book-a-vet/:vetId" element={<HubVetProfileScreen />} />
-            <Route path="/hub/book-a-vet/:vetId/confirm" element={<ProtectedRoute><ConfirmBookingScreen /></ProtectedRoute>} />
-            <Route path="/hub/book-a-vet/success/:bookingId" element={<ProtectedRoute><BookingSuccessScreen /></ProtectedRoute>} />
+            {/* Legacy Book a Vet → MyPet redirects */}
+            <Route path="/hub/book-a-vet" element={<Navigate to="/mypet/book-a-vet" replace />} />
+            <Route path="/hub/book-a-vet/coming-soon" element={<Navigate to="/mypet/book-a-vet/coming-soon" replace />} />
+            <Route path="/hub/book-a-vet/:vetId" element={<Navigate to="/mypet/book-a-vet" replace />} />
+            <Route path="/hub/book-a-vet/:vetId/confirm" element={<Navigate to="/mypet/book-a-vet" replace />} />
+            <Route path="/hub/book-a-vet/success/:bookingId" element={<Navigate to="/mypet/book-a-vet" replace />} />
             <Route path="/mypet/bookings" element={<ProtectedRoute><MyBookingsScreen /></ProtectedRoute>} />
 
             {/* Vet Dashboard */}

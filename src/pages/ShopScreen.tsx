@@ -105,13 +105,13 @@ const MyPetScreen = () => {
           <h1 className="font-heading font-bold text-xl">MyPet</h1>
           <div className="flex gap-2">
             <button
-              onClick={() => navigate("/hub/book-a-vet")}
+              onClick={() => navigate("/mypet/book-a-vet")}
               className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-primary text-primary-foreground shadow-petosauras"
             >
               📅 Book Vet
             </button>
             <button
-              onClick={() => navigate("/hub/recommender")}
+              onClick={() => navigate("/mypet/pet-recommender")}
               className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground shadow-petosauras"
             >
               ✨ Pet Recommender
