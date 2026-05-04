@@ -100,6 +100,24 @@ const MyPetScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-20">
+        {/* MyPet header CTAs */}
+        <div className="px-4 pt-3 flex items-center justify-between gap-2">
+          <h1 className="font-heading font-bold text-xl">MyPet</h1>
+          <div className="flex gap-2">
+            <button
+              onClick={() => navigate("/hub/book-a-vet")}
+              className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-primary text-primary-foreground shadow-petosauras"
+            >
+              📅 Book Vet
+            </button>
+            <button
+              onClick={() => navigate("/hub/recommender")}
+              className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground shadow-petosauras"
+            >
+              ✨ Pet Recommender
+            </button>
+          </div>
+        </div>
         {/* Pet selector */}
         {pets.length > 1 && (
           <div className="px-4 pt-3 flex gap-2 overflow-x-auto no-scrollbar">

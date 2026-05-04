@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
+import { ChatbotProvider } from "@/contexts/ChatbotContext";
+import Chatbot from "@/components/Chatbot";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RegularUserRoute from "@/components/RegularUserRoute";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +62,7 @@ const AdminSeedScreen = lazy(() => import("./pages/AdminSeedScreen"));
 const OnboardingScreen = lazy(() => import("./pages/OnboardingScreen"));
 const InsuranceScreen = lazy(() => import("./pages/hub/InsuranceScreen"));
 const NgoScreen = lazy(() => import("./pages/hub/NgoScreen"));
+const NearbyScreen = lazy(() => import("./pages/NearbyScreen"));
 const PickupScreen = lazy(() => import("./pages/hub/PickupScreen"));
 const RecommenderScreen = lazy(() => import("./pages/hub/RecommenderScreen"));
 const PetcationScreen = lazy(() => import("./pages/hub/PetcationScreen"));
@@ -126,7 +129,9 @@ const App = () => (
         <UserProfileProvider>
         <BrowserRouter>
           <GuestPopupProvider>
+          <ChatbotProvider>
           <PageTracker />
+          <Chatbot />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
             <Route path="/" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
@@ -156,10 +161,12 @@ const App = () => (
 
             {/* Public to guests with feature gating: Feeds, Hub, Shop. Admin is redirected to /admin. */}
             <Route path="/feeds" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
+            <Route path="/nearby" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
+            <Route path="/nearby/:category" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
             <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
-
+            <Route path="/sos" element={<SosScreen />} />
             {/* /profile also gated so admin doesn't see consumer profile */}
 
             {/* Hub sub-pages — Vet Near Me & SOS are public; rest require auth */}
@@ -184,6 +191,8 @@ const App = () => (
             {/* MyPet sub-pages */}
             <Route path="/mypet/health" element={<ProtectedRoute><HealthLogScreen /></ProtectedRoute>} />
             <Route path="/mypet/locker" element={<ProtectedRoute><PetDigiLockerScreen /></ProtectedRoute>} />
+            <Route path="/mypet/book-a-vet" element={<Navigate to="/hub/book-a-vet" replace />} />
+            <Route path="/mypet/pet-recommender" element={<Navigate to="/hub/recommender" replace />} />
 
             {/* Other screens */}
             <Route path="/profile" element={<RegularUserRoute><ProtectedRoute><ProfileScreen /></ProtectedRoute></RegularUserRoute>} />
@@ -238,6 +247,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
+          </ChatbotProvider>
           </GuestPopupProvider>
         </BrowserRouter>
         </UserProfileProvider>

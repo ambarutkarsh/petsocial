@@ -11,6 +11,7 @@ import { Clock, ExternalLink, Phone } from "lucide-react";
 import { BackIcon, LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
+import BackButton from "@/components/BackButton";
 
 interface VetClinic {
   name: string; address: string; phone: string; rating: number;
@@ -18,7 +19,9 @@ interface VetClinic {
   place_id: string; distance_km: number; lat: number; lng: number;
 }
 
-const VetNearMeScreen = () => {
+interface VetNearMeScreenProps { embedded?: boolean }
+
+const VetNearMeScreen = ({ embedded = false }: VetNearMeScreenProps) => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"location" | "search">("location");
   const [query, setQuery] = useState("");
@@ -74,12 +77,12 @@ const VetNearMeScreen = () => {
     window.open(`https://www.google.com/maps/search/veterinary+clinic+near+${encodeURIComponent(searchQuery)}+India`, "_blank");
   };
 
-  return (
-    <MobileLayout>
-      <div className="pb-20 px-4">
+  const inner = (
+    <div className={embedded ? "" : "pb-20 px-4"}>
+      {!embedded && (
         <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/hub")}><BackIcon className="w-5 h-5" /></button>
+            <BackButton fallback="/nearby" />
             <h1 className="font-heading font-bold text-lg">Vet Near Me</h1>
           </div>
           {results.length > 0 && (
@@ -88,6 +91,7 @@ const VetNearMeScreen = () => {
             </Button>
           )}
         </header>
+      )}
 
         <div className="flex gap-2 my-4">
           <button onClick={() => setMode("location")}
@@ -205,7 +209,13 @@ const VetNearMeScreen = () => {
             </Button>
           </div>
         )}
-      </div>
+    </div>
+  );
+
+  if (embedded) return inner;
+  return (
+    <MobileLayout>
+      <div className="px-4">{inner}</div>
     </MobileLayout>
   );
 };
