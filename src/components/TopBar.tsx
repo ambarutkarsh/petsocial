@@ -2,10 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Bell, Bot, X, Sun, Moon, User as UserIcon, Settings as SettingsLucide, LogOut, AlertCircle } from "lucide-react";
+import { Bell, Bot, Sun, Moon, User as UserIcon, Settings as SettingsLucide, LogOut, AlertCircle } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { useChatbot } from "@/contexts/ChatbotContext";
 import UserAvatar from "@/components/UserAvatar";
@@ -25,10 +24,7 @@ const TopBar = () => {
   const { user, signOut } = useAuth();
   const { profile } = useUserProfile();
   const { openChat } = useChatbot();
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState("");
   const { theme, toggleTheme } = useTheme();
-  const [debounced, setDebounced] = useState("");
 
   // Unread notifications count, polled every 60s
   const { data: unreadCount = 0 } = useQuery({
@@ -44,63 +40,6 @@ const TopBar = () => {
       return count || 0;
     },
   });
-
-  // Debounce search input
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(query.trim()), 300);
-    return () => clearTimeout(t);
-  }, [query]);
-
-  const { data: results } = useQuery({
-    queryKey: ["search-results", debounced],
-    enabled: searchOpen && debounced.length >= 2,
-    queryFn: async () => {
-      const like = `%${debounced}%`;
-      const [usersRes, postsRes, petsRes] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id, full_name, username, avatar_url")
-          .or(`full_name.ilike.${like},username.ilike.${like}`)
-          .limit(5),
-        supabase
-          .from("posts")
-          .select("id, caption, media_url, user_id")
-          .ilike("caption", like)
-          .limit(5),
-        supabase
-          .from("pets")
-          .select("id, name, species, avatar_emoji, owner_id")
-          .or(`name.ilike.${like},species.ilike.${like}`)
-          .limit(5),
-      ]);
-      return {
-        users: usersRes.data || [],
-        posts: postsRes.data || [],
-        pets: petsRes.data || [],
-      };
-    },
-  });
-
-  const initials = (profile?.full_name || "U")
-    .trim()
-    .split(/\s+/)
-    .map((s: string) => s[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-
-  const closeSearch = () => {
-    setSearchOpen(false);
-    setQuery("");
-    setDebounced("");
-  };
-
-  const getMediaUrl = (path: string) => {
-    if (!path) return "";
-    if (path.startsWith("http")) return path;
-    return supabase.storage.from("posts").getPublicUrl(path).data.publicUrl;
-  };
 
   return (
     <>
