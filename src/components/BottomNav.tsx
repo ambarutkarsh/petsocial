@@ -3,17 +3,17 @@ import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { useState } from "react";
-import { Rss, MapPin, LayoutGrid, PawPrint, Plus } from "lucide-react";
+import { Rss, LayoutGrid, PawPrint, ShoppingBag, Plus } from "lucide-react";
 import { isAdminEmail } from "@/lib/admin";
 
 import PostUploadModal from "./PostUploadModal";
 
 const navItems = [
   { icon: Rss, label: "Feeds", path: "/feeds", event: "bottom_nav_feeds_tap", match: ["/feeds", "/play", "/feed"] },
-  { icon: MapPin, label: "NearBy", path: "/nearby", event: "bottom_nav_nearby_tap", match: ["/nearby"] },
+  { icon: LayoutGrid, label: "Hub", path: "/hub", event: "bottom_nav_hub_tap", match: ["/hub", "/care", "/forum", "/community"] },
   { icon: Plus, label: "Create", path: "__create", isFab: true, event: "fab_create_button_tap", match: [] },
-  { icon: LayoutGrid, label: "Hub", path: "/hub", event: "bottom_nav_hub_tap", match: ["/hub", "/care", "/forum", "/community", "/shop"] },
   { icon: PawPrint, label: "MyPet", path: "/mypet", event: "bottom_nav_mypet_tap", match: ["/mypet", "/health"], requiresAuth: true },
+  { icon: ShoppingBag, label: "Shop", path: "/shop", event: "bottom_nav_shop_tap", match: ["/shop"] },
 ];
 
 interface BottomNavProps {
