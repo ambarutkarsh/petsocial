@@ -331,9 +331,11 @@ const BudgetCalculatorScreen = ({ embedded = false }: BudgetCalculatorScreenProp
             </p>
           </div>
         )}
-      </div>
-    </MobileLayout>
+    </div>
   );
+
+  if (embedded) return inner;
+  return <MobileLayout>{inner}</MobileLayout>;
 };
 
 export default BudgetCalculatorScreen;
