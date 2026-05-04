@@ -11,16 +11,20 @@ interface Props {
   subtitle?: string;
   emoji?: string;
   children: ReactNode;
+  /** Optional back fallback path. Defaults to /hub. */
+  backFallback?: string;
+  /** When true, back always goes to backFallback (use for SOS → /feeds). */
+  forceBackFallback?: boolean;
 }
 
-const HubSubLayout = ({ title, subtitle, emoji, children }: Props) => {
+const HubSubLayout = ({ title, subtitle, emoji, children, backFallback = "/hub", forceBackFallback = false }: Props) => {
   const [showCreate, setShowCreate] = useState(false);
 
   return (
     <MobileLayout>
       <PageWrapper>
         <header className="flex items-center gap-3">
-          <BackButton fallback="/hub" />
+          <BackButton fallback={backFallback} forceFallback={forceBackFallback} />
           <div className="flex-1 min-w-0">
             <h1 className="font-heading font-bold text-[20px] leading-tight flex items-center gap-2">
               {emoji && <span>{emoji}</span>}
