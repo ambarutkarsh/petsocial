@@ -5,8 +5,9 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Bell, Search, X, Sun, Moon, User as UserIcon, Settings as SettingsLucide, LogOut } from "lucide-react";
+import { Bell, Bot, X, Sun, Moon, User as UserIcon, Settings as SettingsLucide, LogOut, AlertCircle } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
+import { useChatbot } from "@/contexts/ChatbotContext";
 import UserAvatar from "@/components/UserAvatar";
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ const TopBar = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { profile } = useUserProfile();
+  const { openChat } = useChatbot();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const { theme, toggleTheme } = useTheme();
@@ -128,11 +130,11 @@ const TopBar = () => {
               )}
             </button>
             <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search"
+              onClick={() => openChat()}
+              aria-label="Petosauras Assistant"
               className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
             >
-              <Search size={20} strokeWidth={1.5} />
+              <Bot size={20} strokeWidth={1.5} />
             </button>
             {user && (
               <button
@@ -165,6 +167,9 @@ const TopBar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer gap-2">
                     <SettingsLucide className="w-4 h-4" /> Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/sos")} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
+                    <AlertCircle className="w-4 h-4" /> SOS
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer gap-2 text-destructive focus:text-destructive">
