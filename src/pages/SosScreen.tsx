@@ -42,7 +42,7 @@ const SosScreen = () => {
   };
 
   return (
-    <HubSubLayout title="Emergency" emoji="🚑">
+    <HubSubLayout title="Emergency" emoji="🚑" backFallback="/feeds" forceBackFallback>
       <div className="space-y-4">
         <div className="paw-card p-6 text-center bg-destructive/5 border-destructive/30">
           <button

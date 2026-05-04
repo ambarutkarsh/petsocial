@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { BackIcon } from "@/components/icons/PetosauraIcons";
 import { ExternalLink } from "lucide-react";
 import MobileLayout from "@/components/MobileLayout";
 import PageWrapper from "@/components/PageWrapper";
 import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 const RIGHTS = [
   {
@@ -33,19 +32,11 @@ const RIGHTS = [
 ];
 
 const LegalScreen = () => {
-  const navigate = useNavigate();
-
   return (
     <MobileLayout>
       <PageWrapper>
         <header className="flex items-center gap-2">
-          <button
-            onClick={() => navigate("/hub")}
-            aria-label="Back to Hub"
-            className="w-9 h-9 rounded-[10px] bg-surface-alt flex items-center justify-center"
-          >
-            <BackIcon className="w-5 h-5" />
-          </button>
+          <BackButton fallback="/hub" />
           <h1 className="font-heading text-xl font-bold">⚖️ Legal & Rights</h1>
         </header>
         <p className="text-sm text-muted-foreground font-body mt-2">
