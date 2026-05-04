@@ -37,6 +37,7 @@ const SeoInfo = {
 
 // Lazy — everything else is code-split so the feed renders first.
 const CareScreen = lazy(() => import("./pages/CareScreen"));
+const NearByScreen = lazy(() => import("./pages/NearByScreen"));
 const ShopScreen = lazy(() => import("./pages/ShopScreen"));
 const ShopComingSoonScreen = lazy(() => import("./pages/ShopComingSoonScreen"));
 const SosScreen = lazy(() => import("./pages/SosScreen"));
