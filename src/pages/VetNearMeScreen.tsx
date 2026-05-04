@@ -77,12 +77,12 @@ const VetNearMeScreen = ({ embedded = false }: VetNearMeScreenProps) => {
     window.open(`https://www.google.com/maps/search/veterinary+clinic+near+${encodeURIComponent(searchQuery)}+India`, "_blank");
   };
 
-  return (
-    <MobileLayout>
-      <div className="pb-20 px-4">
+  const inner = (
+    <div className={embedded ? "" : "pb-20 px-4"}>
+      {!embedded && (
         <header className="sticky top-14 bg-background/80 backdrop-blur-lg z-30 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/hub")}><BackIcon className="w-5 h-5" /></button>
+            <BackButton fallback="/nearby" />
             <h1 className="font-heading font-bold text-lg">Vet Near Me</h1>
           </div>
           {results.length > 0 && (
@@ -91,6 +91,7 @@ const VetNearMeScreen = ({ embedded = false }: VetNearMeScreenProps) => {
             </Button>
           )}
         </header>
+      )}
 
         <div className="flex gap-2 my-4">
           <button onClick={() => setMode("location")}
