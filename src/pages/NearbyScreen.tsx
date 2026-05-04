@@ -61,28 +61,6 @@ const NearbyScreen = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   const renderContent = () => {
-    if (active === "vets") {
-      return (
-        <NearbyEmptyView
-          emoji="🩺"
-          title="Vets"
-          subtitle="Find veterinarians near you"
-          emptyTitle="No vets found nearby"
-          emptySubtitle="Try changing your location or checking again later."
-        />
-      );
-    }
-    if (active === "pet-restaurants") {
-      return (
-        <NearbyEmptyView
-          emoji="🍽️"
-          title="Pet Restaurants"
-          subtitle="Discover pet-friendly restaurants near you"
-          emptyTitle="No pet restaurants found nearby"
-          emptySubtitle="Try changing your location or checking again later."
-        />
-      );
-    }
     if (active === "walker") {
       return (
         <NearbyEmptyView
