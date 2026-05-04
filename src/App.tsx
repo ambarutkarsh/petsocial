@@ -247,6 +247,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
+          </ChatbotProvider>
           </GuestPopupProvider>
         </BrowserRouter>
         </UserProfileProvider>
