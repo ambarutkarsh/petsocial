@@ -5,6 +5,8 @@ import { Loader2, MapPin, Phone, MessageCircle, Globe, ExternalLink, Star, Plus,
 import { buildDirectionsUrl, NearbyCategory, NormalizedListing, seedListingId, trackNearby } from "@/lib/nearbyHelpers";
 import seedSpa from "@/data/spaGroomingSeed.json";
 import seedParksBoarding from "@/data/petParksBoardingSeed.json";
+import seedVets from "@/data/vetsSeed.json";
+import seedPetRestaurants from "@/data/petRestaurantsSeed.json";
 import NearbyCommentsSheet from "./NearbyCommentsSheet";
 import NearbyRatingSheet from "./NearbyRatingSheet";
 import AddNearbyListingSheet from "./AddNearbyListingSheet";
@@ -32,6 +34,8 @@ const TITLES: Record<Props["category"], { title: string; subtitle: string; emoji
   boarding: { title: "Boarding", subtitle: "Trusted boarding for your pet", emoji: "🏠" },
   help_stray: { title: "Help Stray", subtitle: "Help requests for stray animals", emoji: "🐾" },
   lost_found: { title: "Lost & Found", subtitle: "Help reunite lost pets with families", emoji: "🚨" },
+  vets: { title: "Vets", subtitle: "Find veterinarians near you", emoji: "🩺" },
+  pet_restaurants: { title: "Pet Restaurants", subtitle: "Discover pet-friendly restaurants near you", emoji: "🍽️" },
 };
 
 function normalizeSpaSeed(records: any[]): NormalizedListing[] {
