@@ -209,7 +209,13 @@ const VetNearMeScreen = ({ embedded = false }: VetNearMeScreenProps) => {
             </Button>
           </div>
         )}
-      </div>
+    </div>
+  );
+
+  if (embedded) return inner;
+  return (
+    <MobileLayout>
+      <div className="px-4">{inner}</div>
     </MobileLayout>
   );
 };
