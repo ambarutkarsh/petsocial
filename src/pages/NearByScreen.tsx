@@ -99,7 +99,7 @@ const NearByScreen = () => {
 
         <div className="mt-4 px-4">
           {activePill.category ? (
-            <NearbyListings category={activePill.category} />
+            <NearbyListings category={activePill.category as "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "help_stray" | "lost_found"} />
           ) : (
             <ComingSoonInline emoji={activePill.emoji} label={activePill.label} />
           )}
