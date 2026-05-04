@@ -13,6 +13,7 @@ import {
   Heart,
   Car,
   Lock,
+  ShoppingBag,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +44,7 @@ const services: ServiceItem[] = [
   { Icon: Heart, label: "NGO Connect", path: "/hub/ngo" },
   { Icon: Car, label: "Pet Pick & Drop", path: "/hub/pickup" },
   { Icon: CalendarCheck, label: "Book a Vet", path: "/hub/book-a-vet" },
+  { Icon: ShoppingBag, label: "Shop", path: "/shop", publicOk: true },
 ];
 
 const HubScreen = () => {
