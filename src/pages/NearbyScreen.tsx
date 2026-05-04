@@ -59,14 +59,42 @@ const NearbyScreen = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   const renderContent = () => {
-    if (active === "vets") return <VetNearMeScreen embedded />;
-    if (active === "pet-restaurants") {
-      return <ComingSoon emoji="🍽️" label="Pet Restaurants — open Reels feed via the legacy view soon" />;
+    if (active === "vets") {
+      return (
+        <NearbyEmptyView
+          emoji="🩺"
+          title="Vets"
+          subtitle="Find veterinarians near you"
+          emptyTitle="No vets found nearby"
+          emptySubtitle="Try changing your location or checking again later."
+        />
+      );
     }
-    if (active === "walker") return <ComingSoon emoji="🚶" label="Walker" />;
+    if (active === "pet-restaurants") {
+      return (
+        <NearbyEmptyView
+          emoji="🍽️"
+          title="Pet Restaurants"
+          subtitle="Discover pet-friendly restaurants near you"
+          emptyTitle="No pet restaurants found nearby"
+          emptySubtitle="Try changing your location or checking again later."
+        />
+      );
+    }
+    if (active === "walker") {
+      return (
+        <NearbyEmptyView
+          emoji="🚶"
+          title="Walker"
+          subtitle="Find trusted pet walkers near you"
+          emptyTitle="No walkers found nearby"
+          emptySubtitle="Try changing your location or checking again later."
+        />
+      );
+    }
     const mapped = CATEGORY_MAP[active];
     if (mapped) return <NearbyListings category={mapped} />;
-    return <ComingSoon emoji="🐾" label={active} />;
+    return <NearbyEmptyView emoji="🐾" title={active} subtitle="" emptyTitle="Nothing here yet" emptySubtitle="Check back soon." />;
   };
 
   return (
