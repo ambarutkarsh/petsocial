@@ -280,6 +280,10 @@ const NearbyListings = ({ category }: Props) => {
       seedItems = normalizeSpaSeed((seedSpa as any).records || []);
     } else if (category === "pet_park" || category === "boarding") {
       seedItems = normalizeParksBoardingSeed((seedParksBoarding as any).records || [], category);
+    } else if (category === "vets") {
+      seedItems = normalizeVetsSeed((seedVets as any).places || []);
+    } else if (category === "pet_restaurants") {
+      seedItems = normalizePetRestaurantsSeed((seedPetRestaurants as any).places || []);
     }
     const dbKey = new Set(dbItems.map((x) => `${x.title.toLowerCase()}|${x.city.toLowerCase()}`));
     const filteredSeeds = seedItems.filter((s) => !dbKey.has(`${s.title.toLowerCase()}|${s.city.toLowerCase()}`));
