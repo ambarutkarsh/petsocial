@@ -11,6 +11,7 @@ import { Clock, ExternalLink, Phone } from "lucide-react";
 import { BackIcon, LocationPinIcon, SearchIcon, StarIcon } from "@/components/icons/PetosauraIcons";
 
 import MobileLayout from "@/components/MobileLayout";
+import BackButton from "@/components/BackButton";
 
 interface VetClinic {
   name: string; address: string; phone: string; rating: number;
@@ -18,7 +19,9 @@ interface VetClinic {
   place_id: string; distance_km: number; lat: number; lng: number;
 }
 
-const VetNearMeScreen = () => {
+interface VetNearMeScreenProps { embedded?: boolean }
+
+const VetNearMeScreen = ({ embedded = false }: VetNearMeScreenProps) => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"location" | "search">("location");
   const [query, setQuery] = useState("");
