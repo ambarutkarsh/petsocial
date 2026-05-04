@@ -5,6 +5,8 @@ import { Loader2, MapPin, Phone, MessageCircle, Globe, ExternalLink, Star, Plus,
 import { buildDirectionsUrl, NearbyCategory, NormalizedListing, seedListingId, trackNearby } from "@/lib/nearbyHelpers";
 import seedSpa from "@/data/spaGroomingSeed.json";
 import seedParksBoarding from "@/data/petParksBoardingSeed.json";
+import seedVets from "@/data/vetsSeed.json";
+import seedPetRestaurants from "@/data/petRestaurantsSeed.json";
 import NearbyCommentsSheet from "./NearbyCommentsSheet";
 import NearbyRatingSheet from "./NearbyRatingSheet";
 import AddNearbyListingSheet from "./AddNearbyListingSheet";
@@ -32,6 +34,8 @@ const TITLES: Record<Props["category"], { title: string; subtitle: string; emoji
   boarding: { title: "Boarding", subtitle: "Trusted boarding for your pet", emoji: "🏠" },
   help_stray: { title: "Help Stray", subtitle: "Help requests for stray animals", emoji: "🐾" },
   lost_found: { title: "Lost & Found", subtitle: "Help reunite lost pets with families", emoji: "🚨" },
+  vets: { title: "Vets", subtitle: "Find veterinarians near you", emoji: "🩺" },
+  pet_restaurants: { title: "Pet Restaurants", subtitle: "Discover pet-friendly restaurants near you", emoji: "🍽️" },
 };
 
 function normalizeSpaSeed(records: any[]): NormalizedListing[] {
@@ -91,6 +95,70 @@ function normalizeParksBoardingSeed(records: any[], cat: "pet_park" | "boarding"
     source: r.source_name || null,
     sourceUrl: r.source_url || r.image_source_url || null,
     metadata: { data_confidence: r.data_confidence, location_for_direction: r.location_for_direction },
+  } as NormalizedListing));
+}
+
+function normalizeVetsSeed(records: any[]): NormalizedListing[] {
+  return records.map((r) => ({
+    id: seedListingId(["vets", r.id || r.name, r.city, r.location]),
+    isDb: false,
+    category: "vets",
+    title: r.name,
+    description: r.description || null,
+    city: r.city,
+    state: r.state,
+    locality: r.location,
+    address: r.address,
+    latitude: r.lat ?? null,
+    longitude: r.lng ?? null,
+    phone: r.phone || null,
+    website: r.website || null,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: r.pet_types_supported || [],
+    isVerified: r.verification_status === "verified",
+    source: r.source || "seed_json",
+    sourceUrl: r.google_maps_url || null,
+    metadata: {
+      services: r.services,
+      emergency_available: r.emergency_available,
+      home_visit: r.home_visit,
+      online_consultation: r.online_consultation,
+    },
+  } as NormalizedListing));
+}
+
+function normalizePetRestaurantsSeed(records: any[]): NormalizedListing[] {
+  return records.map((r) => ({
+    id: seedListingId(["pet_restaurants", r.id || r.name, r.city, r.location]),
+    isDb: false,
+    category: "pet_restaurants",
+    title: r.name,
+    description: r.description || null,
+    city: r.city,
+    state: r.state,
+    locality: r.location,
+    address: r.address,
+    latitude: r.lat ?? null,
+    longitude: r.lng ?? null,
+    phone: r.phone || null,
+    website: r.website || null,
+    imageUrl: r.image_url || null,
+    rating: r.rating ?? null,
+    ratingCount: r.review_count ?? null,
+    petAcceptance: r.best_for || [],
+    isVerified: r.verification_status === "verified",
+    source: r.source || "seed_json",
+    sourceUrl: r.google_maps_url || null,
+    metadata: {
+      pet_menu: r.pet_menu,
+      play_area: r.play_area,
+      off_leash: r.off_leash,
+      outdoor_seating: r.outdoor_seating,
+      water_bowl_available: r.water_bowl_available,
+      pet_comfort_index: r.pet_comfort_index,
+    },
   } as NormalizedListing));
 }
 
@@ -212,6 +280,10 @@ const NearbyListings = ({ category }: Props) => {
       seedItems = normalizeSpaSeed((seedSpa as any).records || []);
     } else if (category === "pet_park" || category === "boarding") {
       seedItems = normalizeParksBoardingSeed((seedParksBoarding as any).records || [], category);
+    } else if (category === "vets") {
+      seedItems = normalizeVetsSeed((seedVets as any).places || []);
+    } else if (category === "pet_restaurants") {
+      seedItems = normalizePetRestaurantsSeed((seedPetRestaurants as any).places || []);
     }
     const dbKey = new Set(dbItems.map((x) => `${x.title.toLowerCase()}|${x.city.toLowerCase()}`));
     const filteredSeeds = seedItems.filter((s) => !dbKey.has(`${s.title.toLowerCase()}|${s.city.toLowerCase()}`));

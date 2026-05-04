@@ -33,7 +33,9 @@ const SERVICE_BAR = [
 ];
 
 // Map URL slug → NearbyListings category enum
-const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "help_stray" | "lost_found"> = {
+const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "help_stray" | "lost_found" | "vets" | "pet_restaurants"> = {
+  vets: "vets",
+  "pet-restaurants": "pet_restaurants",
   "spa-grooming": "spa_grooming",
   "pet-parks": "pet_park",
   "pet-shows": "pet_show",
@@ -59,28 +61,6 @@ const NearbyScreen = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   const renderContent = () => {
-    if (active === "vets") {
-      return (
-        <NearbyEmptyView
-          emoji="🩺"
-          title="Vets"
-          subtitle="Find veterinarians near you"
-          emptyTitle="No vets found nearby"
-          emptySubtitle="Try changing your location or checking again later."
-        />
-      );
-    }
-    if (active === "pet-restaurants") {
-      return (
-        <NearbyEmptyView
-          emoji="🍽️"
-          title="Pet Restaurants"
-          subtitle="Discover pet-friendly restaurants near you"
-          emptyTitle="No pet restaurants found nearby"
-          emptySubtitle="Try changing your location or checking again later."
-        />
-      );
-    }
     if (active === "walker") {
       return (
         <NearbyEmptyView

@@ -3,6 +3,8 @@ import { trackEvent } from "@/lib/analytics";
 
 export type NearbyCategory =
   | "pet_restaurant"
+  | "pet_restaurants"
+  | "vets"
   | "spa_grooming"
   | "pet_park"
   | "pet_show"
