@@ -155,10 +155,14 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPasswordScreen />} />
             <Route path="/complete-registration" element={<RegularUserRoute><CompleteRegistrationScreen /></RegularUserRoute>} />
 
-            {/* Public to guests with feature gating: Feeds, Hub, Shop. Admin is redirected to /admin. */}
+            {/* Public to guests with feature gating: Feeds, NearBy, Hub, Shop. Admin is redirected to /admin. */}
             <Route path="/feeds" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
+            <Route path="/nearby" element={<RegularUserRoute><NearByScreen /></RegularUserRoute>} />
+            <Route path="/nearby/:category" element={<RegularUserRoute><NearByScreen /></RegularUserRoute>} />
             <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
+            <Route path="/mypet/pet-care" element={<RegularUserRoute><PetCareScreen /></RegularUserRoute>} />
+            <Route path="/mypet/add" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
 
             {/* /profile also gated so admin doesn't see consumer profile */}
