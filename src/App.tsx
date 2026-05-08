@@ -63,6 +63,7 @@ const OnboardingScreen = lazy(() => import("./pages/OnboardingScreen"));
 const InsuranceScreen = lazy(() => import("./pages/hub/InsuranceScreen"));
 const NgoScreen = lazy(() => import("./pages/hub/NgoScreen"));
 const NearbyScreen = lazy(() => import("./pages/NearbyScreen"));
+const HomeScreen = lazy(() => import("./pages/HomeScreen"));
 const PickupScreen = lazy(() => import("./pages/hub/PickupScreen"));
 const RecommenderScreen = lazy(() => import("./pages/hub/RecommenderScreen"));
 const PetcationScreen = lazy(() => import("./pages/hub/PetcationScreen"));
@@ -160,6 +161,7 @@ const App = () => (
             <Route path="/complete-registration" element={<RegularUserRoute><CompleteRegistrationScreen /></RegularUserRoute>} />
 
             {/* Public to guests with feature gating: Feeds, Hub, Shop. Admin is redirected to /admin. */}
+            <Route path="/home" element={<RegularUserRoute><HomeScreen /></RegularUserRoute>} />
             <Route path="/feeds" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
             <Route path="/nearby" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
             <Route path="/nearby/:category" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
