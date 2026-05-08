@@ -120,12 +120,15 @@ const NearbyScreen = () => {
           className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border"
           style={{ position: "sticky", top: 56, zIndex: 30 }}
         >
-          {activeCategoryList.map((c) => {
+          {activeCategoryList.map((c: any) => {
             const isActive = c.key === active;
             return (
               <button
                 key={c.key}
-                onClick={() => navigate(`/nearby/${c.key}?tab=${tab}`)}
+                onClick={() => {
+                  if (c.redirect) navigate(c.redirect);
+                  else navigate(`/nearby/${c.key}?tab=${tab}`);
+                }}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
                   isActive
@@ -140,24 +143,6 @@ const NearbyScreen = () => {
         </div>
 
         <div className="px-4 mt-3">{renderContent()}</div>
-      </div>
-
-      <div
-        className="fixed left-1/2 -translate-x-1/2 w-full px-3"
-        style={{ maxWidth: 480, bottom: 72, zIndex: 999 }}
-      >
-        <div className="bg-card rounded-2xl border border-border shadow-petosauras-md px-2 py-2 flex gap-2 overflow-x-auto no-scrollbar">
-          {SERVICE_BAR.map(({ key, label, path, Icon }) => (
-            <button
-              key={key}
-              onClick={() => navigate(path)}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-light text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-            >
-              <Icon size={14} strokeWidth={1.8} />
-              <span className="text-[11px] font-body font-bold whitespace-nowrap">{label}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />
