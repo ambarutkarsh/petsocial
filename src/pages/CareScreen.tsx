@@ -38,7 +38,7 @@ const HubScreen = () => {
     <MobileLayout>
       <div className="pb-20">
         <div className="px-5 pt-4 pb-2">
-          <h1 className="font-heading font-bold text-xl">Hub</h1>
+          <h1 className="font-heading font-bold text-xl">eHub</h1>
         </div>
 
         {/* Pill tabs */}
