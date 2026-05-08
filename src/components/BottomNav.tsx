@@ -43,7 +43,7 @@ const BottomNav = (_props: BottomNavProps) => {
       className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full bg-card border-t border-border shadow-[0_-4px_24px_rgba(123,94,167,0.08)]"
       style={{ maxWidth: 480, height: 64, zIndex: 1000, borderTopWidth: 0.5 }}
     >
-      <div className="flex items-center justify-around h-16 px-4 pb-[10px]">
+      <div className="flex items-center h-16 px-2 pb-[10px]">
         {navItems.map((item) => {
           const isActive = isPathActive(item.match);
           const Icon = item.icon;
