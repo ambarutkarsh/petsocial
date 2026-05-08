@@ -167,6 +167,7 @@ const App = () => (
             <Route path="/nearby/:category" element={<RegularUserRoute><NearbyScreen /></RegularUserRoute>} />
             <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/hub/shop" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
+            <Route path="/hub/learn" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
             <Route path="/sos" element={<SosScreen />} />
