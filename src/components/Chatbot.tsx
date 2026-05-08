@@ -163,7 +163,7 @@ const Chatbot = () => {
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm whitespace-pre-line leading-snug ${
+                className={`max-w-[85%] rounded-md px-3.5 py-2 text-sm whitespace-pre-line leading-snug ${
                   m.role === "user"
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-foreground"
@@ -175,7 +175,7 @@ const Chatbot = () => {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="max-w-[85%] rounded-2xl px-3.5 py-2 text-sm bg-muted text-muted-foreground italic">
+              <div className="max-w-[85%] rounded-md px-3.5 py-2 text-sm bg-muted text-muted-foreground italic">
                 Petosauras Assistant is thinking…
               </div>
             </div>
