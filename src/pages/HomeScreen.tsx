@@ -82,24 +82,6 @@ const HomeScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-28 px-5 pt-4 space-y-5 bg-background min-h-screen">
-        {/* TopBar */}
-        <header className="flex items-center justify-between">
-          <button
-            onClick={() => navigate("/mypet")}
-            className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-petosauras"
-            aria-label="Profile"
-          >
-            <PawPrint size={22} />
-          </button>
-          <button
-            onClick={() => navigate("/notifications")}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-foreground"
-            aria-label="Notifications"
-          >
-            <Bell size={22} />
-          </button>
-        </header>
-
         {/* Greeting */}
         <div>
           <h1 className="font-heading font-bold text-2xl leading-tight">Hi, {greetingName}! 👋</h1>
