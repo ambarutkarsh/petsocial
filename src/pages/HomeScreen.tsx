@@ -107,17 +107,30 @@ const HomeScreen = () => {
         </div>
 
         {/* 4 feature pill cards */}
-        <section className="grid grid-cols-4 gap-2">
-          {FEATURE_CARDS.map(({ key, title, Icon, path }) => (
-            <button
-              key={key}
-              onClick={() => navigate(path)}
-              className="rounded-2xl bg-primary-light p-3 flex flex-col items-center justify-center gap-2 aspect-[0.95] hover:shadow-petosauras transition-shadow"
-            >
-              <Icon size={22} className="text-primary" strokeWidth={2} />
-              <span className="font-heading font-bold text-[11px] text-primary text-center leading-tight">{title}</span>
-            </button>
-          ))}
+        <section className="grid grid-cols-4 gap-2.5">
+          {FEATURE_CARDS.map(({ key, title, Icon, path }) => {
+            const words = title.split(" ");
+            const line1 = words[0];
+            const line2 = words.slice(1).join(" ");
+            return (
+              <button
+                key={key}
+                onClick={() => navigate(path)}
+                className="rounded-2xl bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
+              >
+                <Icon size={26} className="text-primary" strokeWidth={2.4} />
+                <span className="font-heading font-bold text-[11px] text-foreground text-center leading-[1.15]">
+                  {line1}
+                  {line2 && (
+                    <>
+                      <br />
+                      {line2}
+                    </>
+                  )}
+                </span>
+              </button>
+            );
+          })}
         </section>
 
         {/* My Pets / Guest CTAs */}
