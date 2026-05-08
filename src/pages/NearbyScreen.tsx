@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car, HeartHandshake } from "lucide-react";
+import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car } from "lucide-react";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -15,6 +15,9 @@ const SERVICES_CATEGORIES = [
   { key: "boarding", label: "Boarding", emoji: "🏠", Icon: Home },
   { key: "spa-grooming", label: "Spa & Grooming", emoji: "💆", Icon: SparklesIcon },
   { key: "walker", label: "Walker", emoji: "🚶", Icon: PersonStanding },
+  { key: "petcation", label: "Petcation", emoji: "✈️", Icon: PlaneTakeoff, redirect: "/hub/petcation" },
+  { key: "pet-moving", label: "Pet Moving", emoji: "🚛", Icon: Truck, redirect: "/hub/pet-moving" },
+  { key: "pickup", label: "Pick & Drop", emoji: "🚗", Icon: Car, redirect: "/hub/pickup" },
 ] as const;
 
 const PLACES_CATEGORIES = [
@@ -22,13 +25,6 @@ const PLACES_CATEGORIES = [
   { key: "pet-parks", label: "Pet Parks", emoji: "🌳", Icon: Trees },
   { key: "pet-shows", label: "Pet Shows", emoji: "🎪", Icon: PartyPopper },
 ] as const;
-
-const SERVICE_BAR = [
-  { key: "petcation", label: "Petcation", path: "/hub/petcation", Icon: PlaneTakeoff },
-  { key: "pet-moving", label: "Pet Moving", path: "/hub/pet-moving", Icon: Truck },
-  { key: "pickup", label: "Pick & Drop", path: "/hub/pickup", Icon: Car },
-  { key: "ngo", label: "NGO Connect", path: "/hub/ngo", Icon: HeartHandshake },
-];
 
 const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "vets" | "pet_restaurants"> = {
   vets: "vets",
@@ -124,12 +120,15 @@ const NearbyScreen = () => {
           className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border"
           style={{ position: "sticky", top: 56, zIndex: 30 }}
         >
-          {activeCategoryList.map((c) => {
+          {activeCategoryList.map((c: any) => {
             const isActive = c.key === active;
             return (
               <button
                 key={c.key}
-                onClick={() => navigate(`/nearby/${c.key}?tab=${tab}`)}
+                onClick={() => {
+                  if (c.redirect) navigate(c.redirect);
+                  else navigate(`/nearby/${c.key}?tab=${tab}`);
+                }}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
                   isActive
@@ -144,24 +143,6 @@ const NearbyScreen = () => {
         </div>
 
         <div className="px-4 mt-3">{renderContent()}</div>
-      </div>
-
-      <div
-        className="fixed left-1/2 -translate-x-1/2 w-full px-3"
-        style={{ maxWidth: 480, bottom: 72, zIndex: 999 }}
-      >
-        <div className="bg-card rounded-2xl border border-border shadow-petosauras-md px-2 py-2 flex gap-2 overflow-x-auto no-scrollbar">
-          {SERVICE_BAR.map(({ key, label, path, Icon }) => (
-            <button
-              key={key}
-              onClick={() => navigate(path)}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-light text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-            >
-              <Icon size={14} strokeWidth={1.8} />
-              <span className="text-[11px] font-body font-bold whitespace-nowrap">{label}</span>
-            </button>
-          ))}
-        </div>
       </div>
 
       <BottomNav onPostClick={() => setShowCreate(true)} />

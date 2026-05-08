@@ -16,6 +16,47 @@ const FEATURE_CARDS = [
   { key: "budget", title: "Pet Budget", Icon: Wallet, path: "/hub/budget" },
 ];
 
+// Category → fallback Unsplash image (cropped square)
+const NEARBY_FALLBACK: Record<string, string> = {
+  vets: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop",
+  vet: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop",
+  pet_restaurants: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=400&fit=crop",
+  restaurant: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=400&fit=crop",
+  cafe: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=400&fit=crop",
+  spa_grooming: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?w=400&h=400&fit=crop",
+  grooming: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?w=400&h=400&fit=crop",
+  pet_park: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=400&fit=crop",
+  park: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=400&fit=crop",
+  boarding: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop",
+  pet_show: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop",
+  aquarium: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400&h=400&fit=crop",
+};
+
+const BLOG_FALLBACK: Record<string, string> = {
+  dog: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop",
+  cat: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop",
+  fish: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400&h=300&fit=crop",
+  aquarium: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400&h=300&fit=crop",
+  bird: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&h=300&fit=crop",
+  rabbit: "https://images.unsplash.com/photo-1535241749838-299277b6305f?w=400&h=300&fit=crop",
+  health: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?w=400&h=300&fit=crop",
+  vet: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?w=400&h=300&fit=crop",
+  adopt: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=300&fit=crop",
+  rescue: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=300&fit=crop",
+  default: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop",
+};
+
+const pickFallback = (map: Record<string, string>, ...candidates: (string | undefined | null)[]) => {
+  for (const c of candidates) {
+    if (!c) continue;
+    const key = c.toLowerCase();
+    for (const k of Object.keys(map)) {
+      if (key.includes(k)) return map[k];
+    }
+  }
+  return map.default || Object.values(map)[0];
+};
+
 const HomeScreen = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -255,11 +296,15 @@ const HomeScreen = () => {
                 className="shrink-0 w-[140px] text-left"
               >
                 <div className="w-full aspect-square rounded-lg bg-primary-light overflow-hidden">
-                  {n.image_url ? (
-                    <img src={n.image_url} alt={n.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl">🐾</div>
-                  )}
+                  <img
+                    src={n.image_url || pickFallback(NEARBY_FALLBACK, n.category, n.name)}
+                    alt={n.name}
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = pickFallback(NEARBY_FALLBACK, n.category, n.name);
+                    }}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h4 className="font-heading font-bold text-[13px] mt-2 truncate">{n.name}</h4>
                 <p className="text-[11px] text-muted-foreground font-body truncate">{n.category}</p>
@@ -288,12 +333,16 @@ const HomeScreen = () => {
                   onClick={() => navigate("/learn")}
                   className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
-                  <div className="w-full aspect-[4/3] bg-primary-light flex items-center justify-center text-4xl">
-                    {b.thumbnail_url ? (
-                      <img src={b.thumbnail_url} alt={b.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <span>{b.emoji || "📖"}</span>
-                    )}
+                  <div className="w-full aspect-[4/3] bg-primary-light overflow-hidden">
+                    <img
+                      src={b.thumbnail_url || pickFallback(BLOG_FALLBACK, b.title, b.summary)}
+                      alt={b.title}
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = pickFallback(BLOG_FALLBACK, b.title, b.summary);
+                      }}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="p-2.5">
                     <h4 className="font-heading font-bold text-[12px] leading-tight line-clamp-2">{b.title}</h4>

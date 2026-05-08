@@ -49,7 +49,7 @@ const TopBar = () => {
       >
         <div className="h-14 px-4 flex items-center justify-between">
           <button
-            onClick={() => navigate("/feeds")}
+            onClick={() => navigate("/home")}
             aria-label="Petosauras home"
             className="flex items-center"
           >
