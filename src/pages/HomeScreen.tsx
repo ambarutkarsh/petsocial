@@ -36,7 +36,11 @@ const HomeScreen = () => {
     },
   });
 
-  const primaryPet = pets[0];
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!selectedPetId && pets[0]) setSelectedPetId(pets[0].id);
+  }, [pets, selectedPetId]);
+  const primaryPet = pets.find((p: any) => p.id === selectedPetId) || pets[0];
 
   const { data: brief } = useQuery({
     queryKey: ["home-brief", primaryPet?.id],
