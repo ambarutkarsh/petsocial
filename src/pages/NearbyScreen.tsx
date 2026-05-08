@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PawPrint, Search, PlaneTakeoff, Truck, Car, HeartHandshake } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car, HeartHandshake } from "lucide-react";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -8,21 +8,19 @@ import PostUploadModal from "@/components/PostUploadModal";
 import NearbyListings from "@/components/nearby/NearbyListings";
 import NearbyEmptyView from "@/components/nearby/NearbyEmptyView";
 
-// Restaurants reuses the existing handcrafted PlayScreen restaurants UI is too coupled,
-// so we render a NearbyListings-shaped placeholder powered by pet_friendly_places via a
-// lightweight wrapper. To keep this change minimal we point Pet Restaurants at an existing
-// experience by deep-linking into the legacy /play view.
+type TopTab = "services" | "places";
 
-const CATEGORIES = [
+const SERVICES_CATEGORIES = [
   { key: "vets", label: "Vets", emoji: "🩺", Icon: Stethoscope },
-  { key: "pet-restaurants", label: "Pet Restaurants", emoji: "🍽️", Icon: UtensilsCrossed },
-  { key: "walker", label: "Walker", emoji: "🚶", Icon: PersonStanding },
+  { key: "boarding", label: "Boarding", emoji: "🏠", Icon: Home },
   { key: "spa-grooming", label: "Spa & Grooming", emoji: "💆", Icon: SparklesIcon },
+  { key: "walker", label: "Walker", emoji: "🚶", Icon: PersonStanding },
+] as const;
+
+const PLACES_CATEGORIES = [
+  { key: "pet-restaurants", label: "Restaurants & Cafés", emoji: "🍽️", Icon: UtensilsCrossed },
   { key: "pet-parks", label: "Pet Parks", emoji: "🌳", Icon: Trees },
   { key: "pet-shows", label: "Pet Shows", emoji: "🎪", Icon: PartyPopper },
-  { key: "boarding", label: "Boarding", emoji: "🏠", Icon: Home },
-  { key: "help-stray", label: "Help Stray", emoji: "🐾", Icon: PawPrint },
-  { key: "lost-found", label: "Lost & Found", emoji: "🚨", Icon: Search },
 ] as const;
 
 const SERVICE_BAR = [
@@ -32,33 +30,46 @@ const SERVICE_BAR = [
   { key: "ngo", label: "NGO Connect", path: "/hub/ngo", Icon: HeartHandshake },
 ];
 
-// Map URL slug → NearbyListings category enum
-const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "help_stray" | "lost_found" | "vets" | "pet_restaurants"> = {
+const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "vets" | "pet_restaurants"> = {
   vets: "vets",
   "pet-restaurants": "pet_restaurants",
   "spa-grooming": "spa_grooming",
   "pet-parks": "pet_park",
   "pet-shows": "pet_show",
   boarding: "boarding",
-  "help-stray": "help_stray",
-  "lost-found": "lost_found",
 };
 
-const ComingSoon = ({ emoji, label }: { emoji: string; label: string }) => (
-  <div className="text-center py-16">
-    <div className="text-6xl mb-3 opacity-70">{emoji}</div>
-    <h3 className="font-heading font-bold text-lg">{label} — Coming soon</h3>
-    <p className="text-sm text-muted-foreground font-body mt-1">
-      This Petosauras feature will be available soon.
-    </p>
-  </div>
-);
+const ALL_KEYS = [...SERVICES_CATEGORIES, ...PLACES_CATEGORIES].map((c) => c.key);
 
 const NearbyScreen = () => {
   const { category } = useParams<{ category?: string }>();
   const navigate = useNavigate();
-  const active = category && CATEGORIES.find((c) => c.key === category) ? category : "vets";
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showCreate, setShowCreate] = useState(false);
+
+  // Determine current top tab from query string OR infer from category slug.
+  const tabFromQuery = (searchParams.get("tab") as TopTab | null) || null;
+  const inferredTab: TopTab = useMemo(() => {
+    if (tabFromQuery === "services" || tabFromQuery === "places") return tabFromQuery;
+    if (category && PLACES_CATEGORIES.some((c) => c.key === category)) return "places";
+    return "services";
+  }, [tabFromQuery, category]);
+
+  const [tab, setTab] = useState<TopTab>(inferredTab);
+  const activeCategoryList = tab === "services" ? SERVICES_CATEGORIES : PLACES_CATEGORIES;
+
+  // Active category: use URL slug if it belongs to current tab; else default to first in tab.
+  const active =
+    category && activeCategoryList.some((c) => c.key === category)
+      ? category
+      : activeCategoryList[0].key;
+
+  const switchTab = (next: TopTab) => {
+    setTab(next);
+    const firstKey = (next === "services" ? SERVICES_CATEGORIES : PLACES_CATEGORIES)[0].key;
+    setSearchParams({ tab: next }, { replace: true });
+    navigate(`/nearby/${firstKey}?tab=${next}`, { replace: true });
+  };
 
   const renderContent = () => {
     if (active === "walker") {
@@ -85,17 +96,40 @@ const NearbyScreen = () => {
           <p className="text-xs text-muted-foreground font-body">Discover pet-friendly places & services near you</p>
         </div>
 
-        {/* Category pills */}
+        {/* Top tabs: Services / Pet Friendly Places */}
+        <div className="px-4 pt-2 pb-1 flex gap-2 bg-background sticky top-0 z-40">
+          {([
+            { key: "services" as TopTab, label: "Services" },
+            { key: "places" as TopTab, label: "Pet Friendly Places" },
+          ]).map((t) => {
+            const isActive = tab === t.key;
+            return (
+              <button
+                key={t.key}
+                onClick={() => switchTab(t.key)}
+                className={`flex-1 px-4 py-2 rounded-full text-sm font-body font-bold border transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-petosauras"
+                    : "bg-card text-muted-foreground border-border"
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sub-category pills */}
         <div
           className="px-4 py-3 flex gap-2 overflow-x-auto no-scrollbar bg-card border-b border-border"
           style={{ position: "sticky", top: 56, zIndex: 30 }}
         >
-          {CATEGORIES.map((c) => {
+          {activeCategoryList.map((c) => {
             const isActive = c.key === active;
             return (
               <button
                 key={c.key}
-                onClick={() => navigate(`/nearby/${c.key}`)}
+                onClick={() => navigate(`/nearby/${c.key}?tab=${tab}`)}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
                   isActive
@@ -112,7 +146,6 @@ const NearbyScreen = () => {
         <div className="px-4 mt-3">{renderContent()}</div>
       </div>
 
-      {/* Sticky service bar above bottom nav */}
       <div
         className="fixed left-1/2 -translate-x-1/2 w-full px-3"
         style={{ maxWidth: 480, bottom: 72, zIndex: 999 }}
