@@ -125,7 +125,7 @@ const HomeScreen = () => {
           <section className="space-y-3">
             <button
               onClick={() => navigate("/auth?redirect=/mypet")}
-              className="w-full rounded-xl bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-lg bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I own a pet</h3>
@@ -141,7 +141,7 @@ const HomeScreen = () => {
             </button>
             <button
               onClick={() => navigate("/mypet/pet-recommender")}
-              className="w-full rounded-xl bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-lg bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I am planning to get a pet</h3>
@@ -254,7 +254,7 @@ const HomeScreen = () => {
                 onClick={() => navigate("/nearby")}
                 className="shrink-0 w-[140px] text-left"
               >
-                <div className="w-full aspect-square rounded-xl bg-primary-light overflow-hidden">
+                <div className="w-full aspect-square rounded-lg bg-primary-light overflow-hidden">
                   {n.image_url ? (
                     <img src={n.image_url} alt={n.name} className="w-full h-full object-cover" />
                   ) : (
@@ -286,7 +286,7 @@ const HomeScreen = () => {
                 <button
                   key={b.id}
                   onClick={() => navigate("/learn")}
-                  className="shrink-0 w-[150px] text-left rounded-xl bg-card border border-border overflow-hidden shadow-sm"
+                  className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
                   <div className="w-full aspect-[4/3] bg-primary-light flex items-center justify-center text-4xl">
                     {b.thumbnail_url ? (
