@@ -103,9 +103,9 @@ const HomeScreen = () => {
               <button
                 key={key}
                 onClick={() => navigate(path)}
-                className="rounded-xl bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
+                className="rounded-lg bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
               >
-                <Icon size={26} className="text-primary" strokeWidth={2.4} />
+                <Icon size={26} className="text-primary" strokeWidth={1.8} fill="currentColor" />
                 <span className="font-heading font-bold text-[11px] text-foreground text-center leading-[1.15]">
                   {line1}
                   {line2 && (
