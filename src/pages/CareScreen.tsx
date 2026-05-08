@@ -47,6 +47,7 @@ const HubScreen = () => {
         <div className="px-4 sticky top-0 z-30 bg-background/90 backdrop-blur py-2">
           <div className="flex gap-2">
             {([
+              { key: "learn" as HubTab, label: "Learn" },
               { key: "shop" as HubTab, label: "Shop" },
               { key: "budget" as HubTab, label: "Budget Calc" },
             ]).map((t) => {
@@ -75,6 +76,7 @@ const HubScreen = () => {
         </div>
 
         <div className="mt-2">
+          {tab === "learn" && <LearnScreen />}
           {tab === "shop" && <ShopComingSoonScreen embedded />}
           {tab === "budget" && <BudgetCalculatorScreen embedded />}
         </div>
