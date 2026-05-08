@@ -101,7 +101,14 @@ const LearnScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
             </div>
           </>
         )}
-      </div>
+    </div>
+  );
+
+  if (embedded) return inner;
+
+  return (
+    <MobileLayout>
+      {inner}
       <BottomNav onPostClick={() => setShowUpload(true)} />
       <PostUploadModal open={showUpload} onClose={() => setShowUpload(false)} />
     </MobileLayout>
