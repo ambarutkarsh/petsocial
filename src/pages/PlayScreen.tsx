@@ -985,6 +985,14 @@ const FeedScreen = () => {
               </button>
             );
           })()}
+          <button
+            key="ngo"
+            onClick={() => navigate("/hub/ngo")}
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
+            style={{ background: "white", color: "#9B96B0", borderColor: "#F5F1EC" }}
+          >
+            🤝 NGO Connect
+          </button>
           {FEED_PILLS.map((p) => {
             const active = activePill === p.key;
             const disabled = isGuest && !GUEST_ENABLED_PILLS.includes(p.key);
