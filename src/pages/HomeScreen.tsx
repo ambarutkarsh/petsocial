@@ -163,21 +163,24 @@ const HomeScreen = () => {
               <button onClick={() => navigate("/mypet")} className="text-xs font-body font-bold text-primary">View all</button>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar">
-              {pets.map((p: any) => (
-                <button
-                  key={p.id}
-                  onClick={() => navigate("/mypet")}
-                  className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
-                >
-                  {p.avatar_url ? (
-                    <img src={p.avatar_url} alt={p.name} className="w-16 h-16 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl">{p.avatar_emoji || "🐾"}</div>
-                  )}
-                  <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
-                  <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
-                </button>
-              ))}
+              {pets.map((p: any) => {
+                const isActive = p.id === selectedPetId;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedPetId(p.id)}
+                    className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
+                  >
+                    {p.avatar_url ? (
+                      <img src={p.avatar_url} alt={p.name} className={`w-16 h-16 rounded-full object-cover ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`} />
+                    ) : (
+                      <div className={`w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}>{p.avatar_emoji || "🐾"}</div>
+                    )}
+                    <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
+                    <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
+                  </button>
+                );
+              })}
               <button
                 onClick={() => navigate("/mypet")}
                 className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
