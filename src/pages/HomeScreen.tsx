@@ -86,7 +86,7 @@ const HomeScreen = () => {
         <header className="flex items-center justify-between">
           <button
             onClick={() => navigate("/mypet")}
-            className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-petosauras"
+            className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-petosauras"
             aria-label="Profile"
           >
             <PawPrint size={22} />
@@ -116,7 +116,7 @@ const HomeScreen = () => {
               <button
                 key={key}
                 onClick={() => navigate(path)}
-                className="rounded-2xl bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
+                className="rounded-xl bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
               >
                 <Icon size={26} className="text-primary" strokeWidth={2.4} />
                 <span className="font-heading font-bold text-[11px] text-foreground text-center leading-[1.15]">
@@ -138,7 +138,7 @@ const HomeScreen = () => {
           <section className="space-y-3">
             <button
               onClick={() => navigate("/auth?redirect=/mypet")}
-              className="w-full rounded-[22px] bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-xl bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I own a pet</h3>
@@ -154,7 +154,7 @@ const HomeScreen = () => {
             </button>
             <button
               onClick={() => navigate("/mypet/pet-recommender")}
-              className="w-full rounded-[22px] bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-xl bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I am planning to get a pet</h3>
@@ -206,7 +206,7 @@ const HomeScreen = () => {
             {primaryPet && (
               <button
                 onClick={() => navigate("/mypet/health")}
-                className="mt-4 w-full rounded-[22px] bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
+                className="mt-4 w-full rounded-xl bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
@@ -264,7 +264,7 @@ const HomeScreen = () => {
                 onClick={() => navigate("/nearby")}
                 className="shrink-0 w-[140px] text-left"
               >
-                <div className="w-full aspect-square rounded-2xl bg-primary-light overflow-hidden">
+                <div className="w-full aspect-square rounded-xl bg-primary-light overflow-hidden">
                   {n.image_url ? (
                     <img src={n.image_url} alt={n.name} className="w-full h-full object-cover" />
                   ) : (
@@ -296,7 +296,7 @@ const HomeScreen = () => {
                 <button
                   key={b.id}
                   onClick={() => navigate("/learn")}
-                  className="shrink-0 w-[150px] text-left rounded-2xl bg-card border border-border overflow-hidden shadow-sm"
+                  className="shrink-0 w-[150px] text-left rounded-xl bg-card border border-border overflow-hidden shadow-sm"
                 >
                   <div className="w-full aspect-[4/3] bg-primary-light flex items-center justify-center text-4xl">
                     {b.thumbnail_url ? (
