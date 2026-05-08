@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car, HeartHandshake } from "lucide-react";
+import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car } from "lucide-react";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -15,6 +15,9 @@ const SERVICES_CATEGORIES = [
   { key: "boarding", label: "Boarding", emoji: "🏠", Icon: Home },
   { key: "spa-grooming", label: "Spa & Grooming", emoji: "💆", Icon: SparklesIcon },
   { key: "walker", label: "Walker", emoji: "🚶", Icon: PersonStanding },
+  { key: "petcation", label: "Petcation", emoji: "✈️", Icon: PlaneTakeoff, redirect: "/hub/petcation" },
+  { key: "pet-moving", label: "Pet Moving", emoji: "🚛", Icon: Truck, redirect: "/hub/pet-moving" },
+  { key: "pickup", label: "Pick & Drop", emoji: "🚗", Icon: Car, redirect: "/hub/pickup" },
 ] as const;
 
 const PLACES_CATEGORIES = [
@@ -22,13 +25,6 @@ const PLACES_CATEGORIES = [
   { key: "pet-parks", label: "Pet Parks", emoji: "🌳", Icon: Trees },
   { key: "pet-shows", label: "Pet Shows", emoji: "🎪", Icon: PartyPopper },
 ] as const;
-
-const SERVICE_BAR = [
-  { key: "petcation", label: "Petcation", path: "/hub/petcation", Icon: PlaneTakeoff },
-  { key: "pet-moving", label: "Pet Moving", path: "/hub/pet-moving", Icon: Truck },
-  { key: "pickup", label: "Pick & Drop", path: "/hub/pickup", Icon: Car },
-  { key: "ngo", label: "NGO Connect", path: "/hub/ngo", Icon: HeartHandshake },
-];
 
 const CATEGORY_MAP: Record<string, "spa_grooming" | "pet_park" | "pet_show" | "boarding" | "vets" | "pet_restaurants"> = {
   vets: "vets",
