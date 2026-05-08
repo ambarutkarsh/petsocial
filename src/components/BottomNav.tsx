@@ -50,38 +50,40 @@ const BottomNav = (_props: BottomNavProps) => {
 
           if (item.isFab) {
             return (
-              <button
-                key={item.path}
-                onClick={() => {
-                  trackEvent(item.event);
-                  navigate(item.path);
-                }}
-                aria-label={item.label}
-                className="relative -mt-[14px] w-[52px] h-[52px] rounded-full bg-gradient-to-br from-primary to-[#9B7EC8] text-primary-foreground shadow-[0_4px_20px_rgba(123,94,167,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
-              >
-                <Icon size={26} strokeWidth={1.8} />
-              </button>
+              <div key={item.path} className="flex-1 flex justify-center">
+                <button
+                  onClick={() => {
+                    trackEvent(item.event);
+                    navigate(item.path);
+                  }}
+                  aria-label={item.label}
+                  className="relative -mt-[18px] w-[54px] h-[54px] rounded-full bg-gradient-to-br from-primary to-[#9B7EC8] text-primary-foreground shadow-[0_4px_20px_rgba(123,94,167,0.45)] flex items-center justify-center transition-transform hover:scale-[1.08] active:scale-95"
+                >
+                  <Icon size={26} strokeWidth={1.8} />
+                </button>
+              </div>
             );
           }
 
           return (
-            <button
-              key={item.path}
-              onClick={() => {
-                trackEvent(item.event);
-                if (item.requiresAuth && !user) {
-                  triggerGuestPopup();
-                  return;
-                }
-                navigate(item.path);
-              }}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 ${
-                isActive ? "text-primary bg-primary-light" : "text-text-hint"
-              }`}
-            >
-              <Icon size={22} strokeWidth={1.5} />
-              <span className="text-[10px] font-body font-semibold">{item.label}</span>
-            </button>
+            <div key={item.path} className="flex-1 flex justify-center">
+              <button
+                onClick={() => {
+                  trackEvent(item.event);
+                  if (item.requiresAuth && !user) {
+                    triggerGuestPopup();
+                    return;
+                  }
+                  navigate(item.path);
+                }}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-[10px] transition-all duration-200 ${
+                  isActive ? "text-primary bg-primary-light" : "text-text-hint"
+                }`}
+              >
+                <Icon size={22} strokeWidth={1.5} fill={isActive ? "currentColor" : "none"} />
+                <span className="text-[10px] font-body font-semibold">{item.label}</span>
+              </button>
+            </div>
           );
         })}
       </div>
