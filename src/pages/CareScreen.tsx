@@ -76,7 +76,7 @@ const HubScreen = () => {
         </div>
 
         <div className="mt-2">
-          {tab === "learn" && <LearnScreen />}
+          {tab === "learn" && <LearnScreen embedded />}
           {tab === "shop" && <ShopComingSoonScreen embedded />}
           {tab === "budget" && <BudgetCalculatorScreen embedded />}
         </div>
