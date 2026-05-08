@@ -17,7 +17,7 @@ const categoryBgColors: Record<string, string> = {
   General: "bg-muted",
 };
 
-const LearnScreen = () => {
+const LearnScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
   const [tab, setTab] = useState<"knowledge" | "news">("knowledge");
   const [activeCategory, setActiveCategory] = useState("All");
   const [showUpload, setShowUpload] = useState(false);
