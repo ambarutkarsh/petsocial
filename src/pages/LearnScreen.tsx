@@ -35,9 +35,8 @@ const LearnScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
     },
   });
 
-  return (
-    <MobileLayout>
-      <div className="pb-20">
+  const inner = (
+    <div className={embedded ? "" : "pb-20"}>
         <div className="px-4 mb-4 pt-4">
           <div className="flex bg-muted rounded-full p-1">
             <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
