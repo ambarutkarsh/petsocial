@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Bot, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useChatbot } from "@/contexts/ChatbotContext";
+import launcherIcon from "@/assets/chatbot-launcher.png";
 
 interface Msg {
   role: "user" | "assistant";
@@ -132,8 +133,12 @@ const Chatbot = () => {
       >
         {/* Header */}
         <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
-          <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center">
-            <Bot className="w-5 h-5 text-primary" />
+          <div className="w-10 h-10 flex items-center justify-center">
+            <img
+              src={launcherIcon}
+              alt="Petosauras Assistant"
+              className="w-10 h-10 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)]"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-heading font-bold text-sm">Petosauras Assistant</p>
@@ -217,7 +222,7 @@ const Chatbot = () => {
             placeholder="Ask about pet care or Petosauras…"
             rows={1}
             disabled={loading}
-            className="flex-1 resize-none rounded-2xl border border-border bg-background px-3 py-2 text-sm font-body outline-none focus:border-primary max-h-24"
+            className="flex-1 resize-none rounded-md border border-border bg-background px-3 py-2 text-sm font-body outline-none focus:border-primary max-h-24"
           />
           <button
             type="submit"
