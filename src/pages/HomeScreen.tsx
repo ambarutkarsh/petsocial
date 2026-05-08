@@ -296,11 +296,15 @@ const HomeScreen = () => {
                 className="shrink-0 w-[140px] text-left"
               >
                 <div className="w-full aspect-square rounded-lg bg-primary-light overflow-hidden">
-                  {n.image_url ? (
-                    <img src={n.image_url} alt={n.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl">🐾</div>
-                  )}
+                  <img
+                    src={n.image_url || pickFallback(NEARBY_FALLBACK, n.category, n.name)}
+                    alt={n.name}
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = pickFallback(NEARBY_FALLBACK, n.category, n.name);
+                    }}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h4 className="font-heading font-bold text-[13px] mt-2 truncate">{n.name}</h4>
                 <p className="text-[11px] text-muted-foreground font-body truncate">{n.category}</p>
