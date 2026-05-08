@@ -195,8 +195,8 @@ const HomeScreen = () => {
             {/* Health Brief */}
             {primaryPet && (
               <button
-                onClick={() => navigate("/mypet/health")}
-                className="mt-4 w-full rounded-xl bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
+                onClick={() => navigate(`/mypet?pet=${primaryPet.id}`)}
+                className="mt-4 w-full rounded-lg bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
