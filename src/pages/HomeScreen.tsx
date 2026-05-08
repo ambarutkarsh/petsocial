@@ -333,12 +333,16 @@ const HomeScreen = () => {
                   onClick={() => navigate("/learn")}
                   className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
-                  <div className="w-full aspect-[4/3] bg-primary-light flex items-center justify-center text-4xl">
-                    {b.thumbnail_url ? (
-                      <img src={b.thumbnail_url} alt={b.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <span>{b.emoji || "📖"}</span>
-                    )}
+                  <div className="w-full aspect-[4/3] bg-primary-light overflow-hidden">
+                    <img
+                      src={b.thumbnail_url || pickFallback(BLOG_FALLBACK, b.title, b.summary)}
+                      alt={b.title}
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = pickFallback(BLOG_FALLBACK, b.title, b.summary);
+                      }}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="p-2.5">
                     <h4 className="font-heading font-bold text-[12px] leading-tight line-clamp-2">{b.title}</h4>
