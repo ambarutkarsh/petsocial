@@ -7,8 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CameraIcon, CheckIcon, CloseIcon, EditIcon, PlusIcon } from "@/components/icons/PetosauraIcons";
 
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
@@ -26,7 +26,12 @@ const MyPetScreen = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [showAddPet, setShowAddPet] = useState(false);
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(searchParams.get("pet"));
+  useEffect(() => {
+    const p = searchParams.get("pet");
+    if (p) setSelectedPetId(p);
+  }, [searchParams]);
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<any>({});
 

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { PawPrint, MapPin, Users as UsersIcon, Wallet, Plus, Calendar, Stethoscope, Scale, ArrowRight, Bell } from "lucide-react";
@@ -35,7 +36,11 @@ const HomeScreen = () => {
     },
   });
 
-  const primaryPet = pets[0];
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!selectedPetId && pets[0]) setSelectedPetId(pets[0].id);
+  }, [pets, selectedPetId]);
+  const primaryPet = pets.find((p: any) => p.id === selectedPetId) || pets[0];
 
   const { data: brief } = useQuery({
     queryKey: ["home-brief", primaryPet?.id],
@@ -82,24 +87,6 @@ const HomeScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-28 px-5 pt-4 space-y-5 bg-background min-h-screen">
-        {/* TopBar */}
-        <header className="flex items-center justify-between">
-          <button
-            onClick={() => navigate("/mypet")}
-            className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-petosauras"
-            aria-label="Profile"
-          >
-            <PawPrint size={22} />
-          </button>
-          <button
-            onClick={() => navigate("/notifications")}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-foreground"
-            aria-label="Notifications"
-          >
-            <Bell size={22} />
-          </button>
-        </header>
-
         {/* Greeting */}
         <div>
           <h1 className="font-heading font-bold text-2xl leading-tight">Hi, {greetingName}! 👋</h1>
@@ -116,9 +103,9 @@ const HomeScreen = () => {
               <button
                 key={key}
                 onClick={() => navigate(path)}
-                className="rounded-xl bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
+                className="rounded-lg bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
               >
-                <Icon size={26} className="text-primary" strokeWidth={2.4} />
+                <Icon size={26} className="text-primary" strokeWidth={1.8} fill="currentColor" />
                 <span className="font-heading font-bold text-[11px] text-foreground text-center leading-[1.15]">
                   {line1}
                   {line2 && (
@@ -138,7 +125,7 @@ const HomeScreen = () => {
           <section className="space-y-3">
             <button
               onClick={() => navigate("/auth?redirect=/mypet")}
-              className="w-full rounded-xl bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-lg bg-primary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I own a pet</h3>
@@ -154,7 +141,7 @@ const HomeScreen = () => {
             </button>
             <button
               onClick={() => navigate("/mypet/pet-recommender")}
-              className="w-full rounded-xl bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
+              className="w-full rounded-lg bg-secondary-light overflow-hidden border border-border shadow-sm flex items-stretch"
             >
               <div className="flex-1 p-4 text-left">
                 <h3 className="font-heading font-bold text-base">I am planning to get a pet</h3>
@@ -176,21 +163,24 @@ const HomeScreen = () => {
               <button onClick={() => navigate("/mypet")} className="text-xs font-body font-bold text-primary">View all</button>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar">
-              {pets.map((p: any) => (
-                <button
-                  key={p.id}
-                  onClick={() => navigate("/mypet")}
-                  className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
-                >
-                  {p.avatar_url ? (
-                    <img src={p.avatar_url} alt={p.name} className="w-16 h-16 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl">{p.avatar_emoji || "🐾"}</div>
-                  )}
-                  <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
-                  <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
-                </button>
-              ))}
+              {pets.map((p: any) => {
+                const isActive = p.id === selectedPetId;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedPetId(p.id)}
+                    className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
+                  >
+                    {p.avatar_url ? (
+                      <img src={p.avatar_url} alt={p.name} className={`w-16 h-16 rounded-full object-cover ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`} />
+                    ) : (
+                      <div className={`w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}>{p.avatar_emoji || "🐾"}</div>
+                    )}
+                    <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
+                    <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
+                  </button>
+                );
+              })}
               <button
                 onClick={() => navigate("/mypet")}
                 className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
@@ -205,8 +195,8 @@ const HomeScreen = () => {
             {/* Health Brief */}
             {primaryPet && (
               <button
-                onClick={() => navigate("/mypet/health")}
-                className="mt-4 w-full rounded-xl bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
+                onClick={() => navigate(`/mypet?pet=${primaryPet.id}`)}
+                className="mt-4 w-full rounded-lg bg-card border border-border p-4 shadow-sm text-left flex items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-3">
@@ -264,7 +254,7 @@ const HomeScreen = () => {
                 onClick={() => navigate("/nearby")}
                 className="shrink-0 w-[140px] text-left"
               >
-                <div className="w-full aspect-square rounded-xl bg-primary-light overflow-hidden">
+                <div className="w-full aspect-square rounded-lg bg-primary-light overflow-hidden">
                   {n.image_url ? (
                     <img src={n.image_url} alt={n.name} className="w-full h-full object-cover" />
                   ) : (
@@ -296,7 +286,7 @@ const HomeScreen = () => {
                 <button
                   key={b.id}
                   onClick={() => navigate("/learn")}
-                  className="shrink-0 w-[150px] text-left rounded-xl bg-card border border-border overflow-hidden shadow-sm"
+                  className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
                   <div className="w-full aspect-[4/3] bg-primary-light flex items-center justify-center text-4xl">
                     {b.thumbnail_url ? (
