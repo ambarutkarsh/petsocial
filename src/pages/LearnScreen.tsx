@@ -1,11 +1,10 @@
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
-import PetBlogsPanel from "@/components/PetBlogsPanel";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
-import { BookOpen, Clock, Newspaper } from "lucide-react";
+import { Clock, Newspaper } from "lucide-react";
 import { DocumentIcon } from "@/components/icons/PetosauraIcons";
 
 const categories = ["All", "🐕 Canine", "🐈 Feline", "🐠 Aquatic", "🦜 Avian", "🐇 Small Pets", "General"];
@@ -19,7 +18,7 @@ const categoryBgColors: Record<string, string> = {
 };
 
 const LearnScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
-  const [tab, setTab] = useState<"knowledge" | "news" | "blogs">("knowledge");
+  const [tab, setTab] = useState<"knowledge" | "news">("knowledge");
   const [activeCategory, setActiveCategory] = useState("All");
   const [showUpload, setShowUpload] = useState(false);
 
@@ -39,20 +38,15 @@ const LearnScreen = ({ embedded = false }: { embedded?: boolean } = {}) => {
   const inner = (
     <div className={embedded ? "" : "pb-20"}>
         <div className="px-4 mb-4 pt-4">
-          <div className="flex bg-muted rounded-full p-1 gap-1">
-            <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-xs font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
-              <DocumentIcon className="w-4 h-4" strokeWidth={1.8} /> Knowledge
+          <div className="flex bg-muted rounded-full p-1">
+            <button onClick={() => setTab("knowledge")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "knowledge" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
+              <DocumentIcon className="w-4 h-4" strokeWidth={1.8} /> Knowledge Base
             </button>
-            <button onClick={() => setTab("blogs")} className={`flex-1 py-2 text-xs font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "blogs" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
-              <BookOpen className="w-4 h-4" strokeWidth={1.8} /> Pet Blogs
-            </button>
-            <button onClick={() => setTab("news")} className={`flex-1 py-2 text-xs font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "news" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
-              <Newspaper className="w-4 h-4" strokeWidth={1.8} /> News
+            <button onClick={() => setTab("news")} className={`flex-1 py-2 text-sm font-heading font-bold rounded-full transition-colors flex items-center justify-center gap-1 ${tab === "news" ? "bg-primary text-primary-foreground shadow-petosauras" : "text-muted-foreground"}`}>
+              <Newspaper className="w-4 h-4" strokeWidth={1.8} /> Pet News
             </button>
           </div>
         </div>
-
-        {tab === "blogs" && <PetBlogsPanel />}
 
         {tab === "knowledge" && (
           <>
