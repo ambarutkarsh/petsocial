@@ -7,6 +7,7 @@ import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { GuestPopupProvider } from "@/contexts/GuestPopupContext";
 import { ChatbotProvider } from "@/contexts/ChatbotContext";
 import Chatbot from "@/components/Chatbot";
+import ChatbotLauncher from "@/components/ChatbotLauncher";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RegularUserRoute from "@/components/RegularUserRoute";
 import { supabase } from "@/integrations/supabase/client";
@@ -133,6 +134,7 @@ const App = () => (
           <ChatbotProvider>
           <PageTracker />
           <Chatbot />
+          <ChatbotLauncher />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
             <Route path="/" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
