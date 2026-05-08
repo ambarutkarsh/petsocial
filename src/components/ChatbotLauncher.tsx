@@ -22,16 +22,20 @@ const ChatbotLauncher = () => {
       onClick={() => openChat()}
       aria-label="Open chatbot"
       title="Open chatbot"
-      className="fixed right-4 z-[1100] w-14 h-14 rounded-full bg-card shadow-petosauras-md ring-1 ring-border flex items-center justify-center hover:scale-105 active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-primary/40"
-      style={{ bottom: "calc(env(safe-area-inset-bottom) + 88px)" }}
+      className="fixed z-[1100] w-12 h-12 rounded-full bg-card shadow-petosauras-md ring-1 ring-border flex items-center justify-center hover:scale-105 active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-primary/40"
+      style={{
+        // Align horizontally with the MyPet column (rightmost of 5 in 480px shell)
+        right: "max(16px, calc(50vw - 240px + 24px))",
+        bottom: "calc(env(safe-area-inset-bottom) + 72px)",
+      }}
     >
       <img
         src={launcherIcon}
         alt=""
-        width={56}
-        height={56}
+        width={48}
+        height={48}
         loading="lazy"
-        className="w-12 h-12 object-contain"
+        className="w-11 h-11 object-contain"
       />
     </button>
   );

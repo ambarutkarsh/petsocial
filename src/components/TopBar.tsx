@@ -68,13 +68,6 @@ const TopBar = () => {
                 <Moon size={20} strokeWidth={1.5} className="transition-transform duration-300" />
               )}
             </button>
-            <button
-              onClick={() => openChat()}
-              aria-label="Petosauras Assistant"
-              className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
-            >
-              <Bot size={20} strokeWidth={1.5} />
-            </button>
             {user && (
               <button
                 onClick={() => navigate("/notifications")}
