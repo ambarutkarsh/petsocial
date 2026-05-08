@@ -137,7 +137,7 @@ const App = () => (
           <ChatbotLauncher />
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
           <Routes>
-            <Route path="/" element={<RegularUserRoute><PlayScreen /></RegularUserRoute>} />
+            <Route path="/" element={<RegularUserRoute><HomeScreen /></RegularUserRoute>} />
             <Route path="/welcome" element={<HomeLanding />} />
             <Route path="/dog-care" element={<CarePage slug="dog-care" />} />
             <Route path="/cat-care" element={<CarePage slug="cat-care" />} />
@@ -254,7 +254,7 @@ const App = () => (
             <Route path="/health/budget" element={<Navigate to="/hub/budget" replace />} />
             <Route path="/health/order" element={<ProtectedRoute><OrderNowScreen /></ProtectedRoute>} />
 
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
           </Suspense>
           </ChatbotProvider>

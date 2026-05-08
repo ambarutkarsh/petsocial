@@ -6,14 +6,18 @@ interface Props {
   subtitle: string;
   emptyTitle: string;
   emptySubtitle: string;
+  /** Optional click handler. When provided, the Add button becomes enabled. */
+  onAdd?: () => void;
+  /** Custom Add CTA label. Defaults to `Add {title}`. */
+  addLabel?: string;
 }
 
 /**
  * Visual mirror of NearbyListings (header + add button + empty state)
  * used for categories that don't yet have a listings backend (Vets, Pet
- * Restaurants, Walker). Keeps NearBy visually consistent across pills.
+ * Restaurants, Walker, Petcation, Pet Moving, Pick & Drop).
  */
-const NearbyEmptyView = ({ emoji, title, subtitle, emptyTitle, emptySubtitle }: Props) => {
+const NearbyEmptyView = ({ emoji, title, subtitle, emptyTitle, emptySubtitle, onAdd, addLabel }: Props) => {
   return (
     <div>
       <div className="flex items-start justify-between gap-3 mb-2">
@@ -24,10 +28,13 @@ const NearbyEmptyView = ({ emoji, title, subtitle, emptyTitle, emptySubtitle }: 
       </div>
 
       <button
-        disabled
-        className="w-full mb-3 h-11 rounded-full bg-primary-light text-primary text-sm font-heading font-bold flex items-center justify-center gap-2 opacity-70 cursor-not-allowed"
+        onClick={onAdd}
+        disabled={!onAdd}
+        className={`w-full mb-3 h-11 rounded-full bg-primary-light text-primary text-sm font-heading font-bold flex items-center justify-center gap-2 transition-colors ${
+          onAdd ? "hover:bg-primary hover:text-primary-foreground" : "opacity-70 cursor-not-allowed"
+        }`}
       >
-        <Plus size={16} /> Add {title}
+        <Plus size={16} /> {addLabel || `Add ${title}`}
       </button>
 
       <div className="text-center py-12">

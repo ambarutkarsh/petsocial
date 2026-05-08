@@ -203,33 +203,34 @@ const HomeScreen = () => {
               <h2 className="font-heading font-bold text-base">My Pets</h2>
               <button onClick={() => navigate("/mypet")} className="text-xs font-body font-bold text-primary">View all</button>
             </div>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar">
+            <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-1 px-1 py-2">
               {pets.map((p: any) => {
                 const isActive = p.id === selectedPetId;
+                const ringClass = isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : "";
                 return (
                   <button
                     key={p.id}
                     onClick={() => setSelectedPetId(p.id)}
-                    className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
+                    className="shrink-0 flex flex-col items-center gap-1 w-20 box-border"
                   >
                     {p.avatar_url ? (
-                      <img src={p.avatar_url} alt={p.name} className={`w-16 h-16 rounded-full object-cover ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`} />
+                      <img src={p.avatar_url} alt={p.name} className={`w-14 h-14 rounded-full object-cover ${ringClass}`} />
                     ) : (
-                      <div className={`w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl ${isActive ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""}`}>{p.avatar_emoji || "🐾"}</div>
+                      <div className={`w-14 h-14 rounded-full bg-primary-light flex items-center justify-center text-2xl ${ringClass}`}>{p.avatar_emoji || "🐾"}</div>
                     )}
-                    <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
+                    <span className="text-[12px] font-heading font-bold truncate w-full text-center mt-1">{p.name}</span>
                     <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
                   </button>
                 );
               })}
               <button
                 onClick={() => navigate("/mypet")}
-                className="shrink-0 flex flex-col items-center gap-1.5 w-[68px]"
+                className="shrink-0 flex flex-col items-center gap-1 w-20 box-border"
               >
-                <div className="w-16 h-16 rounded-full border-2 border-dashed border-primary flex items-center justify-center text-primary">
-                  <Plus size={22} />
+                <div className="w-14 h-14 rounded-full border-2 border-dashed border-primary flex items-center justify-center text-primary">
+                  <Plus size={20} />
                 </div>
-                <span className="text-[12px] font-heading font-bold text-primary">Add Pet</span>
+                <span className="text-[12px] font-heading font-bold text-primary mt-1">Add Pet</span>
               </button>
             </div>
 

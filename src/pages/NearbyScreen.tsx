@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Stethoscope, UtensilsCrossed, PersonStanding, Sparkles as SparklesIcon, Trees, PartyPopper, Home, PlaneTakeoff, Truck, Car } from "lucide-react";
+import { toast } from "sonner";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -15,10 +16,18 @@ const SERVICES_CATEGORIES = [
   { key: "boarding", label: "Boarding", emoji: "🏠", Icon: Home },
   { key: "spa-grooming", label: "Spa & Grooming", emoji: "💆", Icon: SparklesIcon },
   { key: "walker", label: "Walker", emoji: "🚶", Icon: PersonStanding },
-  { key: "petcation", label: "Petcation", emoji: "✈️", Icon: PlaneTakeoff, redirect: "/hub/petcation" },
-  { key: "pet-moving", label: "Pet Moving", emoji: "🚛", Icon: Truck, redirect: "/hub/pet-moving" },
-  { key: "pickup", label: "Pick & Drop", emoji: "🚗", Icon: Car, redirect: "/hub/pickup" },
+  { key: "petcation", label: "Petcation", emoji: "✈️", Icon: PlaneTakeoff },
+  { key: "pet-moving", label: "Pet Moving", emoji: "🚛", Icon: Truck },
+  { key: "pickup", label: "Pick & Drop", emoji: "🚗", Icon: Car },
 ] as const;
+
+// Service categories that share the Walker-style empty + Add CTA layout
+const SIMPLE_SERVICE_VIEWS: Record<string, { emoji: string; title: string; subtitle: string; emptyTitle: string; addLabel: string }> = {
+  walker: { emoji: "🚶", title: "Walker", subtitle: "Find trusted pet walkers near you", emptyTitle: "No walkers found nearby", addLabel: "Add Walker" },
+  petcation: { emoji: "✈️", title: "Petcation", subtitle: "Pet-friendly stays and getaways", emptyTitle: "No petcation listings yet", addLabel: "Add Petcation" },
+  "pet-moving": { emoji: "🚛", title: "Pet Moving", subtitle: "Reliable pet relocation services", emptyTitle: "No pet moving services yet", addLabel: "Add Pet Moving" },
+  pickup: { emoji: "🚗", title: "Pick & Drop", subtitle: "Local pet pick-up & drop-off", emptyTitle: "No pick & drop services yet", addLabel: "Add Pick & Drop" },
+};
 
 const PLACES_CATEGORIES = [
   { key: "pet-restaurants", label: "Restaurants & Cafés", emoji: "🍽️", Icon: UtensilsCrossed },
@@ -68,14 +77,17 @@ const NearbyScreen = () => {
   };
 
   const renderContent = () => {
-    if (active === "walker") {
+    const simple = SIMPLE_SERVICE_VIEWS[active];
+    if (simple) {
       return (
         <NearbyEmptyView
-          emoji="🚶"
-          title="Walker"
-          subtitle="Find trusted pet walkers near you"
-          emptyTitle="No walkers found nearby"
-          emptySubtitle="Try changing your location or checking again later."
+          emoji={simple.emoji}
+          title={simple.title}
+          subtitle={simple.subtitle}
+          emptyTitle={simple.emptyTitle}
+          emptySubtitle="Be the first to add one — we'll review and publish soon."
+          addLabel={simple.addLabel}
+          onAdd={() => toast.success(`${simple.addLabel} — submission coming soon!`)}
         />
       );
     }
@@ -126,8 +138,7 @@ const NearbyScreen = () => {
               <button
                 key={c.key}
                 onClick={() => {
-                  if (c.redirect) navigate(c.redirect);
-                  else navigate(`/nearby/${c.key}?tab=${tab}`);
+                  navigate(`/nearby/${c.key}?tab=${tab}`);
                 }}
                 className="shrink-0 inline-flex items-center gap-1.5 rounded-full text-xs font-body font-bold transition-colors border px-3.5 py-1.5"
                 style={
