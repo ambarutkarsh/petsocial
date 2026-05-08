@@ -1025,6 +1025,14 @@ const FeedScreen = () => {
         {/* Combined feed content */}
         <div className="space-y-3 px-4 mt-3">
           {/* Reels posts */}
+          {showReels && !isGuest && (
+            <button
+              onClick={() => setShowCreate(true)}
+              className="w-full mb-1 h-11 rounded-full bg-primary-light text-primary text-sm font-heading font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+            >
+              <PlusIcon className="w-4 h-4" /> Add a Post
+            </button>
+          )}
           {showReels && (postsLoading ? (
             <div className="space-y-3">{[1, 2].map(i => <div key={i} className="paw-card aspect-square animate-pulse" />)}</div>
           ) : posts.length === 0 ? (
