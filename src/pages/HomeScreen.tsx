@@ -27,7 +27,7 @@ const HomeScreen = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("pets")
-        .select("id, name, species, breed, avatar_emoji, avatar_url")
+        .select("id, name, species, avatar_emoji, avatar_url")
         .eq("owner_id", user!.id)
         .order("is_primary", { ascending: false })
         .limit(6);
@@ -43,11 +43,11 @@ const HomeScreen = () => {
     queryFn: async () => {
       const [vaccRes, logRes] = await Promise.all([
         supabase.from("vaccinations").select("vaccine_name, due_date, status").eq("pet_id", primaryPet!.id).order("due_date", { ascending: true }).limit(3),
-        supabase.from("health_logs").select("weight_kg, log_date, log_type").eq("pet_id", primaryPet!.id).order("log_date", { ascending: false }).limit(5),
+        supabase.from("health_logs").select("weight_kg, log_date").eq("pet_id", primaryPet!.id).order("log_date", { ascending: false }).limit(5),
       ]);
       const upcomingVacc = (vaccRes.data || []).find((v: any) => v.status !== "completed" && v.due_date);
       const lastLog = (logRes.data || [])[0];
-      const lastCheckup = (logRes.data || []).find((l: any) => l.log_type === "checkup") || lastLog;
+      const lastCheckup = lastLog;
       return { upcomingVacc, lastLog, lastCheckup };
     },
   });
@@ -175,7 +175,7 @@ const HomeScreen = () => {
                     <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-3xl">{p.avatar_emoji || "🐾"}</div>
                   )}
                   <span className="text-[12px] font-heading font-bold truncate w-full text-center">{p.name}</span>
-                  <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.breed || p.species}</span>
+                  <span className="text-[10px] font-body text-muted-foreground truncate w-full text-center -mt-1">{p.species}</span>
                 </button>
               ))}
               <button
