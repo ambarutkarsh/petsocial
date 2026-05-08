@@ -6,10 +6,11 @@ import BottomNav from "@/components/BottomNav";
 import PostUploadModal from "@/components/PostUploadModal";
 import ShopComingSoonScreen from "./ShopComingSoonScreen";
 import BudgetCalculatorScreen from "./BudgetCalculatorScreen";
+import LearnScreen from "./LearnScreen";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 
-type HubTab = "shop" | "budget";
+type HubTab = "learn" | "shop" | "budget";
 
 const HubScreen = () => {
   const navigate = useNavigate();
@@ -21,14 +22,15 @@ const HubScreen = () => {
 
   const initialTab: HubTab = useMemo(() => {
     if (location.pathname.startsWith("/hub/budget")) return "budget";
-    return "shop";
+    if (location.pathname.startsWith("/hub/shop")) return "shop";
+    return "learn";
   }, [location.pathname]);
 
   const [tab, setTab] = useState<HubTab>(initialTab);
 
   const switchTab = (next: HubTab) => {
     setTab(next);
-    const target = next === "budget" ? "/hub/budget" : "/hub/shop";
+    const target = next === "budget" ? "/hub/budget" : next === "shop" ? "/hub/shop" : "/hub/learn";
     if (location.pathname !== target) {
       navigate(target, { replace: true });
     }
