@@ -39,9 +39,11 @@ interface PetDigiLockerScreenProps {
   embedded?: boolean;
   /** When provided, render only this single tab and hide the internal tab bar. */
   activeTab?: "health" | "vaccines" | "documents" | "growth";
+  /** When provided (e.g. by MyPet), drive the active pet from the parent. */
+  petId?: string | null;
 }
 
-const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScreenProps) => {
+const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLockerScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -56,8 +58,10 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       return data || [];
     },
   });
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
-  const activePet = pets.find((p: any) => p.id === selectedPetId) || pets[0];
+  const [internalSelectedPetId, setInternalSelectedPetId] = useState<string | null>(null);
+  const selectedPetId = petId ?? internalSelectedPetId;
+  const setSelectedPetId = setInternalSelectedPetId;
+  const activePet = pets.find((p: any) => p.id === selectedPetId) || (petId ? null : pets[0]);
 
   // Weight logs
   const { data: weightLogs = [] } = useQuery({
