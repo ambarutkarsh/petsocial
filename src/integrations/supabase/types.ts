@@ -733,6 +733,42 @@ export type Database = {
           },
         ]
       }
+      home_carousel_config: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          custom_banners: Json
+          id: string
+          is_active: boolean
+          selected_item_ids: string[]
+          source_type: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          custom_banners?: Json
+          id?: string
+          is_active?: boolean
+          selected_item_ids?: string[]
+          source_type?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          custom_banners?: Json
+          id?: string
+          is_active?: boolean
+          selected_item_ids?: string[]
+          source_type?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       knowledge_articles: {
         Row: {
           author_name: string | null
