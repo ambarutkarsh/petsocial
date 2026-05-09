@@ -2,13 +2,14 @@ import { ReactNode, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { isAdminEmail } from "@/lib/admin";
-import { LayoutDashboard, LogOut, ImagePlus, Mail } from "lucide-react";
+import { LayoutDashboard, LogOut, ImagePlus, Mail, Images } from "lucide-react";
 import { BellIcon, PetCareIcon, StarIcon, VetIcon } from "@/components/icons/PetosauraIcons";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/seed", label: "Seed Data", icon: PetCareIcon },
   { to: "/admin/bulk-upload", label: "Bulk Upload", icon: ImagePlus },
+  { to: "/admin/home-carousel", label: "Home Carousel", icon: Images },
   { to: "/admin/competitions", label: "Competitions", icon: StarIcon },
   { to: "/admin/vets", label: "Vets", icon: VetIcon },
   { to: "/admin/welcome-email", label: "Welcome Email", icon: Mail },
