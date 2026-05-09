@@ -269,10 +269,10 @@ const MyPetScreen = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="health"><PetDigiLockerScreen embedded activeTab="health" /></TabsContent>
-            <TabsContent value="vaccines"><PetDigiLockerScreen embedded activeTab="vaccines" /></TabsContent>
-            <TabsContent value="docs"><PetDigiLockerScreen embedded activeTab="documents" /></TabsContent>
-            <TabsContent value="growth"><PetDigiLockerScreen embedded activeTab="growth" /></TabsContent>
+            <TabsContent value="health"><PetDigiLockerScreen embedded activeTab="health" petId={activePet?.id} /></TabsContent>
+            <TabsContent value="vaccines"><PetDigiLockerScreen embedded activeTab="vaccines" petId={activePet?.id} /></TabsContent>
+            <TabsContent value="docs"><PetDigiLockerScreen embedded activeTab="documents" petId={activePet?.id} /></TabsContent>
+            <TabsContent value="growth"><PetDigiLockerScreen embedded activeTab="growth" petId={activePet?.id} /></TabsContent>
           </Tabs>
         </div>
       </div>

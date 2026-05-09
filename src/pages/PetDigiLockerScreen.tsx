@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ChevronDown, ChevronUp, Eye, Trash2 } from "lucide-react";
-import { BackIcon, BookVetIcon, InfoIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { BookVetIcon as CalendarPicker } from "@/components/ui/calendar";
 
 import MobileLayout from "@/components/MobileLayout";
 
@@ -38,9 +39,11 @@ interface PetDigiLockerScreenProps {
   embedded?: boolean;
   /** When provided, render only this single tab and hide the internal tab bar. */
   activeTab?: "health" | "vaccines" | "documents" | "growth";
+  /** When provided (e.g. by MyPet), drive the active pet from the parent. */
+  petId?: string | null;
 }
 
-const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScreenProps) => {
+const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLockerScreenProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -55,8 +58,10 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
       return data || [];
     },
   });
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
-  const activePet = pets.find((p: any) => p.id === selectedPetId) || pets[0];
+  const [internalSelectedPetId, setInternalSelectedPetId] = useState<string | null>(null);
+  const selectedPetId = petId ?? internalSelectedPetId;
+  const setSelectedPetId = setInternalSelectedPetId;
+  const activePet = pets.find((p: any) => p.id === selectedPetId) || (petId ? null : pets[0]);
 
   // Weight logs
   const { data: weightLogs = [] } = useQuery({
@@ -127,6 +132,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
   const [vaccDueDate, setVaccDueDate] = useState<Date | undefined>();
   const [vaccVet, setVaccVet] = useState("");
   const [vaccStatus, setVaccStatus] = useState("done");
+  const [editingVaccId, setEditingVaccId] = useState<string | null>(null);
 
   const [uploading, setUploading] = useState(false);
 
@@ -201,10 +207,41 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
 
   const saveVaccine = async () => {
     if (!vaccName || !activePet) return;
-    const { error } = await supabase.from("vaccinations").insert({ pet_id: activePet.id, owner_id: user!.id, vaccine_name: vaccName, administered_date: format(vaccDate, "yyyy-MM-dd"), due_date: vaccDueDate ? format(vaccDueDate, "yyyy-MM-dd") : null, vet_name: vaccVet || null, status: vaccStatus });
-    if (error) { toast.error("Failed to save"); return; }
-    toast.success("Vaccine added!");
-    setShowVaccForm(false); setVaccName("");
+    const payload = {
+      vaccine_name: vaccName,
+      administered_date: format(vaccDate, "yyyy-MM-dd"),
+      due_date: vaccDueDate ? format(vaccDueDate, "yyyy-MM-dd") : null,
+      vet_name: vaccVet || null,
+      status: vaccStatus,
+    };
+    if (editingVaccId) {
+      const { error } = await supabase.from("vaccinations").update(payload).eq("id", editingVaccId).eq("pet_id", activePet.id).eq("owner_id", user!.id);
+      if (error) { toast.error("Failed to update"); return; }
+      toast.success("Vaccine updated!");
+    } else {
+      const { error } = await supabase.from("vaccinations").insert({ pet_id: activePet.id, owner_id: user!.id, ...payload });
+      if (error) { toast.error("Failed to save"); return; }
+      toast.success("Vaccine added!");
+    }
+    setShowVaccForm(false); setVaccName(""); setVaccVet(""); setVaccDueDate(undefined); setVaccStatus("done"); setVaccDate(new Date()); setEditingVaccId(null);
+    qc.invalidateQueries({ queryKey: ["vaccinations"] });
+  };
+
+  const startEditVaccine = (v: any) => {
+    setEditingVaccId(v.id);
+    setVaccName(v.vaccine_name || "");
+    setVaccDate(v.administered_date ? new Date(v.administered_date) : new Date());
+    setVaccDueDate(v.due_date ? new Date(v.due_date) : undefined);
+    setVaccVet(v.vet_name || "");
+    setVaccStatus(v.status || "done");
+    setShowVaccForm(true);
+  };
+
+  const deleteVaccine = async (id: string) => {
+    if (!activePet || !confirm("Delete this vaccination record?")) return;
+    const { error } = await supabase.from("vaccinations").delete().eq("id", id).eq("pet_id", activePet.id).eq("owner_id", user!.id);
+    if (error) { toast.error("Failed to delete"); return; }
+    toast.success("Deleted");
     qc.invalidateQueries({ queryKey: ["vaccinations"] });
   };
 
@@ -298,7 +335,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
         <Button variant="outline" size="sm" className="text-xs">{format(date, "MMM d, yyyy")}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <BookVetIcon mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
+        <CalendarPicker mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
       </PopoverContent>
     </Popover>
   );
@@ -468,17 +505,21 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                     const isOverdue = v.status !== "done" && v.due_date && new Date(v.due_date) < new Date();
                     const statusDot = v.status === "done" ? "bg-secondary" : isOverdue ? "bg-destructive" : "bg-amber-400";
                     return (
-                      <div key={v.id} className="paw-card p-3 flex gap-3">
+                      <div key={v.id} className="paw-card p-3 flex gap-3 cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => startEditVaccine(v)}>
                         <div className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${statusDot}`} />
                         <div className="flex-1">
                           <p className="text-sm font-semibold">{v.vaccine_name}</p>
                           {v.administered_date && <p className="text-xs text-muted-foreground">Administered: {format(new Date(v.administered_date), "dd MMM yyyy")}</p>}
                           {v.due_date && <p className="text-xs text-muted-foreground">Next due: {format(new Date(v.due_date), "dd MMM yyyy")}</p>}
                           {v.vet_name && <p className="text-xs text-muted-foreground">Vet: {v.vet_name}</p>}
+                          <p className="text-[10px] text-primary mt-1">Tap to edit</p>
                         </div>
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize self-start ${v.status === "done" ? "bg-secondary/10 text-secondary" : isOverdue ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700"}`}>
-                          {isOverdue ? "overdue" : v.status}
-                        </span>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ${v.status === "done" ? "bg-secondary/10 text-secondary" : isOverdue ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700"}`}>
+                            {isOverdue ? "overdue" : v.status}
+                          </span>
+                          <button onClick={(e) => { e.stopPropagation(); deleteVaccine(v.id); }} className="text-[10px] text-destructive">Delete</button>
+                        </div>
                       </div>
                     );
                   })}
@@ -487,8 +528,11 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                 <p className="text-xs text-muted-foreground text-center py-6">No vaccines recorded yet</p>
               )}
 
-              <Button variant="outline" className="w-full" onClick={() => setShowVaccForm(!showVaccForm)}>
-                <PlusIcon className="w-4 h-4 mr-1" />Add Vaccine
+              <Button variant="outline" className="w-full" onClick={() => {
+                if (showVaccForm) { setEditingVaccId(null); setVaccName(""); setVaccVet(""); setVaccDueDate(undefined); }
+                setShowVaccForm(!showVaccForm);
+              }}>
+                <PlusIcon className="w-4 h-4 mr-1" />{editingVaccId ? "Cancel Edit" : "Add Vaccine"}
               </Button>
 
               {showVaccForm && (
@@ -515,7 +559,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
                         className={`text-xs px-3 py-1.5 rounded-full ${vaccStatus === s.v ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{s.l}</button>
                     ))}
                   </div>
-                  <Button size="sm" className="w-full" onClick={saveVaccine}>Save Vaccine</Button>
+                  <Button size="sm" className="w-full" onClick={saveVaccine}>{editingVaccId ? "Update Vaccine" : "Save Vaccine"}</Button>
                 </div>
               )}
 
