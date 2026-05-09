@@ -1,0 +1,721 @@
+{
+  "schema_version": "1.0.0",
+  "product": "Petosauras",
+  "module": "MyPet Health Snapshot",
+  "purpose": "Calculate 1-5 scores for Overall Health, Body Condition, Activity, and Hydration based on user-entered pet parameters.",
+  "score_scale": {
+    "1": {
+      "label": "Poor",
+      "severity": "high",
+      "ui_text": "Needs attention",
+      "color_hint": "red"
+    },
+    "2": {
+      "label": "Below Average",
+      "severity": "medium_high",
+      "ui_text": "Monitor closely",
+      "color_hint": "orange"
+    },
+    "3": {
+      "label": "Fair",
+      "severity": "medium",
+      "ui_text": "Can improve",
+      "color_hint": "yellow"
+    },
+    "4": {
+      "label": "Good",
+      "severity": "low",
+      "ui_text": "Looks good",
+      "color_hint": "green"
+    },
+    "5": {
+      "label": "Excellent",
+      "severity": "very_low",
+      "ui_text": "Great condition",
+      "color_hint": "green"
+    }
+  },
+  "supabase_current_pet_categories_observed": {
+    "source_table": "public.pets",
+    "columns_used": [
+      "pet_type",
+      "species"
+    ],
+    "observed_pet_types": [
+      "Canine",
+      "Feline",
+      "Aquatic",
+      "Avian",
+      "Reptile",
+      "Small Pet"
+    ],
+    "observed_species_or_breeds": {
+      "Canine": [
+        "Labrador Retriever",
+        "Shih Tzu",
+        "Beagle",
+        "Pomeranian",
+        "Golden Retriever",
+        "Indie/Mixed Breed",
+        "German Shepherd"
+      ],
+      "Feline": [
+        "Bengal",
+        "Siamese",
+        "Persian"
+      ],
+      "Aquatic": [
+        "Discus",
+        "Betta",
+        "Koi"
+      ],
+      "Avian": [
+        "African Grey",
+        "Budgerigar (Budgie)",
+        "Macaw (Blue-and-Gold)"
+      ],
+      "Reptile": [
+        "Bearded Dragon",
+        "Indian Star Tortoise"
+      ],
+      "Small Pet": [
+        "Holland Lop Rabbit",
+        "Guinea Pig"
+      ],
+      "Equine": [],
+      "Insect": [],
+      "Others": []
+    },
+    "note": "Equine, Insect, and Others were not present in existing pets data when this config was generated, but rules are included for future extensibility."
+  },
+  "global_inputs": {
+    "required_for_all_pet_types": [
+      {
+        "key": "pet_type",
+        "type": "enum",
+        "values": [
+          "Canine",
+          "Feline",
+          "Aquatic",
+          "Avian",
+          "Small Pet",
+          "Reptile",
+          "Insect",
+          "Equine",
+          "Others"
+        ]
+      },
+      {
+        "key": "breed_or_species",
+        "type": "string"
+      },
+      {
+        "key": "age_years",
+        "type": "number"
+      },
+      {
+        "key": "weight_kg",
+        "type": "number"
+      },
+      {
+        "key": "appetite",
+        "type": "enum_1_to_5",
+        "description": "1=no appetite, 5=normal/healthy appetite"
+      },
+      {
+        "key": "energy_level",
+        "type": "enum_1_to_5",
+        "description": "1=lethargic, 5=active/normal for species"
+      },
+      {
+        "key": "mobility",
+        "type": "enum_1_to_5",
+        "description": "1=unable/very restricted, 5=normal"
+      },
+      {
+        "key": "coat_skin_or_body_surface",
+        "type": "enum_1_to_5",
+        "description": "For fish/reptiles/insects use body surface, scales, shell, exoskeleton, feathers as applicable"
+      },
+      {
+        "key": "stool_or_waste_quality",
+        "type": "enum_1_to_5",
+        "description": "1=abnormal/severe issue, 5=normal"
+      },
+      {
+        "key": "breathing",
+        "type": "enum_1_to_5",
+        "description": "1=laboured/abnormal, 5=normal"
+      },
+      {
+        "key": "body_condition_score",
+        "type": "integer",
+        "min": 1,
+        "max": 5,
+        "description": "User visible BCS where 1=very thin, 3=ideal, 5=obese; transformed into Body Condition health score"
+      },
+      {
+        "key": "activity_minutes_per_day",
+        "type": "number",
+        "description": "For fish/insects use active_observation_minutes_per_day"
+      },
+      {
+        "key": "hydration_input_type",
+        "type": "enum",
+        "values": [
+          "water_intake_ml",
+          "hydration_observation",
+          "environment_water_quality"
+        ]
+      },
+      {
+        "key": "hydration_observation_score",
+        "type": "enum_1_to_5",
+        "description": "Fallback visual/user assessment when exact water intake is not measurable"
+      },
+      {
+        "key": "last_vet_visit_days_ago",
+        "type": "integer"
+      },
+      {
+        "key": "vaccination_status",
+        "type": "enum",
+        "values": [
+          "up_to_date",
+          "due_soon",
+          "overdue",
+          "not_applicable",
+          "unknown"
+        ]
+      },
+      {
+        "key": "deworming_status",
+        "type": "enum",
+        "values": [
+          "up_to_date",
+          "due_soon",
+          "overdue",
+          "not_applicable",
+          "unknown"
+        ]
+      },
+      {
+        "key": "medical_flags",
+        "type": "array",
+        "values": [
+          "vomiting",
+          "diarrhea",
+          "not_eating",
+          "lethargy",
+          "laboured_breathing",
+          "visible_wound",
+          "weight_loss",
+          "seizure",
+          "bloating",
+          "limping",
+          "abnormal_discharge",
+          "none"
+        ]
+      }
+    ]
+  },
+  "pet_type_specific_inputs": {
+    "Canine": {
+      "display_name": "Dog",
+      "breed_examples_from_db": [
+        "Labrador Retriever",
+        "Shih Tzu",
+        "Beagle",
+        "Pomeranian",
+        "Golden Retriever",
+        "Indie/Mixed Breed",
+        "German Shepherd"
+      ],
+      "additional_inputs": [
+        {
+          "key": "gum_moisture",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "urine_frequency_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "panting_excessive",
+          "type": "boolean"
+        },
+        {
+          "key": "exercise_tolerance",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "coat_shine",
+          "type": "enum_1_to_5"
+        }
+      ],
+      "activity_reference": {
+        "low_energy_or_senior": {
+          "good_minutes_per_day": [
+            20,
+            45
+          ]
+        },
+        "small_or_toy": {
+          "good_minutes_per_day": [
+            20,
+            60
+          ]
+        },
+        "medium": {
+          "good_minutes_per_day": [
+            45,
+            90
+          ]
+        },
+        "large_active": {
+          "good_minutes_per_day": [
+            60,
+            120
+          ]
+        }
+      }
+    },
+    "Feline": {
+      "display_name": "Cat",
+      "breed_examples_from_db": [
+        "Bengal",
+        "Siamese",
+        "Persian"
+      ],
+      "additional_inputs": [
+        {
+          "key": "litter_box_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "grooming_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "playfulness",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "hiding_more_than_usual",
+          "type": "boolean"
+        }
+      ],
+      "activity_reference": {
+        "indoor_adult": {
+          "good_minutes_per_day": [
+            20,
+            45
+          ]
+        },
+        "kitten_or_active": {
+          "good_minutes_per_day": [
+            45,
+            90
+          ]
+        },
+        "senior": {
+          "good_minutes_per_day": [
+            10,
+            30
+          ]
+        }
+      }
+    },
+    "Aquatic": {
+      "display_name": "Fish / Aquarium Pet",
+      "species_examples_from_db": [
+        "Discus",
+        "Betta",
+        "Koi"
+      ],
+      "additional_inputs": [
+        {
+          "key": "water_temperature_ok",
+          "type": "boolean"
+        },
+        {
+          "key": "water_ph_ok",
+          "type": "boolean"
+        },
+        {
+          "key": "ammonia_nitrite_safe",
+          "type": "boolean"
+        },
+        {
+          "key": "swimming_normal",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "fin_scale_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "feeding_response",
+          "type": "enum_1_to_5"
+        }
+      ],
+      "hydration_note": "For aquatic pets, hydration is represented as water quality and aquatic environment suitability, not drinking intake."
+    },
+    "Avian": {
+      "display_name": "Bird",
+      "species_examples_from_db": [
+        "African Grey",
+        "Budgerigar (Budgie)",
+        "Macaw (Blue-and-Gold)"
+      ],
+      "additional_inputs": [
+        {
+          "key": "feather_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "droppings_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "perching_balance",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "vocalization_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "beak_eye_condition",
+          "type": "enum_1_to_5"
+        }
+      ]
+    },
+    "Small Pet": {
+      "display_name": "Rabbit / Guinea Pig / Hamster / Small Mammal",
+      "species_examples_from_db": [
+        "Holland Lop Rabbit",
+        "Guinea Pig"
+      ],
+      "additional_inputs": [
+        {
+          "key": "hay_or_fiber_intake_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "teeth_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "droppings_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "hiding_or_hunched_posture",
+          "type": "boolean"
+        },
+        {
+          "key": "activity_in_enclosure",
+          "type": "enum_1_to_5"
+        }
+      ]
+    },
+    "Reptile": {
+      "display_name": "Reptile",
+      "species_examples_from_db": [
+        "Bearded Dragon",
+        "Indian Star Tortoise"
+      ],
+      "additional_inputs": [
+        {
+          "key": "temperature_gradient_ok",
+          "type": "boolean"
+        },
+        {
+          "key": "uvb_exposure_ok",
+          "type": "boolean"
+        },
+        {
+          "key": "shedding_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "shell_or_scale_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "basking_behavior_normal",
+          "type": "boolean"
+        }
+      ],
+      "hydration_note": "For reptiles, hydration can use drinking/soaking behavior, skin/shell condition, urates, and enclosure humidity."
+    },
+    "Insect": {
+      "display_name": "Insect / Arthropod",
+      "species_examples_from_db": [],
+      "additional_inputs": [
+        {
+          "key": "moulting_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "exoskeleton_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "substrate_humidity_ok",
+          "type": "boolean"
+        },
+        {
+          "key": "movement_normal",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "feeding_response",
+          "type": "enum_1_to_5"
+        }
+      ]
+    },
+    "Equine": {
+      "display_name": "Horse / Pony",
+      "species_examples_from_db": [],
+      "additional_inputs": [
+        {
+          "key": "hoof_condition",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "lameness_observed",
+          "type": "boolean"
+        },
+        {
+          "key": "water_bucket_intake_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "gut_sounds_or_colic_signs_normal",
+          "type": "boolean"
+        },
+        {
+          "key": "coat_condition",
+          "type": "enum_1_to_5"
+        }
+      ]
+    },
+    "Others": {
+      "display_name": "Other Pet",
+      "species_examples_from_db": [],
+      "additional_inputs": [
+        {
+          "key": "normal_behavior_for_species",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "environment_suitable",
+          "type": "boolean"
+        },
+        {
+          "key": "feeding_response",
+          "type": "enum_1_to_5"
+        },
+        {
+          "key": "body_surface_condition",
+          "type": "enum_1_to_5"
+        }
+      ]
+    }
+  },
+  "score_calculation": {
+    "body_condition": {
+      "input": "body_condition_score",
+      "mapping": {
+        "1": {
+          "score": 1,
+          "label": "Very thin"
+        },
+        "2": {
+          "score": 3,
+          "label": "Underweight"
+        },
+        "3": {
+          "score": 5,
+          "label": "Ideal"
+        },
+        "4": {
+          "score": 3,
+          "label": "Overweight"
+        },
+        "5": {
+          "score": 1,
+          "label": "Obese"
+        }
+      }
+    },
+    "activity": {
+      "method": "weighted",
+      "weights": {
+        "energy_level": 0.35,
+        "mobility": 0.25,
+        "activity_minutes_fit_to_pet_type": 0.25,
+        "exercise_tolerance_or_species_activity": 0.15
+      },
+      "rounding": "nearest_integer_1_to_5"
+    },
+    "hydration": {
+      "method": "pet_type_adaptive",
+      "rules": [
+        {
+          "pet_types": [
+            "Canine",
+            "Feline",
+            "Small Pet",
+            "Equine",
+            "Others"
+          ],
+          "signals": [
+            "hydration_observation_score",
+            "gum_moisture",
+            "urine_frequency_normal",
+            "appetite",
+            "stool_or_waste_quality"
+          ]
+        },
+        {
+          "pet_types": [
+            "Aquatic"
+          ],
+          "signals": [
+            "water_temperature_ok",
+            "water_ph_ok",
+            "ammonia_nitrite_safe",
+            "swimming_normal",
+            "feeding_response"
+          ]
+        },
+        {
+          "pet_types": [
+            "Avian"
+          ],
+          "signals": [
+            "droppings_normal",
+            "beak_eye_condition",
+            "energy_level",
+            "hydration_observation_score"
+          ]
+        },
+        {
+          "pet_types": [
+            "Reptile"
+          ],
+          "signals": [
+            "hydration_observation_score",
+            "shedding_normal",
+            "temperature_gradient_ok",
+            "basking_behavior_normal",
+            "shell_or_scale_condition"
+          ]
+        },
+        {
+          "pet_types": [
+            "Insect"
+          ],
+          "signals": [
+            "substrate_humidity_ok",
+            "moulting_normal",
+            "exoskeleton_condition",
+            "movement_normal"
+          ]
+        }
+      ]
+    },
+    "overall_health": {
+      "method": "weighted_minus_red_flags",
+      "weights": {
+        "body_condition_score_transformed": 0.2,
+        "activity_score": 0.2,
+        "hydration_score": 0.2,
+        "appetite": 0.15,
+        "breathing": 0.1,
+        "stool_or_waste_quality": 0.1,
+        "preventive_care_status": 0.05
+      },
+      "red_flag_penalty": {
+        "laboured_breathing": -2,
+        "seizure": -2,
+        "not_eating": -1,
+        "vomiting": -1,
+        "diarrhea": -1,
+        "visible_wound": -1,
+        "bloating": -2,
+        "weight_loss": -1,
+        "limping": -1
+      },
+      "minimum_score_if_emergency_flag_present": 1
+    }
+  },
+  "ui_output_template": {
+    "health_snapshot_card": {
+      "overall_health": {
+        "score_key": "overall_health_score",
+        "label_key": "overall_health_label",
+        "subtitle_key": "overall_health_reason"
+      },
+      "body_condition": {
+        "score_key": "body_condition_score_normalized",
+        "label_key": "body_condition_label",
+        "subtitle_key": "body_condition_reason"
+      },
+      "activity": {
+        "score_key": "activity_score",
+        "label_key": "activity_label",
+        "subtitle_key": "activity_reason"
+      },
+      "hydration": {
+        "score_key": "hydration_score",
+        "label_key": "hydration_label",
+        "subtitle_key": "hydration_reason"
+      }
+    },
+    "disclaimer": "This is a wellness indicator based on user input, not a medical diagnosis. Show vet CTA for low scores or red flags."
+  },
+  "sample_user_input": {
+    "pet_type": "Canine",
+    "breed_or_species": "Labrador Retriever",
+    "age_years": 3,
+    "weight_kg": 28,
+    "appetite": 5,
+    "energy_level": 4,
+    "mobility": 5,
+    "coat_skin_or_body_surface": 4,
+    "stool_or_waste_quality": 5,
+    "breathing": 5,
+    "body_condition_score": 3,
+    "activity_minutes_per_day": 60,
+    "hydration_input_type": "hydration_observation",
+    "hydration_observation_score": 4,
+    "gum_moisture": 4,
+    "urine_frequency_normal": true,
+    "panting_excessive": false,
+    "last_vet_visit_days_ago": 30,
+    "vaccination_status": "up_to_date",
+    "deworming_status": "due_soon",
+    "medical_flags": [
+      "none"
+    ]
+  },
+  "sample_output": {
+    "overall_health_score": 5,
+    "overall_health_label": "Excellent",
+    "overall_health_reason": "Normal appetite, breathing, stool, mobility, and no red-flag symptoms reported.",
+    "body_condition_score_normalized": 5,
+    "body_condition_label": "Ideal",
+    "body_condition_reason": "Body condition score is 3/5, which is ideal.",
+    "activity_score": 4,
+    "activity_label": "Good",
+    "activity_reason": "Activity and mobility are healthy for a Labrador-type dog.",
+    "hydration_score": 4,
+    "hydration_label": "Good",
+    "hydration_reason": "Hydration observation and urination pattern appear normal.",
+    "recommended_cta": "Keep tracking weekly"
+  }
+}

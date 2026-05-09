@@ -1493,6 +1493,117 @@ export type Database = {
         }
         Relationships: []
       }
+      pet_health_reminders: {
+        Row: {
+          created_at: string
+          id: string
+          notification_body: string | null
+          notification_title: string | null
+          owner_id: string
+          pet_id: string
+          reminder_type: string
+          scheduled_for: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notification_body?: string | null
+          notification_title?: string | null
+          owner_id: string
+          pet_id: string
+          reminder_type?: string
+          scheduled_for: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notification_body?: string | null
+          notification_title?: string | null
+          owner_id?: string
+          pet_id?: string
+          reminder_type?: string
+          scheduled_for?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pet_health_snapshots: {
+        Row: {
+          activity_label: string | null
+          activity_reason: string | null
+          activity_score: number | null
+          body_condition_label: string | null
+          body_condition_reason: string | null
+          body_condition_score: number | null
+          breed_or_species: string | null
+          calculated_scores: Json
+          created_at: string
+          hydration_label: string | null
+          hydration_reason: string | null
+          hydration_score: number | null
+          id: string
+          input_data: Json
+          overall_health_label: string | null
+          overall_health_reason: string | null
+          overall_health_score: number | null
+          owner_id: string
+          pet_id: string
+          pet_type: string
+          updated_at: string
+        }
+        Insert: {
+          activity_label?: string | null
+          activity_reason?: string | null
+          activity_score?: number | null
+          body_condition_label?: string | null
+          body_condition_reason?: string | null
+          body_condition_score?: number | null
+          breed_or_species?: string | null
+          calculated_scores?: Json
+          created_at?: string
+          hydration_label?: string | null
+          hydration_reason?: string | null
+          hydration_score?: number | null
+          id?: string
+          input_data?: Json
+          overall_health_label?: string | null
+          overall_health_reason?: string | null
+          overall_health_score?: number | null
+          owner_id: string
+          pet_id: string
+          pet_type: string
+          updated_at?: string
+        }
+        Update: {
+          activity_label?: string | null
+          activity_reason?: string | null
+          activity_score?: number | null
+          body_condition_label?: string | null
+          body_condition_reason?: string | null
+          body_condition_score?: number | null
+          breed_or_species?: string | null
+          calculated_scores?: Json
+          created_at?: string
+          hydration_label?: string | null
+          hydration_reason?: string | null
+          hydration_score?: number | null
+          id?: string
+          input_data?: Json
+          overall_health_label?: string | null
+          overall_health_reason?: string | null
+          overall_health_score?: number | null
+          owner_id?: string
+          pet_id?: string
+          pet_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pet_microchips: {
         Row: {
           chip_format: string
