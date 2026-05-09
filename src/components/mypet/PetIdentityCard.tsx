@@ -1,12 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { differenceInDays, differenceInMonths, differenceInYears, format } from "date-fns";
+import { differenceInMonths, differenceInYears } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
-import { Pencil, Syringe, Bug, FileText, Calendar, ShieldCheck, Cpu } from "lucide-react";
-import { useRef } from "react";
+import { Pencil, ShieldCheck, Cpu, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   pet: any;
