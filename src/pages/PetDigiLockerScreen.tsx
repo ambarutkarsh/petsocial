@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ChevronDown, ChevronUp, Eye, Trash2 } from "lucide-react";
-import { BackIcon, BookVetIcon, InfoIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { BackIcon, PlusIcon, UploadIcon } from "@/components/icons/PetosauraIcons";
+import { BookVetIcon as CalendarPicker } from "@/components/ui/calendar";
 
 import MobileLayout from "@/components/MobileLayout";
 
