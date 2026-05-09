@@ -133,7 +133,7 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
           </button>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-3.5">
+        <div className="rounded-lg border border-border bg-card p-3.5">
           <p className="font-heading font-bold text-sm mb-2">Quick Actions</p>
           <div className="space-y-1">
             <ActionRow icon={<Syringe className="w-3.5 h-3.5" />} label="Add Vaccine" onClick={() => onTabChange("vaccines")} />
