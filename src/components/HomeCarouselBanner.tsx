@@ -65,14 +65,10 @@ const HomeCarouselBanner = () => {
       }
 
       if (sourceType === "reels") {
-        let q = supabase
-          .from("posts")
-          .select("id, media_url, media_type, thumbnail_url, caption, location, hashtags, like_count, view_count:like_count, created_at")
-          .eq("media_type", "video")
-          .order("like_count", { ascending: false })
-          .limit(3);
-        if (selectedIds.length) q = supabase.from("posts").select("id, media_url, media_type, thumbnail_url, caption, location, hashtags, like_count, created_at").in("id", selectedIds).limit(3);
-        const { data } = await q;
+        const baseSel = "id, media_url, media_type, thumbnail_url, caption, location, hashtags, like_count, created_at";
+        const { data } = selectedIds.length
+          ? await supabase.from("posts").select(baseSel).in("id", selectedIds).limit(3)
+          : await supabase.from("posts").select(baseSel).eq("media_type", "video").order("like_count", { ascending: false }).limit(3);
         let rows = data || [];
         if (rows.length < 3 && !selectedIds.length) {
           const { data: backfill } = await supabase
@@ -97,14 +93,10 @@ const HomeCarouselBanner = () => {
       }
 
       if (sourceType === "blogs") {
-        let q = supabase
-          .from("knowledge_articles")
-          .select("id, title, summary, thumbnail_url, category")
-          .eq("is_published", true)
-          .order("view_count", { ascending: false })
-          .limit(3);
-        if (selectedIds.length) q = supabase.from("knowledge_articles").select("id, title, summary, thumbnail_url, category").in("id", selectedIds).limit(3);
-        const { data } = await q;
+        const sel = "id, title, summary, thumbnail_url, category";
+        const { data } = selectedIds.length
+          ? await supabase.from("knowledge_articles").select(sel).in("id", selectedIds).limit(3)
+          : await supabase.from("knowledge_articles").select(sel).eq("is_published", true).order("view_count", { ascending: false }).limit(3);
         return (data || []).slice(0, 3).map((b: any) => ({
           id: b.id,
           media_url: b.thumbnail_url || "",
@@ -133,14 +125,10 @@ const HomeCarouselBanner = () => {
       }
 
       if (sourceType === "nearby") {
-        let q: any = supabase
-          .from("nearby_listings")
-          .select("id, title, description, image_url, city, category, rating")
-          .eq("status", "active")
-          .order("rating", { ascending: false })
-          .limit(3);
-        if (selectedIds.length) q = supabase.from("nearby_listings").select("id, title, description, image_url, city, category, rating").in("id", selectedIds).limit(3);
-        const { data } = await q;
+        const sel = "id, title, description, image_url, city, category, rating";
+        const { data } = selectedIds.length
+          ? await supabase.from("nearby_listings").select(sel).in("id", selectedIds).limit(3)
+          : await supabase.from("nearby_listings").select(sel).eq("status", "active").order("rating", { ascending: false }).limit(3);
         return (data || []).map((n: any) => ({
           id: n.id,
           media_url: n.image_url || "",
