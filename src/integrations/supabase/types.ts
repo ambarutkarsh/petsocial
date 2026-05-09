@@ -1299,6 +1299,62 @@ export type Database = {
           },
         ]
       }
+      pet_documents: {
+        Row: {
+          created_at: string
+          document_type: string
+          file_mime_type: string | null
+          file_name: string
+          file_size: number | null
+          file_url: string
+          health_record_id: string | null
+          id: string
+          owner_id: string
+          pet_id: string
+          updated_at: string
+          uploaded_at: string
+          visibility: string
+        }
+        Insert: {
+          created_at?: string
+          document_type: string
+          file_mime_type?: string | null
+          file_name: string
+          file_size?: number | null
+          file_url: string
+          health_record_id?: string | null
+          id?: string
+          owner_id: string
+          pet_id: string
+          updated_at?: string
+          uploaded_at?: string
+          visibility?: string
+        }
+        Update: {
+          created_at?: string
+          document_type?: string
+          file_mime_type?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_url?: string
+          health_record_id?: string | null
+          id?: string
+          owner_id?: string
+          pet_id?: string
+          updated_at?: string
+          uploaded_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_documents_health_record_id_fkey"
+            columns: ["health_record_id"]
+            isOneToOne: false
+            referencedRelation: "pet_health_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pet_facts: {
         Row: {
           emoji: string | null
@@ -1389,6 +1445,51 @@ export type Database = {
           place_type?: string | null
           play_area?: boolean | null
           rating?: number | null
+        }
+        Relationships: []
+      }
+      pet_health_records: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          next_due_date: string | null
+          notes: string | null
+          owner_id: string
+          pet_id: string
+          record_date: string | null
+          record_type: string
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          next_due_date?: string | null
+          notes?: string | null
+          owner_id: string
+          pet_id: string
+          record_date?: string | null
+          record_type: string
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          next_due_date?: string | null
+          notes?: string | null
+          owner_id?: string
+          pet_id?: string
+          record_date?: string | null
+          record_type?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1552,6 +1653,9 @@ export type Database = {
           height_cm: number | null
           id: string
           is_primary: boolean | null
+          microchip_number: string | null
+          microchip_registered_date: string | null
+          microchip_registered_status: string | null
           name: string
           notes: string | null
           owner_id: string
@@ -1569,6 +1673,9 @@ export type Database = {
           height_cm?: number | null
           id?: string
           is_primary?: boolean | null
+          microchip_number?: string | null
+          microchip_registered_date?: string | null
+          microchip_registered_status?: string | null
           name: string
           notes?: string | null
           owner_id: string
@@ -1586,6 +1693,9 @@ export type Database = {
           height_cm?: number | null
           id?: string
           is_primary?: boolean | null
+          microchip_number?: string | null
+          microchip_registered_date?: string | null
+          microchip_registered_status?: string | null
           name?: string
           notes?: string | null
           owner_id?: string
