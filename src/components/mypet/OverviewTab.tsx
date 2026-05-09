@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { differenceInDays, format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronRight, Syringe, Calendar, Bell } from "lucide-react";
 import HealthSnapshotCard from "./HealthSnapshotCard";
@@ -17,18 +15,6 @@ interface Props {
 const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  const { data: records = [] } = useQuery({
-    queryKey: ["mypet-summary", petId],
-    enabled: !!user && !!petId,
-    queryFn: () => fetchHealthRecords({ ownerId: user!.id, petId }),
-  });
-
-  const { data: docs = [] } = useQuery({
-    queryKey: ["pet-documents", petId],
-    enabled: !!user && !!petId,
-    queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId }),
-  });
 
   const { data: weights = [] } = useQuery({
     queryKey: ["weight-logs", petId],
