@@ -256,8 +256,8 @@ const HomeScreen = () => {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-[11px] font-body">
                     <div>
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Calendar size={11} /> Next Vaccination
+                      <div className="flex items-center gap-1 text-muted-foreground whitespace-nowrap text-[10px]">
+                        <Calendar size={11} className="shrink-0" /> Next Vaccine
                       </div>
                       <p className="font-heading font-bold text-foreground mt-0.5">{fmtDate(brief?.upcomingVacc?.due_date)}</p>
                     </div>
