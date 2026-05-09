@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useChatbot } from "@/contexts/ChatbotContext";
 import { useLocation } from "react-router-dom";
+import { X } from "lucide-react";
 import launcherIcon from "@/assets/chatbot-launcher.png";
 
 const HIDDEN_PREFIXES = ["/admin", "/auth", "/reset-password", "/onboarding", "/vet"];
 const IDLE_MS = 20000;
 const ANIM_MS = 3500;
+const DISMISS_KEY = "petosauras_nudge_dismissed_until";
+const DISMISS_COOLDOWN_MS = 30 * 60 * 1000; // 30 min
 
 const ChatbotLauncher = () => {
   const { open, openChat } = useChatbot();
   const location = useLocation();
   const [hovered, setHovered] = useState(false);
   const [idleNudge, setIdleNudge] = useState(false);
+  const [dismissedUntil, setDismissedUntil] = useState<number>(() => {
+    const v = typeof window !== "undefined" ? Number(localStorage.getItem(DISMISS_KEY) || 0) : 0;
+    return isNaN(v) ? 0 : v;
+  });
   const lastActivityRef = useRef<number>(Date.now());
 
-  // Track user activity to reset idle timer
   useEffect(() => {
     const reset = () => {
       lastActivityRef.current = Date.now();
@@ -24,17 +30,26 @@ const ChatbotLauncher = () => {
     return () => events.forEach((e) => window.removeEventListener(e, reset));
   }, []);
 
-  // Idle nudge animation every 20s of inactivity
   useEffect(() => {
     if (open) return;
     const interval = setInterval(() => {
+      if (Date.now() < dismissedUntil) return;
       if (Date.now() - lastActivityRef.current >= IDLE_MS) {
         setIdleNudge(true);
         setTimeout(() => setIdleNudge(false), ANIM_MS);
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [open]);
+  }, [open, dismissedUntil]);
+
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const until = Date.now() + DISMISS_COOLDOWN_MS;
+    localStorage.setItem(DISMISS_KEY, String(until));
+    setDismissedUntil(until);
+    setIdleNudge(false);
+    setHovered(false);
+  };
 
   if (open) return null;
   if (HIDDEN_PREFIXES.some((p) => location.pathname.startsWith(p))) return null;
@@ -50,8 +65,16 @@ const ChatbotLauncher = () => {
       }}
     >
       {showTip && (
-        <span className="whitespace-nowrap rounded-full bg-foreground text-background text-xs font-body font-semibold px-3 py-1.5 shadow-petosauras-md animate-in fade-in slide-in-from-right-2">
+        <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-foreground text-background text-xs font-body font-semibold pl-3 pr-1.5 py-1 shadow-petosauras-md animate-in fade-in slide-in-from-right-2">
           Ask Petosauras Anything
+          <button
+            type="button"
+            onClick={handleDismiss}
+            aria-label="Dismiss"
+            className="w-4 h-4 rounded-full bg-background/20 hover:bg-background/30 flex items-center justify-center"
+          >
+            <X className="w-2.5 h-2.5" />
+          </button>
         </span>
       )}
       <button
