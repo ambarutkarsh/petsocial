@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
+import { ChevronRight, Syringe, Calendar, Bell } from "lucide-react";
 import HealthSnapshotCard from "./HealthSnapshotCard";
 
 interface Props {
