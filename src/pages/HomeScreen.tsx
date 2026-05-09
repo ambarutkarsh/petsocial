@@ -10,6 +10,13 @@ import QuickTipOfTheDay from "@/components/QuickTipOfTheDay";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getBlogBySlug } from "@/lib/knowledgeBase";
+
+const TOP_BLOG_SLUGS = [
+  "common-fish-diseases-and-treatment",
+  "best-diet-for-dogs-in-indian-climate",
+  "rabbit-care-guide-for-indian-households",
+];
 
 const FEATURE_CARDS = [
   { key: "services", title: "Pet Services", Icon: PawPrint, path: "/nearby?tab=services" },
