@@ -10,6 +10,13 @@ import QuickTipOfTheDay from "@/components/QuickTipOfTheDay";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { supabase } from "@/integrations/supabase/client";
+import { getBlogBySlug } from "@/lib/knowledgeBase";
+
+const TOP_BLOG_SLUGS = [
+  "common-fish-diseases-and-treatment",
+  "best-diet-for-dogs-in-indian-climate",
+  "rabbit-care-guide-for-indian-households",
+];
 
 const FEATURE_CARDS = [
   { key: "services", title: "Pet Services", Icon: PawPrint, path: "/nearby?tab=services" },
@@ -100,19 +107,21 @@ const HomeScreen = () => {
     },
   });
 
-  const { data: blogs = [], isLoading: blogsLoading } = useQuery({
-    queryKey: ["home-blogs"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("knowledge_articles")
-        .select("id, title, summary, emoji, thumbnail_url, read_time_minutes")
-        .eq("is_published", true)
-        .order("view_count", { ascending: false })
-        .limit(3);
-      return data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
+  const blogsLoading = false;
+  const blogs = TOP_BLOG_SLUGS
+    .map((slug) => {
+      const b = getBlogBySlug(slug);
+      if (!b) return null;
+      return {
+        id: b.id,
+        slug: b.slug,
+        title: b.title,
+        summary: b.excerpt,
+        thumbnail_url: b.featuredImage?.url,
+        read_time_minutes: b.readingTimeMinutes,
+      };
+    })
+    .filter(Boolean) as Array<{ id: string; slug: string; title: string; summary: string; thumbnail_url?: string; read_time_minutes: number }>;
 
   const { data: nearby = [], isLoading: nearbyLoading } = useQuery({
     queryKey: ["home-nearby"],
@@ -353,7 +362,7 @@ const HomeScreen = () => {
               {blogs.map((b: any) => (
                 <button
                   key={b.id}
-                  onClick={() => navigate("/learn")}
+                  onClick={() => navigate(`/hub/learn/knowledge-base/${b.slug}`)}
                   className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
                   <div className="w-full aspect-[4/3] bg-primary-light overflow-hidden">
