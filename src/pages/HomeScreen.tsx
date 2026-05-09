@@ -130,13 +130,16 @@ const HomeScreen = () => {
   return (
     <MobileLayout>
       <div className="pb-28 px-5 pt-4 space-y-5 bg-background min-h-screen">
+        {/* Top carousel banner */}
+        <HomeCarouselBanner />
+
         {/* Greeting */}
         <div>
           <h1 className="font-heading font-bold text-2xl leading-tight">Hi, {greetingName}! 👋</h1>
           <p className="text-sm text-muted-foreground font-body mt-1">What would you like to do today?</p>
         </div>
 
-        {/* 4 feature pill cards */}
+        {/* 4 feature pill cards — compact */}
         <section className="grid grid-cols-4 gap-2.5">
           {FEATURE_CARDS.map(({ key, title, Icon, path }) => {
             const words = title.split(" ");
@@ -146,9 +149,9 @@ const HomeScreen = () => {
               <button
                 key={key}
                 onClick={() => navigate(path)}
-                className="rounded-lg bg-primary-light px-2 pt-3 pb-2.5 flex flex-col items-center justify-start gap-2 aspect-square hover:shadow-petosauras transition-shadow"
+                className="rounded-lg bg-primary-light px-2 py-2 flex flex-col items-center justify-center gap-1 h-[92px] hover:shadow-petosauras transition-shadow"
               >
-                <Icon size={26} className="text-primary" strokeWidth={1.8} fill="currentColor" />
+                <Icon size={22} className="text-primary" strokeWidth={1.8} fill="currentColor" />
                 <span className="font-heading font-bold text-[11px] text-foreground text-center leading-[1.15]">
                   {line1}
                   {line2 && (
