@@ -299,7 +299,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab }: PetDigiLockerScree
         <Button variant="outline" size="sm" className="text-xs">{format(date, "MMM d, yyyy")}</Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <BookVetIcon mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
+        <CalendarPicker mode="single" selected={date} onSelect={(d) => d && onSelect(d)} className={cn("p-3 pointer-events-auto")} />
       </PopoverContent>
     </Popover>
   );
