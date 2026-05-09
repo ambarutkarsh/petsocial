@@ -1,87 +1,103 @@
-# Petosauras IA Restructure Plan
 
-## 1. Bottom Navigation (src/components/BottomNav.tsx)
+# MyPet Redesign — Pet-wise Health Locker
 
-Replace the 5 items with this order:
+This is a large change covering data model, storage, RLS, and a redesigned MyPet experience. I'll keep the existing visual language (lilac primary / peach CTAs / rounded cards), reuse existing components (`PetMicrochipCard`, `AddPetSheet`, `BottomNav`, `MobileLayout`), and keep all routes and other modules (Home, Community, NearBy, eHub, Chatbot) untouched.
 
+## 1. Database changes (single migration)
+
+New tables:
+
+- `pet_health_records`
+  - `id, owner_id, pet_id, record_type, title, record_date, next_due_date, status, notes, created_at, updated_at`
+  - `record_type`: vaccine | deworming | vet_visit | lab_report | prescription | surgery | allergy | medication | insurance | microchip | general_document
+  - RLS: owner-only (`auth.uid() = owner_id`)
+- `pet_documents`
+  - `id, owner_id, pet_id, health_record_id (nullable), document_type, file_name, file_url, file_mime_type, file_size, uploaded_at, visibility default 'private'`
+  - `document_type`: vaccination_certificate | prescription | lab_report | insurance | adoption_registration | microchip_certificate | invoice | other
+  - RLS: owner-only
+
+Existing tables kept for back-compat (`vaccinations`, `pet_records`, `pet_microchips`) — not dropped, so existing data isn't lost. New flows write to the new tables; the Vaccines tab will read from `pet_health_records` where `record_type='vaccine'` AND fall back to legacy `vaccinations` for read-only display.
+
+New private storage bucket `pet-documents` with path:
+`{owner_id}/{pet_id}/{record_type}/{record_id|general}/{filename}`
+
+Storage RLS: owner can read/write only objects under their own `{owner_id}/...` prefix; viewing uses signed URLs.
+
+## 2. New / refactored screens
+
+```text
+/mypet (redesigned)
+  ├── Overview tab (default)        ← new dashboard
+  ├── Vaccines tab
+  ├── Deworming tab                 ← new
+  ├── Reports tab                   ← new (lab_report + prescription)
+  ├── Documents tab                 ← health locker
+  ├── Growth tab                    ← reuse existing weight chart
+  └── Reminders tab                 ← upcoming dues across record types
 ```
-Community | NearBy | Home (FAB) | eHub | MyPet
-```
 
-- **Community** → `/feeds` (label changed from "Feeds" → "Community"; icon `Users`)
-- **NearBy** → `/nearby` (unchanged)
-- **Home** → `/home` (center FAB, circular purple button, icon-only `Home`). Replaces the `+ Create` FAB. Posting moves into Community (existing top-right `+` / create button stays in PlayScreen).
-- **eHub** → `/hub` (label "Hub" → "eHub"; icon `LayoutGrid`)
-- **MyPet** → `/mypet` (unchanged)
+### Pet identity card (top of MyPet)
+- Photo, name, species/breed, gender, age, weight
+- Microchip row directly below: "Microchip ID: …" + Registered badge OR "+ Add Microchip" CTA → `/hub/microchip/register?pet={petId}`
+- Summary chips: upcoming vaccine, deworming due, doc count, last vet visit, microchip status
 
-The current `+ Create` FAB is removed from the navbar. The existing in-page create entry points (PlayScreen header, story creator, post buttons) remain intact, so posting flows are preserved.
+### Overview cards
+Health Snapshot, Upcoming Care, Documents Summary, Growth/Weight, Microchip Status, Quick Actions (Add Vaccine, Upload Report, Add Prescription, Book Vet, Set Reminder, Add Microchip).
 
-## 2. New Home Screen (`src/pages/HomeScreen.tsx`, route `/home`)
+### Vaccines / Deworming / Reports
+Each record card opens a detail view that **only** shows documents where `pet_id = activePet.id` AND `health_record_id = record.id` AND `owner_id = user.id`. Upload from inside a record auto-fills `health_record_id`.
 
-Layout (mobile-first, 430px max):
+### Documents tab (health locker)
+- Privacy badge "Private • visible only to {pet}'s owner"
+- Filters by `document_type` including Microchip
+- Each card shows linked record name when `health_record_id` is set
+- Query is **always** scoped by `owner_id + pet_id`, never by type alone
 
-- Top: existing TopBar (unchanged).
-- Greeting block: "Hi, Pet Parent! 👋" + "What would you like to do today?"
-- 4 rounded feature cards (2×2 grid):
-  1. **Pet Services** → `/nearby` (Services tab)
-  2. **Pet Friendly Places** → `/nearby?tab=places`
-  3. **Pet Community** → `/feeds`
-  4. **Pet Budget** → `/hub/budget`
-- **Logged-in users**: "My Pets" horizontal list (avatars + Add Pet) + compact **Health Brief** card (next vaccination, last weight, upcoming reminder — pulled from existing `pets`, `vaccinations`, `health_logs` tables).
-- **Guest users**: two CTA cards instead of My Pets:
-  - "I own a pet" → `/auth?redirect=/mypet`
-  - "I am planning to get a pet" → `/mypet/pet-recommender`
-- **Near You**: reuse `NearbyListings` (top 3, mixed) or compact preview list.
-- **Top Blogs**: query `knowledge_articles` (`is_published=true`, top by `view_count`), 3 cards.
+### Microchip integration
+- `RegisterMicrochipScreen` accepts `?pet=<id>` query param to preselect pet
+- On successful microchip save, also create a `pet_health_records` row (`record_type='microchip'`) and link any uploaded chip certificate as `pet_documents` with `document_type='microchip_certificate'` and that `health_record_id`
 
-`/` (and `/welcome` for guests) remain the existing landing pages — only the in-app Home button targets `/home`. Default in-app entry after login also goes to `/home`.
+## 3. Files to create
 
-## 3. NearBy 2-Tab Restructure (`src/pages/NearbyScreen.tsx`)
+- `src/pages/MyPetScreen.tsx` (replaces/wraps current `ShopScreen.tsx` MyPet view) — Overview + tab shell
+- `src/components/mypet/PetIdentityCard.tsx`
+- `src/components/mypet/OverviewDashboard.tsx`
+- `src/components/mypet/VaccinesPanel.tsx`
+- `src/components/mypet/DewormingPanel.tsx`
+- `src/components/mypet/ReportsPanel.tsx`
+- `src/components/mypet/DocumentsPanel.tsx` (health locker)
+- `src/components/mypet/RemindersPanel.tsx`
+- `src/components/mypet/HealthRecordDetailSheet.tsx` (record + scoped docs)
+- `src/components/mypet/UploadDocumentSheet.tsx` (reusable; takes `petId`, optional `healthRecordId`, `documentType`)
+- `src/lib/petDocuments.ts` — strict scoped fetchers + signed URL helper
 
-Add a top-level tab bar above the existing category pills:
+## 4. Files to update
 
-- **Services** (default): Vets, Boarding, Spa & Grooming, Walker
-- **Pet Friendly Places**: Restaurants & Cafés, Pet Parks, Pet Shows
+- `src/App.tsx` — point `/mypet` to new `MyPetScreen`
+- `src/pages/ShopScreen.tsx` — keep file but `MyPetScreen` becomes the new export target (rename internal logic preserved for fallback)
+- `src/pages/hub/RegisterMicrochipScreen.tsx` — accept `?pet=`, write linked `pet_health_records` + `pet_documents` rows in addition to `pet_microchips`
+- `src/components/microchip/PetMicrochipCard.tsx` — show "Registered" badge + chip ID in pet card style
+- Keep `PetDigiLockerScreen` for any legacy routes; new code does not depend on it
 
-Category mapping reuses existing slugs:
-- Vets → `vets`
-- Boarding → `boarding`
-- Spa & Grooming → `spa-grooming`
-- Walker → `walker` (empty-state)
-- Restaurants & Cafés → `pet-restaurants`
-- Pet Parks → `pet-parks`
-- Pet Shows → `pet-shows`
+## 5. Acceptance verification
 
-The old mixed pill row (Help Stray, Lost & Found) is hidden — those routes still resolve if visited directly. Auto city detection, listing cards, ratings, comments, and detail flow are untouched.
-
-## 4. Community → Reels Tab (`src/pages/PlayScreen.tsx`)
-
-Reels are already supported via `posts.post_category = 'reel'` and `PostUploadModal` (video upload, 30s/5MB limits). No DB changes.
-
-- Add a "Reels" pill alongside the existing pills (already present as `reels`). Confirm it's visible and default in Community.
-- Wire the page header to label "Community" instead of "Feeds" if shown anywhere.
-- Reels feed already renders `posts` with video media via `FeedVideoPlayer`/`ReelViewer`. Guest tap on "Post Reel" → `triggerGuestPopup()` (existing behavior).
-
-No new tables; reuse `posts`, `posts` storage bucket, and existing RLS.
-
-## 5. Routes (`src/App.tsx`)
-
-- Add `<Route path="/home" element={<RegularUserRoute><HomeScreen /></RegularUserRoute>} />`.
-- Keep `/`, `/feeds`, `/nearby`, `/hub`, `/mypet` as-is.
-
-## What stays untouched
-
-- Auth, RLS, Supabase tables, storage buckets.
-- Feeds/Hub/MyPet/NearBy data fetching and listing detail pages.
-- TopBar component and behaviors.
-- `PostUploadModal`, story creator, comments, likes, saves, bookmarks.
+- Aston's Rabies certificate appears only inside Rabies record + Documents (linked to Rabies) — not under Deworming or under Guinness
+- Aston's microchip never shows on Guinness
+- All document queries filter by `owner_id + pet_id` (and `health_record_id` inside record details)
+- Signed URLs only — bucket is private
+- No regressions: Home, Community, NearBy, eHub, Chatbot, login/register all untouched
 
 ## Technical notes
 
-- Home → use `useAuth`, `useUserProfile`, and lightweight queries for vaccinations / health_logs / knowledge_articles.
-- BottomNav: keep guest popup gating on MyPet; Community is open to guests (existing Feeds behavior).
-- NearBy tabs persist active tab via URL query (`?tab=services|places`) so deep-links work.
-- Add legacy redirect: removed `+ Create` button — verify no caller breaks (only `BottomNav onPostClick` consumers, which all also have other entry points).
+- Reuse design tokens from `index.css`/`tailwind.config.ts` (no hardcoded colors)
+- TanStack Query keys include `pet_id` so switching pets refetches scoped data
+- Microchip route stays `/hub/microchip/register` (in-app), with `?pet=<id>` for pet context
+- Legacy `vaccinations` and `pet_records` data shown read-only; new entries go to `pet_health_records` / `pet_documents`
 
-Files to add: `src/pages/HomeScreen.tsx`.
-Files to edit: `src/components/BottomNav.tsx`, `src/pages/NearbyScreen.tsx`, `src/App.tsx`, `src/pages/PlayScreen.tsx` (label only).
+## Out of scope
+
+- No changes to Home, Community, NearBy, eHub, Chatbot, auth
+- No removal of existing tables / data
+- No new edge functions
+
+If you approve, I'll run the migration first (you'll get an approval prompt for the DB), then ship the screens.
