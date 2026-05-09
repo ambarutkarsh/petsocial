@@ -281,6 +281,9 @@ const HomeScreen = () => {
           </section>
         )}
 
+        {/* Quick Tip of the Day */}
+        <QuickTipOfTheDay />
+
         {/* Near You */}
         <section>
           <div className="flex items-center justify-between mb-3">
