@@ -45,55 +45,10 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
     },
   });
 
-  const upcomingVaccine = records.find(
-    (r: any) => r.record_type === "vaccine" && r.next_due_date
-  );
-  const upcomingDeworming = records.find(
-    (r: any) => r.record_type === "deworming" && r.next_due_date
-  );
-  const lastVetVisit = records
-    .filter((r: any) => r.record_type === "vet_visit")
-    .sort((a: any, b: any) => new Date(b.record_date || b.created_at).getTime() - new Date(a.record_date || a.created_at).getTime())[0];
-
   const lastWeight = weights[weights.length - 1] as any;
   const prevWeight = weights[weights.length - 2] as any;
   const weightDelta =
     lastWeight && prevWeight ? Number(lastWeight.weight_kg) - Number(prevWeight.weight_kg) : null;
-
-  const tiles = [
-    {
-      key: "vaccines",
-      icon: <Syringe className="w-4 h-4 text-secondary" />,
-      label: "Upcoming Vaccine",
-      value: upcomingVaccine ? format(new Date(upcomingVaccine.next_due_date), "dd MMM") : "—",
-      sub: upcomingVaccine ? upcomingVaccine.title : "None",
-      onClick: () => onTabChange("vaccines"),
-    },
-    {
-      key: "deworming",
-      icon: <Bug className="w-4 h-4 text-accent" />,
-      label: "Deworming",
-      value: upcomingDeworming ? format(new Date(upcomingDeworming.next_due_date), "dd MMM") : "—",
-      sub: upcomingDeworming ? `In ${Math.max(0, differenceInDays(new Date(upcomingDeworming.next_due_date), new Date()))}d` : "None",
-      onClick: () => onTabChange("deworming"),
-    },
-    {
-      key: "documents",
-      icon: <FileText className="w-4 h-4 text-primary" />,
-      label: "Documents",
-      value: String(docs.length),
-      sub: "Total",
-      onClick: () => onTabChange("documents"),
-    },
-    {
-      key: "vet",
-      icon: <Calendar className="w-4 h-4 text-secondary" />,
-      label: "Last Vet Visit",
-      value: lastVetVisit ? format(new Date(lastVetVisit.record_date || lastVetVisit.created_at), "dd MMM") : "—",
-      sub: lastVetVisit ? (lastVetVisit.title || "Visit") : "None",
-      onClick: () => onTabChange("vaccines"),
-    },
-  ];
 
   return (
     <div className="space-y-3">
