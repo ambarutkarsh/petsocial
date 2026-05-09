@@ -164,29 +164,6 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   );
 };
 
-const SnapItem = ({
-  icon,
-  label,
-  value,
-  sub,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  sub: string;
-  tone: string;
-}) => (
-  <div className="text-center">
-    <p className="text-[9px] font-body text-muted-foreground leading-tight mb-1">{label}</p>
-    <div className="w-9 h-9 mx-auto rounded-full bg-primary-light/60 flex items-center justify-center mb-1">
-      {icon}
-    </div>
-    <p className={`text-[12px] font-body font-bold ${tone}`}>{value}</p>
-    <p className="text-[9px] text-muted-foreground font-body leading-tight">{sub}</p>
-  </div>
-);
-
 const CareRow = ({
   icon,
   title,
