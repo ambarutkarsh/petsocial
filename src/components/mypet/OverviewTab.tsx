@@ -58,19 +58,8 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
 
   return (
     <div className="space-y-3">
-      {/* Health Snapshot */}
-      <div className="rounded-3xl border border-border bg-card p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-heading font-bold text-base">Health Snapshot</h3>
-          <span className="text-[10px] text-muted-foreground font-body">Updated today</span>
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          <SnapItem icon={<Heart className="w-5 h-5 text-secondary" />} label="Overall Health" value="Good" sub="No issues" tone="text-secondary" />
-          <SnapItem icon={<Sparkles className="w-5 h-5 text-accent" />} label="Body Condition" value="Ideal" sub="Score: 4/5" tone="text-accent" />
-          <SnapItem icon={<Activity className="w-5 h-5 text-primary" />} label="Activity Level" value="Active" sub="Great job!" tone="text-primary" />
-          <SnapItem icon={<Droplet className="w-5 h-5 text-secondary" />} label="Hydration" value="Good" sub="Keep it up" tone="text-secondary" />
-        </div>
-      </div>
+      {/* Health Snapshot (configurable, per-pet) */}
+      <HealthSnapshotCard pet={pet || { id: petId, name: petName }} />
 
       {/* Upcoming Care + Growth */}
       <div className="grid grid-cols-2 gap-3">
