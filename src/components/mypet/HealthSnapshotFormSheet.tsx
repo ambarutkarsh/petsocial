@@ -269,7 +269,7 @@ const HealthSnapshotFormSheet = ({ open, onClose, pet, existing }: Props) => {
             </div>
           </div>
 
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-border max-w-[430px] mx-auto">
+          <div className="sticky bottom-0 -mx-4 px-4 pt-3 pb-4 bg-card border-t border-border">
             <Button className="w-full" onClick={handleSave} disabled={saving}>
               {saving ? "Saving…" : "Save Snapshot"}
             </Button>
