@@ -207,10 +207,41 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
 
   const saveVaccine = async () => {
     if (!vaccName || !activePet) return;
-    const { error } = await supabase.from("vaccinations").insert({ pet_id: activePet.id, owner_id: user!.id, vaccine_name: vaccName, administered_date: format(vaccDate, "yyyy-MM-dd"), due_date: vaccDueDate ? format(vaccDueDate, "yyyy-MM-dd") : null, vet_name: vaccVet || null, status: vaccStatus });
-    if (error) { toast.error("Failed to save"); return; }
-    toast.success("Vaccine added!");
-    setShowVaccForm(false); setVaccName("");
+    const payload = {
+      vaccine_name: vaccName,
+      administered_date: format(vaccDate, "yyyy-MM-dd"),
+      due_date: vaccDueDate ? format(vaccDueDate, "yyyy-MM-dd") : null,
+      vet_name: vaccVet || null,
+      status: vaccStatus,
+    };
+    if (editingVaccId) {
+      const { error } = await supabase.from("vaccinations").update(payload).eq("id", editingVaccId).eq("pet_id", activePet.id).eq("owner_id", user!.id);
+      if (error) { toast.error("Failed to update"); return; }
+      toast.success("Vaccine updated!");
+    } else {
+      const { error } = await supabase.from("vaccinations").insert({ pet_id: activePet.id, owner_id: user!.id, ...payload });
+      if (error) { toast.error("Failed to save"); return; }
+      toast.success("Vaccine added!");
+    }
+    setShowVaccForm(false); setVaccName(""); setVaccVet(""); setVaccDueDate(undefined); setVaccStatus("done"); setVaccDate(new Date()); setEditingVaccId(null);
+    qc.invalidateQueries({ queryKey: ["vaccinations"] });
+  };
+
+  const startEditVaccine = (v: any) => {
+    setEditingVaccId(v.id);
+    setVaccName(v.vaccine_name || "");
+    setVaccDate(v.administered_date ? new Date(v.administered_date) : new Date());
+    setVaccDueDate(v.due_date ? new Date(v.due_date) : undefined);
+    setVaccVet(v.vet_name || "");
+    setVaccStatus(v.status || "done");
+    setShowVaccForm(true);
+  };
+
+  const deleteVaccine = async (id: string) => {
+    if (!activePet || !confirm("Delete this vaccination record?")) return;
+    const { error } = await supabase.from("vaccinations").delete().eq("id", id).eq("pet_id", activePet.id).eq("owner_id", user!.id);
+    if (error) { toast.error("Failed to delete"); return; }
+    toast.success("Deleted");
     qc.invalidateQueries({ queryKey: ["vaccinations"] });
   };
 
