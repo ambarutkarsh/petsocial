@@ -55,6 +55,11 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
     .filter((r: any) => r.record_type === "vet_visit")
     .sort((a: any, b: any) => new Date(b.record_date || b.created_at).getTime() - new Date(a.record_date || a.created_at).getTime())[0];
 
+  const lastWeight = weights[weights.length - 1] as any;
+  const prevWeight = weights[weights.length - 2] as any;
+  const weightDelta =
+    lastWeight && prevWeight ? Number(lastWeight.weight_kg) - Number(prevWeight.weight_kg) : null;
+
   const tiles = [
     {
       key: "vaccines",
