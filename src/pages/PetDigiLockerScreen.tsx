@@ -505,17 +505,21 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
                     const isOverdue = v.status !== "done" && v.due_date && new Date(v.due_date) < new Date();
                     const statusDot = v.status === "done" ? "bg-secondary" : isOverdue ? "bg-destructive" : "bg-amber-400";
                     return (
-                      <div key={v.id} className="paw-card p-3 flex gap-3">
+                      <div key={v.id} className="paw-card p-3 flex gap-3 cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => startEditVaccine(v)}>
                         <div className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${statusDot}`} />
                         <div className="flex-1">
                           <p className="text-sm font-semibold">{v.vaccine_name}</p>
                           {v.administered_date && <p className="text-xs text-muted-foreground">Administered: {format(new Date(v.administered_date), "dd MMM yyyy")}</p>}
                           {v.due_date && <p className="text-xs text-muted-foreground">Next due: {format(new Date(v.due_date), "dd MMM yyyy")}</p>}
                           {v.vet_name && <p className="text-xs text-muted-foreground">Vet: {v.vet_name}</p>}
+                          <p className="text-[10px] text-primary mt-1">Tap to edit</p>
                         </div>
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize self-start ${v.status === "done" ? "bg-secondary/10 text-secondary" : isOverdue ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700"}`}>
-                          {isOverdue ? "overdue" : v.status}
-                        </span>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize ${v.status === "done" ? "bg-secondary/10 text-secondary" : isOverdue ? "bg-destructive/10 text-destructive" : "bg-amber-100 text-amber-700"}`}>
+                            {isOverdue ? "overdue" : v.status}
+                          </span>
+                          <button onClick={(e) => { e.stopPropagation(); deleteVaccine(v.id); }} className="text-[10px] text-destructive">Delete</button>
+                        </div>
                       </div>
                     );
                   })}
@@ -524,8 +528,11 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
                 <p className="text-xs text-muted-foreground text-center py-6">No vaccines recorded yet</p>
               )}
 
-              <Button variant="outline" className="w-full" onClick={() => setShowVaccForm(!showVaccForm)}>
-                <PlusIcon className="w-4 h-4 mr-1" />Add Vaccine
+              <Button variant="outline" className="w-full" onClick={() => {
+                if (showVaccForm) { setEditingVaccId(null); setVaccName(""); setVaccVet(""); setVaccDueDate(undefined); }
+                setShowVaccForm(!showVaccForm);
+              }}>
+                <PlusIcon className="w-4 h-4 mr-1" />{editingVaccId ? "Cancel Edit" : "Add Vaccine"}
               </Button>
 
               {showVaccForm && (
