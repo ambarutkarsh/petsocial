@@ -5,6 +5,8 @@ import { PawPrint, MapPin, Users as UsersIcon, Wallet, Plus, Calendar, Stethosco
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
+import HomeCarouselBanner from "@/components/HomeCarouselBanner";
+import QuickTipOfTheDay from "@/components/QuickTipOfTheDay";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { supabase } from "@/integrations/supabase/client";
