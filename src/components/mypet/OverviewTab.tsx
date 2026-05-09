@@ -51,54 +51,71 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   const upcomingDeworming = records.find(
     (r: any) => r.record_type === "deworming" && r.next_due_date
   );
-  const lastWeight = weights[weights.length - 1] as any;
-  const prevWeight = weights[weights.length - 2] as any;
-  const weightDelta =
-    lastWeight && prevWeight ? Number(lastWeight.weight_kg) - Number(prevWeight.weight_kg) : null;
+  const lastVetVisit = records
+    .filter((r: any) => r.record_type === "vet_visit")
+    .sort((a: any, b: any) => new Date(b.record_date || b.created_at).getTime() - new Date(a.record_date || a.created_at).getTime())[0];
+
+  const tiles = [
+    {
+      key: "vaccines",
+      icon: <Syringe className="w-4 h-4 text-secondary" />,
+      label: "Upcoming Vaccine",
+      value: upcomingVaccine ? format(new Date(upcomingVaccine.next_due_date), "dd MMM") : "—",
+      sub: upcomingVaccine ? upcomingVaccine.title : "None",
+      onClick: () => onTabChange("vaccines"),
+    },
+    {
+      key: "deworming",
+      icon: <Bug className="w-4 h-4 text-accent" />,
+      label: "Deworming",
+      value: upcomingDeworming ? format(new Date(upcomingDeworming.next_due_date), "dd MMM") : "—",
+      sub: upcomingDeworming ? `In ${Math.max(0, differenceInDays(new Date(upcomingDeworming.next_due_date), new Date()))}d` : "None",
+      onClick: () => onTabChange("deworming"),
+    },
+    {
+      key: "documents",
+      icon: <FileText className="w-4 h-4 text-primary" />,
+      label: "Documents",
+      value: String(docs.length),
+      sub: "Total",
+      onClick: () => onTabChange("documents"),
+    },
+    {
+      key: "vet",
+      icon: <Calendar className="w-4 h-4 text-secondary" />,
+      label: "Last Vet Visit",
+      value: lastVetVisit ? format(new Date(lastVetVisit.record_date || lastVetVisit.created_at), "dd MMM") : "—",
+      sub: lastVetVisit ? (lastVetVisit.title || "Visit") : "None",
+      onClick: () => onTabChange("vaccines"),
+    },
+  ];
 
   return (
     <div className="space-y-3">
       {/* Health Snapshot (configurable, per-pet) */}
       <HealthSnapshotCard pet={pet || { id: petId, name: petName }} />
 
-      {/* Upcoming Care + Growth */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-3xl border border-border bg-card p-3.5">
-          <div className="flex items-center justify-between mb-2">
-            <p className="font-heading font-bold text-sm">Upcoming Care</p>
-          </div>
-          <div className="space-y-2">
-            {upcomingVaccine && (
-              <CareRow
-                icon={<Syringe className="w-4 h-4 text-secondary" />}
-                title={upcomingVaccine.title}
-                date={format(new Date(upcomingVaccine.next_due_date), "dd MMM yyyy")}
-                badge="Upcoming"
-                tone="bg-accent/15 text-accent"
-              />
-            )}
-            {upcomingDeworming && (
-              <CareRow
-                icon={<Bug className="w-4 h-4 text-accent" />}
-                title="Deworming"
-                date={format(new Date(upcomingDeworming.next_due_date), "dd MMM yyyy")}
-                badge={`In ${Math.max(0, differenceInDays(new Date(upcomingDeworming.next_due_date), new Date()))} days`}
-                tone="bg-primary-light text-primary"
-              />
-            )}
-            {!upcomingVaccine && !upcomingDeworming && (
-              <p className="text-xs text-muted-foreground font-body">Nothing scheduled</p>
-            )}
-          </div>
+      {/* Quick stats — single row */}
+      <div className="grid grid-cols-4 gap-2">
+        {tiles.map((t) => (
           <button
-            onClick={() => onTabChange("reminders")}
-            className="text-[11px] font-body font-bold text-primary mt-2"
+            key={t.key}
+            onClick={t.onClick}
+            className="rounded-xl border border-border bg-card p-2 text-left active:scale-95 transition-all"
           >
-            View all
+            <div className="w-7 h-7 rounded-md bg-primary-light/60 flex items-center justify-center mb-1.5">
+              {t.icon}
+            </div>
+            <p className="text-[9px] uppercase font-bold text-muted-foreground leading-tight truncate">{t.label}</p>
+            <p className="font-heading font-bold text-sm leading-tight truncate">{t.value}</p>
+            <p className="text-[9px] text-muted-foreground font-body truncate">{t.sub}</p>
           </button>
-        </div>
+        ))}
+      </div>
 
-        <div className="rounded-3xl border border-border bg-card p-3.5">
+      {/* Growth + Quick Actions */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-2xl border border-border bg-card p-3.5">
           <p className="font-heading font-bold text-sm mb-2">Growth / Weight</p>
           {lastWeight ? (
             <>
@@ -128,30 +145,8 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
             View growth chart
           </button>
         </div>
-      </div>
 
-      {/* Documents Summary + Quick Actions */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-3xl border border-border bg-card p-3.5">
-          <p className="font-heading font-bold text-sm mb-2">Documents Summary</p>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <p className="font-heading font-bold text-2xl leading-none">{docs.length}</p>
-              <p className="text-[10px] text-muted-foreground font-body">Total documents</p>
-            </div>
-          </div>
-          <button
-            onClick={() => onTabChange("documents")}
-            className="text-[11px] font-body font-bold text-primary mt-2"
-          >
-            View all
-          </button>
-        </div>
-
-        <div className="rounded-3xl border border-border bg-card p-3.5">
+        <div className="rounded-2xl border border-border bg-card p-3.5">
           <p className="font-heading font-bold text-sm mb-2">Quick Actions</p>
           <div className="space-y-1">
             <ActionRow icon={<Syringe className="w-3.5 h-3.5" />} label="Add Vaccine" onClick={() => onTabChange("vaccines")} />
