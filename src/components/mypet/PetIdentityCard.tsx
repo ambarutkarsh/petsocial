@@ -138,7 +138,16 @@ const PetIdentityCard = ({ pet }: Props) => {
   };
 
   return (
-    <div className="rounded-3xl border border-border bg-primary-light/40 p-3.5 shadow-petosauras">
+    <div className="relative rounded-3xl border border-border bg-primary-light/40 p-3.5 shadow-petosauras">
+      {/* Delete CTA */}
+      <button
+        onClick={() => setDeleteOpen(true)}
+        aria-label="Delete pet"
+        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-card/80 hover:bg-destructive hover:text-destructive-foreground border border-border/50 flex items-center justify-center shadow-sm transition-colors"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+
       {/* Top row: avatar + name + meta */}
       <div className="flex items-start gap-3">
         <button onClick={() => fileRef.current?.click()} className="relative shrink-0">
@@ -162,13 +171,16 @@ const PetIdentityCard = ({ pet }: Props) => {
           />
         </button>
 
-        <div className="flex-1 min-w-0 pt-0.5">
+        <div className="flex-1 min-w-0 pt-0.5 pr-7">
           <div className="flex items-center gap-1.5">
             <h2 className="font-heading font-bold text-xl truncate">{pet.name}</h2>
             <button
-              onClick={() => navigate(`/profile/edit-pet/${pet.id}`)}
+              onClick={() => {
+                setNameDraft(pet.name || "");
+                setEditOpen(true);
+              }}
               className="p-1 rounded-full hover:bg-card/60"
-              aria-label="Edit pet"
+              aria-label="Edit pet name"
             >
               <Pencil className="w-3.5 h-3.5 text-primary" />
             </button>
@@ -204,35 +216,56 @@ const PetIdentityCard = ({ pet }: Props) => {
               </span>
             </button>
           )}
-
         </div>
       </div>
+
+      {/* Edit name dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-[360px] rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Edit pet name</DialogTitle>
+          </DialogHeader>
+          <Input
+            value={nameDraft}
+            onChange={(e) => setNameDraft(e.target.value)}
+            placeholder="Pet name"
+            maxLength={40}
+            autoFocus
+          />
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveName} disabled={savingName}>
+              {savingName ? "Saving…" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirm */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent className="max-w-[360px] rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-heading">Delete {pet.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove {pet.name} and all associated details (health records, documents, logs). This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
-
-const StatPill = ({
-  icon,
-  value,
-  label,
-  compact,
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  compact?: boolean;
-}) => (
-  <div className="flex items-center gap-2 rounded-2xl bg-card px-2.5 py-1.5 border border-border/50">
-    <div className="shrink-0 w-7 h-7 rounded-full bg-primary-light/70 flex items-center justify-center">
-      {icon}
-    </div>
-    <div className="min-w-0 leading-tight">
-      <p className={`font-body font-bold text-foreground truncate ${compact ? "text-[11px]" : "text-sm"}`}>
-        {value}
-      </p>
-      <p className="text-[10px] text-muted-foreground font-body truncate">{label}</p>
-    </div>
-  </div>
-);
 
 export default PetIdentityCard;
