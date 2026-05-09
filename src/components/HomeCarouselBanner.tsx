@@ -189,7 +189,13 @@ const HomeCarouselBanner = () => {
     return parts.join(" · ");
   }, [current]);
 
-  if (!current) return null;
+  if (!current) {
+    return (
+      <section aria-label="Home banner" className="-mx-5">
+        <div className="relative w-full aspect-square max-h-[160px] overflow-hidden rounded-lg bg-primary-light animate-pulse" />
+      </section>
+    );
+  }
 
   const handleClick = () => {
     if (current.cta_url) {
