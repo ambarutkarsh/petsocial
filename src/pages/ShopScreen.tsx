@@ -200,4 +200,26 @@ const MyPetScreen = () => {
   );
 };
 
+const IconTab = ({
+  active,
+  icon,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-0.5 py-2 px-1 rounded-xl transition-colors ${
+      active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/40"
+    }`}
+  >
+    {icon}
+    <span className="text-[10px] font-body font-semibold">{label}</span>
+  </button>
+);
+
 export default MyPetScreen;
