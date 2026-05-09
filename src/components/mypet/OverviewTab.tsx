@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Syringe, Calendar, Bell } from "lucide-react";
+import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
+import { ChevronRight, Syringe, Calendar, Bell, Bug, FileText } from "lucide-react";
 import HealthSnapshotCard from "./HealthSnapshotCard";
 
 interface Props {
