@@ -334,7 +334,19 @@ const HomeScreen = () => {
             <h2 className="font-heading font-bold text-base">Top Blogs</h2>
             <button onClick={() => navigate("/learn")} className="text-xs font-body font-bold text-primary">View all</button>
           </div>
-          {blogs.length === 0 ? (
+          {blogsLoading ? (
+            <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-1 px-1">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="shrink-0 w-[150px] rounded-lg bg-card border border-border overflow-hidden">
+                  <div className="w-full aspect-[4/3] bg-primary-light animate-pulse" />
+                  <div className="p-2.5 space-y-1.5">
+                    <div className="h-3 rounded bg-primary-light animate-pulse" />
+                    <div className="h-3 w-2/3 rounded bg-primary-light animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : blogs.length === 0 ? (
             <p className="text-xs text-muted-foreground font-body">No articles yet.</p>
           ) : (
             <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-1 px-1">
