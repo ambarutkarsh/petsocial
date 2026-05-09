@@ -35,6 +35,43 @@ const PetIdentityCard = ({ pet }: Props) => {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [nameDraft, setNameDraft] = useState(pet.name || "");
+  const [savingName, setSavingName] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleSaveName = async () => {
+    const trimmed = nameDraft.trim();
+    if (!trimmed) {
+      toast.error("Name cannot be empty");
+      return;
+    }
+    setSavingName(true);
+    const { error } = await supabase.from("pets").update({ name: trimmed }).eq("id", pet.id);
+    setSavingName(false);
+    if (error) {
+      toast.error("Could not update name");
+      return;
+    }
+    toast.success("Name updated");
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
+    setEditOpen(false);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    const { error } = await supabase.from("pets").delete().eq("id", pet.id);
+    setDeleting(false);
+    if (error) {
+      toast.error("Could not delete pet");
+      return;
+    }
+    toast.success(`${pet.name} removed`);
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
+    setDeleteOpen(false);
+    navigate("/mypet");
+  };
 
   const { data: latestWeight } = useQuery({
     queryKey: ["latest-weight", pet.id],
