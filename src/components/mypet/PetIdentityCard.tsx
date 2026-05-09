@@ -4,7 +4,7 @@ import { differenceInDays, differenceInMonths, differenceInYears, format } from 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
-import { Pencil, Syringe, Bug, FileText, Calendar } from "lucide-react";
+import { Pencil, Syringe, Bug, FileText, Calendar, ShieldCheck, Cpu } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 
