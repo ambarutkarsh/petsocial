@@ -108,13 +108,17 @@ const RegisterMicrochipScreen = () => {
     },
   });
 
-  // Auto-select first pet without chip
+  // Prefer pet from ?pet= query param, else first pet without chip
   useEffect(() => {
     if (selectedPetId !== null) return;
+    if (prefilledPetId && pets.some((p: any) => p.id === prefilledPetId)) {
+      setSelectedPetId(prefilledPetId);
+      return;
+    }
     const taken = new Set(existingChips.map((c: any) => c.pet_id).filter(Boolean));
     const candidate = pets.find((p: any) => !taken.has(p.id));
     if (candidate) setSelectedPetId(candidate.id);
-  }, [pets, existingChips, selectedPetId]);
+  }, [pets, existingChips, selectedPetId, prefilledPetId]);
 
   // Debounced validation + conflict check
   useEffect(() => {
