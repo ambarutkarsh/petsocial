@@ -72,6 +72,8 @@ const PetMovingScreen = lazy(() => import("./pages/hub/PetMovingScreen"));
 const MicrochipScreen = lazy(() => import("./pages/hub/MicrochipScreen"));
 const RegisterMicrochipScreen = lazy(() => import("./pages/hub/RegisterMicrochipScreen"));
 const PetCareScreen = lazy(() => import("./pages/hub/PetCareScreen"));
+const KnowledgeBaseScreen = lazy(() => import("./pages/hub/KnowledgeBaseScreen"));
+const KnowledgeBlogScreen = lazy(() => import("./pages/hub/KnowledgeBlogScreen"));
 const AdminNotificationsScreen = lazy(() => import("./pages/admin/AdminNotificationsScreen"));
 const AdminCompetitionsScreen = lazy(() => import("./pages/admin/AdminCompetitionsScreen"));
 const AdminVetsScreen = lazy(() => import("./pages/admin/AdminVetsScreen"));
@@ -170,6 +172,8 @@ const App = () => (
             <Route path="/hub" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/hub/shop" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
             <Route path="/hub/learn" element={<RegularUserRoute><CareScreen /></RegularUserRoute>} />
+            <Route path="/hub/learn/knowledge-base" element={<RegularUserRoute><KnowledgeBaseScreen /></RegularUserRoute>} />
+            <Route path="/hub/learn/knowledge-base/:slug" element={<RegularUserRoute><KnowledgeBlogScreen /></RegularUserRoute>} />
             <Route path="/mypet" element={<RegularUserRoute><ProtectedRoute><ShopScreen /></ProtectedRoute></RegularUserRoute>} />
             <Route path="/shop" element={<RegularUserRoute><ShopComingSoonScreen /></RegularUserRoute>} />
             <Route path="/sos" element={<SosScreen />} />

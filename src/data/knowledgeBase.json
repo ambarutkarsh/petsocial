@@ -1,0 +1,1548 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "site": "petosauras.com",
+    "section": "hub.learn.knowledge-base",
+    "generatedAt": "2026-05-08",
+    "schemaNotes": "Each blog uses a structured `content` array of blocks (heading, paragraph, list, callout, quote, image). This makes posts easy to render in any frontend and ingest from an admin panel.",
+    "blockTypes": {
+      "heading": { "fields": ["level (2|3|4)", "text"] },
+      "paragraph": { "fields": ["text"] },
+      "list": { "fields": ["style (unordered|ordered)", "items[]"] },
+      "callout": { "fields": ["variant (info|warning|tip|danger)", "title", "text"] },
+      "quote": { "fields": ["text", "attribution"] },
+      "image": { "fields": ["url", "alt", "caption"] },
+      "divider": { "fields": [] }
+    }
+  },
+  "categories": [
+    { "id": "all",       "name": "All",        "slug": "all",        "description": "Browse every article in the Knowledge Base.", "icon": "library", "order": 0 },
+    { "id": "canine",    "name": "Canine",     "slug": "canine",     "description": "Everything about dogs — care, training, health, food and behaviour.", "icon": "dog", "order": 1 },
+    { "id": "feline",    "name": "Feline",     "slug": "feline",     "description": "All about cats — health, grooming, litter habits and nutrition.", "icon": "cat", "order": 2 },
+    { "id": "aquatic",   "name": "Aquatic",    "slug": "aquatic",    "description": "Fish, aquariums and underwater life — setup, feeding and maintenance.", "icon": "fish", "order": 3 },
+    { "id": "avian",     "name": "Avian",      "slug": "avian",      "description": "Pet birds — diet, cages, training and common health issues.", "icon": "bird", "order": 4 },
+    { "id": "small-pets","name": "Small Pets", "slug": "small-pets", "description": "Rabbits, hamsters, guinea pigs and other pocket pets.", "icon": "rabbit", "order": 5 },
+    { "id": "general",   "name": "General",    "slug": "general",    "description": "Cross-pet topics — first aid, seasonal care, insurance and choosing a pet.", "icon": "paw", "order": 6 }
+  ],
+  "tags": [
+    "health", "training", "care", "food", "vaccination", "grooming", "behaviour", "what-to-avoid", "india", "puppy", "kitten", "senior", "monsoon", "summer", "first-aid", "insurance"
+  ],
+  "blogs": [
+    {
+      "id": "can-001",
+      "slug": "complete-vaccination-schedule-for-dogs-in-india",
+      "title": "Complete Vaccination Schedule for Dogs in India",
+      "category": "canine",
+      "tags": ["vaccination", "health", "india", "puppy"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 7,
+      "status": "published",
+      "featured": true,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=1200&q=80",
+        "alt": "Veterinarian examining a puppy during vaccination",
+        "caption": "Routine vaccination is the single most effective health investment for your dog."
+      },
+      "excerpt": "A clear, age-by-age guide to core and non-core vaccines for dogs in India, including DHPPi, Anti-Rabies, Lepto and Kennel Cough — plus when to booster and what each shot protects against.",
+      "seo": {
+        "metaTitle": "Dog Vaccination Schedule in India (2026) — Puppy to Adult",
+        "metaDescription": "A vet-aligned vaccination schedule for dogs in India: DHPPi, Rabies, Lepto, Kennel Cough, Corona — plus boosters, costs and what to ask your vet.",
+        "keywords": ["dog vaccination India", "puppy vaccination schedule", "anti rabies vaccine India", "DHPPi vaccine", "kennel cough"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Vaccinations protect your dog from several life-threatening diseases that are still common in India — distemper, parvovirus, leptospirosis and rabies. A timely first-year course followed by lifelong boosters keeps your dog healthy and protects your family too, because rabies is a zoonotic disease." },
+        { "type": "heading", "level": 2, "text": "Core vs non-core vaccines" },
+        { "type": "paragraph", "text": "Core vaccines are recommended for every dog regardless of lifestyle. Non-core vaccines are decided based on environment, travel, boarding habits and exposure risk. In India, most veterinarians follow WSAVA guidelines adapted to local disease prevalence." },
+        { "type": "list", "style": "unordered", "items": [
+          "Core: Distemper, Hepatitis (Adenovirus), Parvovirus, Parainfluenza (DHPPi) and Anti-Rabies.",
+          "Non-core: Leptospirosis, Bordetella (Kennel Cough), Canine Coronavirus."
+        ]},
+        { "type": "heading", "level": 2, "text": "Puppy vaccination schedule (6 weeks – 16 weeks)" },
+        { "type": "list", "style": "ordered", "items": [
+          "6–8 weeks: First DHPPi (some vets begin with DHPPi+L at 8 weeks).",
+          "10–12 weeks: Second DHPPi + Lepto.",
+          "12–14 weeks: Third DHPPi + Lepto booster + first Anti-Rabies.",
+          "16 weeks: Final puppy booster (DHPPi+L) and Bordetella if your puppy will socialise, board or attend training."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Why three rounds?", "text": "Maternal antibodies from the mother's milk can neutralise a vaccine if given too early. Spacing shots 3–4 weeks apart ensures at least one dose lands when the puppy can build its own immunity." },
+        { "type": "heading", "level": 2, "text": "Adult dogs (annual schedule)" },
+        { "type": "list", "style": "unordered", "items": [
+          "Anti-Rabies: every 12 months (mandatory in most Indian states and required for travel).",
+          "DHPPi + Lepto: annual booster; some vets move to a 3-year DHPPi cycle for adult dogs after age 2.",
+          "Kennel Cough (Bordetella): every 6–12 months for dogs that visit parks, daycares or groomers.",
+          "Deworming: every 3 months, regardless of vaccination status."
+        ]},
+        { "type": "heading", "level": 2, "text": "Indicative costs in India" },
+        { "type": "paragraph", "text": "Prices vary by city and clinic, but as a rough guide expect ₹500–₹900 per DHPPi shot, ₹400–₹700 for Anti-Rabies and ₹600–₹1,200 for Bordetella. A full puppy course typically costs ₹3,500–₹6,000 over the first 16 weeks." },
+        { "type": "heading", "level": 2, "text": "Side effects to watch for" },
+        { "type": "list", "style": "unordered", "items": [
+          "Mild lethargy or reduced appetite for 24 hours — normal.",
+          "Small lump at injection site that resolves in a week — normal.",
+          "Facial swelling, hives, vomiting or breathing difficulty — emergency, call your vet immediately."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Never skip rabies", "text": "Rabies is 100% fatal once symptoms begin and 100% preventable with vaccination. India accounts for nearly a third of global human rabies deaths — protecting your dog protects your family." },
+        { "type": "heading", "level": 2, "text": "Maintain a vaccine card" },
+        { "type": "paragraph", "text": "Keep a paper or digital vaccination record showing date, vaccine, batch number and your vet's signature. You will need it for boarding, travel within India by train or air, society registration in many cities, and international relocation." }
+      ]
+    },
+    {
+      "id": "can-002",
+      "slug": "best-diet-for-dogs-in-indian-climate",
+      "title": "Best Diet for Dogs in the Indian Climate",
+      "category": "canine",
+      "tags": ["food", "care", "india", "health"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1200&q=80",
+        "alt": "Bowl of fresh dog food with vegetables",
+        "caption": "A balanced bowl: protein, slow carbs, healthy fats and a little fibre."
+      },
+      "excerpt": "Tropical heat, humidity and Indian kitchen ingredients change what works in your dog's bowl. Here's how to build a balanced diet — kibble, home-cooked or hybrid.",
+      "seo": {
+        "metaTitle": "Dog Food Guide India — Best Diet for Indian Climate",
+        "metaDescription": "Build a balanced dog diet for the Indian climate: kibble vs home-cooked, ingredient lists, portion sizes and seasonal tweaks.",
+        "keywords": ["dog food India", "home cooked dog food", "best dog food India", "dog diet"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "There is no single 'best' dog food — there is the best diet for your specific dog given their breed, age, activity level and the climate they live in. India's heat and humidity make hydration, fibre and meal timing especially important." },
+        { "type": "heading", "level": 2, "text": "The three approaches" },
+        { "type": "list", "style": "unordered", "items": [
+          "Commercial kibble: convenient, nutritionally balanced, longer shelf life. Pick brands with named meat as the first ingredient (e.g., 'chicken', not 'meat meal').",
+          "Home-cooked: full control over ingredients, easier on sensitive stomachs, but must be balanced with a vet-approved supplement plan.",
+          "Hybrid: kibble in the morning, fresh meal in the evening — popular and practical in Indian households."
+        ]},
+        { "type": "heading", "level": 2, "text": "What a balanced Indian home-cooked meal looks like" },
+        { "type": "paragraph", "text": "Aim for roughly 50% protein, 25% slow carbs and 25% vegetables, with a teaspoon of healthy fat." },
+        { "type": "list", "style": "unordered", "items": [
+          "Protein: boiled chicken, eggs, paneer (small amounts), boneless fish, lean mutton.",
+          "Slow carbs: brown rice, dalia, ragi, oats, sweet potato.",
+          "Vegetables: carrot, beans, pumpkin, spinach, bottle gourd — boiled, never raw onion or garlic.",
+          "Fats: a teaspoon of ghee, coconut oil or cold-pressed flaxseed oil.",
+          "Hydration: keep two water bowls and refill twice a day in summer."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Skip Indian masala", "text": "Salt, chilli, turmeric in large amounts, garam masala, onion and garlic are not safe for dogs. Cook your dog's portion before adding spices for the family." },
+        { "type": "heading", "level": 2, "text": "Portion sizes by weight (adult, moderate activity)" },
+        { "type": "list", "style": "unordered", "items": [
+          "Up to 5 kg: 100–150 g per day.",
+          "5–10 kg: 200–300 g per day.",
+          "10–20 kg: 350–500 g per day.",
+          "20–35 kg: 550–750 g per day.",
+          "35 kg+: 800 g–1.2 kg per day, split across 2 meals."
+        ]},
+        { "type": "heading", "level": 2, "text": "Seasonal adjustments" },
+        { "type": "list", "style": "unordered", "items": [
+          "Summer: lighter meals, more curd and buttermilk, frozen watermelon cubes as treats.",
+          "Monsoon: cook all meat thoroughly, avoid leftovers older than 6 hours, add a probiotic.",
+          "Winter: slightly higher fat, warm meals, ghee for joints in senior dogs."
+        ]},
+        { "type": "heading", "level": 2, "text": "Treats and biscuits" },
+        { "type": "paragraph", "text": "Treats should not exceed 10% of daily calories. Use boiled chicken cubes, dehydrated liver, paneer or commercial training treats — and keep packaged biscuits as occasional, not daily." }
+      ]
+    },
+    {
+      "id": "can-003",
+      "slug": "house-training-your-puppy-step-by-step",
+      "title": "House Training Your Puppy: A Step-by-Step Guide",
+      "category": "canine",
+      "tags": ["training", "puppy", "behaviour", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1200&q=80",
+        "alt": "Puppy on a leash being trained outside",
+        "caption": "Patience, predictability and praise — the three Ps of potty training."
+      },
+      "excerpt": "Most puppies can be reliably house-trained in 2–4 weeks if you stick to a routine. Here's the realistic, kind, India-context plan.",
+      "seo": {
+        "metaTitle": "How to House Train a Puppy — Realistic 14-Day Plan",
+        "metaDescription": "A practical step-by-step puppy potty training guide for Indian apartments and homes — schedule, accident clean-up and crate basics.",
+        "keywords": ["puppy potty training", "house train dog", "puppy training India", "crate training"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Puppies do not 'know better'. They have tiny bladders and very little impulse control until around 16 weeks. Successful house training is about preventing accidents and rewarding the right choice — not punishing the wrong one." },
+        { "type": "heading", "level": 2, "text": "The schedule that works" },
+        { "type": "list", "style": "unordered", "items": [
+          "First thing in the morning — within 5 minutes of waking.",
+          "After every meal — within 15 minutes.",
+          "After a nap — every nap, every time.",
+          "After play or excitement.",
+          "Last thing at night before bed."
+        ]},
+        { "type": "paragraph", "text": "An 8-week-old puppy can hold its bladder for roughly its age in months plus one hour, so plan toilet breaks every 2 hours during the day." },
+        { "type": "heading", "level": 2, "text": "Indoor pee-pad or balcony patch?" },
+        { "type": "paragraph", "text": "If you live in a high-rise and cannot take an unvaccinated puppy outside yet, set up a pee-pad or artificial grass patch in a fixed corner. Once vaccinations are complete (after 16 weeks), gradually move the pad closer to the door and then outside." },
+        { "type": "heading", "level": 2, "text": "Step-by-step process" },
+        { "type": "list", "style": "ordered", "items": [
+          "Pick a cue word ('go potty', 'susu') and use it every time your pup eliminates in the right spot.",
+          "Within 3 seconds of finishing, reward with a tiny treat and warm praise.",
+          "If you catch an accident mid-stream, calmly say 'no' and carry the pup to the right spot.",
+          "Never rub a dog's nose in mess — it teaches fear of you, not of the floor.",
+          "Clean accidents with an enzymatic cleaner (Pet Gusto, Petrix or diluted vinegar) so the smell does not invite a repeat."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Crate training accelerates this", "text": "A correctly sized crate (your pup can stand, turn and lie down — no bigger) helps because dogs avoid soiling where they sleep. Use it for naps and short alone-time, never as punishment." },
+        { "type": "heading", "level": 2, "text": "When to expect what" },
+        { "type": "list", "style": "unordered", "items": [
+          "Days 1–7: Many accidents. You are still learning your pup's signals.",
+          "Days 8–21: Fewer accidents. Pup starts pausing or circling near the right spot.",
+          "Weeks 4–8: Mostly reliable indoors. Accidents drop to 1–2 a week.",
+          "By 6 months: Most dogs can hold 6–8 hours and ask to go out."
+        ]},
+        { "type": "callout", "variant": "info", "title": "Setbacks are normal", "text": "New environments, illness, changes in food, or even a household member travelling can cause regressions. Go back to basics for a week and the routine returns." }
+      ]
+    },
+    {
+      "id": "can-004",
+      "slug": "common-health-issues-in-indian-dogs",
+      "title": "Common Health Issues in Indian Dogs (and How to Spot Them Early)",
+      "category": "canine",
+      "tags": ["health", "care", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 7,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=1200&q=80",
+        "alt": "A vet checking a dog's ears",
+        "caption": "Early detection turns most issues into a 10-minute clinic visit."
+      },
+      "excerpt": "Tick fever, hot spots, ear infections, heatstroke — the eight most common health issues seen in Indian dogs and the early signs every owner should know.",
+      "seo": {
+        "metaTitle": "Common Dog Health Problems in India — Signs and Prevention",
+        "metaDescription": "Tick fever, hot spots, parvovirus, ear infections — recognise the eight most common dog health issues in India before they become emergencies.",
+        "keywords": ["dog tick fever", "common dog diseases India", "dog health problems"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "India's tropical climate creates a few predictable health challenges for dogs. The good news: almost all of them are manageable when caught early." },
+        { "type": "heading", "level": 2, "text": "1. Tick-borne diseases (Ehrlichiosis, Babesiosis)" },
+        { "type": "paragraph", "text": "Sometimes called 'tick fever'. Symptoms: high fever, lethargy, pale gums, nose bleeds, weight loss. Diagnosis is a simple blood test; treatment is a 21–28 day antibiotic course. Prevention is monthly tick prevention (Bravecto, Nexgard, Simparica)." },
+        { "type": "heading", "level": 2, "text": "2. Parvovirus" },
+        { "type": "paragraph", "text": "Highly contagious viral disease in unvaccinated puppies. Symptoms: bloody diarrhoea, repeated vomiting, sudden lethargy. This is an emergency — survival rate jumps from 10% to 90% with prompt IV fluid therapy." },
+        { "type": "heading", "level": 2, "text": "3. Ear infections" },
+        { "type": "paragraph", "text": "Common in floppy-eared breeds (Cocker Spaniels, Beagles, Labs). Watch for head shaking, scratching, dark waxy discharge, foul smell. Clean weekly with a vet-recommended ear cleaner; never use cotton buds inside the canal." },
+        { "type": "heading", "level": 2, "text": "4. Hot spots and skin infections" },
+        { "type": "paragraph", "text": "Humid weather plus an itch (often a flea bite) can become a raw, oozy patch within hours. Trim the fur around it, clean with diluted Betadine, keep dry, and visit your vet for antibiotics if it's larger than a 5-rupee coin." },
+        { "type": "heading", "level": 2, "text": "5. Heatstroke" },
+        { "type": "paragraph", "text": "Dogs cool primarily by panting; in 40°C+ Indian summers this isn't enough. Signs: heavy panting, bright red gums, vomiting, collapse. Move to shade, wet with cool (not ice) water, head to a vet immediately." },
+        { "type": "callout", "variant": "danger", "title": "Never leave a dog in a parked car", "text": "Even with windows cracked, the interior of a car parked in Indian sun reaches 50°C in under 10 minutes. Heatstroke is fatal in under 20." },
+        { "type": "heading", "level": 2, "text": "6. Internal parasites" },
+        { "type": "paragraph", "text": "Roundworms, hookworms and tapeworms are extremely common. Deworm every 3 months for life — most adult dogs won't show symptoms until the worm load is heavy." },
+        { "type": "heading", "level": 2, "text": "7. Dental disease" },
+        { "type": "paragraph", "text": "By age 3, around 80% of dogs have gum disease. Brush 2–3 times a week with dog-specific toothpaste, offer dental chews, and book a professional cleaning every 1–2 years." },
+        { "type": "heading", "level": 2, "text": "8. Hip dysplasia and joint issues" },
+        { "type": "paragraph", "text": "Common in Labradors, German Shepherds and Golden Retrievers. Watch for stiffness after rest, reluctance to climb stairs, bunny-hopping gait. Maintain lean body weight, avoid forced jumping in puppies, supplement with omega-3 and glucosamine for seniors." },
+        { "type": "callout", "variant": "info", "title": "The 'something's off' rule", "text": "You know your dog. If they're 'just not themselves' for more than 24 hours — eating less, quieter, not wagging — call your vet. Early visits cost less and save lives." }
+      ]
+    },
+    {
+      "id": "can-005",
+      "slug": "grooming-guide-for-indian-dogs",
+      "title": "Grooming Guide for Indian Dogs — At-Home Routine and Salon Visits",
+      "category": "canine",
+      "tags": ["grooming", "care", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1200&q=80",
+        "alt": "Dog being brushed",
+        "caption": "Twenty minutes of weekly grooming saves hours at the salon."
+      },
+      "excerpt": "Bathing frequency, brushing for double coats, nail trimming, ear cleaning and how to handle the Indian shedding season — a no-fuss home grooming routine.",
+      "seo": {
+        "metaTitle": "Dog Grooming at Home — Indian Climate Routine",
+        "metaDescription": "How often to bathe and brush your dog, plus nails, ears and coat care — a simple at-home grooming routine for Indian conditions.",
+        "keywords": ["dog grooming India", "how often to bathe dog", "dog brushing", "dog nail trimming"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Grooming is more than aesthetic. Regular brushing distributes natural oils, surfaces lumps early, and keeps shedding manageable in a country where dogs blow coat almost year-round." },
+        { "type": "heading", "level": 2, "text": "How often to bathe" },
+        { "type": "list", "style": "unordered", "items": [
+          "Short coats (Indie, Beagle, Pug): every 4–6 weeks.",
+          "Double coats (Husky, Golden, German Shepherd): every 6–8 weeks.",
+          "Long coats (Lhasa, Shih Tzu, Maltese): every 3–4 weeks plus daily face wipes.",
+          "Skin-sensitive dogs: only when truly dirty, with a medicated shampoo."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Don't use human shampoo", "text": "Human skin pH is 5.5; dog skin is 6.5–7.5. Human shampoo strips coat oils and causes itching. Use a dog-specific shampoo." },
+        { "type": "heading", "level": 2, "text": "Brushing schedule" },
+        { "type": "list", "style": "unordered", "items": [
+          "Short coat: once a week with a rubber mitt.",
+          "Double coat: 3–4 times a week with a slicker, plus an undercoat rake during shedding seasons (Mar–Apr, Sep–Oct).",
+          "Long coat: daily with a pin brush, finishing with a comb to catch hidden mats."
+        ]},
+        { "type": "heading", "level": 2, "text": "Nails, ears and teeth" },
+        { "type": "list", "style": "unordered", "items": [
+          "Nails: trim every 3–4 weeks. If you can hear nails clicking on tile, they're too long.",
+          "Ears: weekly check, monthly clean for floppy-eared breeds.",
+          "Teeth: brush 2–3 times a week with chicken-flavoured dog toothpaste."
+        ]},
+        { "type": "heading", "level": 2, "text": "Indian summer coat care" },
+        { "type": "paragraph", "text": "Do not shave a double-coated dog in summer — the undercoat is what insulates against heat as much as cold. Instead, deshed thoroughly and let the coat do its job." }
+      ]
+    },
+    {
+      "id": "can-006",
+      "slug": "understanding-dog-behaviour-and-body-language",
+      "title": "Understanding Dog Behaviour and Body Language",
+      "category": "canine",
+      "tags": ["behaviour", "training", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1200&q=80",
+        "alt": "Dog with relaxed body language",
+        "caption": "A wagging tail isn't always a happy tail — context is everything."
+      },
+      "excerpt": "Dogs communicate constantly with their ears, eyes, tail and posture. Learn the ten signals every owner should be able to read at a glance.",
+      "seo": {
+        "metaTitle": "How to Read Dog Body Language — A Complete Guide",
+        "metaDescription": "Learn to read your dog's body language: tail position, ear set, eye contact, lip licks, yawns and play bows — and what each one means.",
+        "keywords": ["dog body language", "dog behaviour", "calming signals dogs"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Most behaviour problems are really communication problems. Dogs telegraph stress long before they bite or bolt — owners just need to know what they're seeing." },
+        { "type": "heading", "level": 2, "text": "The relaxed dog" },
+        { "type": "list", "style": "unordered", "items": [
+          "Loose, soft body, tail at spine level wagging in wide arcs.",
+          "Mouth open, tongue out in a soft 'smile'.",
+          "Eyes soft, blinking, ears in their natural resting position."
+        ]},
+        { "type": "heading", "level": 2, "text": "The stressed or fearful dog" },
+        { "type": "list", "style": "unordered", "items": [
+          "Tail tucked, ears flat, body lowered.",
+          "Whale eye (whites of the eyes showing as the dog looks sideways).",
+          "Lip licking when no food is around, repeated yawning, panting in cool weather.",
+          "Turning the head away — a polite 'please stop'."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Children and 'hugs'", "text": "Most child-dog bites happen during a hug. Dogs experience hugs as restraint. Teach kids to scratch a chest or chin, never wrap arms around a dog's neck." },
+        { "type": "heading", "level": 2, "text": "The aroused or aggressive dog" },
+        { "type": "list", "style": "unordered", "items": [
+          "Stiff body, weight forward.",
+          "Ears pricked sharply forward, hackles raised along the spine.",
+          "Tail held high and stiff, possibly with a fast, tight wag (not friendly).",
+          "Hard stare, closed mouth, low growl."
+        ]},
+        { "type": "heading", "level": 2, "text": "Play signals" },
+        { "type": "list", "style": "unordered", "items": [
+          "Play bow: front down, rear up — universal 'this is play, not real'.",
+          "Loose, bouncy movement, exaggerated paw slaps.",
+          "Self-handicapping (a bigger dog rolling onto its back to give a smaller pup a chance)."
+        ]},
+        { "type": "heading", "level": 2, "text": "Calming signals" },
+        { "type": "paragraph", "text": "Dogs use subtle gestures — sniffing the ground suddenly, walking in a curve, shaking off — to defuse tension. These aren't random. When you see one, give your dog space and lower your own intensity." }
+      ]
+    },
+    {
+      "id": "can-007",
+      "slug": "foods-to-avoid-feeding-your-dog",
+      "title": "What Foods to Avoid Feeding Your Dog",
+      "category": "canine",
+      "tags": ["food", "what-to-avoid", "health", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=80",
+        "alt": "Dog looking up at food on a table",
+        "caption": "Some kitchen staples are quietly toxic to dogs."
+      },
+      "excerpt": "Chocolate, grapes, onions, xylitol — a printable list of human foods that are dangerous for dogs, and what to do if your dog eats one.",
+      "seo": {
+        "metaTitle": "Foods Dogs Cannot Eat — The Complete Toxic List",
+        "metaDescription": "Chocolate, grapes, onions, xylitol and more — the foods your dog should never eat, with symptoms and emergency steps.",
+        "keywords": ["foods toxic to dogs", "dog cannot eat", "chocolate poisoning dog"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Dogs metabolise some compounds very differently from humans. A few common Indian kitchen ingredients are actually serious poisons for them." },
+        { "type": "heading", "level": 2, "text": "Strictly off-limits" },
+        { "type": "list", "style": "unordered", "items": [
+          "Chocolate — theobromine is toxic; dark chocolate is the worst.",
+          "Grapes and raisins — even small amounts can cause kidney failure.",
+          "Onion, garlic, leek, shallot (raw or cooked) — damage red blood cells.",
+          "Xylitol — a sweetener in sugar-free gum, mints, peanut butters; causes rapid blood sugar crash and liver failure.",
+          "Macadamia nuts — cause weakness and tremors.",
+          "Alcohol and caffeine — even small amounts.",
+          "Cooked bones — splinter and perforate the gut.",
+          "Raw bread dough — yeast expands and produces alcohol in the stomach."
+        ]},
+        { "type": "heading", "level": 2, "text": "Risky in quantity" },
+        { "type": "list", "style": "unordered", "items": [
+          "Salty namkeen, chips and pickles — sodium ion poisoning.",
+          "Spicy curries — gut irritation and pancreatitis.",
+          "Fatty trimmings, fried food — pancreatitis (very common in Indian dogs over festivals).",
+          "Avocado — persin in skin and pit.",
+          "Mushrooms (wild/unknown varieties) — many are toxic.",
+          "Nutmeg — neurotoxic in larger amounts.",
+          "Cow's milk — many adult dogs are lactose intolerant; small curd is usually fine."
+        ]},
+        { "type": "callout", "variant": "danger", "title": "If your dog eats something toxic", "text": "Call your vet or a 24x7 pet helpline immediately. Note the food, quantity and time. Do not try to make your dog vomit unless instructed — for some toxins it makes things worse." }
+      ]
+    },
+    {
+      "id": "fel-001",
+      "slug": "cat-vaccination-schedule-india",
+      "title": "Cat Vaccination Schedule in India",
+      "category": "feline",
+      "tags": ["vaccination", "health", "india", "kitten"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": true,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?w=1200&q=80",
+        "alt": "Veterinarian giving a kitten a check up",
+        "caption": "Even indoor-only cats need core vaccines."
+      },
+      "excerpt": "FVRCP, FeLV, Rabies — a clear schedule from kitten to adult, including what to do for indoor-only cats and rescued strays.",
+      "seo": {
+        "metaTitle": "Cat Vaccination Schedule India — Kitten to Adult",
+        "metaDescription": "FVRCP, FeLV and Rabies vaccination schedule for cats in India. Indoor-only and rescue-cat protocols, costs and side effects.",
+        "keywords": ["cat vaccination India", "FVRCP", "kitten vaccine", "feline leukaemia vaccine"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Even cats who never leave the apartment need core vaccines — viruses can hitch a ride on shoes, on a window-ledge fly, or on a new pet entering the house." },
+        { "type": "heading", "level": 2, "text": "Core vaccines" },
+        { "type": "list", "style": "unordered", "items": [
+          "FVRCP — Feline Viral Rhinotracheitis (herpesvirus), Calicivirus, Panleukopenia. The 'cat distemper' shot.",
+          "Anti-Rabies — required by law in most Indian states."
+        ]},
+        { "type": "heading", "level": 2, "text": "Non-core" },
+        { "type": "list", "style": "unordered", "items": [
+          "FeLV (Feline Leukaemia Virus) — recommended for cats with outdoor access or multi-cat households.",
+          "FIV — situation-dependent; discuss with your vet."
+        ]},
+        { "type": "heading", "level": 2, "text": "Kitten schedule" },
+        { "type": "list", "style": "ordered", "items": [
+          "8 weeks: First FVRCP.",
+          "12 weeks: Second FVRCP + first Rabies + FeLV (if applicable).",
+          "16 weeks: Third FVRCP + FeLV booster."
+        ]},
+        { "type": "heading", "level": 2, "text": "Adult cats" },
+        { "type": "list", "style": "unordered", "items": [
+          "FVRCP booster: every 1–3 years depending on vet protocol.",
+          "Rabies: annually.",
+          "FeLV: annually for at-risk cats."
+        ]},
+        { "type": "heading", "level": 2, "text": "Special note for rescued cats" },
+        { "type": "paragraph", "text": "Adult rescues with unknown history typically receive an FVRCP shot, an FeLV/FIV blood test before mixing with other cats, deworming, and a rabies shot a month after settling in. Quarantine new cats from resident cats for at least 14 days." },
+        { "type": "callout", "variant": "tip", "title": "Costs", "text": "FVRCP: ₹600–₹1,000. Rabies: ₹400–₹700. FeLV: ₹900–₹1,400. Full kitten course is typically ₹3,500–₹5,500 in metro India." }
+      ]
+    },
+    {
+      "id": "fel-002",
+      "slug": "litter-training-your-cat",
+      "title": "Litter Training Your Cat — and Fixing Litter Box Problems",
+      "category": "feline",
+      "tags": ["training", "behaviour", "care", "kitten"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=1200&q=80",
+        "alt": "Cat sitting near a litter box",
+        "caption": "If a cat suddenly stops using the box, something is wrong — usually fixable."
+      },
+      "excerpt": "Most kittens train themselves. The trick is setup. Here's the box rule, the sand rule and what to do when an adult cat starts going outside the litter.",
+      "seo": {
+        "metaTitle": "How to Litter Train a Cat — Setup and Troubleshooting",
+        "metaDescription": "A simple guide to litter training kittens and adult cats — number of boxes, type of litter, and how to fix accidents.",
+        "keywords": ["litter training cat", "cat peeing outside box", "best cat litter India"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "The N+1 box rule" },
+        { "type": "paragraph", "text": "If you have N cats, you need N+1 litter boxes. One cat needs two boxes, two cats need three, and so on. Boxes should be in low-traffic, well-ventilated areas — not next to the food bowl." },
+        { "type": "heading", "level": 2, "text": "Setting up for a new kitten" },
+        { "type": "list", "style": "ordered", "items": [
+          "Pick a shallow tray a kitten can climb into easily.",
+          "Use clumping clay litter or wood pellets — avoid scented litters (cats hate strong perfumes).",
+          "Fill 5–7 cm deep.",
+          "After meals or naps, gently place the kitten in the box and let her dig.",
+          "Reward with calm praise — never make a fuss right next to the box."
+        ]},
+        { "type": "heading", "level": 2, "text": "Cleaning routine" },
+        { "type": "list", "style": "unordered", "items": [
+          "Scoop solids twice a day.",
+          "Change litter fully once a week.",
+          "Wash the tray with mild soap (no harsh disinfectants — they smell threatening to cats)."
+        ]},
+        { "type": "heading", "level": 2, "text": "When an adult cat stops using the box" },
+        { "type": "paragraph", "text": "This is one of the most common reasons cats are surrendered, and it's almost always fixable." },
+        { "type": "list", "style": "unordered", "items": [
+          "Rule out medical issues first — UTIs and crystals make cats associate the box with pain. Vet visit is step one.",
+          "Check for stress: a new pet, renovations, a new baby, even a change in the brand of litter.",
+          "Try two boxes side-by-side with different litters to see which the cat prefers.",
+          "Move the box if it's too close to a noisy washing machine or a busy doorway."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Punishment backfires", "text": "Yelling at a cat or rubbing her nose in an accident makes her fear you and the box. Clean the spot with an enzymatic cleaner and address the underlying cause." }
+      ]
+    },
+    {
+      "id": "fel-003",
+      "slug": "common-cat-health-issues",
+      "title": "Common Cat Health Issues and How to Spot Them",
+      "category": "feline",
+      "tags": ["health", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=1200&q=80",
+        "alt": "Cat being examined by vet",
+        "caption": "Cats hide illness well. Subtle changes matter."
+      },
+      "excerpt": "Cats are masters at hiding pain. Here are the eight most common issues and the small clues that something's wrong.",
+      "seo": {
+        "metaTitle": "Common Cat Diseases — Symptoms, Prevention and When to Worry",
+        "metaDescription": "URI, FLUTD, dental disease, kidney issues — recognise the most common cat health problems and what to do.",
+        "keywords": ["cat health issues", "FLUTD", "cat URI", "cat kidney disease"]
+      },
+      "content": [
+        { "type": "paragraph", "text": "Wild ancestors taught cats to mask weakness. By the time a cat 'looks unwell', she has often felt unwell for days or weeks." },
+        { "type": "heading", "level": 2, "text": "1. Upper respiratory infections (URI)" },
+        { "type": "paragraph", "text": "Cat 'cold' caused by herpesvirus or calicivirus. Sneezing, watery eyes, loss of appetite. Usually self-limiting in 7–10 days; vet care needed if a kitten or senior, or if breathing is laboured." },
+        { "type": "heading", "level": 2, "text": "2. FLUTD (Feline Lower Urinary Tract Disease)" },
+        { "type": "paragraph", "text": "Straining in the litter box, frequent small pees, blood in urine, going outside the box. Male cats blocking is a life-threatening emergency — same-day vet visit." },
+        { "type": "heading", "level": 2, "text": "3. Dental disease" },
+        { "type": "paragraph", "text": "Bad breath, drooling, dropping food. By age 3, the majority of cats have some periodontal disease. Annual dental checks save teeth and money." },
+        { "type": "heading", "level": 2, "text": "4. Hairballs and gastrointestinal issues" },
+        { "type": "paragraph", "text": "Occasional hairballs are normal. Daily vomiting is not. A tablespoon of plain pumpkin or hairball-formula treats helps; persistent vomiting needs vet evaluation." },
+        { "type": "heading", "level": 2, "text": "5. Chronic kidney disease (CKD)" },
+        { "type": "paragraph", "text": "The number one cause of death in older cats. Watch for increased thirst, increased urination, slow weight loss. Diagnosed with blood and urine tests; managed with prescription diet and fluids." },
+        { "type": "heading", "level": 2, "text": "6. Hyperthyroidism" },
+        { "type": "paragraph", "text": "Common after age 8. The cat eats more but loses weight and becomes restless or vocal at night. Treatable with medication, diet or radioactive iodine." },
+        { "type": "heading", "level": 2, "text": "7. Diabetes" },
+        { "type": "paragraph", "text": "Linked to obesity. Sudden increase in thirst, weight loss despite eating well. Reversible in many cats with early diagnosis and a low-carb diet." },
+        { "type": "heading", "level": 2, "text": "8. Parasites" },
+        { "type": "paragraph", "text": "Even indoor cats get fleas, ticks and worms. Use vet-approved monthly preventives. Deworm every 3 months." }
+      ]
+    },
+    {
+      "id": "fel-004",
+      "slug": "cat-grooming-complete-guide",
+      "title": "Cat Grooming — A Complete At-Home Guide",
+      "category": "feline",
+      "tags": ["grooming", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=1200&q=80",
+        "alt": "Cat being brushed",
+        "caption": "Most cats love a slow, patient grooming session."
+      },
+      "excerpt": "Cats groom themselves but they still need help — especially long-haired breeds. Brushing, nail trimming, baths and how to make it enjoyable.",
+      "seo": {
+        "metaTitle": "Cat Grooming Guide — Brushing, Bathing and Nails at Home",
+        "metaDescription": "An at-home cat grooming guide for short and long-haired cats: brushing schedule, nail care, baths, ears and dental.",
+        "keywords": ["cat grooming", "long hair cat brushing", "cat nail trimming"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Brushing" },
+        { "type": "list", "style": "unordered", "items": [
+          "Short hair: once a week with a soft slicker or rubber mitt.",
+          "Long hair (Persian, Maine Coon, Himalayan): daily, 5–10 minutes.",
+          "Use a wide-toothed comb to catch tangles, then a slicker for finishing."
+        ]},
+        { "type": "heading", "level": 2, "text": "Bathing" },
+        { "type": "paragraph", "text": "Most cats don't need baths. If your cat is dirty, has a skin condition or is a hairless breed, bathe every 4–6 weeks with cat shampoo. Use a non-slip mat, lukewarm water, and one person to hold while another washes." },
+        { "type": "heading", "level": 2, "text": "Nail trimming" },
+        { "type": "paragraph", "text": "Trim every 2–3 weeks. Press the toe pad gently to extend the claw and clip only the clear, curved tip — never the pink quick. A scratching post in every main room reduces the need." },
+        { "type": "heading", "level": 2, "text": "Ears, eyes and teeth" },
+        { "type": "list", "style": "unordered", "items": [
+          "Ears: weekly check; clean only the visible part with a damp cotton pad.",
+          "Eyes: wipe tear stains with a warm, damp cotton ball — Persians and Himalayans need this daily.",
+          "Teeth: brush 2–3 times a week with cat-specific toothpaste; never use human toothpaste."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Make it pleasant", "text": "Pair grooming with treats, do short sessions, and stop before your cat gets cranky. Repeated calm experiences turn grooming into a moment your cat looks forward to." }
+      ]
+    },
+    {
+      "id": "fel-005",
+      "slug": "foods-toxic-to-cats",
+      "title": "Foods Toxic to Cats — What to Keep Off the Counter",
+      "category": "feline",
+      "tags": ["food", "what-to-avoid", "health"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 4,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=1200&q=80",
+        "alt": "Cat eyeing food on a counter",
+        "caption": "Cats are obligate carnivores — but plenty of meat is wrong for them too."
+      },
+      "excerpt": "Cats need very specific nutrition. These common Indian household items can cause serious illness or death.",
+      "seo": {
+        "metaTitle": "Foods Cats Cannot Eat — A Toxic List",
+        "metaDescription": "Onion, garlic, raw fish, milk, dog food and more — the foods to keep away from your cat.",
+        "keywords": ["cat toxic foods", "cat cannot eat", "foods bad for cats"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Strictly off-limits" },
+        { "type": "list", "style": "unordered", "items": [
+          "Onion, garlic, leek, shallot — even powdered forms cause anaemia.",
+          "Chocolate and caffeine — toxic to cats as to dogs.",
+          "Grapes and raisins — kidney injury.",
+          "Alcohol and raw bread dough.",
+          "Xylitol — sugar-free sweetener.",
+          "Raw eggs and raw fish — salmonella, thiamine destruction.",
+          "Cooked bones, fish bones — splintering risk.",
+          "Liver in large amounts — vitamin A toxicity."
+        ]},
+        { "type": "heading", "level": 2, "text": "Often misunderstood" },
+        { "type": "list", "style": "unordered", "items": [
+          "Cow's milk — most adult cats are lactose intolerant. The 'cat with a saucer of milk' image is a myth.",
+          "Dog food — too low in taurine for cats long-term.",
+          "Tuna for humans — fine occasionally, dangerous as a daily meal due to mercury and thiamine issues.",
+          "Vegetarian diets — cats are obligate carnivores; they cannot live on a plant-only diet."
+        ]},
+        { "type": "callout", "variant": "danger", "title": "Houseplants matter too", "text": "Lilies are extremely toxic to cats — even the pollen on a paw. Other risky houseplants: pothos, dieffenbachia, sago palm, aloe vera. Move them or rehome them." }
+      ]
+    },
+    {
+      "id": "aqu-001",
+      "slug": "setting-up-your-first-freshwater-aquarium",
+      "title": "Setting Up Your First Freshwater Aquarium",
+      "category": "aquatic",
+      "tags": ["care", "training"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 7,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1520637836862-4d197d17c55a?w=1200&q=80",
+        "alt": "A planted freshwater aquarium",
+        "caption": "Bigger tanks are easier than smaller ones — water chemistry is more stable."
+      },
+      "excerpt": "Tank size, filter, substrate, cycling and the first ten fish — a beginner-friendly walkthrough that avoids the most common rookie mistakes.",
+      "seo": {
+        "metaTitle": "Beginner Freshwater Aquarium Setup Guide",
+        "metaDescription": "Tank size, filter, cycling, water parameters and the best beginner fish — a complete first-aquarium guide.",
+        "keywords": ["aquarium setup", "freshwater aquarium beginner", "fish tank cycling"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Choose a tank size" },
+        { "type": "paragraph", "text": "The single biggest mistake is going too small. A 60-litre tank is far easier to keep stable than a 20-litre one because temperature, ammonia and pH change more slowly in larger water volumes." },
+        { "type": "list", "style": "unordered", "items": [
+          "Beginner sweet spot: 60–100 litres.",
+          "Position: away from direct sunlight (algae) and AC vents (temperature swings).",
+          "Sturdy stand — water weighs 1 kg per litre."
+        ]},
+        { "type": "heading", "level": 2, "text": "Essential equipment" },
+        { "type": "list", "style": "unordered", "items": [
+          "Filter rated for at least 4x your tank volume per hour.",
+          "Heater (in northern India winters tropical fish need 24–27°C).",
+          "Lighting timer for 8 hours a day.",
+          "Substrate: gravel or planted-tank soil capped with sand.",
+          "Test kit for ammonia, nitrite, nitrate and pH (liquid kits are far more accurate than strips)."
+        ]},
+        { "type": "heading", "level": 2, "text": "The nitrogen cycle (cycling)" },
+        { "type": "paragraph", "text": "A new tank cannot hold fish for 4–6 weeks. Beneficial bacteria need time to colonise the filter and convert toxic ammonia into nitrite, then nitrate. Skipping this step kills fish — it is the #1 reason new aquariums fail." },
+        { "type": "list", "style": "ordered", "items": [
+          "Set up tank with water, filter and heater running.",
+          "Add a small dose of pure ammonia (or fish food) daily.",
+          "Test water every 2–3 days. Wait until ammonia and nitrite both read 0 and you see nitrate appear.",
+          "Do a 50% water change. Now you can add fish — slowly."
+        ]},
+        { "type": "heading", "level": 2, "text": "Best beginner fish" },
+        { "type": "list", "style": "unordered", "items": [
+          "Neon tetras and harlequin rasboras — peaceful schoolers.",
+          "Corydoras catfish — bottom feeders that clean leftover food.",
+          "Platies and mollies — hardy, colourful, livebearers.",
+          "Otocinclus or nerite snails for algae control."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Avoid the goldfish bowl", "text": "Goldfish are cold-water, large, and produce huge bio-loads. They need 75+ litres each, with strong filtration. A bowl is essentially a slow death sentence." }
+      ]
+    },
+    {
+      "id": "aqu-002",
+      "slug": "common-fish-diseases-and-treatment",
+      "title": "Common Fish Diseases and Treatment",
+      "category": "aquatic",
+      "tags": ["health", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=1200&q=80",
+        "alt": "Aquarium fish swimming",
+        "caption": "Most fish disease is really water-quality disease."
+      },
+      "excerpt": "Ich, fin rot, dropsy, swim bladder — recognise the signs early and know which treatments actually work.",
+      "seo": {
+        "metaTitle": "Common Aquarium Fish Diseases — Symptoms and Cures",
+        "metaDescription": "Ich, fin rot, dropsy and swim bladder issues — how to identify and treat common fish illnesses.",
+        "keywords": ["fish ich treatment", "fin rot", "dropsy fish", "fish diseases"]
+      },
+      "content": [
+        { "type": "callout", "variant": "info", "title": "Test water first", "text": "Eight out of ten 'sick fish' problems are water-quality problems. Before medicating, test ammonia, nitrite, nitrate and pH and do a 30% water change." },
+        { "type": "heading", "level": 2, "text": "Ich (white spot disease)" },
+        { "type": "paragraph", "text": "Tiny salt-grain-sized white dots on body and fins; rapid breathing; flashing on decor. Treat by raising temperature gradually to 28°C and dosing a copper-free ich medication for 7–10 days." },
+        { "type": "heading", "level": 2, "text": "Fin rot" },
+        { "type": "paragraph", "text": "Frayed, blackened or receding fin edges. Caused by poor water quality plus bacterial opportunism. Improve water, dose with a broad-spectrum antibacterial." },
+        { "type": "heading", "level": 2, "text": "Dropsy" },
+        { "type": "paragraph", "text": "Pinecone scale appearance, swollen belly. A sign of internal organ failure — prognosis is poor. Quarantine and treat with epsom salt baths and antibiotics; manage expectations." },
+        { "type": "heading", "level": 2, "text": "Swim bladder issues" },
+        { "type": "paragraph", "text": "Fish floats sideways or sinks. In livebearers and goldfish, often constipation — fast for 48 hours and feed a deshelled boiled pea. If it persists, suspect bacterial swim bladder disease." },
+        { "type": "heading", "level": 2, "text": "Quarantine new fish" },
+        { "type": "paragraph", "text": "A small 20-litre quarantine tank prevents most outbreaks. New fish stay there for 2–3 weeks before joining your display tank." }
+      ]
+    },
+    {
+      "id": "aqu-003",
+      "slug": "best-fish-foods-and-feeding-schedule",
+      "title": "Best Fish Foods and Feeding Schedule",
+      "category": "aquatic",
+      "tags": ["food", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 4,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=1200&q=80",
+        "alt": "Fish feeding at the surface of an aquarium",
+        "caption": "Underfeeding is almost always safer than overfeeding."
+      },
+      "excerpt": "Flakes, pellets, frozen, live — what to feed which fish, how often, and the two-minute rule that prevents most water-quality crashes.",
+      "seo": {
+        "metaTitle": "Aquarium Fish Feeding Guide — How Much and How Often",
+        "metaDescription": "Flake, pellet, frozen and live food guidance for community fish. How often to feed and how to fast.",
+        "keywords": ["fish feeding schedule", "best fish food", "how often to feed fish"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "The two-minute rule" },
+        { "type": "paragraph", "text": "Feed only what your fish can finish in two minutes. Anything left rots, spikes ammonia and clouds water. If food sinks past the bottom feeders, you're feeding too much." },
+        { "type": "heading", "level": 2, "text": "What to feed" },
+        { "type": "list", "style": "unordered", "items": [
+          "Daily staple: high-quality flake or pellet sized for your fish's mouth.",
+          "Variety 2–3x a week: frozen bloodworm, brine shrimp, daphnia.",
+          "Vegetable feeders (otocinclus, plecos): blanched zucchini, spinach, algae wafers.",
+          "Live food: occasional, only from trusted suppliers (parasite risk)."
+        ]},
+        { "type": "heading", "level": 2, "text": "How often" },
+        { "type": "list", "style": "unordered", "items": [
+          "Adult community fish: once or twice a day.",
+          "Fry: 4–5 small feedings a day.",
+          "Goldfish: twice a day, smaller portions.",
+          "Fast day: one day a week with no food keeps adults lean and helps water stay clean."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Going on holiday?", "text": "A healthy adult community tank is fine without food for up to 7 days. Avoid 'holiday feeder blocks' — they pollute water more than they feed fish." }
+      ]
+    },
+    {
+      "id": "aqu-004",
+      "slug": "aquarium-maintenance-guide",
+      "title": "Aquarium Maintenance — A Weekly and Monthly Checklist",
+      "category": "aquatic",
+      "tags": ["care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 4,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1497671954146-59a07ea2f8b8?w=1200&q=80",
+        "alt": "Cleaning an aquarium glass with a magnetic cleaner",
+        "caption": "Twenty minutes a week prevents nearly every aquarium disaster."
+      },
+      "excerpt": "A no-nonsense maintenance schedule — what to do weekly, monthly and seasonally so your tank stays clear and your fish stay healthy.",
+      "seo": {
+        "metaTitle": "Aquarium Maintenance Checklist — Weekly and Monthly Tasks",
+        "metaDescription": "A simple aquarium maintenance schedule covering water changes, glass cleaning, filter care and equipment checks.",
+        "keywords": ["aquarium maintenance", "fish tank water change", "filter cleaning"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Weekly (15–20 mins)" },
+        { "type": "list", "style": "unordered", "items": [
+          "20–25% water change with dechlorinated water at the same temperature.",
+          "Gravel vacuum the open substrate.",
+          "Wipe inside glass with a magnetic cleaner or aquarium-safe sponge.",
+          "Test ammonia, nitrite, nitrate."
+        ]},
+        { "type": "heading", "level": 2, "text": "Monthly" },
+        { "type": "list", "style": "unordered", "items": [
+          "Rinse filter media in tank water (never tap water — it kills good bacteria).",
+          "Trim plants, remove dead leaves.",
+          "Clean filter intake sponge.",
+          "Check heater accuracy with a separate thermometer."
+        ]},
+        { "type": "heading", "level": 2, "text": "Quarterly" },
+        { "type": "list", "style": "unordered", "items": [
+          "Replace mechanical filter media (filter floss).",
+          "Inspect silicone seals on the tank.",
+          "Refresh airline tubing if cracked.",
+          "Replenish trace minerals if you keep a planted tank."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "Never deep-clean the whole tank", "text": "Stripping the tank, scrubbing decor and replacing all the water destroys the bacterial colony and triggers a new ammonia cycle. Maintain — don't reset." }
+      ]
+    },
+    {
+      "id": "avi-001",
+      "slug": "caring-for-pet-birds-in-india",
+      "title": "Caring for Pet Birds in India — A Beginner's Guide",
+      "category": "avian",
+      "tags": ["care", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?w=1200&q=80",
+        "alt": "Budgerigar perched on a hand",
+        "caption": "Birds are intelligent, social, and surprisingly demanding companions."
+      },
+      "excerpt": "Indian wildlife laws, suitable species, cage size, daily routines, vet care — start here before bringing a feathered friend home.",
+      "seo": {
+        "metaTitle": "Pet Bird Care Guide India — Species, Cages and Routine",
+        "metaDescription": "What pet birds you can legally keep in India, cage requirements, daily routines and basic health care.",
+        "keywords": ["pet bird India", "budgie care", "cockatiel India", "lovebird care"]
+      },
+      "content": [
+        { "type": "callout", "variant": "warning", "title": "Indian wildlife law", "text": "Under the Wildlife Protection Act, all native Indian bird species — including the rose-ringed parakeet, mynah and most parrots seen on the streets — cannot be kept as pets. Only non-native species (budgerigars, cockatiels, lovebirds, finches, canaries, certain conures) can be legally kept." },
+        { "type": "heading", "level": 2, "text": "Beginner-friendly species" },
+        { "type": "list", "style": "unordered", "items": [
+          "Budgerigar: small, sociable, easy first bird.",
+          "Cockatiel: gentle, can learn tunes, lives 15–20 years.",
+          "Lovebird: charming but bonded pairs are happiest.",
+          "Zebra finch: low-interaction, great for watchers."
+        ]},
+        { "type": "heading", "level": 2, "text": "Cage requirements" },
+        { "type": "list", "style": "unordered", "items": [
+          "Width and length matter more than height — birds fly horizontally.",
+          "Minimum: 3x the bird's wingspan in width.",
+          "Bar spacing small enough that the bird cannot squeeze its head through.",
+          "Place at chest-to-eye height in a calm room with no kitchen fumes."
+        ]},
+        { "type": "heading", "level": 2, "text": "Daily routine" },
+        { "type": "list", "style": "unordered", "items": [
+          "Fresh food and water every morning.",
+          "Out-of-cage flying time: 1–4 hours, depending on species.",
+          "12 hours of dark, quiet sleep — birds need this for hormone regulation.",
+          "Cover the cage at night in noisy households."
+        ]},
+        { "type": "heading", "level": 2, "text": "Avian vets in India" },
+        { "type": "paragraph", "text": "Avian medicine is specialised. Look for a vet who explicitly mentions exotic or avian experience — many small-animal vets do not see enough birds to confidently treat them. Most metro cities have at least one avian-trained vet." }
+      ]
+    },
+    {
+      "id": "avi-002",
+      "slug": "bird-diet-and-nutrition-guide",
+      "title": "Bird Diet and Nutrition Guide",
+      "category": "avian",
+      "tags": ["food", "care", "what-to-avoid"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1507666664345-c49223375e33?w=1200&q=80",
+        "alt": "Pet bird eating fresh vegetables",
+        "caption": "Variety is everything — a seed-only diet shortens lifespan."
+      },
+      "excerpt": "Pellets, fresh produce, sprouts, treats — and the surprisingly long list of foods that can kill a pet bird.",
+      "seo": {
+        "metaTitle": "Pet Bird Diet — What to Feed and What to Avoid",
+        "metaDescription": "Building a balanced bird diet beyond seeds. Pellets, vegetables, fruits and toxic foods to avoid.",
+        "keywords": ["pet bird food", "budgie diet", "cockatiel nutrition", "toxic foods birds"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "The 60-30-10 plate" },
+        { "type": "list", "style": "unordered", "items": [
+          "60% pellets — formulated, nutritionally complete.",
+          "30% fresh vegetables and a few greens.",
+          "10% seeds, fruits and treats."
+        ]},
+        { "type": "heading", "level": 2, "text": "Bird-friendly fresh foods" },
+        { "type": "list", "style": "unordered", "items": [
+          "Vegetables: carrot, capsicum, broccoli, cauliflower, sweet potato, beans.",
+          "Greens: methi, spinach, kale (in moderation), parsley.",
+          "Fruits (small portions): apple (no seeds), banana, papaya, mango, melon.",
+          "Sprouts: moong, chana — gently sprouted and washed."
+        ]},
+        { "type": "heading", "level": 2, "text": "Foods to never offer" },
+        { "type": "list", "style": "unordered", "items": [
+          "Avocado — fatal even in small amounts.",
+          "Chocolate, caffeine, alcohol.",
+          "Onion and garlic.",
+          "Apple seeds, cherry pits, peach pits — cyanogenic.",
+          "Raw beans.",
+          "Salty, fried or sugary human food.",
+          "Dairy in larger amounts."
+        ]},
+        { "type": "callout", "variant": "danger", "title": "Teflon and birds", "text": "Birds have super-sensitive respiratory systems. Heated non-stick (Teflon/PTFE) cookware releases fumes that kill birds within minutes. Move the cage out of the kitchen, use stainless steel or cast iron, and never use scented candles or aerosols nearby." }
+      ]
+    },
+    {
+      "id": "avi-003",
+      "slug": "bird-health-issues-and-vet-visits",
+      "title": "Bird Health Issues and When to See a Vet",
+      "category": "avian",
+      "tags": ["health", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=1200&q=80",
+        "alt": "Veterinarian holding a small parrot",
+        "caption": "Birds hide illness even harder than cats. Annual check-ups matter."
+      },
+      "excerpt": "Fluffed feathers, tail bobbing, droppings changes — the early warning signs every bird owner should know.",
+      "seo": {
+        "metaTitle": "Pet Bird Health — Common Problems and Warning Signs",
+        "metaDescription": "Recognise feather plucking, respiratory disease and egg-binding early — when to call your avian vet.",
+        "keywords": ["bird health problems", "feather plucking", "bird respiratory disease"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Warning signs" },
+        { "type": "list", "style": "unordered", "items": [
+          "Fluffed up for hours, sitting on the cage floor.",
+          "Tail bobbing with each breath, open-mouth breathing.",
+          "Discharge from nostrils or eyes.",
+          "Sudden change in droppings (colour, amount, consistency).",
+          "Plucking feathers or self-mutilation.",
+          "Off food for more than 12 hours — birds have very fast metabolisms."
+        ]},
+        { "type": "heading", "level": 2, "text": "Common conditions" },
+        { "type": "list", "style": "unordered", "items": [
+          "Respiratory infections from drafts, dust, kitchen fumes.",
+          "Feather plucking — often boredom, hormonal or skin disease.",
+          "Egg-binding in females — emergency.",
+          "Polyomavirus and PBFD in parrots — viral, with serious implications for multi-bird homes.",
+          "Crop infections (sour crop) — yeast or bacterial."
+        ]},
+        { "type": "callout", "variant": "info", "title": "Annual vet check", "text": "An annual avian wellness exam (with weight, beak/nail trim, gram stain) catches most issues before they become emergencies. Schedule it in cooler months when transport is easier on the bird." }
+      ]
+    },
+    {
+      "id": "avi-004",
+      "slug": "training-your-pet-bird",
+      "title": "Training Your Pet Bird — Step-Up, Recall and Tricks",
+      "category": "avian",
+      "tags": ["training", "behaviour", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1597626133663-53df9633b799?w=1200&q=80",
+        "alt": "Hand-trained cockatiel on a finger",
+        "caption": "Trust comes first; tricks come second."
+      },
+      "excerpt": "Birds learn fast — but only when training is short, calm and reward-based. The first three behaviours every pet bird should know.",
+      "seo": {
+        "metaTitle": "Pet Bird Training — Step-Up, Recall and Beyond",
+        "metaDescription": "Teach your bird step-up, recall and trick basics with positive reinforcement. Short sessions, big results.",
+        "keywords": ["bird training", "step up training bird", "parrot recall training"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Build trust first" },
+        { "type": "paragraph", "text": "For the first 1–2 weeks, do nothing but sit near the cage and talk softly. Offer millet from your fingertip. Only when the bird approaches calmly should you begin step-up." },
+        { "type": "heading", "level": 2, "text": "Step-up cue" },
+        { "type": "list", "style": "ordered", "items": [
+          "Hold a perch or your finger gently against the bird's lower belly.",
+          "Say 'step up' once, calmly.",
+          "Most birds will rock forward and step on; reward with a small treat.",
+          "Practise 5 minutes, twice a day."
+        ]},
+        { "type": "heading", "level": 2, "text": "Recall (flying to you on cue)" },
+        { "type": "paragraph", "text": "Once your bird is comfortable on your hand, start with very short distances in a closed room. Hold a treat, say the bird's name and 'come', and reward instantly when she lands on your hand." },
+        { "type": "callout", "variant": "tip", "title": "Short, sweet sessions", "text": "Five-minute sessions, two or three times a day, beat one long session. End on a win — even if it's just one good step-up." },
+        { "type": "heading", "level": 2, "text": "What not to do" },
+        { "type": "list", "style": "unordered", "items": [
+          "Never grab at a bird's feet.",
+          "Never punish a bite — withdraw attention briefly instead.",
+          "Never train a hungry bird to the point of stress; use small bits of favourite treats.",
+          "Never clip wings without thinking — many vets now recommend against it; if necessary, only a vet should do it."
+        ]}
+      ]
+    },
+    {
+      "id": "sml-001",
+      "slug": "rabbit-care-guide-for-indian-households",
+      "title": "Rabbit Care Guide for Indian Households",
+      "category": "small-pets",
+      "tags": ["care", "food", "health", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1452857297128-d9c29adba80b?w=1200&q=80",
+        "alt": "Domestic rabbit eating hay",
+        "caption": "A rabbit's diet is 80% hay — everything else is supplementary."
+      },
+      "excerpt": "Rabbits live 8–12 years, need hay-based diets and a lot more space than the typical pet shop tells you. Here's how to do it right.",
+      "seo": {
+        "metaTitle": "Rabbit Care Guide India — Diet, Housing and Health",
+        "metaDescription": "How to care for a pet rabbit in India: housing, hay-based diet, health, neutering and litter training.",
+        "keywords": ["rabbit care India", "rabbit diet", "indoor rabbit", "rabbit health"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Housing" },
+        { "type": "list", "style": "unordered", "items": [
+          "Minimum enclosure: 4x the rabbit's stretched-out length.",
+          "Wire-bottom cages are unhealthy — they cause sore hocks. Use a solid base with hay.",
+          "Free-roam in a bunny-proofed room is ideal — rabbits chew cables and skirting.",
+          "Indian summers: keep the room below 28°C; rabbits get heatstroke easily."
+        ]},
+        { "type": "heading", "level": 2, "text": "Diet" },
+        { "type": "list", "style": "unordered", "items": [
+          "80% unlimited grass hay (Timothy, Oat, Orchard).",
+          "15% leafy greens — coriander, methi, lettuce (not iceberg), basil, parsley.",
+          "5% pellets — high-fibre, plain Timothy-based.",
+          "Treats: a slice of apple or carrot once a day — carrots are NOT a staple."
+        ]},
+        { "type": "callout", "variant": "warning", "title": "No bread, no chocolate, no cooked food", "text": "Rabbits cannot vomit. Anything inappropriate stays in until it causes GI stasis — a life-threatening shutdown of the gut." },
+        { "type": "heading", "level": 2, "text": "Health basics" },
+        { "type": "list", "style": "unordered", "items": [
+          "Annual vaccination against RHDV2 (now available in India).",
+          "Spay/neuter at 4–6 months — prevents reproductive cancers and calms behaviour.",
+          "Watch for: not eating for 12 hours, no droppings, hunched posture — these are GI stasis emergencies.",
+          "Brush daily during shedding."
+        ]},
+        { "type": "heading", "level": 2, "text": "Litter training" },
+        { "type": "paragraph", "text": "Most rabbits naturally pick a corner. Place a litter tray with paper-pellet litter and a handful of hay there. They'll happily eat hay while doing their business — completely normal." }
+      ]
+    },
+    {
+      "id": "sml-002",
+      "slug": "hamster-care-essentials",
+      "title": "Hamster Care Essentials",
+      "category": "small-pets",
+      "tags": ["care", "food", "health"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=1200&q=80",
+        "alt": "Syrian hamster in bedding",
+        "caption": "Hamsters are solitary nocturnal animals — respect that and they thrive."
+      },
+      "excerpt": "Cage size, wheel size, bedding, diet and the most-broken rules in pet shops — a clear guide to keeping a hamster happy.",
+      "seo": {
+        "metaTitle": "Hamster Care Guide — Cage, Diet and Handling",
+        "metaDescription": "How to care for Syrian and dwarf hamsters: minimum cage size, correct wheel, diet and handling.",
+        "keywords": ["hamster care", "hamster cage size", "hamster diet"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Cage size" },
+        { "type": "paragraph", "text": "Most pet shop cages are too small. Aim for a minimum 80x50 cm of unbroken floor space. Bin cages and DIY enclosures are popular for a reason." },
+        { "type": "heading", "level": 2, "text": "Wheel size" },
+        { "type": "list", "style": "unordered", "items": [
+          "Syrian: 28 cm or larger.",
+          "Dwarf: 21 cm or larger.",
+          "Wheels too small bend the spine — the hamster runs hunched."
+        ]},
+        { "type": "heading", "level": 2, "text": "Bedding" },
+        { "type": "list", "style": "unordered", "items": [
+          "Aspen shavings or paper-based bedding 15+ cm deep for burrowing.",
+          "Avoid pine and cedar — toxic phenols.",
+          "Provide a sand bath (chinchilla sand, not dust) for grooming."
+        ]},
+        { "type": "heading", "level": 2, "text": "Diet" },
+        { "type": "list", "style": "unordered", "items": [
+          "Quality hamster mix or lab block as base.",
+          "Fresh veg in small amounts — broccoli, cucumber, carrot top.",
+          "Occasional protein: a tiny cube of boiled egg or mealworm.",
+          "Never: citrus, onion, garlic, chocolate, almonds (bitter)."
+        ]},
+        { "type": "callout", "variant": "info", "title": "Solitary by nature", "text": "Syrian hamsters MUST live alone. Dwarf species can sometimes live in same-sex pairs from a young age, but fights are common. When in doubt, house separately." }
+      ]
+    },
+    {
+      "id": "sml-003",
+      "slug": "guinea-pig-health-and-diet",
+      "title": "Guinea Pig Health and Diet",
+      "category": "small-pets",
+      "tags": ["care", "food", "health"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1535241749838-299277b6305f?w=1200&q=80",
+        "alt": "Guinea pig eating fresh greens",
+        "caption": "Guinea pigs need vitamin C every day — they cannot make their own."
+      },
+      "excerpt": "Guinea pigs are sociable, vocal and surprisingly fragile. Diet, housing, the must-know vitamin C rule, and how to spot trouble.",
+      "seo": {
+        "metaTitle": "Guinea Pig Care — Diet, Vitamin C and Housing",
+        "metaDescription": "Caring for guinea pigs: hay-based diet, daily vitamin C, social housing and common health issues.",
+        "keywords": ["guinea pig diet", "vitamin C guinea pig", "guinea pig health"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Vitamin C — the critical detail" },
+        { "type": "paragraph", "text": "Like humans, guinea pigs cannot synthesise vitamin C. Without 10–25 mg daily, they develop scurvy — joint pain, weight loss, skin problems. Provide vitamin-C-rich greens daily (parsley, capsicum, broccoli) or a vet-prescribed supplement. Don't rely on water-drop additives — vitamin C degrades in light." },
+        { "type": "heading", "level": 2, "text": "Housing" },
+        { "type": "list", "style": "unordered", "items": [
+          "Minimum cage: 1.2 m x 0.6 m for one — bigger for two.",
+          "Solid floor with fleece or paper bedding.",
+          "Hidey houses — guinea pigs are prey animals, they need cover.",
+          "Pairs are happiest. Same-sex or neutered pairs avoid babies."
+        ]},
+        { "type": "heading", "level": 2, "text": "Diet" },
+        { "type": "list", "style": "unordered", "items": [
+          "Unlimited Timothy hay.",
+          "1 cup mixed fresh vegetables daily, half of which is vitamin-C-rich.",
+          "Quarter-cup pellets per pig per day.",
+          "Plain water; clean the bottle daily."
+        ]},
+        { "type": "heading", "level": 2, "text": "Health red flags" },
+        { "type": "list", "style": "unordered", "items": [
+          "Refusing to eat for 12 hours — emergency.",
+          "Loose droppings, hunched posture.",
+          "Crusty eyes or laboured breathing.",
+          "Bald patches, scratching — fungal or mite infections."
+        ]}
+      ]
+    },
+    {
+      "id": "sml-004",
+      "slug": "setting-up-cages-for-small-pets",
+      "title": "Setting Up Cages for Small Pets — Rabbits, Hamsters, Guinea Pigs",
+      "category": "small-pets",
+      "tags": ["care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 4,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1578326457399-3b34dbbf23b8?w=1200&q=80",
+        "alt": "Spacious small pet enclosure",
+        "caption": "More space, less hardware — the right cage simplifies care."
+      },
+      "excerpt": "What 'spacious enough' actually looks like for the three most popular small pets, plus enrichment ideas that actually get used.",
+      "seo": {
+        "metaTitle": "Small Pet Cage Setup Guide — Sizes and Enrichment",
+        "metaDescription": "Cage size and setup for rabbits, hamsters and guinea pigs — including enrichment that actually gets used.",
+        "keywords": ["small pet cage", "rabbit hutch", "hamster bin cage", "guinea pig cage"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Cage size benchmarks" },
+        { "type": "list", "style": "unordered", "items": [
+          "Hamster (Syrian): 80x50 cm minimum.",
+          "Hamster (Dwarf): 70x40 cm minimum.",
+          "Guinea pig (one): 120x60 cm; (two): 150x60 cm.",
+          "Rabbit: a full bunny-proofed room or 3x3 m exercise pen."
+        ]},
+        { "type": "heading", "level": 2, "text": "Enrichment that gets used" },
+        { "type": "list", "style": "unordered", "items": [
+          "Cardboard tunnels and chew toys (replace weekly).",
+          "Foraging trays — hay sprinkled with a few veg pieces.",
+          "Wooden ledges and hiding huts.",
+          "Sand bath (hamsters), digging box (rabbits), pigloos (guinea pigs)."
+        ]},
+        { "type": "heading", "level": 2, "text": "Cleaning routine" },
+        { "type": "list", "style": "unordered", "items": [
+          "Daily: spot-clean wet patches, refill hay, clean water bottle.",
+          "Weekly: full bedding change, wash food bowls.",
+          "Monthly: deep clean cage with mild soap, rinse thoroughly."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Avoid over-disinfecting", "text": "Strong disinfectants leave residues that small pets are sensitive to. A 1:10 white vinegar solution kills urine scale and is safe once dry." }
+      ]
+    },
+    {
+      "id": "gen-001",
+      "slug": "choosing-the-right-pet-for-your-family",
+      "title": "Choosing the Right Pet for Your Family",
+      "category": "general",
+      "tags": ["care", "behaviour"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": true,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=80",
+        "alt": "Family with multiple pets",
+        "caption": "The best pet is the one you can realistically commit to for a decade or more."
+      },
+      "excerpt": "Time, budget, space, lifestyle — eight honest questions to answer before bringing any pet home, with realistic guidance on which species fits which household.",
+      "seo": {
+        "metaTitle": "How to Choose the Right Pet — Family-Fit Guide",
+        "metaDescription": "Eight questions to ask before getting a pet, with honest guidance on what species fits what household.",
+        "keywords": ["choosing a pet", "best pet family", "first time pet owner"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Eight honest questions" },
+        { "type": "list", "style": "ordered", "items": [
+          "How many hours a day will the pet be alone?",
+          "What's our monthly budget — including vet emergencies?",
+          "Do we travel often, and what's our boarding plan?",
+          "Are there allergies in the household?",
+          "How much living space and outdoor access do we have?",
+          "Who is the primary caregiver, realistically?",
+          "Are there small children, and are they ready for a pet?",
+          "Are we ready to commit for the pet's full lifespan — 10–18 years for many species?"
+        ]},
+        { "type": "heading", "level": 2, "text": "Rough fit guide" },
+        { "type": "list", "style": "unordered", "items": [
+          "Working couple, no kids, apartment: cat, fish, hamster.",
+          "Family with kids 6+, time for walks: medium dog, rabbit pair.",
+          "Retiree, plenty of time: senior dog from a shelter, parrot, aquarium.",
+          "Frequent travellers: fish, low-maintenance reptile, no pet (foster instead)."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Adopt, don't shop", "text": "India's shelters and rescue groups (CUPA, FOA, Welfare for Animals, local NGOs) are full of healthy pets looking for homes. Adoption fees are typically a fraction of a breeder's price and include vaccination and sterilisation." }
+      ]
+    },
+    {
+      "id": "gen-002",
+      "slug": "pet-first-aid-basics",
+      "title": "Pet First Aid Basics — What to Do Before You Reach the Vet",
+      "category": "general",
+      "tags": ["first-aid", "health", "care"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 6,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1518398046578-8cca57782e17?w=1200&q=80",
+        "alt": "First aid kit for pets",
+        "caption": "First aid keeps the situation stable until professional help arrives."
+      },
+      "excerpt": "What to do for cuts, choking, heatstroke, poisoning and bleeding — plus a printable list of items every pet first-aid kit should contain.",
+      "seo": {
+        "metaTitle": "Pet First Aid Guide — Emergency Steps and Kit",
+        "metaDescription": "Pet first aid basics for bleeding, choking, heatstroke and poisoning, plus a complete first-aid kit checklist.",
+        "keywords": ["pet first aid", "dog choking", "pet heatstroke", "first aid kit pet"]
+      },
+      "content": [
+        { "type": "callout", "variant": "warning", "title": "First aid is not a substitute for a vet", "text": "Every emergency below ends with: 'then go to the vet'. First aid stabilises — it does not heal." },
+        { "type": "heading", "level": 2, "text": "Cuts and bleeding" },
+        { "type": "list", "style": "ordered", "items": [
+          "Apply firm pressure with a clean cloth for 5 minutes.",
+          "If bleeding doesn't slow, apply a second cloth on top — don't remove the first.",
+          "Wrap loosely with a bandage; cover the wound, don't constrict the limb.",
+          "Vet visit, even for small wounds — Indian climate makes infection fast."
+        ]},
+        { "type": "heading", "level": 2, "text": "Choking" },
+        { "type": "list", "style": "ordered", "items": [
+          "Open the mouth and look — only sweep with a finger if you can clearly see the object.",
+          "Small dog/cat: hold upside down briefly and tap firmly between shoulder blades.",
+          "Large dog: stand behind, place fist below ribs and push up and forward (Heimlich-style).",
+          "Even after success, vet check for airway swelling."
+        ]},
+        { "type": "heading", "level": 2, "text": "Heatstroke" },
+        { "type": "list", "style": "ordered", "items": [
+          "Move to shade or AC.",
+          "Wet with cool (not ice) water — focus on belly, paws and groin.",
+          "Offer small sips of water, never force.",
+          "Drive to vet immediately, AC on full."
+        ]},
+        { "type": "heading", "level": 2, "text": "Suspected poisoning" },
+        { "type": "list", "style": "unordered", "items": [
+          "Note what was eaten, how much, and when.",
+          "Take packaging or a photo with you.",
+          "Do NOT induce vomiting unless the vet tells you to.",
+          "Call your vet or a 24x7 helpline en route."
+        ]},
+        { "type": "heading", "level": 2, "text": "First-aid kit checklist" },
+        { "type": "list", "style": "unordered", "items": [
+          "Sterile gauze, cotton, vet wrap, bandage scissors, tweezers.",
+          "Saline solution, dilute Betadine, hydrogen peroxide (3%).",
+          "Digital thermometer (rectal) and water-based lubricant.",
+          "Tick remover.",
+          "Activated charcoal (use only on vet advice).",
+          "Your vet's number, a 24x7 emergency vet number, your pet's vaccination card."
+        ]}
+      ]
+    },
+    {
+      "id": "gen-003",
+      "slug": "monsoon-pet-care-india",
+      "title": "Monsoon Pet Care in India — A Survival Guide",
+      "category": "general",
+      "tags": ["monsoon", "care", "health", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=1200&q=80",
+        "alt": "Dog being dried with a towel after a walk in rain",
+        "caption": "Monsoons mean fungal skin, leptospirosis and tummy upsets — preventable with a few habits."
+      },
+      "excerpt": "From paw drying to leptospirosis vaccines, the small habits that prevent the big monsoon problems for Indian pets.",
+      "seo": {
+        "metaTitle": "Monsoon Pet Care India — Skin, Stomach and Safety Tips",
+        "metaDescription": "Survive Indian monsoons with your pet: prevent fungal skin, GI upsets, leptospirosis and tick infestations.",
+        "keywords": ["monsoon pet care", "dog rainy season", "leptospirosis dog"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "After every walk" },
+        { "type": "list", "style": "unordered", "items": [
+          "Towel dry thoroughly — focus on paws, belly and ears.",
+          "Wipe paws with a damp cloth and dry with a separate towel.",
+          "Check between toes for grass thorns and small wounds."
+        ]},
+        { "type": "heading", "level": 2, "text": "Watch out for" },
+        { "type": "list", "style": "unordered", "items": [
+          "Fungal skin infections — patchy hair loss, ring-shaped marks.",
+          "Hot spots — sudden raw, oozing patches.",
+          "Ear infections — head shaking, foul smell.",
+          "GI upsets from waterlogged street food bins or puddle drinking.",
+          "Leptospirosis — bacterial disease from rat urine in puddles. Vaccinate yearly."
+        ]},
+        { "type": "heading", "level": 2, "text": "At home" },
+        { "type": "list", "style": "unordered", "items": [
+          "Switch to a thinner towel-dry routine; avoid heavy oiling.",
+          "Add a probiotic to meals 3 days a week.",
+          "Boost tick prevention — moist weather is peak season.",
+          "Don't bathe more than once every 3 weeks unless prescribed."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "The 'sniff first' rule", "text": "If your dog hesitates to drink puddle water, listen. If they're tempted, redirect — many monsoon GI cases trace back to a single muddy slurp." }
+      ]
+    },
+    {
+      "id": "gen-004",
+      "slug": "summer-pet-care-tips-india",
+      "title": "Summer Pet Care Tips for Indian Climate",
+      "category": "general",
+      "tags": ["summer", "care", "health", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=1200&q=80",
+        "alt": "Dog drinking water on a hot day",
+        "caption": "Hydration, shade, early walks — repeat daily until October."
+      },
+      "excerpt": "Indian summers regularly cross 40°C. Heatstroke, paw burns and dehydration are common — and almost entirely preventable.",
+      "seo": {
+        "metaTitle": "Summer Pet Care India — Heat, Hydration and Walks",
+        "metaDescription": "How to keep your pets safe in Indian summers: heatstroke prevention, paw protection, hydration tricks and walk timings.",
+        "keywords": ["summer pet care India", "heatstroke prevention dog", "paw burn"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "The seven-second pavement test" },
+        { "type": "paragraph", "text": "Place the back of your hand on the pavement. If you cannot hold it there for 7 seconds, it's too hot for paws. Walk before 7 am or after 8 pm in summer." },
+        { "type": "heading", "level": 2, "text": "Hydration tricks" },
+        { "type": "list", "style": "unordered", "items": [
+          "Two water bowls in different rooms; refill twice a day.",
+          "Add unsalted homemade chicken stock to one bowl as a tempter.",
+          "Frozen watermelon cubes or curd-stuffed Kong toys as cool treats.",
+          "Bird and small-pet bottles cleaned daily — heat breeds algae fast."
+        ]},
+        { "type": "heading", "level": 2, "text": "Indoor cooling" },
+        { "type": "list", "style": "unordered", "items": [
+          "Cool tile floors are a pet's best friend; let them lie there.",
+          "Cooling mats and damp towels under a fan work well.",
+          "Never leave a pet in a parked car, even for 'two minutes'.",
+          "Birds: never near the AC, never in direct fan blast."
+        ]},
+        { "type": "callout", "variant": "danger", "title": "Heatstroke signs", "text": "Heavy panting, bright red gums or tongue, drooling, vomiting, wobbly walking, collapse. Move to shade, wet with cool (not ice) water and head to vet immediately." }
+      ]
+    },
+    {
+      "id": "gen-005",
+      "slug": "pet-insurance-in-india",
+      "title": "Pet Insurance in India — What You Need to Know",
+      "category": "general",
+      "tags": ["insurance", "care", "india"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=80",
+        "alt": "Dog at the vet's office",
+        "caption": "A serious illness can mean a lakh-plus bill. Insurance softens the blow."
+      },
+      "excerpt": "Pet insurance is finally maturing in India. Here's what's covered, what isn't, and how to read a policy without surprises.",
+      "seo": {
+        "metaTitle": "Pet Insurance India — Coverage, Costs and Policy Tips",
+        "metaDescription": "How pet insurance works in India, what's typically covered, exclusions, and how to compare policies.",
+        "keywords": ["pet insurance India", "dog insurance", "cat insurance India"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "What policies typically cover" },
+        { "type": "list", "style": "unordered", "items": [
+          "Accidents and emergency surgery.",
+          "Illness — infectious diseases, internal disorders.",
+          "Hospitalisation and diagnostic tests.",
+          "Third-party liability (if your pet injures someone or damages property).",
+          "Theft or loss (some policies)."
+        ]},
+        { "type": "heading", "level": 2, "text": "What's usually not covered" },
+        { "type": "list", "style": "unordered", "items": [
+          "Routine vaccinations and annual check-ups.",
+          "Dental cleaning and grooming.",
+          "Pre-existing conditions.",
+          "Pregnancy and elective procedures.",
+          "Hereditary conditions, sometimes — read fine print for breed-specific exclusions."
+        ]},
+        { "type": "heading", "level": 2, "text": "How to choose" },
+        { "type": "list", "style": "ordered", "items": [
+          "Get the policy when your pet is young and healthy — pre-existing exclusions tighten with age.",
+          "Compare claim settlement ratios, not just premiums.",
+          "Check the cashless network — does your usual vet accept this insurer?",
+          "Read the waiting period (often 30 days for illness).",
+          "Note the claim limit per year and per condition."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Self-insurance backup", "text": "Even with a policy, keep an emergency fund of ₹15,000–₹40,000 per pet for deductibles, co-pays and uncovered events." }
+      ]
+    },
+    {
+      "id": "gen-006",
+      "slug": "introducing-a-new-pet-to-your-home",
+      "title": "Introducing a New Pet to Your Home (and Existing Pets)",
+      "category": "general",
+      "tags": ["behaviour", "care", "training"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1444212477490-ca407925329e?w=1200&q=80",
+        "alt": "Dog and cat meeting cautiously",
+        "caption": "Slow introductions become lifelong friendships."
+      },
+      "excerpt": "The first 14 days set the tone. Here's a step-by-step plan for introducing a new pet to your existing pets and household — with fewer fights and more friendships.",
+      "seo": {
+        "metaTitle": "How to Introduce a New Pet to Your Existing Pets",
+        "metaDescription": "A 14-day plan for introducing a new dog, cat or small pet to your home and resident pets without conflict.",
+        "keywords": ["introduce new pet", "new dog existing dog", "cat introduction"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "Before the new pet arrives" },
+        { "type": "list", "style": "unordered", "items": [
+          "Prepare a 'safe room' with food, water, bed, litter (for cats), toys.",
+          "Do not move resident pet's furniture — they need stability.",
+          "Stock up on high-value treats for both pets."
+        ]},
+        { "type": "heading", "level": 2, "text": "Days 1–3: Scent swap" },
+        { "type": "paragraph", "text": "Keep pets separated. Swap blankets and bedding daily so each animal gets used to the other's scent before any face-to-face. Feed them on either side of a closed door so 'good things' happen in each other's presence." },
+        { "type": "heading", "level": 2, "text": "Days 4–7: Visual contact" },
+        { "type": "paragraph", "text": "Use a baby gate or carrier so they can see each other without contact. Reward calm behaviour. Two short sessions a day, ending while everyone is still relaxed." },
+        { "type": "heading", "level": 2, "text": "Days 8–14: Supervised meetings" },
+        { "type": "list", "style": "unordered", "items": [
+          "Leash dogs, harness or carrier for cats during first meets.",
+          "Keep meetings under 10 minutes; end on a positive note.",
+          "Watch for stiff bodies, hard stares, prolonged growls — separate calmly.",
+          "Gradually extend time as both pets relax."
+        ]},
+        { "type": "callout", "variant": "tip", "title": "Patience pays", "text": "Most cat-dog or cat-cat introductions take 4–8 weeks for true comfort. Push the pace and you'll set yourself back weeks." }
+      ]
+    },
+    {
+      "id": "gen-007",
+      "slug": "pet-friendly-travel-india",
+      "title": "Travelling with Pets in India — Trains, Cars and Flights",
+      "category": "general",
+      "tags": ["care", "india", "training"],
+      "author": { "name": "Petosauras Team", "role": "Editorial" },
+      "publishedAt": "2026-05-08",
+      "updatedAt": "2026-05-08",
+      "readingTimeMinutes": 5,
+      "status": "published",
+      "featured": false,
+      "featuredImage": {
+        "url": "https://images.unsplash.com/photo-1601758174039-1c6e35a19f31?w=1200&q=80",
+        "alt": "Dog looking out of a car window",
+        "caption": "Plan paperwork, comfort and pit stops in advance — your pet will travel better."
+      },
+      "excerpt": "Health certificates, carrier sizing, in-cabin vs cargo, and pet-friendly hotels — practical advice for travel within and from India.",
+      "seo": {
+        "metaTitle": "Travelling with Pets in India — Train, Flight and Car Guide",
+        "metaDescription": "Pet travel rules in India: trains, domestic flights, car journeys, paperwork, carriers and pet-friendly stays.",
+        "keywords": ["pet travel India", "dog flight India", "train pet India"]
+      },
+      "content": [
+        { "type": "heading", "level": 2, "text": "By car" },
+        { "type": "list", "style": "unordered", "items": [
+          "Use a crash-tested carrier or a back-seat harness.",
+          "Pee break every 2 hours; offer water but feed only at destination.",
+          "Never allow head out of window — debris and ear infections.",
+          "Cover seats with a waterproof liner — motion sickness is common in young dogs."
+        ]},
+        { "type": "heading", "level": 2, "text": "By train" },
+        { "type": "list", "style": "unordered", "items": [
+          "Indian Railways allows dogs in 1st AC if you book the entire coupé, or in the dog box.",
+          "Carry vaccination card, fitness certificate (issued within 48 hrs), and ticket.",
+          "Cats and small pets travel in carriers in the brake van."
+        ]},
+        { "type": "heading", "level": 2, "text": "By flight" },
+        { "type": "list", "style": "unordered", "items": [
+          "Most Indian airlines accept pets only in cargo, with a few allowing in-cabin for very small pets.",
+          "Health certificate within 10 days, vaccination record, IATA-compliant crate.",
+          "Avoid summer afternoon flights — heat is hardest on pets.",
+          "Snub-nosed breeds (Pugs, Bulldogs, Persian cats) are often refused for flight safety."
+        ]},
+        { "type": "callout", "variant": "info", "title": "Pet-friendly stays", "text": "Many resorts in Goa, Coorg, Lonavala, Manali and Wayanad welcome dogs. Confirm size limits and any extra deposit when booking, and bring your pet's bedding to ease the change of environment." }
+      ]
+    }
+  ]
+}
