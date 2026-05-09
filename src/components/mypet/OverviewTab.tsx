@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, Sparkles, Activity, Droplet, ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
+import { ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
+import HealthSnapshotCard from "./HealthSnapshotCard";
 
 interface Props {
   petId: string;
   petName: string;
+  pet?: any;
   onTabChange: (tab: string) => void;
 }
 
-const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
+const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
