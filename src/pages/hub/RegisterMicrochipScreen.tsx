@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGuestPopup } from "@/contexts/GuestPopupContext";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { BackIcon, UploadIcon, VerifiedIcon, WarningIcon } from "@/components/icons/PetosauraIcons";
@@ -36,6 +36,8 @@ const RegisterMicrochipScreen = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { triggerGuestPopup } = useGuestPopup();
+  const [searchParams] = useSearchParams();
+  const prefilledPetId = searchParams.get("pet");
 
   // Guest gate
   useEffect(() => {
@@ -106,13 +108,17 @@ const RegisterMicrochipScreen = () => {
     },
   });
 
-  // Auto-select first pet without chip
+  // Prefer pet from ?pet= query param, else first pet without chip
   useEffect(() => {
     if (selectedPetId !== null) return;
+    if (prefilledPetId && pets.some((p: any) => p.id === prefilledPetId)) {
+      setSelectedPetId(prefilledPetId);
+      return;
+    }
     const taken = new Set(existingChips.map((c: any) => c.pet_id).filter(Boolean));
     const candidate = pets.find((p: any) => !taken.has(p.id));
     if (candidate) setSelectedPetId(candidate.id);
-  }, [pets, existingChips, selectedPetId]);
+  }, [pets, existingChips, selectedPetId, prefilledPetId]);
 
   // Debounced validation + conflict check
   useEffect(() => {
@@ -208,6 +214,53 @@ const RegisterMicrochipScreen = () => {
         is_active: true,
       });
       if (insErr) throw insErr;
+
+      // Mirror microchip identity onto the pet for fast read in MyPet identity card
+      const linkedPetId = selectedPetId && selectedPetId !== "none" ? selectedPetId : null;
+      if (linkedPetId) {
+        await supabase
+          .from("pets")
+          .update({
+            microchip_number: validation.cleaned,
+            microchip_registered_status: verification_status,
+            microchip_registered_date: implantDate || new Date().toISOString().slice(0, 10),
+          })
+          .eq("id", linkedPetId)
+          .eq("owner_id", user.id);
+
+        // Create a microchip health record + link the certificate (best-effort)
+        try {
+          const db: any = supabase;
+          const { data: hr } = await db
+            .from("pet_health_records")
+            .insert({
+              owner_id: user.id,
+              pet_id: linkedPetId,
+              record_type: "microchip",
+              title: `Microchip ${validation.cleaned}`,
+              record_date: implantDate || new Date().toISOString().slice(0, 10),
+              status: "done",
+              notes: notes || null,
+            })
+            .select()
+            .single();
+          if (hr && documentPath) {
+            await db.from("pet_documents").insert({
+              owner_id: user.id,
+              pet_id: linkedPetId,
+              health_record_id: hr.id,
+              document_type: "microchip_certificate",
+              file_name: documentName,
+              file_url: documentPath,
+              file_size: picked ? picked.file.size : null,
+              file_mime_type: picked ? picked.file.type : null,
+            });
+          }
+        } catch {
+          // Non-fatal: chip is still registered in pet_microchips
+        }
+      }
+
 
       setSuccess({
         status: verification_status,
