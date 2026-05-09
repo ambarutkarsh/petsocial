@@ -197,6 +197,7 @@ const App = () => (
             <Route path="/hub/pet-moving" element={<ProtectedRoute><PetMovingScreen /></ProtectedRoute>} />
             <Route path="/hub/microchip" element={<MicrochipScreen />} />
             <Route path="/hub/microchip/register" element={<RegisterMicrochipScreen />} />
+            <Route path="/mypet/microchip/register" element={<ProtectedRoute><RegisterMicrochipScreen /></ProtectedRoute>} />
             <Route path="/hub/settings" element={<ProtectedRoute><SettingsScreen /></ProtectedRoute>} />
 
             {/* MyPet sub-pages */}
