@@ -46,6 +46,27 @@ const PetIdentityCard = ({ pet }: Props) => {
     queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId: pet.id }),
   });
 
+  const { data: microchip } = useQuery({
+    queryKey: ["pet-microchip", pet.id],
+    enabled: !!user && !!pet?.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("pet_microchips")
+        .select("chip_number, verification_status, is_active")
+        .eq("pet_id", pet.id)
+        .eq("owner_id", user!.id)
+        .eq("is_active", true)
+        .order("registered_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const hasChip = !!(microchip?.chip_number || pet.microchip_number);
+  const chipNumber = microchip?.chip_number || pet.microchip_number;
+  const isVerified = microchip?.verification_status === "verified";
+
   const upcomingVaccines = records.filter(
     (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
   );
