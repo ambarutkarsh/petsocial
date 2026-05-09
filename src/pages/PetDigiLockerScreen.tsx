@@ -559,7 +559,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
                         className={`text-xs px-3 py-1.5 rounded-full ${vaccStatus === s.v ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{s.l}</button>
                     ))}
                   </div>
-                  <Button size="sm" className="w-full" onClick={saveVaccine}>Save Vaccine</Button>
+                  <Button size="sm" className="w-full" onClick={saveVaccine}>{editingVaccId ? "Update Vaccine" : "Save Vaccine"}</Button>
                 </div>
               )}
 
