@@ -362,7 +362,7 @@ const HomeScreen = () => {
               {blogs.map((b: any) => (
                 <button
                   key={b.id}
-                  onClick={() => navigate("/learn")}
+                  onClick={() => navigate(`/hub/learn/knowledge-base/${b.slug}`)}
                   className="shrink-0 w-[150px] text-left rounded-lg bg-card border border-border overflow-hidden shadow-sm"
                 >
                   <div className="w-full aspect-[4/3] bg-primary-light overflow-hidden">
