@@ -100,27 +100,9 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
       {/* Health Snapshot (configurable, per-pet) */}
       <HealthSnapshotCard pet={pet || { id: petId, name: petName }} />
 
-      {/* Quick stats — single row */}
-      <div className="grid grid-cols-4 gap-2">
-        {tiles.map((t) => (
-          <button
-            key={t.key}
-            onClick={t.onClick}
-            className="rounded-xl border border-border bg-card p-2 text-left active:scale-95 transition-all"
-          >
-            <div className="w-7 h-7 rounded-md bg-primary-light/60 flex items-center justify-center mb-1.5">
-              {t.icon}
-            </div>
-            <p className="text-[9px] uppercase font-bold text-muted-foreground leading-tight truncate">{t.label}</p>
-            <p className="font-heading font-bold text-sm leading-tight truncate">{t.value}</p>
-            <p className="text-[9px] text-muted-foreground font-body truncate">{t.sub}</p>
-          </button>
-        ))}
-      </div>
-
       {/* Growth + Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-border bg-card p-3.5">
+        <div className="rounded-lg border border-border bg-card p-3.5">
           <p className="font-heading font-bold text-sm mb-2">Growth / Weight</p>
           {lastWeight ? (
             <>
