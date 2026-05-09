@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, Sparkles, Activity, Droplet, ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
+import { ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
+import HealthSnapshotCard from "./HealthSnapshotCard";
 
 interface Props {
   petId: string;
   petName: string;
+  pet?: any;
   onTabChange: (tab: string) => void;
 }
 
-const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
+const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -56,19 +58,8 @@ const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
 
   return (
     <div className="space-y-3">
-      {/* Health Snapshot */}
-      <div className="rounded-3xl border border-border bg-card p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-heading font-bold text-base">Health Snapshot</h3>
-          <span className="text-[10px] text-muted-foreground font-body">Updated today</span>
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          <SnapItem icon={<Heart className="w-5 h-5 text-secondary" />} label="Overall Health" value="Good" sub="No issues" tone="text-secondary" />
-          <SnapItem icon={<Sparkles className="w-5 h-5 text-accent" />} label="Body Condition" value="Ideal" sub="Score: 4/5" tone="text-accent" />
-          <SnapItem icon={<Activity className="w-5 h-5 text-primary" />} label="Activity Level" value="Active" sub="Great job!" tone="text-primary" />
-          <SnapItem icon={<Droplet className="w-5 h-5 text-secondary" />} label="Hydration" value="Good" sub="Keep it up" tone="text-secondary" />
-        </div>
-      </div>
+      {/* Health Snapshot (configurable, per-pet) */}
+      <HealthSnapshotCard pet={pet || { id: petId, name: petName }} />
 
       {/* Upcoming Care + Growth */}
       <div className="grid grid-cols-2 gap-3">
@@ -172,29 +163,6 @@ const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
     </div>
   );
 };
-
-const SnapItem = ({
-  icon,
-  label,
-  value,
-  sub,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  sub: string;
-  tone: string;
-}) => (
-  <div className="text-center">
-    <p className="text-[9px] font-body text-muted-foreground leading-tight mb-1">{label}</p>
-    <div className="w-9 h-9 mx-auto rounded-full bg-primary-light/60 flex items-center justify-center mb-1">
-      {icon}
-    </div>
-    <p className={`text-[12px] font-body font-bold ${tone}`}>{value}</p>
-    <p className="text-[9px] text-muted-foreground font-body leading-tight">{sub}</p>
-  </div>
-);
 
 const CareRow = ({
   icon,
