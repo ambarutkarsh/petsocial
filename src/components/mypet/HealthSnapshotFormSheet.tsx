@@ -147,7 +147,7 @@ const HealthSnapshotFormSheet = ({ open, onClose, pet, existing }: Props) => {
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent
         side="bottom"
-        className="h-[92vh] overflow-y-auto rounded-t-3xl p-4 left-1/2 -translate-x-1/2 w-full max-w-[480px] sm:max-w-[480px]"
+        className="h-[92vh] overflow-y-auto rounded-t-3xl p-4 !left-1/2 !right-auto -translate-x-1/2 w-full max-w-[480px]"
       >
         <SheetHeader>
           <SheetTitle className="font-heading">
