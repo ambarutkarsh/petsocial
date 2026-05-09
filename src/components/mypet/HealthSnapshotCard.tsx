@@ -35,13 +35,13 @@ const HealthSnapshotCard = ({ pet }: Props) => {
   });
 
   if (isLoading) {
-    return <div className="rounded-3xl border border-border bg-card p-4 h-40 animate-pulse" />;
+    return <div className="rounded-lg border border-border bg-card p-4 h-40 animate-pulse" />;
   }
 
   if (!snapshot) {
     return (
       <>
-        <div className="rounded-3xl border border-border bg-card p-5 text-center">
+        <div className="rounded-lg border border-border bg-card p-5 text-center">
           <div className="w-12 h-12 mx-auto rounded-full bg-primary-light/60 flex items-center justify-center mb-2">
             <Heart className="w-6 h-6 text-primary" />
           </div>
@@ -78,7 +78,7 @@ const HealthSnapshotCard = ({ pet }: Props) => {
 
   return (
     <>
-      <div className="rounded-3xl border border-border bg-card p-4">
+      <div className="rounded-lg border border-border bg-card p-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="font-heading font-bold text-base">Health Snapshot</h3>
@@ -99,7 +99,7 @@ const HealthSnapshotCard = ({ pet }: Props) => {
             const Icon = it.icon;
             const tone = SCORE_COLORS[it.score] || "bg-muted text-muted-foreground";
             return (
-              <div key={it.key} className="rounded-2xl border border-border p-2.5">
+              <div key={it.key} className="rounded-lg border border-border p-2.5">
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center ${tone}`}>
                     <Icon className="w-3.5 h-3.5" />
