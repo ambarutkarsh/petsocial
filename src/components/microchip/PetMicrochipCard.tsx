@@ -43,7 +43,7 @@ const PetMicrochipCard = ({ petId, ownerId }: Props) => {
         <p className="text-xs text-muted-foreground font-body mb-3">
           Register your chip to protect your pet.
         </p>
-        <Button size="sm" className="rounded-full" onClick={() => navigate("/hub/microchip/register")}>
+        <Button size="sm" className="rounded-full" onClick={() => navigate(`/hub/microchip/register?pet=${petId}`)}>
           Register Chip →
         </Button>
       </div>
