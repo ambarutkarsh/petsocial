@@ -144,6 +144,32 @@ const PetIdentityCard = ({ pet }: Props) => {
               .join(" • ")}
           </p>
 
+          {/* Microchip row */}
+          {hasChip ? (
+            <button
+              onClick={() => navigate(`/mypet/microchip/register?pet=${pet.id}`)}
+              className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 border border-border/50 max-w-full"
+            >
+              <Cpu className="w-3 h-3 text-primary shrink-0" />
+              <span className="text-[11px] font-body font-semibold text-foreground truncate">
+                {chipNumber}
+              </span>
+              {isVerified && (
+                <ShieldCheck className="w-3 h-3 text-secondary shrink-0" />
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate(`/mypet/microchip/register?pet=${pet.id}`)}
+              className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-primary-foreground"
+            >
+              <Cpu className="w-3 h-3 shrink-0" />
+              <span className="text-[11px] font-body font-semibold">
+                Add microchip
+              </span>
+            </button>
+          )}
+
           {/* 2 inline status pills */}
           <div className="grid grid-cols-2 gap-2 mt-2.5">
             <StatPill
