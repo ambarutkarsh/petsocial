@@ -178,7 +178,6 @@ const HomeCarouselBanner = () => {
   }, [items.length]);
 
   const current = items[idx];
-  if (!current) return null;
 
   const tagLine = useMemo(() => {
     if (!current) return "";
@@ -189,6 +188,8 @@ const HomeCarouselBanner = () => {
     ].filter(Boolean);
     return parts.join(" · ");
   }, [current]);
+
+  if (!current) return null;
 
   const handleClick = () => {
     if (current.cta_url) {
