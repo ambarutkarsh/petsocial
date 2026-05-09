@@ -1,12 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { differenceInDays, differenceInMonths, differenceInYears, format } from "date-fns";
+import { differenceInMonths, differenceInYears } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
-import { Pencil, Syringe, Bug, FileText, Calendar, ShieldCheck, Cpu } from "lucide-react";
-import { useRef } from "react";
+import { Pencil, ShieldCheck, Cpu, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   pet: any;
@@ -17,6 +35,43 @@ const PetIdentityCard = ({ pet }: Props) => {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [nameDraft, setNameDraft] = useState(pet.name || "");
+  const [savingName, setSavingName] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleSaveName = async () => {
+    const trimmed = nameDraft.trim();
+    if (!trimmed) {
+      toast.error("Name cannot be empty");
+      return;
+    }
+    setSavingName(true);
+    const { error } = await supabase.from("pets").update({ name: trimmed }).eq("id", pet.id);
+    setSavingName(false);
+    if (error) {
+      toast.error("Could not update name");
+      return;
+    }
+    toast.success("Name updated");
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
+    setEditOpen(false);
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    const { error } = await supabase.from("pets").delete().eq("id", pet.id);
+    setDeleting(false);
+    if (error) {
+      toast.error("Could not delete pet");
+      return;
+    }
+    toast.success(`${pet.name} removed`);
+    qc.invalidateQueries({ queryKey: ["my-pets"] });
+    setDeleteOpen(false);
+    navigate("/mypet");
+  };
 
   const { data: latestWeight } = useQuery({
     queryKey: ["latest-weight", pet.id],
@@ -32,18 +87,6 @@ const PetIdentityCard = ({ pet }: Props) => {
         .maybeSingle();
       return data?.weight_kg ?? null;
     },
-  });
-
-  const { data: records = [] } = useQuery({
-    queryKey: ["mypet-summary", pet.id],
-    enabled: !!user && !!pet?.id,
-    queryFn: () => fetchHealthRecords({ ownerId: user!.id, petId: pet.id }),
-  });
-
-  const { data: docs = [] } = useQuery({
-    queryKey: ["pet-documents", pet.id],
-    enabled: !!user && !!pet?.id,
-    queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId: pet.id }),
   });
 
   const { data: microchip } = useQuery({
@@ -66,14 +109,6 @@ const PetIdentityCard = ({ pet }: Props) => {
   const hasChip = !!(microchip?.chip_number || pet.microchip_number);
   const chipNumber = microchip?.chip_number || pet.microchip_number;
   const isVerified = microchip?.verification_status === "verified";
-
-  const upcomingVaccines = records.filter(
-    (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
-  );
-  const upcomingDeworm = records.find(
-    (r: any) => r.record_type === "deworming" && r.next_due_date && new Date(r.next_due_date) > new Date()
-  );
-  const lastVet = records.find((r: any) => r.record_type === "vet_visit" && r.record_date);
 
   const age = pet.date_of_birth
     ? (() => {
@@ -103,7 +138,16 @@ const PetIdentityCard = ({ pet }: Props) => {
   };
 
   return (
-    <div className="rounded-3xl border border-border bg-primary-light/40 p-3.5 shadow-petosauras">
+    <div className="relative rounded-3xl border border-border bg-primary-light/40 p-3.5 shadow-petosauras">
+      {/* Delete CTA */}
+      <button
+        onClick={() => setDeleteOpen(true)}
+        aria-label="Delete pet"
+        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-card/80 hover:bg-destructive hover:text-destructive-foreground border border-border/50 flex items-center justify-center shadow-sm transition-colors"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+
       {/* Top row: avatar + name + meta */}
       <div className="flex items-start gap-3">
         <button onClick={() => fileRef.current?.click()} className="relative shrink-0">
@@ -127,13 +171,16 @@ const PetIdentityCard = ({ pet }: Props) => {
           />
         </button>
 
-        <div className="flex-1 min-w-0 pt-0.5">
+        <div className="flex-1 min-w-0 pt-0.5 pr-7">
           <div className="flex items-center gap-1.5">
             <h2 className="font-heading font-bold text-xl truncate">{pet.name}</h2>
             <button
-              onClick={() => navigate(`/profile/edit-pet/${pet.id}`)}
+              onClick={() => {
+                setNameDraft(pet.name || "");
+                setEditOpen(true);
+              }}
               className="p-1 rounded-full hover:bg-card/60"
-              aria-label="Edit pet"
+              aria-label="Edit pet name"
             >
               <Pencil className="w-3.5 h-3.5 text-primary" />
             </button>
@@ -169,35 +216,56 @@ const PetIdentityCard = ({ pet }: Props) => {
               </span>
             </button>
           )}
-
         </div>
       </div>
+
+      {/* Edit name dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-[360px] rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Edit pet name</DialogTitle>
+          </DialogHeader>
+          <Input
+            value={nameDraft}
+            onChange={(e) => setNameDraft(e.target.value)}
+            placeholder="Pet name"
+            maxLength={40}
+            autoFocus
+          />
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveName} disabled={savingName}>
+              {savingName ? "Saving…" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirm */}
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent className="max-w-[360px] rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-heading">Delete {pet.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove {pet.name} and all associated details (health records, documents, logs). This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
-
-const StatPill = ({
-  icon,
-  value,
-  label,
-  compact,
-}: {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  compact?: boolean;
-}) => (
-  <div className="flex items-center gap-2 rounded-2xl bg-card px-2.5 py-1.5 border border-border/50">
-    <div className="shrink-0 w-7 h-7 rounded-full bg-primary-light/70 flex items-center justify-center">
-      {icon}
-    </div>
-    <div className="min-w-0 leading-tight">
-      <p className={`font-body font-bold text-foreground truncate ${compact ? "text-[11px]" : "text-sm"}`}>
-        {value}
-      </p>
-      <p className="text-[10px] text-muted-foreground font-body truncate">{label}</p>
-    </div>
-  </div>
-);
 
 export default PetIdentityCard;

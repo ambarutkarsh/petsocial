@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -100,18 +101,22 @@ const UploadDocumentSheet = ({
             <label className="text-[11px] font-semibold uppercase text-muted-foreground block mb-1.5">
               Document Type
             </label>
-            <select
-              disabled={lockDocumentType}
+            <Select
               value={docType}
-              onChange={(e) => setDocType(e.target.value as DocumentType)}
-              className="w-full h-11 rounded-2xl border border-input bg-background px-3 text-sm font-body disabled:opacity-60"
+              onValueChange={(v) => setDocType(v as DocumentType)}
+              disabled={lockDocumentType}
             >
-              {TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {DOCUMENT_TYPE_LABEL[t]}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full h-11 rounded-2xl">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-[1300]">
+                {TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {DOCUMENT_TYPE_LABEL[t]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
