@@ -60,7 +60,7 @@ const AuthScreen = () => {
           setShowRegistration(true);
         }
       } else {
-        navigate("/feeds", { replace: true });
+        navigate("/", { replace: true });
       }
     };
     checkProfile();
@@ -75,7 +75,7 @@ const AuthScreen = () => {
     if (error) { toast.error(error.message); return; }
     trackEvent("login_success");
     if (isAdminEmail(email)) { navigate("/admin"); return; }
-    navigate("/feeds");
+    navigate("/");
   };
 
   const handleGoogleSignIn = async () => {
@@ -129,14 +129,14 @@ const AuthScreen = () => {
     if (error) { toast.error(error.message); return; }
     trackEvent("otp_login_success");
     if (isAdminEmail(otpEmail)) { navigate("/admin"); return; }
-    navigate("/feeds");
+    navigate("/");
   };
 
   if (showRegistration) {
     return (
       <RegistrationFlow
         initialStep={registrationStep}
-        onComplete={() => navigate("/feeds")}
+        onComplete={() => navigate("/")}
         onBackToLogin={() => setShowRegistration(false)}
       />
     );

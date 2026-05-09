@@ -88,7 +88,7 @@ const CompleteRegistrationScreen = () => {
       await refreshProfile();
       sendWelcomeEmail(user.id);
       toast.success("Welcome to Petosauras! 🦕");
-      navigate("/feed", { replace: true });
+      navigate("/", { replace: true });
     } catch (e: any) {
       toast.error(e.message || "Something went wrong");
     }
@@ -132,7 +132,7 @@ const CompleteRegistrationScreen = () => {
             </select>
             <Input placeholder="PIN code (optional)" value={pinCode} onChange={e => setPinCode(e.target.value.replace(/\D/g, "").slice(0, 6))} />
             <div className="flex gap-2">
-              <Button variant="outline" className="flex-1" onClick={() => navigate("/feed")}>Skip for now</Button>
+              <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>Skip for now</Button>
               <Button className="flex-1" disabled={!canContinueA} onClick={() => setStep(1)}>Continue →</Button>
             </div>
           </div>
