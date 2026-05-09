@@ -107,19 +107,21 @@ const HomeScreen = () => {
     },
   });
 
-  const { data: blogs = [], isLoading: blogsLoading } = useQuery({
-    queryKey: ["home-blogs"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("knowledge_articles")
-        .select("id, title, summary, emoji, thumbnail_url, read_time_minutes")
-        .eq("is_published", true)
-        .order("view_count", { ascending: false })
-        .limit(3);
-      return data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
+  const blogsLoading = false;
+  const blogs = TOP_BLOG_SLUGS
+    .map((slug) => {
+      const b = getBlogBySlug(slug);
+      if (!b) return null;
+      return {
+        id: b.id,
+        slug: b.slug,
+        title: b.title,
+        summary: b.excerpt,
+        thumbnail_url: b.featuredImage?.url,
+        read_time_minutes: b.readingTimeMinutes,
+      };
+    })
+    .filter(Boolean) as Array<{ id: string; slug: string; title: string; summary: string; thumbnail_url?: string; read_time_minutes: number }>;
 
   const { data: nearby = [], isLoading: nearbyLoading } = useQuery({
     queryKey: ["home-nearby"],
