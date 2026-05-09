@@ -38,8 +38,71 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   const weightDelta =
     lastWeight && prevWeight ? Number(lastWeight.weight_kg) - Number(prevWeight.weight_kg) : null;
 
+  const { data: records = [] } = useQuery({
+    queryKey: ["overview-records", petId],
+    enabled: !!user && !!petId,
+    queryFn: () => fetchHealthRecords({ ownerId: user!.id, petId }),
+  });
+
+  const { data: docs = [] } = useQuery({
+    queryKey: ["overview-docs", petId],
+    enabled: !!user && !!petId,
+    queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId }),
+  });
+
+  const upcomingVaccines = records.filter(
+    (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
+  );
+  const upcomingDeworm = records.find(
+    (r: any) => r.record_type === "deworming" && r.next_due_date && new Date(r.next_due_date) > new Date()
+  );
+  const lastVet = records.find((r: any) => r.record_type === "vet_visit" && r.record_date);
+
+  const tiles = [
+    {
+      icon: <Syringe className="w-3.5 h-3.5 text-secondary" />,
+      value: `${upcomingVaccines.length}`,
+      label: "Upcoming vaccine",
+    },
+    {
+      icon: <Bug className="w-3.5 h-3.5 text-accent" />,
+      value: "Deworming",
+      label: upcomingDeworm ? "Due soon" : "Up to date",
+    },
+    {
+      icon: <FileText className="w-3.5 h-3.5 text-primary" />,
+      value: `${docs.length}`,
+      label: "Documents",
+    },
+    {
+      icon: <Calendar className="w-3.5 h-3.5 text-primary" />,
+      value: "Last vet visit",
+      label: lastVet?.record_date ? format(new Date(lastVet.record_date), "dd MMM yyyy") : "—",
+    },
+  ];
+
   return (
     <div className="space-y-3">
+      {/* Health summary tiles - minimal rounded rectangles */}
+      <div className="grid grid-cols-4 gap-2">
+        {tiles.map((t, i) => (
+          <div
+            key={i}
+            className="rounded-lg border border-border bg-card p-2 flex flex-col items-start gap-1"
+          >
+            <div className="w-7 h-7 rounded-md bg-primary-light/60 flex items-center justify-center">
+              {t.icon}
+            </div>
+            <p className="font-body font-bold text-[11px] text-foreground leading-tight truncate w-full">
+              {t.value}
+            </p>
+            <p className="text-[9px] text-muted-foreground font-body leading-tight truncate w-full">
+              {t.label}
+            </p>
+          </div>
+        ))}
+      </div>
+
       {/* Health Snapshot (configurable, per-pet) */}
       <HealthSnapshotCard pet={pet || { id: petId, name: petName }} />
 
