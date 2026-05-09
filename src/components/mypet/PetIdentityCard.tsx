@@ -4,7 +4,7 @@ import { differenceInDays, differenceInMonths, differenceInYears, format } from 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
-import { Pencil, Syringe, Bug, FileText, Calendar } from "lucide-react";
+import { Pencil, Syringe, Bug, FileText, Calendar, ShieldCheck, Cpu } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 
@@ -45,6 +45,27 @@ const PetIdentityCard = ({ pet }: Props) => {
     enabled: !!user && !!pet?.id,
     queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId: pet.id }),
   });
+
+  const { data: microchip } = useQuery({
+    queryKey: ["pet-microchip", pet.id],
+    enabled: !!user && !!pet?.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("pet_microchips")
+        .select("chip_number, verification_status, is_active")
+        .eq("pet_id", pet.id)
+        .eq("owner_id", user!.id)
+        .eq("is_active", true)
+        .order("registered_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const hasChip = !!(microchip?.chip_number || pet.microchip_number);
+  const chipNumber = microchip?.chip_number || pet.microchip_number;
+  const isVerified = microchip?.verification_status === "verified";
 
   const upcomingVaccines = records.filter(
     (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
@@ -122,6 +143,32 @@ const PetIdentityCard = ({ pet }: Props) => {
               .filter(Boolean)
               .join(" • ")}
           </p>
+
+          {/* Microchip row */}
+          {hasChip ? (
+            <button
+              onClick={() => navigate(`/mypet/microchip/register?pet=${pet.id}`)}
+              className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-card px-2.5 py-1 border border-border/50 max-w-full"
+            >
+              <Cpu className="w-3 h-3 text-primary shrink-0" />
+              <span className="text-[11px] font-body font-semibold text-foreground truncate">
+                {chipNumber}
+              </span>
+              {isVerified && (
+                <ShieldCheck className="w-3 h-3 text-secondary shrink-0" />
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate(`/mypet/microchip/register?pet=${pet.id}`)}
+              className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-primary-foreground"
+            >
+              <Cpu className="w-3 h-3 shrink-0" />
+              <span className="text-[11px] font-body font-semibold">
+                Add microchip
+              </span>
+            </button>
+          )}
 
           {/* 2 inline status pills */}
           <div className="grid grid-cols-2 gap-2 mt-2.5">
