@@ -100,7 +100,7 @@ const HomeScreen = () => {
     },
   });
 
-  const { data: blogs = [] } = useQuery({
+  const { data: blogs = [], isLoading: blogsLoading } = useQuery({
     queryKey: ["home-blogs"],
     queryFn: async () => {
       const { data } = await supabase
@@ -111,9 +111,10 @@ const HomeScreen = () => {
         .limit(3);
       return data || [];
     },
+    staleTime: 5 * 60 * 1000,
   });
 
-  const { data: nearby = [] } = useQuery({
+  const { data: nearby = [], isLoading: nearbyLoading } = useQuery({
     queryKey: ["home-nearby"],
     queryFn: async () => {
       const { data } = await supabase
@@ -122,6 +123,7 @@ const HomeScreen = () => {
         .limit(3);
       return (data as any[]) || [];
     },
+    staleTime: 5 * 60 * 1000,
   });
 
   const greetingName = profile?.full_name?.split(" ")[0] || "Pet Parent";
