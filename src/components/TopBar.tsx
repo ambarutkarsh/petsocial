@@ -8,6 +8,7 @@ import { Bell, Bot, Sun, Moon, User as UserIcon, Settings as SettingsLucide, Log
 import { useTheme } from "@/hooks/useTheme";
 import { useChatbot } from "@/contexts/ChatbotContext";
 import UserAvatar from "@/components/UserAvatar";
+import PWAInstallButton from "@/components/PWAInstallButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +57,7 @@ const TopBar = () => {
             <img src={logo} alt="Petosauras" className="h-8 w-auto" />
           </button>
           <div className="flex items-center gap-1">
+            <PWAInstallButton />
             <button
               onClick={toggleTheme}
               aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
