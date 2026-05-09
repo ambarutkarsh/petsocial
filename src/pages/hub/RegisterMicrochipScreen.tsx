@@ -215,6 +215,53 @@ const RegisterMicrochipScreen = () => {
       });
       if (insErr) throw insErr;
 
+      // Mirror microchip identity onto the pet for fast read in MyPet identity card
+      const linkedPetId = selectedPetId && selectedPetId !== "none" ? selectedPetId : null;
+      if (linkedPetId) {
+        await supabase
+          .from("pets")
+          .update({
+            microchip_number: validation.cleaned,
+            microchip_registered_status: verification_status,
+            microchip_registered_date: implantDate || new Date().toISOString().slice(0, 10),
+          })
+          .eq("id", linkedPetId)
+          .eq("owner_id", user.id);
+
+        // Create a microchip health record + link the certificate (best-effort)
+        try {
+          const db: any = supabase;
+          const { data: hr } = await db
+            .from("pet_health_records")
+            .insert({
+              owner_id: user.id,
+              pet_id: linkedPetId,
+              record_type: "microchip",
+              title: `Microchip ${validation.cleaned}`,
+              record_date: implantDate || new Date().toISOString().slice(0, 10),
+              status: "done",
+              notes: notes || null,
+            })
+            .select()
+            .single();
+          if (hr && documentPath) {
+            await db.from("pet_documents").insert({
+              owner_id: user.id,
+              pet_id: linkedPetId,
+              health_record_id: hr.id,
+              document_type: "microchip_certificate",
+              file_name: documentName,
+              file_url: documentPath,
+              file_size: picked ? picked.file.size : null,
+              file_mime_type: picked ? picked.file.type : null,
+            });
+          }
+        } catch {
+          // Non-fatal: chip is still registered in pet_microchips
+        }
+      }
+
+
       setSuccess({
         status: verification_status,
         chipNumber: formattedChip,
