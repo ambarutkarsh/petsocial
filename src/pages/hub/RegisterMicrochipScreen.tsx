@@ -36,6 +36,8 @@ const RegisterMicrochipScreen = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { triggerGuestPopup } = useGuestPopup();
+  const [searchParams] = useSearchParams();
+  const prefilledPetId = searchParams.get("pet");
 
   // Guest gate
   useEffect(() => {
