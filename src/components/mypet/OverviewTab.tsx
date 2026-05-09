@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { Heart, Sparkles, Activity, Droplet, ChevronRight, Syringe, Bug, FileText, Calendar, Bell } from "lucide-react";
 
 interface Props {
   petId: string;
@@ -28,21 +28,6 @@ const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
     queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId }),
   });
 
-  const { data: chip } = useQuery({
-    queryKey: ["pet-chip", petId],
-    enabled: !!user && !!petId,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("pet_microchips")
-        .select("chip_number, verification_status, registered_at")
-        .eq("pet_id", petId)
-        .eq("owner_id", user!.id)
-        .eq("is_active", true)
-        .maybeSingle();
-      return data;
-    },
-  });
-
   const { data: weights = [] } = useQuery({
     queryKey: ["weight-logs", petId],
     enabled: !!user && !!petId,
@@ -64,161 +49,198 @@ const OverviewTab = ({ petId, petName, onTabChange }: Props) => {
   const upcomingDeworming = records.find(
     (r: any) => r.record_type === "deworming" && r.next_due_date
   );
-  const lastVet = records.find((r: any) => r.record_type === "vet_visit");
   const lastWeight = weights[weights.length - 1] as any;
+  const prevWeight = weights[weights.length - 2] as any;
+  const weightDelta =
+    lastWeight && prevWeight ? Number(lastWeight.weight_kg) - Number(prevWeight.weight_kg) : null;
 
   return (
     <div className="space-y-3">
+      {/* Health Snapshot */}
+      <div className="rounded-3xl border border-border bg-card p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-heading font-bold text-base">Health Snapshot</h3>
+          <span className="text-[10px] text-muted-foreground font-body">Updated today</span>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          <SnapItem icon={<Heart className="w-5 h-5 text-secondary" />} label="Overall Health" value="Good" sub="No issues" tone="text-secondary" />
+          <SnapItem icon={<Sparkles className="w-5 h-5 text-accent" />} label="Body Condition" value="Ideal" sub="Score: 4/5" tone="text-accent" />
+          <SnapItem icon={<Activity className="w-5 h-5 text-primary" />} label="Activity Level" value="Active" sub="Great job!" tone="text-primary" />
+          <SnapItem icon={<Droplet className="w-5 h-5 text-secondary" />} label="Hydration" value="Good" sub="Keep it up" tone="text-secondary" />
+        </div>
+      </div>
+
+      {/* Upcoming Care + Growth */}
       <div className="grid grid-cols-2 gap-3">
-        <DashCard
-          title="Upcoming Care"
-          accent="bg-accent/15"
-          onClick={() => onTabChange("reminders")}
-        >
-          {upcomingVaccine ? (
-            <p className="text-xs font-body">
-              💉 {upcomingVaccine.title}
-              <br />
-              <span className="text-muted-foreground text-[10px]">
-                {format(new Date(upcomingVaccine.next_due_date), "dd MMM")}
-              </span>
-            </p>
-          ) : (
-            <p className="text-xs text-muted-foreground font-body">Nothing scheduled</p>
-          )}
-          {upcomingDeworming && (
-            <p className="text-xs font-body mt-1">
-              🪱 Deworming
-              <br />
-              <span className="text-muted-foreground text-[10px]">
-                in {differenceInDays(new Date(upcomingDeworming.next_due_date), new Date())} days
-              </span>
-            </p>
-          )}
-        </DashCard>
+        <div className="rounded-3xl border border-border bg-card p-3.5">
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-heading font-bold text-sm">Upcoming Care</p>
+          </div>
+          <div className="space-y-2">
+            {upcomingVaccine && (
+              <CareRow
+                icon={<Syringe className="w-4 h-4 text-secondary" />}
+                title={upcomingVaccine.title}
+                date={format(new Date(upcomingVaccine.next_due_date), "dd MMM yyyy")}
+                badge="Upcoming"
+                tone="bg-accent/15 text-accent"
+              />
+            )}
+            {upcomingDeworming && (
+              <CareRow
+                icon={<Bug className="w-4 h-4 text-accent" />}
+                title="Deworming"
+                date={format(new Date(upcomingDeworming.next_due_date), "dd MMM yyyy")}
+                badge={`In ${Math.max(0, differenceInDays(new Date(upcomingDeworming.next_due_date), new Date()))} days`}
+                tone="bg-primary-light text-primary"
+              />
+            )}
+            {!upcomingVaccine && !upcomingDeworming && (
+              <p className="text-xs text-muted-foreground font-body">Nothing scheduled</p>
+            )}
+          </div>
+          <button
+            onClick={() => onTabChange("reminders")}
+            className="text-[11px] font-body font-bold text-primary mt-2"
+          >
+            View all
+          </button>
+        </div>
 
-        <DashCard
-          title="Documents"
-          accent="bg-primary-light"
-          onClick={() => onTabChange("documents")}
-        >
-          <p className="text-2xl font-heading font-bold">{docs.length}</p>
-          <p className="text-[10px] text-muted-foreground font-body">total uploaded</p>
-        </DashCard>
-
-        <DashCard title="Growth" accent="bg-secondary/10" onClick={() => onTabChange("growth")}>
+        <div className="rounded-3xl border border-border bg-card p-3.5">
+          <p className="font-heading font-bold text-sm mb-2">Growth / Weight</p>
           {lastWeight ? (
             <>
-              <p className="text-2xl font-heading font-bold">{lastWeight.weight_kg} kg</p>
-              <p className="text-[10px] text-muted-foreground font-body">
-                {format(new Date(lastWeight.log_date), "dd MMM yyyy")}
-              </p>
+              <p className="font-heading font-bold text-2xl">{lastWeight.weight_kg} kg</p>
+              <p className="text-[10px] text-muted-foreground font-body">Current weight</p>
+              <div className="my-2 h-7 flex items-end gap-0.5">
+                {weights.slice(-12).map((w: any, i: number) => {
+                  const max = Math.max(...weights.map((x: any) => Number(x.weight_kg)));
+                  const h = Math.max(8, (Number(w.weight_kg) / max) * 28);
+                  return <div key={i} className="flex-1 bg-secondary/60 rounded-sm" style={{ height: h }} />;
+                })}
+              </div>
+              {weightDelta !== null && (
+                <p className={`text-[11px] font-body font-bold ${weightDelta >= 0 ? "text-secondary" : "text-destructive"}`}>
+                  {weightDelta >= 0 ? "+" : ""}{weightDelta.toFixed(1)} kg
+                  <span className="text-muted-foreground font-normal"> vs last log</span>
+                </p>
+              )}
             </>
           ) : (
             <p className="text-xs text-muted-foreground font-body">Log first weight</p>
           )}
-        </DashCard>
-
-        <DashCard title="Microchip" accent="bg-primary/10">
-          {chip ? (
-            <>
-              <p className="text-[11px] font-mono font-bold break-all">{chip.chip_number}</p>
-              <p className="text-[10px] text-secondary font-body font-semibold mt-1">
-                ✓ {chip.verification_status === "document_verified" ? "Verified" : "Registered"}
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-xs font-body">Not added</p>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 mt-1.5 text-[11px]"
-                onClick={() => navigate(`/hub/microchip/register?pet=${petId}`)}
-              >
-                + Add
-              </Button>
-            </>
-          )}
-        </DashCard>
+          <button
+            onClick={() => onTabChange("growth")}
+            className="text-[11px] font-body font-bold text-primary mt-1"
+          >
+            View growth chart
+          </button>
+        </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-4">
-        <p className="text-[11px] uppercase font-semibold text-muted-foreground mb-2">
-          Last vet visit
-        </p>
-        <p className="font-body text-sm">
-          {lastVet
-            ? `${lastVet.title} • ${
-                lastVet.record_date
-                  ? format(new Date(lastVet.record_date), "dd MMM yyyy")
-                  : ""
-              }`
-            : "No visits logged"}
-        </p>
-      </div>
+      {/* Documents Summary + Quick Actions */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-3xl border border-border bg-card p-3.5">
+          <p className="font-heading font-bold text-sm mb-2">Documents Summary</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center">
+              <FileText className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-heading font-bold text-2xl leading-none">{docs.length}</p>
+              <p className="text-[10px] text-muted-foreground font-body">Total documents</p>
+            </div>
+          </div>
+          <button
+            onClick={() => onTabChange("documents")}
+            className="text-[11px] font-body font-bold text-primary mt-2"
+          >
+            View all
+          </button>
+        </div>
 
-      <div className="rounded-2xl border border-border bg-card p-4">
-        <p className="text-[11px] uppercase font-semibold text-muted-foreground mb-2">
-          Quick Actions
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          <QuickAction emoji="💉" label="Add Vaccine" onClick={() => onTabChange("vaccines")} />
-          <QuickAction emoji="🪱" label="Deworming" onClick={() => onTabChange("deworming")} />
-          <QuickAction emoji="📋" label="Add Report" onClick={() => onTabChange("reports")} />
-          <QuickAction emoji="📂" label="Upload Doc" onClick={() => onTabChange("documents")} />
-          <QuickAction emoji="📅" label="Book Vet" onClick={() => navigate("/mypet/book-a-vet")} />
-          <QuickAction
-            emoji="🔖"
-            label={chip ? "View Chip" : "Add Microchip"}
-            onClick={() => navigate(chip ? "/hub/microchip" : `/hub/microchip/register?pet=${petId}`)}
-          />
+        <div className="rounded-3xl border border-border bg-card p-3.5">
+          <p className="font-heading font-bold text-sm mb-2">Quick Actions</p>
+          <div className="space-y-1">
+            <ActionRow icon={<Syringe className="w-3.5 h-3.5" />} label="Add Vaccine" onClick={() => onTabChange("vaccines")} />
+            <ActionRow icon={<Calendar className="w-3.5 h-3.5" />} label="Book Vet" onClick={() => navigate("/mypet/book-a-vet")} />
+            <ActionRow icon={<Bell className="w-3.5 h-3.5" />} label="Set Reminder" onClick={() => onTabChange("reminders")} />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const DashCard = ({
-  title,
-  accent,
-  children,
-  onClick,
+const SnapItem = ({
+  icon,
+  label,
+  value,
+  sub,
+  tone,
 }: {
-  title: string;
-  accent: string;
-  children: React.ReactNode;
-  onClick?: () => void;
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub: string;
+  tone: string;
 }) => (
-  <button
-    onClick={onClick}
-    disabled={!onClick}
-    className={`text-left rounded-2xl border border-border bg-card p-3 ${
-      onClick ? "active:scale-[0.98] transition-transform" : ""
-    }`}
-  >
-    <div className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${accent} mb-2`}>
-      {title}
+  <div className="text-center">
+    <p className="text-[9px] font-body text-muted-foreground leading-tight mb-1">{label}</p>
+    <div className="w-9 h-9 mx-auto rounded-full bg-primary-light/60 flex items-center justify-center mb-1">
+      {icon}
     </div>
-    {children}
-  </button>
+    <p className={`text-[12px] font-body font-bold ${tone}`}>{value}</p>
+    <p className="text-[9px] text-muted-foreground font-body leading-tight">{sub}</p>
+  </div>
 );
 
-const QuickAction = ({
-  emoji,
+const CareRow = ({
+  icon,
+  title,
+  date,
+  badge,
+  tone,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  date: string;
+  badge: string;
+  tone: string;
+}) => (
+  <div className="flex items-center gap-2">
+    <div className="w-7 h-7 rounded-lg bg-primary-light/60 flex items-center justify-center shrink-0">
+      {icon}
+    </div>
+    <div className="flex-1 min-w-0">
+      <p className="text-xs font-body font-semibold truncate">{title}</p>
+      <p className="text-[10px] text-muted-foreground font-body">{date}</p>
+    </div>
+    <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${tone}`}>
+      {badge}
+    </span>
+  </div>
+);
+
+const ActionRow = ({
+  icon,
   label,
   onClick,
 }: {
-  emoji: string;
+  icon: React.ReactNode;
   label: string;
   onClick: () => void;
 }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center gap-1 rounded-xl bg-muted/40 hover:bg-primary-light p-2.5 transition-colors active:scale-95"
+    className="w-full flex items-center gap-2 p-2 rounded-xl hover:bg-muted/50 active:scale-95 transition-all"
   >
-    <span className="text-xl">{emoji}</span>
-    <span className="text-[10px] font-body font-semibold text-center leading-tight">{label}</span>
+    <div className="w-7 h-7 rounded-lg bg-primary-light/60 flex items-center justify-center text-primary">
+      {icon}
+    </div>
+    <span className="text-xs font-body font-semibold flex-1 text-left">{label}</span>
+    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
   </button>
 );
 

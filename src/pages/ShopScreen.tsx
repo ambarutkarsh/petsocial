@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon } from "@/components/icons/PetosauraIcons";
+import { Calendar, Sparkles, Home, Syringe, FileText, FolderOpen, TrendingUp, Bell } from "lucide-react";
 
 import PetDigiLockerScreen from "./PetDigiLockerScreen";
 import PetIdentityCard from "@/components/mypet/PetIdentityCard";
@@ -89,19 +90,19 @@ const MyPetScreen = () => {
       <div className="pb-20">
         {/* Header */}
         <div className="px-4 pt-3 flex items-center justify-between gap-2">
-          <h1 className="font-heading font-bold text-xl">MyPet</h1>
+          <h1 className="font-heading font-bold text-2xl">MyPet</h1>
           <div className="flex gap-2">
             <button
               onClick={() => navigate("/mypet/book-a-vet")}
-              className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-primary text-primary-foreground shadow-petosauras"
+              className="inline-flex items-center gap-1.5 text-[11px] font-body font-bold px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-petosauras"
             >
-              📅 Book Vet
+              <Calendar className="w-3.5 h-3.5" /> Book Vet
             </button>
             <button
               onClick={() => navigate("/mypet/pet-recommender")}
-              className="text-[11px] font-body font-bold px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground shadow-petosauras"
+              className="inline-flex items-center gap-1.5 text-[11px] font-body font-bold px-3 py-2 rounded-full bg-accent text-accent-foreground shadow-petosauras"
             >
-              ✨ Recommender
+              <Sparkles className="w-3.5 h-3.5" /> Pet Recommender
             </button>
           </div>
         </div>
@@ -112,20 +113,25 @@ const MyPetScreen = () => {
             <button
               key={p.id}
               onClick={() => handlePetSwitch(p.id)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold transition-colors ${
                 p.id === activePet?.id
                   ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+                  : "bg-card text-foreground border border-border"
               }`}
             >
-              {p.avatar_emoji || "🐾"} {p.name}
+              {p.avatar_url ? (
+                <img src={p.avatar_url} alt={p.name} className="w-5 h-5 rounded-full object-cover" />
+              ) : (
+                <span className="text-base">{p.avatar_emoji || "🐾"}</span>
+              )}
+              {p.name}
             </button>
           ))}
           <button
             onClick={() => setShowAddPet(true)}
-            className="shrink-0 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary"
+            className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold border-2 border-primary text-primary bg-card"
           >
-            <PlusIcon className="w-3 h-3 inline" /> Add
+            <PlusIcon className="w-3 h-3" /> Add
           </button>
         </div>
 
@@ -137,30 +143,15 @@ const MyPetScreen = () => {
         {/* Tabs */}
         <div className="px-4 mt-3">
           <Tabs value={activeTab} onValueChange={handleTabChange}>
-            <div className="w-full overflow-x-auto no-scrollbar -mx-4 px-4">
-              <TabsList className="inline-flex w-auto min-w-full">
-                <TabsTrigger value="overview" className="text-xs whitespace-nowrap">
-                  🏠 Overview
-                </TabsTrigger>
-                <TabsTrigger value="vaccines" className="text-xs whitespace-nowrap">
-                  💉 Vaccines
-                </TabsTrigger>
-                <TabsTrigger value="deworming" className="text-xs whitespace-nowrap">
-                  🪱 Deworming
-                </TabsTrigger>
-                <TabsTrigger value="reports" className="text-xs whitespace-nowrap">
-                  📊 Reports
-                </TabsTrigger>
-                <TabsTrigger value="documents" className="text-xs whitespace-nowrap">
-                  📂 Documents
-                </TabsTrigger>
-                <TabsTrigger value="growth" className="text-xs whitespace-nowrap">
-                  📈 Growth
-                </TabsTrigger>
-                <TabsTrigger value="reminders" className="text-xs whitespace-nowrap">
-                  ⏰ Reminders
-                </TabsTrigger>
-              </TabsList>
+            <div className="rounded-2xl bg-card border border-border p-1.5 overflow-x-auto no-scrollbar">
+              <div className="grid grid-cols-6 min-w-[420px] gap-1">
+                <IconTab active={activeTab === "overview"} icon={<Home className="w-4 h-4" />} label="Overview" onClick={() => handleTabChange("overview")} />
+                <IconTab active={activeTab === "vaccines"} icon={<Syringe className="w-4 h-4" />} label="Vaccines" onClick={() => handleTabChange("vaccines")} />
+                <IconTab active={activeTab === "reports"} icon={<FileText className="w-4 h-4" />} label="Reports" onClick={() => handleTabChange("reports")} />
+                <IconTab active={activeTab === "documents"} icon={<FolderOpen className="w-4 h-4" />} label="Documents" onClick={() => handleTabChange("documents")} />
+                <IconTab active={activeTab === "growth"} icon={<TrendingUp className="w-4 h-4" />} label="Growth" onClick={() => handleTabChange("growth")} />
+                <IconTab active={activeTab === "reminders"} icon={<Bell className="w-4 h-4" />} label="Reminders" onClick={() => handleTabChange("reminders")} />
+              </div>
             </div>
 
             <TabsContent value="overview" className="mt-4">
@@ -176,14 +167,6 @@ const MyPetScreen = () => {
                 petId={activePet.id}
                 recordType="vaccine"
                 defaultDocumentType="vaccination_certificate"
-              />
-            </TabsContent>
-
-            <TabsContent value="deworming" className="mt-4">
-              <HealthRecordsPanel
-                petId={activePet.id}
-                recordType="deworming"
-                defaultDocumentType="prescription"
               />
             </TabsContent>
 
@@ -216,5 +199,27 @@ const MyPetScreen = () => {
     </MobileLayout>
   );
 };
+
+const IconTab = ({
+  active,
+  icon,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-0.5 py-2 px-1 rounded-xl transition-colors ${
+      active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/40"
+    }`}
+  >
+    {icon}
+    <span className="text-[10px] font-body font-semibold">{label}</span>
+  </button>
+);
 
 export default MyPetScreen;
