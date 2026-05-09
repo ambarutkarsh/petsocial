@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { differenceInMonths, differenceInYears } from "date-fns";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { differenceInDays, differenceInMonths, differenceInYears, format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { CameraIcon } from "@/components/icons/PetosauraIcons";
+import { fetchHealthRecords, fetchPetDocuments } from "@/lib/petDocuments";
+import { Pencil, Syringe, Bug, FileText, Calendar } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   pet: any;
@@ -18,21 +17,6 @@ const PetIdentityCard = ({ pet }: Props) => {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
-
-  const { data: chip } = useQuery({
-    queryKey: ["pet-chip", pet.id],
-    enabled: !!user && !!pet?.id,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("pet_microchips")
-        .select("chip_number, verification_status")
-        .eq("pet_id", pet.id)
-        .eq("owner_id", user!.id)
-        .eq("is_active", true)
-        .maybeSingle();
-      return data;
-    },
-  });
 
   const { data: latestWeight } = useQuery({
     queryKey: ["latest-weight", pet.id],
@@ -50,16 +34,36 @@ const PetIdentityCard = ({ pet }: Props) => {
     },
   });
 
+  const { data: records = [] } = useQuery({
+    queryKey: ["mypet-summary", pet.id],
+    enabled: !!user && !!pet?.id,
+    queryFn: () => fetchHealthRecords({ ownerId: user!.id, petId: pet.id }),
+  });
+
+  const { data: docs = [] } = useQuery({
+    queryKey: ["pet-documents", pet.id],
+    enabled: !!user && !!pet?.id,
+    queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId: pet.id }),
+  });
+
+  const upcomingVaccines = records.filter(
+    (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
+  );
+  const upcomingDeworm = records.find(
+    (r: any) => r.record_type === "deworming" && r.next_due_date && new Date(r.next_due_date) > new Date()
+  );
+  const lastVet = records.find((r: any) => r.record_type === "vet_visit" && r.record_date);
+
   const age = pet.date_of_birth
     ? (() => {
         const dob = new Date(pet.date_of_birth);
         const yrs = differenceInYears(new Date(), dob);
         const mos = differenceInMonths(new Date(), dob) % 12;
-        return `${yrs}y ${mos}m`;
+        return yrs >= 1 ? `${yrs} yr${yrs > 1 ? "s" : ""}` : `${mos} mo`;
       })()
     : pet.age_years
-    ? `${pet.age_years}y`
-    : "—";
+    ? `${pet.age_years} yrs`
+    : null;
 
   const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -78,27 +82,21 @@ const PetIdentityCard = ({ pet }: Props) => {
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 shadow-petosauras">
+    <div className="rounded-3xl border border-border bg-primary-light/40 p-3.5 shadow-petosauras">
+      {/* Top row: avatar + name + meta */}
       <div className="flex items-start gap-3">
-        <div className="relative shrink-0">
+        <button onClick={() => fileRef.current?.click()} className="relative shrink-0">
           {pet.avatar_url ? (
             <img
               src={pet.avatar_url}
               alt={pet.name}
-              className="w-20 h-20 rounded-2xl object-cover border-2 border-card shadow-petosauras"
+              className="w-[88px] h-[88px] rounded-2xl object-cover border-2 border-card shadow-petosauras"
             />
           ) : (
-            <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center text-4xl">
+            <div className="w-[88px] h-[88px] rounded-2xl bg-card flex items-center justify-center text-4xl">
               {pet.avatar_emoji || "🐾"}
             </div>
           )}
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-petosauras"
-            aria-label="Change photo"
-          >
-            <CameraIcon className="w-3.5 h-3.5" />
-          </button>
           <input
             ref={fileRef}
             type="file"
@@ -106,42 +104,97 @@ const PetIdentityCard = ({ pet }: Props) => {
             className="hidden"
             onChange={handleAvatar}
           />
-        </div>
+        </button>
 
-        <div className="flex-1 min-w-0">
-          <h2 className="font-heading font-bold text-lg truncate">{pet.name}</h2>
-          <p className="text-xs text-muted-foreground font-body">
-            {pet.species || pet.pet_type}
-            {pet.gender ? ` • ${pet.gender}` : ""}
-            {age !== "—" ? ` • ${age}` : ""}
-            {latestWeight ? ` • ${latestWeight} kg` : ""}
+        <div className="flex-1 min-w-0 pt-0.5">
+          <div className="flex items-center gap-1.5">
+            <h2 className="font-heading font-bold text-xl truncate">{pet.name}</h2>
+            <button
+              onClick={() => navigate(`/profile/edit-pet/${pet.id}`)}
+              className="p-1 rounded-full hover:bg-card/60"
+              aria-label="Edit pet"
+            >
+              <Pencil className="w-3.5 h-3.5 text-primary" />
+            </button>
+          </div>
+          <p className="text-xs text-foreground/70 font-body mt-0.5">
+            {[pet.breed || pet.species || pet.pet_type, pet.gender, age, latestWeight ? `${latestWeight} kg` : null]
+              .filter(Boolean)
+              .join(" • ")}
           </p>
 
-          <div className="mt-2">
-            {chip?.chip_number ? (
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-light px-2.5 py-1">
-                <span className="text-[10px] font-mono font-bold">
-                  🔖 {chip.chip_number}
-                </span>
-                <span className="text-[9px] uppercase font-bold bg-secondary/20 text-secondary px-1.5 py-0.5 rounded-full">
-                  {chip.verification_status === "document_verified" ? "Verified" : "Registered"}
-                </span>
-              </div>
-            ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 text-[11px] px-3"
-                onClick={() => navigate(`/hub/microchip/register?pet=${pet.id}`)}
-              >
-                + Add Microchip
-              </Button>
-            )}
+          {/* 2 inline status pills */}
+          <div className="grid grid-cols-2 gap-2 mt-2.5">
+            <StatPill
+              icon={<Syringe className="w-3.5 h-3.5 text-secondary" />}
+              value={`${upcomingVaccines.length}`}
+              label="Upcoming vaccine"
+            />
+            <StatPill
+              icon={<Bug className="w-3.5 h-3.5 text-accent" />}
+              value={
+                upcomingDeworm
+                  ? `Deworming`
+                  : "Deworming"
+              }
+              label={
+                upcomingDeworm
+                  ? `due in ${Math.max(
+                      0,
+                      differenceInDays(new Date(upcomingDeworm.next_due_date), new Date())
+                    )} days`
+                  : "Up to date"
+              }
+              compact
+            />
           </div>
         </div>
+      </div>
+
+      {/* Bottom row: 2 wider pills */}
+      <div className="grid grid-cols-2 gap-2 mt-2.5">
+        <StatPill
+          icon={<FileText className="w-3.5 h-3.5 text-primary" />}
+          value={`${docs.length}`}
+          label="Documents"
+        />
+        <StatPill
+          icon={<Calendar className="w-3.5 h-3.5 text-primary" />}
+          value="Last vet visit"
+          label={
+            lastVet?.record_date
+              ? format(new Date(lastVet.record_date), "dd MMM yyyy")
+              : "—"
+          }
+          compact
+        />
       </div>
     </div>
   );
 };
+
+const StatPill = ({
+  icon,
+  value,
+  label,
+  compact,
+}: {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+  compact?: boolean;
+}) => (
+  <div className="flex items-center gap-2 rounded-2xl bg-card px-2.5 py-1.5 border border-border/50">
+    <div className="shrink-0 w-7 h-7 rounded-full bg-primary-light/70 flex items-center justify-center">
+      {icon}
+    </div>
+    <div className="min-w-0 leading-tight">
+      <p className={`font-body font-bold text-foreground truncate ${compact ? "text-[11px]" : "text-sm"}`}>
+        {value}
+      </p>
+      <p className="text-[10px] text-muted-foreground font-body truncate">{label}</p>
+    </div>
+  </div>
+);
 
 export default PetIdentityCard;
