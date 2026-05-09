@@ -87,33 +87,6 @@ const OverviewTab = ({ petId, petName, pet, onTabChange }: Props) => {
   );
 };
 
-const CareRow = ({
-  icon,
-  title,
-  date,
-  badge,
-  tone,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  date: string;
-  badge: string;
-  tone: string;
-}) => (
-  <div className="flex items-center gap-2">
-    <div className="w-7 h-7 rounded-lg bg-primary-light/60 flex items-center justify-center shrink-0">
-      {icon}
-    </div>
-    <div className="flex-1 min-w-0">
-      <p className="text-xs font-body font-semibold truncate">{title}</p>
-      <p className="text-[10px] text-muted-foreground font-body">{date}</p>
-    </div>
-    <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${tone}`}>
-      {badge}
-    </span>
-  </div>
-);
-
 const ActionRow = ({
   icon,
   label,
