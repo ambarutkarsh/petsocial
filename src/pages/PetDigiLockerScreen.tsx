@@ -132,6 +132,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
   const [vaccDueDate, setVaccDueDate] = useState<Date | undefined>();
   const [vaccVet, setVaccVet] = useState("");
   const [vaccStatus, setVaccStatus] = useState("done");
+  const [editingVaccId, setEditingVaccId] = useState<string | null>(null);
 
   const [uploading, setUploading] = useState(false);
 
