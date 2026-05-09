@@ -158,6 +158,7 @@ const MyPetScreen = () => {
               <OverviewTab
                 petId={activePet.id}
                 petName={activePet.name}
+                pet={activePet}
                 onTabChange={handleTabChange}
               />
             </TabsContent>
