@@ -1143,6 +1143,69 @@ export type Database = {
           },
         ]
       }
+      pet_blog_articles: {
+        Row: {
+          author: string | null
+          body_text: string | null
+          category: string
+          category_label: string
+          created_at: string
+          date_modified: string | null
+          date_published: string | null
+          excerpt: string | null
+          id: string
+          image: string | null
+          image_alt: string | null
+          is_published: boolean
+          reading_time_min: number | null
+          source: string
+          tags: string[] | null
+          title: string
+          url: string
+          word_count: number | null
+        }
+        Insert: {
+          author?: string | null
+          body_text?: string | null
+          category: string
+          category_label: string
+          created_at?: string
+          date_modified?: string | null
+          date_published?: string | null
+          excerpt?: string | null
+          id: string
+          image?: string | null
+          image_alt?: string | null
+          is_published?: boolean
+          reading_time_min?: number | null
+          source?: string
+          tags?: string[] | null
+          title: string
+          url: string
+          word_count?: number | null
+        }
+        Update: {
+          author?: string | null
+          body_text?: string | null
+          category?: string
+          category_label?: string
+          created_at?: string
+          date_modified?: string | null
+          date_published?: string | null
+          excerpt?: string | null
+          id?: string
+          image?: string | null
+          image_alt?: string | null
+          is_published?: boolean
+          reading_time_min?: number | null
+          source?: string
+          tags?: string[] | null
+          title?: string
+          url?: string
+          word_count?: number | null
+        }
+        Relationships: []
+      }
       pet_club_events: {
         Row: {
           banner_url: string | null
