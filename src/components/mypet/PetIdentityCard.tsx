@@ -170,51 +170,7 @@ const PetIdentityCard = ({ pet }: Props) => {
             </button>
           )}
 
-          {/* 2 inline status pills */}
-          <div className="grid grid-cols-2 gap-2 mt-2.5">
-            <StatPill
-              icon={<Syringe className="w-3.5 h-3.5 text-secondary" />}
-              value={`${upcomingVaccines.length}`}
-              label="Upcoming vaccine"
-            />
-            <StatPill
-              icon={<Bug className="w-3.5 h-3.5 text-accent" />}
-              value={
-                upcomingDeworm
-                  ? `Deworming`
-                  : "Deworming"
-              }
-              label={
-                upcomingDeworm
-                  ? `due in ${Math.max(
-                      0,
-                      differenceInDays(new Date(upcomingDeworm.next_due_date), new Date())
-                    )} days`
-                  : "Up to date"
-              }
-              compact
-            />
-          </div>
         </div>
-      </div>
-
-      {/* Bottom row: 2 wider pills */}
-      <div className="grid grid-cols-2 gap-2 mt-2.5">
-        <StatPill
-          icon={<FileText className="w-3.5 h-3.5 text-primary" />}
-          value={`${docs.length}`}
-          label="Documents"
-        />
-        <StatPill
-          icon={<Calendar className="w-3.5 h-3.5 text-primary" />}
-          value="Last vet visit"
-          label={
-            lastVet?.record_date
-              ? format(new Date(lastVet.record_date), "dd MMM yyyy")
-              : "—"
-          }
-          compact
-        />
       </div>
     </div>
   );
