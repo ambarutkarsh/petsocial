@@ -52,18 +52,6 @@ const PetIdentityCard = ({ pet }: Props) => {
     },
   });
 
-  const { data: records = [] } = useQuery({
-    queryKey: ["mypet-summary", pet.id],
-    enabled: !!user && !!pet?.id,
-    queryFn: () => fetchHealthRecords({ ownerId: user!.id, petId: pet.id }),
-  });
-
-  const { data: docs = [] } = useQuery({
-    queryKey: ["pet-documents", pet.id],
-    enabled: !!user && !!pet?.id,
-    queryFn: () => fetchPetDocuments({ ownerId: user!.id, petId: pet.id }),
-  });
-
   const { data: microchip } = useQuery({
     queryKey: ["pet-microchip", pet.id],
     enabled: !!user && !!pet?.id,
@@ -84,14 +72,6 @@ const PetIdentityCard = ({ pet }: Props) => {
   const hasChip = !!(microchip?.chip_number || pet.microchip_number);
   const chipNumber = microchip?.chip_number || pet.microchip_number;
   const isVerified = microchip?.verification_status === "verified";
-
-  const upcomingVaccines = records.filter(
-    (r: any) => r.record_type === "vaccine" && r.next_due_date && new Date(r.next_due_date) > new Date()
-  );
-  const upcomingDeworm = records.find(
-    (r: any) => r.record_type === "deworming" && r.next_due_date && new Date(r.next_due_date) > new Date()
-  );
-  const lastVet = records.find((r: any) => r.record_type === "vet_visit" && r.record_date);
 
   const age = pet.date_of_birth
     ? (() => {
