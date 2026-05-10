@@ -295,6 +295,28 @@ const HomeScreen = () => {
         {/* Quick Tip of the Day */}
         <QuickTipOfTheDay />
 
+        {/* Flappy Pet game banner */}
+        <button
+          onClick={() => navigate("/game/flappy-pet")}
+          className="w-full rounded-2xl overflow-hidden text-left relative"
+          style={{ background: "linear-gradient(135deg, #1E3A5F 0%, #0F2A4A 100%)" }}
+        >
+          <div className="flex items-center gap-4 px-5 py-4">
+            <div className="flex shrink-0 -space-x-2">
+              {["🐶","🐱","🐦","🐰"].map((e, i) => (
+                <span key={i} className="text-3xl" style={{ zIndex: 4 - i }}>{e}</span>
+              ))}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-black text-base leading-tight">Flappy Pet</p>
+              <p className="text-white/60 text-xs mt-0.5">Fly your pet, beat the leaderboard!</p>
+            </div>
+            <div className="shrink-0 bg-yellow-400 text-gray-900 font-black text-xs px-3 py-1.5 rounded-full">
+              PLAY
+            </div>
+          </div>
+        </button>
+
         {/* Near You */}
         <section>
           <div className="flex items-center justify-between mb-3">
