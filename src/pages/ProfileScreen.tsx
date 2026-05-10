@@ -330,51 +330,6 @@ const ProfileScreen = () => {
           )}
         </div>
 
-        {/* Preferences Section */}
-        <div className="px-4 mt-6 mb-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1"><SettingsIcon className="w-3.5 h-3.5" /> Preferences</h3>
-          <button onClick={() => { setSelectedDefaultTab(profile?.community_default_tab || "interesting_facts"); setShowDefaultTabPref(true); }}
-            className="paw-card p-3 w-full flex items-center justify-between">
-            <div>
-              <p className="text-sm font-heading font-semibold">Default Community Tab</p>
-              <p className="text-xs text-muted-foreground font-body">{defaultTabLabels[profile?.community_default_tab || "interesting_facts"] || "⭐ Interesting Facts"}</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
-
-        {/* Default Tab Preference Sheet */}
-        {showDefaultTabPref && (
-          <div className="fixed inset-0 z-[1100] flex items-end">
-            <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => setShowDefaultTabPref(false)} />
-            <div className="relative w-full mx-auto bg-card rounded-t-[28px] px-6 pt-4 pb-8 animate-slide-up" style={{ maxWidth: 480 }}>
-              <div className="w-10 h-1 rounded-full bg-muted mx-auto mb-4" />
-              <h2 className="text-lg font-heading font-bold mb-1">Default Community Tab</h2>
-              <p className="text-sm text-muted-foreground font-body mb-4">Choose which tab opens first in Community</p>
-              <div className="space-y-2">
-                {defaultTabOptions.map((opt) => (
-                  <button key={opt.value} onClick={() => setSelectedDefaultTab(opt.value)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-[16px] border-2 transition-all ${
-                      selectedDefaultTab === opt.value ? "border-primary bg-primary-light" : "border-border"
-                    }`}>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedDefaultTab === opt.value ? "border-primary" : "border-muted-foreground"}`}>
-                      {selectedDefaultTab === opt.value && <div className="w-3 h-3 rounded-full bg-primary" />}
-                    </div>
-                    <span className="text-sm font-body font-semibold">{opt.label}</span>
-                  </button>
-                ))}
-              </div>
-              <Button className="w-full mt-4" onClick={async () => {
-                localStorage.setItem("communityDefaultTab", selectedDefaultTab);
-                localStorage.setItem("communityDefaultTabSet", "true");
-                if (user) await supabase.from("profiles").update({ community_default_tab: selectedDefaultTab }).eq("id", user.id);
-                queryClient.invalidateQueries({ queryKey: ["profile"] });
-                setShowDefaultTabPref(false);
-                toast.success("Preference saved!");
-              }}>Save Preference</Button>
-            </div>
-          </div>
-        )}
         </div>
       </PageWrapper>
 
