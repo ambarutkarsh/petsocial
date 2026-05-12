@@ -95,6 +95,7 @@ const VetCalendarScreen = lazy(() => import("./pages/vet/VetCalendarScreen"));
 const VetRequestsScreen = lazy(() => import("./pages/vet/VetRequestsScreen"));
 const VetAvailabilityScreen = lazy(() => import("./pages/vet/VetAvailabilityScreen"));
 const VetDashProfileScreen = lazy(() => import("./pages/vet/VetProfileScreen"));
+const VetLedgerScreen = lazy(() => import("./pages/vet/VetLedgerScreen"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -241,6 +242,7 @@ const App = () => (
             <Route path="/vet-dashboard/requests" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Requests"><VetRequestsScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
             <Route path="/vet-dashboard/availability" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Availability"><VetAvailabilityScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
             <Route path="/vet-dashboard/profile" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Profile"><VetDashProfileScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
+            <Route path="/vet-dashboard/ledger" element={<ProtectedRoute><VetGuard><VetDashboardLayout title="Ledger"><VetLedgerScreen /></VetDashboardLayout></VetGuard></ProtectedRoute>} />
 
             {/* Public post detail keeps its own layout */}
             <Route path="/post/:postId" element={<PostDetailScreen />} />

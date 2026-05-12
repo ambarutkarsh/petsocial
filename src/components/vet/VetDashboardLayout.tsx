@@ -7,9 +7,9 @@ import { BackIcon, BellIcon, BookVetIcon, ProfileIcon, SettingsIcon } from "@/co
 
 const tabs = [
   { path: "/vet-dashboard", label: "Today", Icon: BookVetIcon },
-  { path: "/vet-dashboard/calendar", label: "Calendar", Icon: BookVetIcon },
+  { path: "/vet-dashboard/ledger", label: "Ledger", Icon: BookVetIcon },
   { path: "/vet-dashboard/requests", label: "Requests", Icon: BellIcon },
-  { path: "/vet-dashboard/availability", label: "Availability", Icon: SettingsIcon },
+  { path: "/vet-dashboard/availability", label: "Hours", Icon: SettingsIcon },
   { path: "/vet-dashboard/profile", label: "Profile", Icon: ProfileIcon },
 ];
 
