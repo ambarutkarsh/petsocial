@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { BackIcon, StarIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { trackBookVet } from "@/lib/analytics";
 
 const VetProfileScreen = () => {
   const { vetId } = useParams<{ vetId: string }>();
@@ -94,6 +95,7 @@ const VetProfileScreen = () => {
 
   const proceed = async () => {
     if (!selectedSlotId || !user) return;
+    trackBookVet("slot_selected", { vet_id: vetId, slot_id: selectedSlotId });
     navigate(`/mypet/book-a-vet/${vetId}/confirm?slot=${selectedSlotId}`);
   };
 
