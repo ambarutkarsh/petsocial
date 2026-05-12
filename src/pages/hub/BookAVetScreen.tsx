@@ -154,8 +154,8 @@ const BookAVetScreen = () => {
         {!isLoading && vets.length === 0 && (
           <div className="paw-card p-5 text-center">
             <p className="text-3xl mb-2">🐾</p>
-            <p className="font-heading font-bold text-sm">No verified vets in your city yet</p>
-            <p className="text-xs text-muted-foreground font-body mt-1">Coming soon to your city. We're onboarding vets in Chennai first.</p>
+            <p className="font-heading font-bold text-sm">No bookable vets are available yet.</p>
+            <p className="text-xs text-muted-foreground font-body mt-1">We're onboarding verified vets in your city. Check back soon.</p>
           </div>
         )}
         {vets.map((v: any) => {
@@ -168,7 +168,10 @@ const BookAVetScreen = () => {
           return (
             <button
               key={v.id}
-              onClick={() => navigate(`/hub/book-a-vet/${v.id}`)}
+              onClick={() => {
+                trackBookVet("vet_selected", { vet_id: v.id });
+                navigate(`/mypet/book-a-vet/${v.id}`);
+              }}
               className="w-full text-left paw-card p-4 hover:shadow-petosauras-md transition"
             >
               <div className="flex gap-3">
