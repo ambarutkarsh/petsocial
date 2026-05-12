@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { trackBookVet } from "@/lib/analytics";
 
 import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
@@ -75,7 +76,7 @@ const ConfirmBookingScreen = () => {
         .eq("id", slotId)
         .then(() => {
           toast("Your slot has been released. Please select again.");
-          navigate(`/hub/book-a-vet/${vetId}`);
+          navigate(`/mypet/book-a-vet/${vetId}`);
         });
     }
   }, [secondsLeft, slotId, vetId, navigate]);
@@ -89,48 +90,51 @@ const ConfirmBookingScreen = () => {
       return;
     }
     setConfirming(true);
+    trackBookVet("booking_submitted", { vet_id: vetId, slot_id: slotId });
     try {
-      // Verify slot still locked by this user
-      const { data: chk } = await supabase
-        .from("vet_slots")
-        .select("locked_by, status")
-        .eq("id", slotId)
-        .single();
-      if (chk?.status !== "locked" || chk.locked_by !== user.id) {
-        toast.error("Slot no longer available");
-        navigate(`/hub/book-a-vet/${vetId}`);
-        return;
-      }
-
-      const { data: booking, error } = await supabase
-        .from("vet_bookings")
-        .insert({
+      const { data, error } = await supabase.functions.invoke("create-vet-booking", {
+        body: {
           slot_id: slotId,
           vet_id: vetId,
-          user_id: user.id,
           pet_id: petId,
-          consultation_type: "in_clinic",
-          is_emergency: !!slot?.is_emergency,
-          status: "pending_vet_confirmation",
-          reason_for_visit: symptoms.join(", "),
+          reason_for_visit: symptoms.join(", ") || "Consultation",
           symptoms,
           share_health_records: shareRecords,
           user_notes: notes,
-        })
-        .select()
-        .single();
-      if (error) throw error;
+        },
+      });
 
-      await supabase
-        .from("vet_slots")
-        .update({ status: "booked" })
-        .eq("id", slotId);
+      // Edge function returns 4xx with { error } via FunctionsHttpError -> error.context.json()
+      if (error) {
+        let msg = "Booking failed";
+        try {
+          const ctx: any = (error as any).context;
+          if (ctx?.json) msg = (await ctx.json()).error ?? msg;
+          else if (ctx?.body) msg = JSON.parse(await ctx.text()).error ?? msg;
+        } catch (_) { /* keep default */ }
+        trackBookVet("booking_failed", { vet_id: vetId, slot_id: slotId, reason: msg });
+        toast.error(msg);
+        if (msg.toLowerCase().includes("just been")) {
+          navigate(`/mypet/book-a-vet/${vetId}`);
+        }
+        return;
+      }
 
-      // Fire notify-vet-booking (don't block UI on failures)
-      supabase.functions.invoke("notify-vet-booking", { body: { booking_id: booking.id } }).catch(() => {});
+      const payload = data as { booking_id?: string; booking_reference?: string; error?: string };
+      if (payload?.error || !payload?.booking_id) {
+        trackBookVet("booking_failed", { vet_id: vetId, slot_id: slotId, reason: payload?.error });
+        toast.error(payload?.error ?? "Booking failed");
+        return;
+      }
 
-      navigate(`/hub/book-a-vet/success?ref=${booking.booking_reference}`);
+      trackBookVet("booking_success", {
+        vet_id: vetId,
+        slot_id: slotId,
+        booking_id: payload.booking_id,
+      });
+      navigate(`/mypet/book-a-vet/success/${payload.booking_id}`);
     } catch (e: any) {
+      trackBookVet("booking_failed", { vet_id: vetId, slot_id: slotId, reason: e.message });
       toast.error(e.message ?? "Booking failed");
     } finally {
       setConfirming(false);
@@ -145,7 +149,7 @@ const ConfirmBookingScreen = () => {
       <PageWrapper>
         <header className="flex items-center gap-3">
           <button
-            onClick={() => navigate(`/hub/book-a-vet/${vetId}`)}
+            onClick={() => navigate(`/mypet/book-a-vet/${vetId}`)}
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
           >

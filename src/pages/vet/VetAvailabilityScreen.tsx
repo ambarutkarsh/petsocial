@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { trackBookVet } from "@/lib/analytics";
 
 import VetDashboardLayout from "@/components/vet/VetDashboardLayout";
 import VetGuard from "@/components/vet/VetGuard";
@@ -86,6 +87,8 @@ const VetAvailabilityInner = () => {
 
       // Generate slots
       await supabase.functions.invoke("generate-vet-slots", { body: { vet_id: vet.id, days: 30 } });
+      trackBookVet("vet_availability_updated", { vet_id: vet.id });
+      trackBookVet("vet_slots_generated", { vet_id: vet.id, days: 30 });
       toast("Schedule saved & slots regenerated");
     } catch (e: any) {
       toast.error(e.message);

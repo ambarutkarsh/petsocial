@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
 import { LocationPinIcon, VerifiedIcon } from "@/components/icons/PetosauraIcons";
+import { trackBookVet } from "@/lib/analytics";
 
 type ConsultType = "in_clinic" | "home" | "tele";
 
@@ -33,21 +34,35 @@ const BookAVetScreen = () => {
   const [sortBy, setSortBy] = useState<"rating" | "availability">("rating");
 
   useEffect(() => {
+    trackBookVet("book_vet_opened");
     if (!user) triggerGuestPopup();
   }, [user, triggerGuestPopup]);
 
+  const today = new Date().toISOString().slice(0, 10);
+
   const { data: vets = [], isLoading } = useQuery({
-    queryKey: ["vets-chennai", spec, sortBy],
+    queryKey: ["bookable-vets-chennai", spec, sortBy, today],
     queryFn: async () => {
+      // Strict bookable filter: active, verified, onboarded, AND has at least
+      // one available slot today or later (inner join).
       let q = supabase
         .from("vets")
-        .select("*")
+        .select("*, vet_slots!inner(id, slot_date, status)")
         .eq("is_active", true)
         .eq("is_verified", true)
-        .eq("city", "Chennai");
+        .eq("onboarding_status", "active")
+        .eq("city", "Chennai")
+        .eq("vet_slots.status", "available")
+        .gte("vet_slots.slot_date", today);
       if (spec !== "All Specialisations") q = q.contains("specialisations", [spec]);
       const { data } = await q.order("avg_rating", { ascending: false });
-      return data ?? [];
+      // Dedupe (inner join can yield duplicates per matching slot row)
+      const seen = new Set<string>();
+      return (data ?? []).filter((v: any) => {
+        if (seen.has(v.id)) return false;
+        seen.add(v.id);
+        return true;
+      });
     },
   });
 
@@ -139,8 +154,8 @@ const BookAVetScreen = () => {
         {!isLoading && vets.length === 0 && (
           <div className="paw-card p-5 text-center">
             <p className="text-3xl mb-2">🐾</p>
-            <p className="font-heading font-bold text-sm">No verified vets in your city yet</p>
-            <p className="text-xs text-muted-foreground font-body mt-1">Coming soon to your city. We're onboarding vets in Chennai first.</p>
+            <p className="font-heading font-bold text-sm">No bookable vets are available yet.</p>
+            <p className="text-xs text-muted-foreground font-body mt-1">We're onboarding verified vets in your city. Check back soon.</p>
           </div>
         )}
         {vets.map((v: any) => {
@@ -153,7 +168,10 @@ const BookAVetScreen = () => {
           return (
             <button
               key={v.id}
-              onClick={() => navigate(`/hub/book-a-vet/${v.id}`)}
+              onClick={() => {
+                trackBookVet("vet_selected", { vet_id: v.id });
+                navigate(`/mypet/book-a-vet/${v.id}`);
+              }}
               className="w-full text-left paw-card p-4 hover:shadow-petosauras-md transition"
             >
               <div className="flex gap-3">

@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { VerifiedIcon } from "@/components/icons/PetosauraIcons";
 
 import { useQuery } from "@tanstack/react-query";
@@ -8,21 +8,24 @@ import { supabase } from "@/integrations/supabase/client";
 
 const BookingSuccessScreen = () => {
   const [params] = useSearchParams();
+  const { bookingId } = useParams<{ bookingId?: string }>();
   const ref = params.get("ref");
   const navigate = useNavigate();
 
   const { data: booking } = useQuery({
-    queryKey: ["booking-by-ref", ref],
-    enabled: !!ref,
+    queryKey: ["booking-by-ref", bookingId ?? ref],
+    enabled: !!(bookingId || ref),
     queryFn: async () => {
-      const { data } = await supabase
+      let q = supabase
         .from("vet_bookings")
-        .select("*, vets(full_name, clinic_name), pets(name), vet_slots(slot_date, start_time)")
-        .eq("booking_reference", ref!)
-        .single();
+        .select("*, vets(full_name, clinic_name), pets(name), vet_slots(slot_date, start_time)");
+      q = bookingId ? q.eq("id", bookingId) : q.eq("booking_reference", ref!);
+      const { data } = await q.maybeSingle();
       return data as any;
     },
   });
+
+  const displayRef = booking?.booking_reference ?? ref ?? "—";
 
   return (
     <HubSubLayout title="Booking Confirmed" emoji="🐾">
@@ -36,7 +39,7 @@ const BookingSuccessScreen = () => {
       <div className="mt-5 paw-card divide-y divide-border">
         <div className="p-3">
           <p className="text-[10px] uppercase font-body text-muted-foreground">Booking Reference</p>
-          <p className="font-heading font-bold text-base">{ref}</p>
+          <p className="font-heading font-bold text-base">{displayRef}</p>
         </div>
         <div className="p-3 text-xs font-body space-y-1">
           <p>🩺 Dr. {booking?.vets?.full_name ?? "—"}</p>
