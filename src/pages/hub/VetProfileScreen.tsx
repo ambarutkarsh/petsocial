@@ -94,7 +94,7 @@ const VetProfileScreen = () => {
 
   const proceed = async () => {
     if (!selectedSlotId || !user) return;
-    navigate(`/hub/book-a-vet/${vetId}/confirm?slot=${selectedSlotId}`);
+    navigate(`/mypet/book-a-vet/${vetId}/confirm?slot=${selectedSlotId}`);
   };
 
   return (
@@ -102,7 +102,7 @@ const VetProfileScreen = () => {
       <PageWrapper>
         <header className="flex items-center gap-3">
           <button
-            onClick={() => navigate("/hub/book-a-vet")}
+            onClick={() => navigate("/mypet/book-a-vet")}
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
           >

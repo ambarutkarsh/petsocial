@@ -76,7 +76,7 @@ const ConfirmBookingScreen = () => {
         .eq("id", slotId)
         .then(() => {
           toast("Your slot has been released. Please select again.");
-          navigate(`/hub/book-a-vet/${vetId}`);
+          navigate(`/mypet/book-a-vet/${vetId}`);
         });
     }
   }, [secondsLeft, slotId, vetId, navigate]);
@@ -149,7 +149,7 @@ const ConfirmBookingScreen = () => {
       <PageWrapper>
         <header className="flex items-center gap-3">
           <button
-            onClick={() => navigate(`/hub/book-a-vet/${vetId}`)}
+            onClick={() => navigate(`/mypet/book-a-vet/${vetId}`)}
             aria-label="Back"
             className="w-9 h-9 rounded-[12px] bg-card border border-border shadow-petosauras flex items-center justify-center"
           >
