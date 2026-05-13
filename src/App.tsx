@@ -228,6 +228,7 @@ const App = () => (
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
             <Route path="/admin/welcome-email" element={<ProtectedRoute><AdminWelcomeEmailScreen /></ProtectedRoute>} />
             <Route path="/admin/home-carousel" element={<ProtectedRoute><AdminHomeCarouselScreen /></ProtectedRoute>} />
+            <Route path="/admin/vet-notifications" element={<ProtectedRoute><AdminVetNotificationsScreen /></ProtectedRoute>} />
 
             {/* Legacy Book a Vet → MyPet redirects */}
             <Route path="/hub/book-a-vet" element={<Navigate to="/mypet/book-a-vet" replace />} />
