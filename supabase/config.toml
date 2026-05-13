@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.vet-whatsapp-webhook]
 verify_jwt = false
+
+[functions.handle-vet-booking-action]
+verify_jwt = false

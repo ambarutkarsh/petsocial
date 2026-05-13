@@ -1,5 +1,6 @@
-// Send WhatsApp (Interakt) + email (Resend) notifications to vet on new booking
-// and log every delivery attempt to public.vet_notifications for audit + retry.
+// Send branded confirm/reject email to the vet (Resend) + sync the booking row
+// to the clinic Google Sheet ledger. No Interakt / WhatsApp automation —
+// WhatsApp is click-to-chat only on the user side.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -8,36 +9,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-type Channel = "whatsapp" | "email";
-
-function backoffSeconds(attempts: number) {
-  // 1m, 5m, 15m, 1h, 6h
-  const ladder = [60, 300, 900, 3600, 21600];
-  return ladder[Math.min(attempts, ladder.length - 1)];
-}
-
-async function sendWhatsapp(
-  apiKey: string,
-  toNumber: string,
-  text: string,
-): Promise<{ ok: boolean; status: number; body: any }> {
-  const res = await fetch("https://api.interakt.ai/v1/public/message/", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      countryCode: "+91",
-      phoneNumber: toNumber.replace(/^\+?91/, ""),
-      type: "Text",
-      data: { message: text },
-    }),
-  });
-  let body: any = null;
-  try { body = await res.json(); } catch { body = await res.text().catch(() => null); }
-  return { ok: res.ok, status: res.status, body };
-}
+const SITE_BASE = "https://petosauras.com";
 
 async function sendEmail(
   apiKey: string,
@@ -59,119 +31,72 @@ async function sendEmail(
     }),
   });
   let body: any = null;
-  try { body = await res.json(); } catch { body = await res.text().catch(() => null); }
+  try {
+    body = await res.json();
+  } catch {
+    body = await res.text().catch(() => null);
+  }
   return { ok: res.ok, status: res.status, body };
 }
 
-/**
- * Attempt a single delivery and write/update a row in vet_notifications.
- * If `existingId` is provided, the existing row is updated (used by retry).
- */
-async function attemptDelivery(
-  admin: any,
-  opts: {
-    existingId?: string;
-    vetId: string;
-    bookingId: string | null;
-    channel: Channel;
-    recipient: string;
-    subject?: string;
-    message: string;
-    html?: string;
-  },
-) {
-  const apiKey =
-    opts.channel === "whatsapp"
-      ? Deno.env.get("INTERAKT_API_KEY")
-      : Deno.env.get("RESEND_API_KEY");
+function buildEmailHtml(opts: {
+  bookingRef: string;
+  vetName: string;
+  petName: string;
+  petType: string;
+  ownerName: string;
+  slotDate: string;
+  slotTime: string;
+  reason: string;
+  symptoms: string[];
+  isEmergency: boolean;
+  confirmLink: string;
+  rejectLink: string;
+  rescheduleLink: string;
+  whatsappLink: string | null;
+}) {
+  const symptomsBlock = opts.symptoms.length
+    ? `<p style="margin:6px 0;color:#555"><b>Symptoms:</b> ${opts.symptoms.join(", ")}</p>`
+    : "";
+  const emergencyBlock = opts.isEmergency
+    ? `<div style="display:inline-block;background:#FFF4E5;color:#B45309;border:1px solid #FCD9A8;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;margin:8px 0">⚡ EMERGENCY — Priority Appointment</div>`
+    : "";
+  const waBlock = opts.whatsappLink
+    ? `<p style="margin:18px 0 0;font-size:13px;color:#555">Quick chat: <a href="${opts.whatsappLink}" style="color:#25D366;font-weight:700">Open WhatsApp</a></p>`
+    : "";
 
-  // Read existing attempts if we are retrying
-  let prevAttempts = 0;
-  let maxAttempts = 5;
-  if (opts.existingId) {
-    const { data } = await admin
-      .from("vet_notifications")
-      .select("attempts, max_attempts")
-      .eq("id", opts.existingId)
-      .maybeSingle();
-    prevAttempts = data?.attempts ?? 0;
-    maxAttempts = data?.max_attempts ?? 5;
-  }
-
-  const nowIso = new Date().toISOString();
-
-  if (!apiKey) {
-    const row = {
-      vet_id: opts.vetId,
-      booking_id: opts.bookingId,
-      channel: opts.channel,
-      recipient: opts.recipient,
-      subject: opts.subject ?? null,
-      message: opts.message,
-      payload: { html: opts.html ?? null },
-      status: "failed",
-      last_error: `Missing ${opts.channel === "whatsapp" ? "INTERAKT_API_KEY" : "RESEND_API_KEY"}`,
-      attempts: prevAttempts + 1,
-      max_attempts: maxAttempts,
-      last_attempt_at: nowIso,
-      next_retry_at: new Date(
-        Date.now() + backoffSeconds(prevAttempts) * 1000,
-      ).toISOString(),
-    };
-    if (opts.existingId) {
-      await admin.from("vet_notifications").update(row).eq("id", opts.existingId);
-    } else {
-      await admin.from("vet_notifications").insert(row);
-    }
-    return { ok: false, error: row.last_error };
-  }
-
-  let result: { ok: boolean; status: number; body: any };
-  try {
-    result =
-      opts.channel === "whatsapp"
-        ? await sendWhatsapp(apiKey, opts.recipient, opts.message)
-        : await sendEmail(
-            apiKey,
-            opts.recipient,
-            opts.subject ?? "Petosauras notification",
-            opts.html ?? opts.message,
-          );
-  } catch (e: any) {
-    result = { ok: false, status: 0, body: { error: e?.message ?? String(e) } };
-  }
-
-  const newAttempts = prevAttempts + 1;
-  const isDead = !result.ok && newAttempts >= maxAttempts;
-
-  const row: Record<string, unknown> = {
-    vet_id: opts.vetId,
-    booking_id: opts.bookingId,
-    channel: opts.channel,
-    recipient: opts.recipient,
-    subject: opts.subject ?? null,
-    message: opts.message,
-    payload: { html: opts.html ?? null },
-    provider_response: { status: result.status, body: result.body },
-    status: result.ok ? "sent" : isDead ? "dead" : "failed",
-    attempts: newAttempts,
-    max_attempts: maxAttempts,
-    last_attempt_at: nowIso,
-    last_error: result.ok ? null : `HTTP ${result.status}`,
-    delivered_at: result.ok ? nowIso : null,
-    next_retry_at:
-      result.ok || isDead
-        ? null
-        : new Date(Date.now() + backoffSeconds(newAttempts - 1) * 1000).toISOString(),
-  };
-
-  if (opts.existingId) {
-    await admin.from("vet_notifications").update(row).eq("id", opts.existingId);
-  } else {
-    await admin.from("vet_notifications").insert(row);
-  }
-
-  return { ok: result.ok, error: result.ok ? null : `HTTP ${result.status}` };
+  return `<!doctype html><html><body style="margin:0;padding:0;background:#FEFAF5;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FEFAF5;padding:24px 0">
+    <tr><td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.05)">
+        <tr><td style="background:#E8633A;padding:18px 24px;color:#fff;font-weight:700;font-size:18px">🐾 Petosauras</td></tr>
+        <tr><td style="padding:24px">
+          <h1 style="margin:0 0 6px;font-size:20px">New Booking Request</h1>
+          <p style="margin:0 0 14px;color:#666;font-size:13px">Booking Ref: <b>${opts.bookingRef}</b></p>
+          ${emergencyBlock}
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6EE;border-radius:12px;padding:14px;margin:8px 0 18px">
+            <tr><td style="font-size:14px;line-height:1.7">
+              <b>Pet:</b> ${opts.petName} (${opts.petType})<br/>
+              <b>Owner:</b> ${opts.ownerName}<br/>
+              <b>Date:</b> ${opts.slotDate}<br/>
+              <b>Time:</b> ${opts.slotTime}<br/>
+              <b>Reason:</b> ${opts.reason}
+            </td></tr>
+          </table>
+          ${symptomsBlock}
+          <div style="text-align:center;margin:22px 0 8px">
+            <a href="${opts.confirmLink}" style="display:inline-block;background:#16A34A;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;margin:6px 4px">✅ Confirm Appointment</a>
+            <a href="${opts.rejectLink}" style="display:inline-block;background:#DC2626;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;margin:6px 4px">❌ Reject Appointment</a>
+          </div>
+          <p style="text-align:center;margin:8px 0 0"><a href="${opts.rescheduleLink}" style="color:#E8633A;font-size:13px;font-weight:600">Reschedule / Open Vet Dashboard</a></p>
+          ${waBlock}
+          <hr style="border:none;border-top:1px solid #eee;margin:24px 0" />
+          <p style="font-size:12px;color:#888;margin:0;text-align:center">This booking was generated by Petosauras.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+  </body></html>`;
 }
 
 Deno.serve(async (req) => {
@@ -196,7 +121,7 @@ Deno.serve(async (req) => {
     const { data: booking, error: bErr } = await supabase
       .from("vet_bookings")
       .select(
-        "id, booking_reference, reason_for_visit, symptoms, is_emergency, vet_id, user_id, pet_id, slot_id",
+        "id, booking_reference, reason_for_visit, symptoms, is_emergency, vet_id, user_id, pet_id, slot_id, action_token, status",
       )
       .eq("id", booking_id)
       .single();
@@ -206,77 +131,166 @@ Deno.serve(async (req) => {
       await Promise.all([
         supabase
           .from("vets")
-          .select("id, full_name, email, whatsapp_number, clinic_name, clinic_address")
+          .select(
+            "id, full_name, email, whatsapp_number, phone, clinic_name, clinic_address",
+          )
           .eq("id", booking.vet_id)
           .single(),
         booking.pet_id
-          ? supabase.from("pets").select("name, species, pet_type").eq("id", booking.pet_id).single()
-          : Promise.resolve({ data: null }),
-        supabase.from("profiles").select("full_name").eq("id", booking.user_id).single(),
-        supabase.from("vet_slots").select("slot_date, start_time").eq("id", booking.slot_id).single(),
+          ? supabase
+              .from("pets")
+              .select("name, species, pet_type")
+              .eq("id", booking.pet_id)
+              .single()
+          : Promise.resolve({ data: null as any }),
+        supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", booking.user_id)
+          .single(),
+        supabase
+          .from("vet_slots")
+          .select("slot_date, start_time")
+          .eq("id", booking.slot_id)
+          .single(),
       ]);
 
     if (!vet) throw new Error("vet missing");
 
-    const symptomsLine =
-      booking.symptoms && booking.symptoms.length
-        ? `Symptoms: ${booking.symptoms.join(", ")}\n`
-        : "";
-    const emergencyLine = booking.is_emergency ? "⚡ EMERGENCY — Priority appointment\n" : "";
+    const tokenQ = `booking_id=${booking.id}&token=${booking.action_token}`;
+    const confirmLink = `${SITE_BASE}/vet-booking-action?${tokenQ}&action=confirm`;
+    const rejectLink = `${SITE_BASE}/vet-booking-action?${tokenQ}&action=reject`;
+    const rescheduleLink = `${SITE_BASE}/vet-dashboard?booking_id=${booking.id}&action=reschedule`;
 
-    const text = `🐾 *New Petosauras Booking*
+    const rawPhone = (vet.whatsapp_number || vet.phone || "").replace(
+      /[^\d]/g,
+      "",
+    );
+    const waPhone = rawPhone.startsWith("91") ? rawPhone : `91${rawPhone}`;
+    const waMessage =
+      `Hello Dr. ${vet.full_name}, regarding Petosauras booking ${booking.booking_reference}.`;
+    const whatsappLink =
+      rawPhone.length >= 10
+        ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`
+        : null;
 
-Reference: ${booking.booking_reference}
-Pet: ${pet?.name ?? "—"} (${pet?.species ?? pet?.pet_type ?? "—"})
-Owner: ${owner?.full_name ?? "Pet parent"}
-Date: ${slot?.slot_date} at ${slot?.start_time}
-Reason: ${booking.reason_for_visit ?? "—"}
-${symptomsLine}${emergencyLine}
-Reply *1* to CONFIRM
-Reply *2* to RESCHEDULE
-Reply *3* to CANCEL
+    const slotTime = String(slot?.start_time ?? "").slice(0, 5);
+    const subject = `New Petosauras Booking · ${booking.booking_reference}`;
+    const html = buildEmailHtml({
+      bookingRef: booking.booking_reference,
+      vetName: vet.full_name,
+      petName: pet?.name ?? "—",
+      petType: pet?.species ?? pet?.pet_type ?? "—",
+      ownerName: owner?.full_name ?? "Pet parent",
+      slotDate: slot?.slot_date ?? "",
+      slotTime,
+      reason: booking.reason_for_visit ?? "Consultation",
+      symptoms: booking.symptoms ?? [],
+      isEmergency: !!booking.is_emergency,
+      confirmLink,
+      rejectLink,
+      rescheduleLink,
+      whatsappLink,
+    });
 
-Manage via your dashboard:
-https://petosauras.com/vet-dashboard`;
-
-    const html = text.replace(/\*([^*]+)\*/g, "<strong>$1</strong>").replace(/\n/g, "<br/>");
-    const subject = `🐾 New booking · ${booking.booking_reference}`;
-
-    let waResult: any = { ok: false, error: "no_recipient" };
-    let emailResult: any = { ok: false, error: "no_recipient" };
-
-    if (vet.whatsapp_number) {
-      waResult = await attemptDelivery(supabase, {
-        vetId: vet.id,
-        bookingId: booking.id,
-        channel: "whatsapp",
-        recipient: vet.whatsapp_number,
-        message: text,
-      });
+    // Send email
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    let emailRes: { ok: boolean; status: number; body: any } = {
+      ok: false,
+      status: 0,
+      body: { error: "missing_recipient_or_key" },
+    };
+    if (vet.email && apiKey) {
+      try {
+        emailRes = await sendEmail(apiKey, vet.email, subject, html);
+      } catch (e: any) {
+        emailRes = { ok: false, status: 0, body: { error: e?.message } };
+      }
     }
-    if (vet.email) {
-      emailResult = await attemptDelivery(supabase, {
-        vetId: vet.id,
-        bookingId: booking.id,
-        channel: "email",
-        recipient: vet.email,
-        subject,
-        message: text,
-        html,
-      });
-    }
 
-    // User confirmation notification (best-effort, in-app)
+    const nowIso = new Date().toISOString();
+    await supabase.from("vet_notifications").insert({
+      vet_id: vet.id,
+      booking_id: booking.id,
+      channel: "email",
+      recipient: vet.email ?? "",
+      subject,
+      message: `New booking ${booking.booking_reference} for ${pet?.name ?? "pet"}`,
+      payload: { html, confirmLink, rejectLink, rescheduleLink, whatsappLink },
+      provider_response: { status: emailRes.status, body: emailRes.body },
+      status: emailRes.ok ? "sent" : "failed",
+      attempts: 1,
+      max_attempts: 5,
+      last_attempt_at: nowIso,
+      delivered_at: emailRes.ok ? nowIso : null,
+      last_error: emailRes.ok ? null : `HTTP ${emailRes.status}`,
+    });
+
+    // In-app notification for the user
     await supabase.from("notifications").insert({
       user_id: booking.user_id,
       type: "booking",
       title: "Booking request sent to vet",
-      body: `Dr. ${vet.full_name} will confirm your appointment within 2 hours.`,
+      body: "Your booking request has been sent. The vet will confirm or reject it shortly.",
       is_read: false,
     });
 
+    // Google Sheet ledger sync — best effort, never fails the booking
+    const sheetUrl = Deno.env.get("GOOGLE_SHEET_LEDGER_WEBHOOK_URL");
+    let sheetOk = false;
+    let sheetError: string | null = null;
+    const sheetPayload = {
+      booking_reference: booking.booking_reference,
+      vet_name: vet.full_name,
+      clinic_name: vet.clinic_name ?? "",
+      vet_email: vet.email ?? "",
+      vet_phone: vet.phone ?? vet.whatsapp_number ?? "",
+      pet_name: pet?.name ?? "",
+      pet_type: pet?.species ?? pet?.pet_type ?? "",
+      owner_name: owner?.full_name ?? "",
+      slot_date: slot?.slot_date ?? "",
+      slot_time: slotTime,
+      reason: booking.reason_for_visit ?? "",
+      status: booking.status,
+      confirm_link: confirmLink,
+      reject_link: rejectLink,
+      whatsapp_link: whatsappLink,
+    };
+    if (sheetUrl) {
+      try {
+        const sheetRes = await fetch(sheetUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sheetPayload),
+        });
+        sheetOk = sheetRes.ok;
+        if (!sheetRes.ok) sheetError = `HTTP ${sheetRes.status}`;
+      } catch (e: any) {
+        sheetError = e?.message ?? "fetch_failed";
+      }
+    } else {
+      sheetError = "missing_GOOGLE_SHEET_LEDGER_WEBHOOK_URL";
+    }
+
+    if (sheetOk) {
+      await supabase
+        .from("vet_bookings")
+        .update({ google_sheet_synced: true })
+        .eq("id", booking.id);
+    }
+    await supabase.from("vet_ledger_sync_logs").insert({
+      booking_id: booking.id,
+      status: sheetOk ? "success" : "error",
+      error: sheetError,
+      payload: sheetPayload,
+    });
+
     return new Response(
-      JSON.stringify({ ok: true, whatsapp: waResult, email: emailResult }),
+      JSON.stringify({
+        ok: true,
+        email: { ok: emailRes.ok, status: emailRes.status },
+        sheet: { ok: sheetOk, error: sheetError },
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e: any) {
@@ -286,6 +300,3 @@ https://petosauras.com/vet-dashboard`;
     });
   }
 });
-
-// Re-export the helper so the retry function can import the same logic
-export { attemptDelivery };

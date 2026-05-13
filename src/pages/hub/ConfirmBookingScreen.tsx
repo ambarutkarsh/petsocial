@@ -90,7 +90,7 @@ const ConfirmBookingScreen = () => {
       return;
     }
     setConfirming(true);
-    trackBookVet("booking_submitted", { vet_id: vetId, slot_id: slotId });
+    trackBookVet("vet_booking_submitted", { vet_id: vetId, slot_id: slotId });
     try {
       const { data, error } = await supabase.functions.invoke("create-vet-booking", {
         body: {
@@ -120,21 +120,28 @@ const ConfirmBookingScreen = () => {
         return;
       }
 
-      const payload = data as { booking_id?: string; booking_reference?: string; error?: string };
+      const payload = data as {
+        booking_id?: string;
+        booking_reference?: string;
+        whatsapp_link?: string | null;
+        error?: string;
+      };
       if (payload?.error || !payload?.booking_id) {
-        trackBookVet("booking_failed", { vet_id: vetId, slot_id: slotId, reason: payload?.error });
+        trackBookVet("vet_booking_failed", { vet_id: vetId, slot_id: slotId, reason: payload?.error });
         toast.error(payload?.error ?? "Booking failed");
         return;
       }
 
-      trackBookVet("booking_success", {
+      trackBookVet("vet_booking_success", {
         vet_id: vetId,
         slot_id: slotId,
         booking_id: payload.booking_id,
       });
-      navigate(`/mypet/book-a-vet/success/${payload.booking_id}`);
+      navigate(`/mypet/book-a-vet/success/${payload.booking_id}`, {
+        state: { whatsapp_link: payload.whatsapp_link ?? null },
+      });
     } catch (e: any) {
-      trackBookVet("booking_failed", { vet_id: vetId, slot_id: slotId, reason: e.message });
+      trackBookVet("vet_booking_failed", { vet_id: vetId, slot_id: slotId, reason: e.message });
       toast.error(e.message ?? "Booking failed");
     } finally {
       setConfirming(false);

@@ -100,6 +100,14 @@ Deno.serve(async (req) => {
       return json({ error: SLOT_TAKEN_MESSAGE }, 409);
     }
 
+    // Generate a one-time action token used by email Confirm/Reject links
+    const actionToken =
+      crypto.randomUUID().replace(/-/g, "") +
+      crypto.randomUUID().replace(/-/g, "");
+    const actionTokenExpires = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
     // 3. Insert booking. Unique partial index protects from races at the DB level.
     const { data: booking, error: bookErr } = await admin
       .from("vet_bookings")
@@ -115,6 +123,8 @@ Deno.serve(async (req) => {
         symptoms: Array.isArray(symptoms) ? symptoms : [],
         share_health_records: !!share_health_records,
         user_notes: user_notes ?? null,
+        action_token: actionToken,
+        action_token_expires_at: actionTokenExpires,
       })
       .select("id, booking_reference")
       .single();
@@ -133,6 +143,35 @@ Deno.serve(async (req) => {
       throw bookErr;
     }
 
+    // Build click-to-chat WhatsApp link from vet phone/whatsapp_number
+    const [{ data: vet }, { data: pet }] = await Promise.all([
+      admin
+        .from("vets")
+        .select("full_name, whatsapp_number, phone")
+        .eq("id", vet_id)
+        .maybeSingle(),
+      pet_id
+        ? admin.from("pets").select("name").eq("id", pet_id).maybeSingle()
+        : Promise.resolve({ data: null as any }),
+    ]);
+
+    const rawPhone = (vet?.whatsapp_number || vet?.phone || "").replace(
+      /[^\d]/g,
+      "",
+    );
+    const waPhone = rawPhone.startsWith("91") ? rawPhone : `91${rawPhone}`;
+    const waMessage =
+      `Hello Dr. ${vet?.full_name ?? ""}, I have requested an appointment on Petosauras.\n\n` +
+      `Booking Ref: ${booking.booking_reference}\n` +
+      `Pet: ${pet?.name ?? "—"}\n` +
+      `Date/Time: ${slot.consultation_type ? "" : ""}${(slot as any).slot_date ?? ""}\n` +
+      `Reason: ${reason_for_visit ?? "Consultation"}\n\n` +
+      `Please check your email to confirm or reject.`;
+    const whatsapp_link =
+      rawPhone.length >= 10
+        ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`
+        : null;
+
     // 4. Fire notification (don't fail the booking if it errors)
     try {
       await admin.functions.invoke("notify-vet-booking", {
@@ -146,6 +185,7 @@ Deno.serve(async (req) => {
       ok: true,
       booking_id: booking.id,
       booking_reference: booking.booking_reference,
+      whatsapp_link,
     });
   } catch (e: any) {
     return json({ error: e.message ?? "Booking failed" }, 500);

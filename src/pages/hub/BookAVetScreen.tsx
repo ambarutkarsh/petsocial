@@ -154,8 +154,8 @@ const BookAVetScreen = () => {
         {!isLoading && vets.length === 0 && (
           <div className="paw-card p-5 text-center">
             <p className="text-3xl mb-2">🐾</p>
-            <p className="font-heading font-bold text-sm">No bookable vets are available yet.</p>
-            <p className="text-xs text-muted-foreground font-body mt-1">We're onboarding verified vets in your city. Check back soon.</p>
+            <p className="font-heading font-bold text-sm">Bookable vets are not available yet.</p>
+            <p className="text-xs text-muted-foreground font-body mt-1">You can still discover nearby clinics or invite a vet.</p>
           </div>
         )}
         {vets.map((v: any) => {
