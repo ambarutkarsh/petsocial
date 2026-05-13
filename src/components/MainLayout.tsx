@@ -26,7 +26,7 @@ const MainLayout = ({ children, hideTopBar = false }: MainLayoutProps) => {
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
       <div className="app-root">
         <TopBar />
-        <div style={{ paddingTop: 56 }}>{children}</div>
+        <div style={{ paddingTop: "calc(56px + env(safe-area-inset-top, 0px))" }}>{children}</div>
       </div>
     </div>
   );
