@@ -2430,6 +2430,8 @@ export type Database = {
       }
       vet_bookings: {
         Row: {
+          action_token: string | null
+          action_token_expires_at: string | null
           booking_reference: string
           cancellation_reason: string | null
           cancelled_at: string | null
@@ -2438,6 +2440,7 @@ export type Database = {
           confirmed_at: string | null
           consultation_type: string
           created_at: string | null
+          google_sheet_synced: boolean
           id: string
           is_emergency: boolean | null
           pet_id: string | null
@@ -2449,10 +2452,14 @@ export type Database = {
           symptoms: string[] | null
           user_id: string
           user_notes: string | null
+          vet_action_at: string | null
+          vet_action_source: string | null
           vet_id: string
           vet_notes: string | null
         }
         Insert: {
+          action_token?: string | null
+          action_token_expires_at?: string | null
           booking_reference?: string
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -2461,6 +2468,7 @@ export type Database = {
           confirmed_at?: string | null
           consultation_type?: string
           created_at?: string | null
+          google_sheet_synced?: boolean
           id?: string
           is_emergency?: boolean | null
           pet_id?: string | null
@@ -2472,10 +2480,14 @@ export type Database = {
           symptoms?: string[] | null
           user_id: string
           user_notes?: string | null
+          vet_action_at?: string | null
+          vet_action_source?: string | null
           vet_id: string
           vet_notes?: string | null
         }
         Update: {
+          action_token?: string | null
+          action_token_expires_at?: string | null
           booking_reference?: string
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -2484,6 +2496,7 @@ export type Database = {
           confirmed_at?: string | null
           consultation_type?: string
           created_at?: string | null
+          google_sheet_synced?: boolean
           id?: string
           is_emergency?: boolean | null
           pet_id?: string | null
@@ -2495,6 +2508,8 @@ export type Database = {
           symptoms?: string[] | null
           user_id?: string
           user_notes?: string | null
+          vet_action_at?: string | null
+          vet_action_source?: string | null
           vet_id?: string
           vet_notes?: string | null
         }
@@ -2542,6 +2557,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vet_ledger_sync_logs: {
+        Row: {
+          booking_id: string | null
+          created_at: string
+          error: string | null
+          id: string
+          payload: Json | null
+          status: string
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          payload?: Json | null
+          status: string
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          payload?: Json | null
+          status?: string
+        }
+        Relationships: []
       }
       vet_notifications: {
         Row: {
