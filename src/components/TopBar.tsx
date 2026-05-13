@@ -46,7 +46,13 @@ const TopBar = () => {
     <>
       <header
         className="fixed top-0 left-1/2 -translate-x-1/2 w-full bg-card border-b border-border"
-        style={{ maxWidth: 480, height: 56, zIndex: 1000, borderBottomWidth: 0.5 }}
+        style={{
+          maxWidth: 480,
+          minHeight: "calc(56px + env(safe-area-inset-top, 0px))",
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          zIndex: 1000,
+          borderBottomWidth: 0.5,
+        }}
       >
         <div className="h-14 px-4 flex items-center justify-between">
           <button

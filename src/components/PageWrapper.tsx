@@ -25,7 +25,7 @@ const PageWrapper = ({ children, noPadding = false, className = "", style }: Pag
     className={className}
     style={{
       paddingTop: 0,
-      paddingBottom: 72,
+      paddingBottom: "calc(72px + env(safe-area-inset-bottom, 0px))",
       paddingLeft: noPadding ? 0 : 16,
       paddingRight: noPadding ? 0 : 16,
       minHeight: "100vh",

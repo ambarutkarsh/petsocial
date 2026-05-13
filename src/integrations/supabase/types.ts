@@ -35,6 +35,41 @@ export type Database = {
         }
         Relationships: []
       }
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json
+          document_id: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json
+          document_id?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json
+          document_id?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_logs_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       budget_estimates: {
         Row: {
           breed: string | null
@@ -326,6 +361,207 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correction_workflows: {
+        Row: {
+          authority: string | null
+          correction_type: string
+          created_at: string
+          document_id: string
+          expected_timeline: string | null
+          fee: string | null
+          id: string
+          notes: string | null
+          process_steps: Json
+          required_documents: Json
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          authority?: string | null
+          correction_type: string
+          created_at?: string
+          document_id: string
+          expected_timeline?: string | null
+          fee?: string | null
+          id?: string
+          notes?: string | null
+          process_steps?: Json
+          required_documents?: Json
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          authority?: string | null
+          correction_type?: string
+          created_at?: string
+          document_id?: string
+          expected_timeline?: string | null
+          fee?: string | null
+          id?: string
+          notes?: string | null
+          process_steps?: Json
+          required_documents?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correction_workflows_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_shares: {
+        Row: {
+          access_count: number
+          allow_download: boolean
+          channel: string
+          created_at: string
+          document_id: string
+          expiry_at: string | null
+          id: string
+          is_password_protected: boolean
+          is_watermarked: boolean
+          max_access_count: number | null
+          password_hash: string | null
+          purpose: string | null
+          recipient_contact: string | null
+          recipient_name: string | null
+          signed_url: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          access_count?: number
+          allow_download?: boolean
+          channel: string
+          created_at?: string
+          document_id: string
+          expiry_at?: string | null
+          id?: string
+          is_password_protected?: boolean
+          is_watermarked?: boolean
+          max_access_count?: number | null
+          password_hash?: string | null
+          purpose?: string | null
+          recipient_contact?: string | null
+          recipient_name?: string | null
+          signed_url?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          access_count?: number
+          allow_download?: boolean
+          channel?: string
+          created_at?: string
+          document_id?: string
+          expiry_at?: string | null
+          id?: string
+          is_password_protected?: boolean
+          is_watermarked?: boolean
+          max_access_count?: number | null
+          password_hash?: string | null
+          purpose?: string | null
+          recipient_contact?: string | null
+          recipient_name?: string | null
+          signed_url?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_shares_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          category: string
+          created_at: string
+          document_name: string
+          document_number: string | null
+          expiry_date: string | null
+          file_size: number
+          file_type: string
+          id: string
+          issue_date: string | null
+          issuer: string | null
+          metadata: Json
+          ocr_text: string | null
+          profile_id: string | null
+          source: string
+          storage_path: string
+          sub_category: string | null
+          tags: string[]
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          document_name: string
+          document_number?: string | null
+          expiry_date?: string | null
+          file_size?: number
+          file_type: string
+          id?: string
+          issue_date?: string | null
+          issuer?: string | null
+          metadata?: Json
+          ocr_text?: string | null
+          profile_id?: string | null
+          source?: string
+          storage_path: string
+          sub_category?: string | null
+          tags?: string[]
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          document_name?: string
+          document_number?: string | null
+          expiry_date?: string | null
+          file_size?: number
+          file_type?: string
+          id?: string
+          issue_date?: string | null
+          issuer?: string | null
+          metadata?: Json
+          ocr_text?: string | null
+          profile_id?: string | null
+          source?: string
+          storage_path?: string
+          sub_category?: string | null
+          tags?: string[]
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "lifevault_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -817,6 +1053,42 @@ export type Database = {
           title?: string
           updated_at?: string | null
           view_count?: number | null
+        }
+        Relationships: []
+      }
+      lifevault_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          metadata: Json
+          name: string
+          profile_type: string
+          relationship: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name: string
+          profile_type: string
+          relationship?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name?: string
+          profile_type?: string
+          relationship?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2090,6 +2362,50 @@ export type Database = {
         }
         Relationships: []
       }
+      reminders: {
+        Row: {
+          created_at: string
+          document_id: string
+          frequency: string | null
+          id: string
+          notes: string | null
+          reminder_date: string
+          reminder_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          frequency?: string | null
+          id?: string
+          notes?: string | null
+          reminder_date: string
+          reminder_type: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          frequency?: string | null
+          id?: string
+          notes?: string | null
+          reminder_date?: string
+          reminder_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sauras_coins: {
         Row: {
           coins: number
@@ -2254,6 +2570,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users_profile: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          mobile: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          mobile?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          mobile?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       vaccinations: {
         Row: {
