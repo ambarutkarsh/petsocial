@@ -17,6 +17,7 @@ const NAV = [
 
 const NAV_BOTTOM = [
   { to: "/admin/notifications", label: "Push Notifications", icon: BellIcon },
+  { to: "/admin/vet-notifications", label: "Vet Delivery Log", icon: BellIcon },
 ];
 
 interface Props {
