@@ -2545,30 +2545,60 @@ export type Database = {
       }
       vet_notifications: {
         Row: {
+          attempts: number
           booking_id: string | null
           channel: string | null
+          delivered_at: string | null
           id: string
+          last_attempt_at: string | null
+          last_error: string | null
+          max_attempts: number
           message: string | null
+          next_retry_at: string | null
+          payload: Json | null
+          provider_response: Json | null
+          recipient: string | null
           sent_at: string | null
           status: string | null
+          subject: string | null
           vet_id: string
         }
         Insert: {
+          attempts?: number
           booking_id?: string | null
           channel?: string | null
+          delivered_at?: string | null
           id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          max_attempts?: number
           message?: string | null
+          next_retry_at?: string | null
+          payload?: Json | null
+          provider_response?: Json | null
+          recipient?: string | null
           sent_at?: string | null
           status?: string | null
+          subject?: string | null
           vet_id: string
         }
         Update: {
+          attempts?: number
           booking_id?: string | null
           channel?: string | null
+          delivered_at?: string | null
           id?: string
+          last_attempt_at?: string | null
+          last_error?: string | null
+          max_attempts?: number
           message?: string | null
+          next_retry_at?: string | null
+          payload?: Json | null
+          provider_response?: Json | null
+          recipient?: string | null
           sent_at?: string | null
           status?: string | null
+          subject?: string | null
           vet_id?: string
         }
         Relationships: [
