@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { trackBookVet } from "@/lib/analytics";
+import { trackBookVet, type BookVetEvent } from "@/lib/analytics";
 
 type State =
   | { kind: "loading" }
@@ -34,10 +34,9 @@ const VetBookingActionScreen = () => {
         setState({ kind: "error", message: msg });
         return;
       }
-      trackBookVet(
-        action === "confirm" ? "vet_confirmed_from_email" : "vet_rejected_from_email",
-        { booking_id },
-      );
+      const ev: BookVetEvent =
+        action === "confirm" ? "vet_confirmed_from_email" : "vet_rejected_from_email";
+      trackBookVet(ev, { booking_id });
       setState({ kind: "ok", action, ref: payload.booking_reference });
     })();
     return () => { cancelled = true; };
