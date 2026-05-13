@@ -81,6 +81,7 @@ const AdminDashboardScreen = lazy(() => import("./pages/admin/AdminDashboardScre
 const BulkUpload = lazy(() => import("./pages/admin/BulkUpload"));
 const AdminWelcomeEmailScreen = lazy(() => import("./pages/admin/AdminWelcomeEmailScreen"));
 const AdminHomeCarouselScreen = lazy(() => import("./pages/admin/AdminHomeCarouselScreen"));
+const AdminVetNotificationsScreen = lazy(() => import("./pages/admin/AdminVetNotificationsScreen"));
 const FlappyPetGame = lazy(() => import("./pages/FlappyPetGame"));
 const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
 const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
@@ -227,6 +228,7 @@ const App = () => (
             <Route path="/admin/vets" element={<ProtectedRoute><AdminVetsScreen /></ProtectedRoute>} />
             <Route path="/admin/welcome-email" element={<ProtectedRoute><AdminWelcomeEmailScreen /></ProtectedRoute>} />
             <Route path="/admin/home-carousel" element={<ProtectedRoute><AdminHomeCarouselScreen /></ProtectedRoute>} />
+            <Route path="/admin/vet-notifications" element={<ProtectedRoute><AdminVetNotificationsScreen /></ProtectedRoute>} />
 
             {/* Legacy Book a Vet → MyPet redirects */}
             <Route path="/hub/book-a-vet" element={<Navigate to="/mypet/book-a-vet" replace />} />
