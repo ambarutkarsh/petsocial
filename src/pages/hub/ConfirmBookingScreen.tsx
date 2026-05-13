@@ -90,7 +90,7 @@ const ConfirmBookingScreen = () => {
       return;
     }
     setConfirming(true);
-    trackBookVet("booking_submitted", { vet_id: vetId, slot_id: slotId });
+    trackBookVet("vet_booking_submitted", { vet_id: vetId, slot_id: slotId });
     try {
       const { data, error } = await supabase.functions.invoke("create-vet-booking", {
         body: {
