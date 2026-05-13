@@ -60,10 +60,16 @@ const VetRequestsInner = () => {
   });
 
   const confirm = async (b: any) => {
-    trackBookVet("vet_accept_clicked", { booking_id: b.id });
+    trackBookVet("vet_confirmed_from_dashboard", { booking_id: b.id });
+    const nowIso = new Date().toISOString();
     const { error: e1 } = await supabase
       .from("vet_bookings")
-      .update({ status: "confirmed", confirmed_at: new Date().toISOString() })
+      .update({
+        status: "confirmed",
+        confirmed_at: nowIso,
+        vet_action_at: nowIso,
+        vet_action_source: "dashboard",
+      })
       .eq("id", b.id);
     if (e1) return toast.error(e1.message);
     await supabase.from("vet_slots").update({ status: "booked" }).eq("id", b.slot_id);
@@ -79,12 +85,15 @@ const VetRequestsInner = () => {
 
   const doReject = async () => {
     if (!cancelFor) return;
-    trackBookVet("vet_reject_clicked", { booking_id: cancelFor.id, reason });
+    trackBookVet("vet_rejected_from_dashboard", { booking_id: cancelFor.id, reason });
+    const nowIso = new Date().toISOString();
     await supabase.from("vet_bookings").update({
       status: "rejected",
       cancellation_reason: reason,
       cancelled_by: "vet",
-      cancelled_at: new Date().toISOString(),
+      cancelled_at: nowIso,
+      vet_action_at: nowIso,
+      vet_action_source: "dashboard",
     }).eq("id", cancelFor.id);
     await supabase.from("vet_slots").update({ status: "available", locked_by: null, locked_at: null }).eq("id", cancelFor.slot_id);
     await supabase.from("notifications").insert({
