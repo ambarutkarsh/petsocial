@@ -330,7 +330,7 @@ const RegisterMicrochipScreen = () => {
 
   return (
     <HubSubLayout title="Register Microchip" emoji="💉">
-      <div className="space-y-5 pb-28">
+      <div className="space-y-5" style={{ paddingBottom: "calc(160px + env(safe-area-inset-bottom, 0px))" }}>
         <ChipStepper current={step} total={4} labels={STEP_LABELS} />
 
         {/* STEP 1 */}
