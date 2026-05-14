@@ -199,6 +199,32 @@
     background: hsl(var(--background));
     position: relative;
     overflow-x: hidden;
+  /* iOS: prevent input zoom on focus by enforcing 16px+ font-size */
+  input, select, textarea {
+    font-size: 16px;
+  }
+
+  /* Hide PWA install CTA inside Capacitor / native app */
+  body.is-native-app .pwa-install-cta {
+    display: none !important;
+  }
+
+  /* Improve clarity of native date inputs so they don't look blank */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    min-height: 48px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: hsl(var(--input));
+    color: hsl(var(--text-primary));
+  }
+  input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+  }
+  input[type="date"]:invalid,
+  input[type="date"]:not(:focus):placeholder-shown {
+    color: hsl(var(--text-hint));
   }
 }
 
