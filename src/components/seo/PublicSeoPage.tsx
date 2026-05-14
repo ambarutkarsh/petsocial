@@ -10,6 +10,7 @@ export interface SeoLandingProps {
   intro: string;
   sections: { heading: string; body: string }[];
   breadcrumbLabel: string;
+  jsonLd?: object | object[];
 }
 
 const RELATED: { to: string; label: string; cta?: CtaName }[] = [
