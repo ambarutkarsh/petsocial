@@ -3,6 +3,7 @@ import { useChatbot } from "@/contexts/ChatbotContext";
 import { useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import launcherIcon from "@/assets/chatbot-launcher.png";
+import fallbackIcon from "@/assets/petosauras-icon.png";
 
 const HIDDEN_PREFIXES = ["/admin", "/auth", "/reset-password", "/onboarding", "/vet"];
 const IDLE_MS = 20000;
