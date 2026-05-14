@@ -30,7 +30,7 @@ const PWAInstallButton = () => {
         onClick={handleClick}
         aria-label="Install Petosauras app"
         title="Install Petosauras app"
-        className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
+        className="pwa-install-cta w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
       >
         <Download size={20} strokeWidth={1.5} />
       </button>
