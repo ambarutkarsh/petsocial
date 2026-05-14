@@ -85,7 +85,24 @@ export const CARE_PAGES: Record<string, CareDef> = {
 
 export const CarePage = ({ slug }: { slug: keyof typeof CARE_PAGES }) => {
   const def = CARE_PAGES[slug];
-  return <PublicSeoPage {...def} />;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: def.h1,
+    description: def.description,
+    mainEntityOfPage: `https://petsocial.lovable.app/${def.slug}`,
+    author: { "@type": "Organization", name: "Petosauras" },
+    publisher: {
+      "@type": "Organization",
+      name: "Petosauras",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://petsocial.lovable.app/petosauras-logo-new.png",
+      },
+    },
+    about: def.breadcrumbLabel,
+  };
+  return <PublicSeoPage {...def} jsonLd={articleJsonLd} />;
 };
 
 export default CarePage;
