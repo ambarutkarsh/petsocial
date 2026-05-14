@@ -141,6 +141,11 @@ const HomeScreen = () => {
 
   return (
     <MobileLayout>
+      <SEO
+        title="My Pet Dashboard | Petosauras"
+        description="Your personal Petosauras dashboard — quick access to pet services, nearby places, your pet community feed and budget tools."
+        canonical="/home"
+      />
       <div className="pb-28 px-5 pt-4 space-y-5 bg-background min-h-screen">
         {/* Top carousel banner */}
         <HomeCarouselBanner />
