@@ -30,7 +30,7 @@ const MobileLayout = ({ children, className = "", hideTopBar = false }: MobileLa
     <div className="min-h-screen flex justify-center" style={{ background: "#EFEFEF" }}>
       <div className={`app-root ${className}`}>
         {!hideTopBar && <TopBar />}
-        <div style={{ paddingTop: hideTopBar ? 0 : "calc(56px + env(safe-area-inset-top, 0px))" }}>{children}</div>
+        <main style={{ paddingTop: hideTopBar ? 0 : "calc(56px + env(safe-area-inset-top, 0px))" }}>{children}</main>
       </div>
     </div>
   );
