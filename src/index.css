@@ -12,6 +12,9 @@
     --safe-area-left: env(safe-area-inset-left, 0px);
     --safe-area-right: env(safe-area-inset-right, 0px);
 
+    /* Bottom navigation height (used to reserve space on scrollable pages) */
+    --bottom-nav-height: 84px;
+
     /* Petosauras purple theme — all colours stored as HSL */
 
     /* Background / surfaces */
