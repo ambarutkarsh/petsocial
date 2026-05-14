@@ -110,6 +110,7 @@ export const FaqLanding = () => {
       breadcrumbLabel="FAQ"
       intro="Everything pet parents commonly ask about Petosauras."
       sections={faqs.map((f) => ({ heading: f.q, body: f.a }))}
+      jsonLd={jsonLd}
     />
   );
 };

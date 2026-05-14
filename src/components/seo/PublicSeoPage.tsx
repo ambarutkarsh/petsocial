@@ -33,6 +33,7 @@ const PublicSeoPage = ({
   intro,
   sections,
   breadcrumbLabel,
+  jsonLd,
 }: SeoLandingProps) => {
   const url = `${SITE}/${slug}`;
   const related = RELATED.filter((r) => r.to !== `/${slug}`).slice(0, 5);
@@ -46,13 +47,16 @@ const PublicSeoPage = ({
     ],
   };
 
+  const extra = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+  const allJsonLd = [breadcrumb, ...extra];
+
   return (
     <>
       <SEO
         title={title}
         description={description}
         canonical={`/${slug}`}
-        jsonLd={breadcrumb}
+        jsonLd={allJsonLd}
       />
       <main className="min-h-screen bg-background text-foreground">
         <header className="border-b border-border">
