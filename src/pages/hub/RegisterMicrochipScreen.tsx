@@ -330,7 +330,7 @@ const RegisterMicrochipScreen = () => {
 
   return (
     <HubSubLayout title="Register Microchip" emoji="💉">
-      <div className="space-y-5 pb-28">
+      <div className="space-y-5" style={{ paddingBottom: "calc(160px + env(safe-area-inset-bottom, 0px))" }}>
         <ChipStepper current={step} total={4} labels={STEP_LABELS} />
 
         {/* STEP 1 */}
@@ -548,7 +548,13 @@ const RegisterMicrochipScreen = () => {
         )}
 
         {/* Sticky action bar */}
-        <div className="fixed left-0 right-0 bottom-[64px] mx-auto max-w-[430px] px-4 py-3 bg-background/95 backdrop-blur border-t border-border">
+        <div
+          className="fixed left-0 right-0 mx-auto max-w-[430px] px-4 py-3 bg-background/95 backdrop-blur border-t border-border"
+          style={{
+            bottom: "calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px))",
+            zIndex: 900,
+          }}
+        >
           <div className="flex items-center gap-2">
             <Button variant="outline" className="rounded-full h-11 w-11 p-0" onClick={handleBack} disabled={submitting} aria-label="Back">
               <BackIcon className="w-4 h-4" />

@@ -3,6 +3,7 @@ import { useChatbot } from "@/contexts/ChatbotContext";
 import { useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 import launcherIcon from "@/assets/chatbot-launcher.png";
+import fallbackIcon from "@/assets/petosauras-icon.png";
 
 const HIDDEN_PREFIXES = ["/admin", "/auth", "/reset-password", "/onboarding", "/vet"];
 const IDLE_MS = 20000;
@@ -88,10 +89,14 @@ const ChatbotLauncher = () => {
       >
         <img
           src={launcherIcon}
-          alt=""
+          alt="Petosauras chatbot"
           width={48}
           height={48}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src !== fallbackIcon) img.src = fallbackIcon;
+          }}
           className={`w-12 h-12 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)] origin-bottom ${
             idleNudge ? "animate-petosauras-wave" : ""
           }`}

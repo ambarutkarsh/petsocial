@@ -7,6 +7,13 @@ const PWAInstallButton = () => {
   const { canPrompt, installed, isIOS, promptInstall } = usePWAInstall();
   const [showHelp, setShowHelp] = useState(false);
 
+  // Hide PWA install CTA inside native (Capacitor) app
+  const isNativeApp =
+    typeof window !== "undefined" &&
+    (((window as any).Capacitor && (window as any).Capacitor.isNativePlatform?.()) ||
+      !!(window as any).Capacitor?.getPlatform);
+  if (isNativeApp) return null;
+
   if (installed) return null;
 
   const handleClick = async () => {
@@ -23,7 +30,7 @@ const PWAInstallButton = () => {
         onClick={handleClick}
         aria-label="Install Petosauras app"
         title="Install Petosauras app"
-        className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
+        className="pwa-install-cta w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-muted transition-colors"
       >
         <Download size={20} strokeWidth={1.5} />
       </button>

@@ -277,7 +277,14 @@ export default function FlappyPetGame() {
   return (
     <div className="min-h-screen w-full flex flex-col" style={{ background: "linear-gradient(180deg, #0F1729 0%, #1A1F3A 100%)" }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <header
+        className="flex items-center justify-between px-4 py-3 border-b border-white/10 sticky top-0 z-50"
+        style={{
+          paddingTop: "max(env(safe-area-inset-top, 0px), 12px)",
+          minHeight: "calc(56px + env(safe-area-inset-top, 0px))",
+          background: "linear-gradient(180deg, #0F1729 0%, #1A1F3A 100%)",
+        }}
+      >
         <button
           onClick={() => { cancelAnimationFrame(rafRef.current); navigate(-1); }}
           className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
