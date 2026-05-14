@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://petosauras.com/sitemap.xml
+Sitemap: https://petsocial.lovable.app/sitemap.xml

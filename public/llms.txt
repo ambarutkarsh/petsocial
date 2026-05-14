@@ -1,0 +1,29 @@
+# Petosauras
+
+> India's all-in-one pet app for pet parents — share pet moments, track health records, find vets, manage vaccination cards, and connect with the dog, cat, fish, bird and reptile community.
+
+## Pages
+
+- [Home](/welcome): Marketing landing page introducing Petosauras.
+- [Features](/features): Overview of what the app offers.
+- [Pet Community](/community): Social feed for Indian pet parents.
+- [Vet Near Me](/vet-near-me): Find verified veterinary clinics nearby.
+- [Pet DigiLocker](/pet-digilocker): Digital storage for vaccination and health records.
+- [Pet Budget Calculator](/pet-budget-calculator): Estimate monthly pet care costs.
+- [Pet Facts](/pet-facts): Daily facts about dogs, cats, fish, birds and more.
+
+## Care guides
+
+- [Dog Care](/dog-care): Diet, vaccination, grooming and training for Indian dog parents.
+- [Cat Care](/cat-care): Feeding, litter training, vaccinations and health checks.
+- [Fish Care](/fish-care): Aquarium setup, water quality, feeding and species compatibility.
+- [Bird Care](/bird-care): Cage setup, diet, enrichment and avian vet care.
+- [Reptile Care](/reptile-care): Heat, humidity, UVB, feeding and exotic vet support.
+
+## About
+
+- [About Us](/about-us): The story and vision behind Petosauras.
+- [FAQ](/faq): Common questions about pricing, content, privacy and more.
+- [Contact Us](/contact-us): Get in touch.
+- [Privacy Policy](/privacy-policy): How we handle user data.
+- [Terms of Service](/terms-of-service): Usage terms.

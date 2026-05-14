@@ -8,7 +8,7 @@ interface SEOProps {
   jsonLd?: object | object[];
 }
 
-const SITE = "https://petosauras.com";
+const SITE = "https://petsocial.lovable.app";
 const DEFAULT_IMAGE = `${SITE}/petosauras-logo-new.png`;
 
 const setMeta = (selector: string, attr: string, value: string) => {

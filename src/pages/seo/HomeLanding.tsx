@@ -42,7 +42,7 @@ const HomeLanding = () => {
     <>
       <SEO
         title="Petosauras | All-in-One Pet App for Pet Parents in India"
-        description="Petosauras is an all-in-one pet hub for Indian pet parents to share pet moments, track health records, find vets, manage vaccination cards, explore pet facts, and connect with dog, cat, fish, bird, reptile and small pet communities."
+        description="India's all-in-one pet app — share pet moments, track health records, find vets, store vaccination cards, and join the pet community."
         canonical="/"
         jsonLd={jsonLd}
       />

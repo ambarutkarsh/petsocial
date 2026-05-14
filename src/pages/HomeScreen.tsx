@@ -7,6 +7,7 @@ import MobileLayout from "@/components/MobileLayout";
 import BottomNav from "@/components/BottomNav";
 import HomeCarouselBanner from "@/components/HomeCarouselBanner";
 import QuickTipOfTheDay from "@/components/QuickTipOfTheDay";
+import SEO from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -140,6 +141,11 @@ const HomeScreen = () => {
 
   return (
     <MobileLayout>
+      <SEO
+        title="My Pet Dashboard | Petosauras"
+        description="Your personal Petosauras dashboard — quick access to pet services, nearby places, your pet community feed and budget tools."
+        canonical="/home"
+      />
       <div className="pb-28 px-5 pt-4 space-y-5 bg-background min-h-screen">
         {/* Top carousel banner */}
         <HomeCarouselBanner />
