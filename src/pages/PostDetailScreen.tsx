@@ -58,9 +58,34 @@ const PostDetailScreen = () => {
 
   const mediaUrl = getMediaUrl(post.media_url);
   const profile = post.profiles as any;
+  const captionText = (post.caption || "").trim();
+  const authorName = profile?.full_name || profile?.username || "a pet parent";
+  const seoTitle = captionText
+    ? `${captionText.slice(0, 70)} — by ${authorName} | Petosauras`
+    : `Pet post by ${authorName} | Petosauras`;
+  const seoDescription = captionText
+    ? captionText.slice(0, 160)
+    : `See this pet moment shared by ${authorName} on Petosauras — India's all-in-one pet community.`;
+  const socialJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SocialMediaPosting",
+    headline: captionText.slice(0, 110) || `Pet post by ${authorName}`,
+    articleBody: captionText || undefined,
+    image: mediaUrl || undefined,
+    author: { "@type": "Person", name: authorName },
+    datePublished: (post as any).created_at,
+    mainEntityOfPage: `https://petsocial.lovable.app/post/${post.id}`,
+  };
 
   return (
     <MobileLayout>
+      <SEO
+        title={seoTitle}
+        description={seoDescription}
+        canonical={`/post/${post.id}`}
+        image={mediaUrl || undefined}
+        jsonLd={socialJsonLd}
+      />
       <div className="min-h-screen">
         <header className="sticky top-14 bg-card/80 backdrop-blur-lg z-30 px-4 py-3 flex items-center gap-3 border-b border-border">
           <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-[10px] bg-surface-alt flex items-center justify-center">
