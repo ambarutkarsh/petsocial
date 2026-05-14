@@ -7,6 +7,13 @@ const PWAInstallButton = () => {
   const { canPrompt, installed, isIOS, promptInstall } = usePWAInstall();
   const [showHelp, setShowHelp] = useState(false);
 
+  // Hide PWA install CTA inside native (Capacitor) app
+  const isNativeApp =
+    typeof window !== "undefined" &&
+    (((window as any).Capacitor && (window as any).Capacitor.isNativePlatform?.()) ||
+      !!(window as any).Capacitor?.getPlatform);
+  if (isNativeApp) return null;
+
   if (installed) return null;
 
   const handleClick = async () => {
