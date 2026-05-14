@@ -199,6 +199,8 @@
     background: hsl(var(--background));
     position: relative;
     overflow-x: hidden;
+  }
+
   /* iOS: prevent input zoom on focus by enforcing 16px+ font-size */
   input, select, textarea {
     font-size: 16px;
