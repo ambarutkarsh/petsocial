@@ -92,11 +92,17 @@ const UploadDocumentSheet = ({
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" className="rounded-t-3xl max-h-[85vh] overflow-y-auto">
-        <SheetHeader>
+      <SheetContent
+        side="bottom"
+        className="rounded-t-3xl p-0 flex flex-col z-[1200]"
+        style={{
+          maxHeight: "calc(100vh - env(safe-area-inset-top, 0px) - 24px)",
+        }}
+      >
+        <SheetHeader className="px-6 pt-6 pb-2 shrink-0">
           <SheetTitle className="font-heading">{title}</SheetTitle>
         </SheetHeader>
-        <div className="space-y-4 mt-4 pb-6">
+        <div className="flex-1 overflow-y-auto px-6 pb-4 space-y-4 mt-2">
           <div>
             <label className="text-[11px] font-semibold uppercase text-muted-foreground block mb-1.5">
               Document Type
@@ -134,14 +140,18 @@ const UploadDocumentSheet = ({
           <div className="rounded-xl bg-muted/40 p-3 text-[11px] text-muted-foreground font-body">
             🔒 Stored privately in your pet's secure locker. Only you can view it.
           </div>
-
+        </div>
+        <div
+          className="shrink-0 px-6 pt-3 border-t border-border bg-background"
+          style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 16px)" }}
+        >
           <Button
             disabled={!file || busy}
             onClick={handleUpload}
             className="w-full"
           >
             <UploadIcon className="w-4 h-4" />
-            {busy ? "Uploading…" : "Upload"}
+            {busy ? "Uploading…" : "Upload Document"}
           </Button>
         </div>
       </SheetContent>
