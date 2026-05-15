@@ -421,6 +421,36 @@ export type Database = {
           },
         ]
       }
+      dinofy_usage: {
+        Row: {
+          created_at: string
+          email: string | null
+          generation_count: number
+          id: string
+          last_generated_at: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          generation_count?: number
+          id?: string
+          last_generated_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          generation_count?: number
+          id?: string
+          last_generated_at?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       document_shares: {
         Row: {
           access_count: number
