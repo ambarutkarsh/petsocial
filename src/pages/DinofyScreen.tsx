@@ -285,7 +285,8 @@ const DinofyScreen = () => {
       // Increment guest count locally on success
       if (!user) incGuestCount();
 
-      setDinoUrl(data.imageUrl);
+      const branded = await brandDinoImage(data.imageUrl);
+      setDinoUrl(branded);
       setStep(5);
     } catch (e: any) {
       setError(e?.message || "Failed to generate. Please try again.");
