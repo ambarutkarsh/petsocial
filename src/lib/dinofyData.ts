@@ -107,7 +107,53 @@ export function lookupDino(species: Species, breed: string): Dino | null {
   return DINOS[entry.dino];
 }
 
+// Fuzzy lookup for AI-detected breeds (handles synonyms / partial matches)
+export function lookupDinoByDetection(species: string, breed: string): { dino: Dino; matchedSpecies: Species; matchedBreed: string } | null {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const sp = norm(species);
+  const br = norm(breed);
+
+  // Map detected species to our Species keys
+  const speciesMap: Record<string, Species> = {
+    dog: 'Dog', puppy: 'Dog', canine: 'Dog',
+    cat: 'Cat', kitten: 'Cat', feline: 'Cat',
+    bird: 'Bird', parrot: 'Bird',
+    rabbit: 'Rabbit', bunny: 'Rabbit',
+    hamster: 'Hamster/Guinea Pig', guineapig: 'Hamster/Guinea Pig',
+    fish: 'Fish',
+    reptile: 'Reptile', lizard: 'Reptile', snake: 'Reptile', tortoise: 'Reptile', turtle: 'Reptile',
+    ferret: 'Small Mammal', chinchilla: 'Small Mammal', hedgehog: 'Small Mammal', sugarglider: 'Small Mammal',
+  };
+
+  let matchedSpecies: Species | null = null;
+  for (const k of Object.keys(speciesMap)) {
+    if (sp.includes(k)) { matchedSpecies = speciesMap[k]; break; }
+  }
+  if (!matchedSpecies) {
+    // try matching breed string against species hints
+    for (const k of Object.keys(speciesMap)) {
+      if (br.includes(k)) { matchedSpecies = speciesMap[k]; break; }
+    }
+  }
+  if (!matchedSpecies) return null;
+
+  const list = BREEDS[matchedSpecies];
+  // try direct contains either way
+  let entry = list.find(b => {
+    const bn = norm(b.breed);
+    return bn === br || bn.includes(br) || br.includes(bn);
+  });
+  // try token overlap
+  if (!entry) {
+    const tokens = breed.toLowerCase().split(/\s+/).filter(Boolean);
+    entry = list.find(b => tokens.some(t => norm(b.breed).includes(norm(t)) && t.length > 2));
+  }
+  if (!entry) entry = list[0]; // fallback to first breed in species
+
+  return { dino: DINOS[entry.dino], matchedSpecies, matchedBreed: entry.breed };
+}
+
 export function buildPrompt(dino: Dino, breedName: string): string {
   const traits = dino.traits.slice(0, 4).join(', ');
-  return `A premium Pixar-style 3D animated dinosaur-pet hybrid character using the uploaded pet image as identity reference. Preserve the exact facial identity of the uploaded ${breedName} pet including eyes, nose, ears, muzzle, markings, fur colour, proportions, and expression. Transform only the body into a cute cartoon ${dino.name} hybrid. Style: Pixar animated movie quality, DreamWorks expressive character design, premium 3D rendering, cinematic warm lighting, glossy textures, adorable baby dinosaur proportions, oversized expressive eyes, high-end family animation aesthetic, collectible figurine quality, studio poster quality. Character personality: ${dino.description} Traits: ${traits}. Transparent background. Square composition. Single subject. No humans. No text. No watermark. Negative: realistic dinosaur, wildlife photography, horror, monster, aggressive, multiple animals, cropped face, mutated anatomy, text, logo, watermark, clutter, anime, 2D art, emoji sticker, pixel art.`;
+  return `A premium Pixar-style 3D animated dinosaur-pet hybrid using the uploaded pet photo as the exact identity reference. Preserve the exact facial identity of the uploaded ${breedName} pet: eyes, nose, muzzle, ears, fur colour, facial markings, breed identity, expression, proportions. Transform ONLY the body into a cute cartoon ${dino.name} dinosaur hybrid. Character personality: ${dino.description} Traits: ${traits}. Style: Pixar animated movie quality, DreamWorks expressive character design, premium 3D rendering, cinematic warm lighting, adorable chunky baby dinosaur anatomy, oversized expressive eyes, collectible figurine quality, transparent background, single subject, square composition. Do not alter pet face identity. Do not create generic cartoon animals. No text. No watermark.`;
 }

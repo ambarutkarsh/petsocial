@@ -4,7 +4,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, imageUrl } = await req.json();
     if (!prompt || typeof prompt !== 'string') {
       return new Response(JSON.stringify({ error: 'prompt required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -18,27 +18,39 @@ Deno.serve(async (req) => {
       });
     }
 
-    const createRes = await fetch(
-      'https://api.replicate.com/v1/models/black-forest-labs/flux-dev/predictions',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-          Prefer: 'wait',
-        },
-        body: JSON.stringify({
-          input: {
-            prompt,
-            go_fast: false,
-            num_outputs: 1,
-            aspect_ratio: '1:1',
-            output_format: 'png',
-            output_quality: 100,
-          },
-        }),
-      }
-    );
+    // If we have an image, use flux-kontext-pro for identity-preserving generation.
+    // Otherwise fall back to text-only flux-dev.
+    const useKontext = !!imageUrl && typeof imageUrl === 'string';
+    const modelUrl = useKontext
+      ? 'https://api.replicate.com/v1/models/black-forest-labs/flux-kontext-pro/predictions'
+      : 'https://api.replicate.com/v1/models/black-forest-labs/flux-dev/predictions';
+
+    const input: Record<string, unknown> = useKontext
+      ? {
+          prompt,
+          input_image: imageUrl,
+          aspect_ratio: '1:1',
+          output_format: 'png',
+          safety_tolerance: 2,
+        }
+      : {
+          prompt,
+          go_fast: false,
+          num_outputs: 1,
+          aspect_ratio: '1:1',
+          output_format: 'png',
+          output_quality: 100,
+        };
+
+    const createRes = await fetch(modelUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+        Prefer: 'wait',
+      },
+      body: JSON.stringify({ input }),
+    });
 
     if (!createRes.ok) {
       const txt = await createRes.text();
@@ -65,11 +77,11 @@ Deno.serve(async (req) => {
       });
     }
 
-    const imageUrl = Array.isArray(pred.output) ? pred.output[0] : pred.output;
-    return new Response(JSON.stringify({ imageUrl }), {
+    const out = Array.isArray(pred.output) ? pred.output[0] : pred.output;
+    return new Response(JSON.stringify({ imageUrl: out }), {
       status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-  } catch (e) {
+  } catch (e: any) {
     return new Response(JSON.stringify({ error: String(e?.message || e) }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
