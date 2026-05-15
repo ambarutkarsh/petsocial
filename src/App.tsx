@@ -83,6 +83,7 @@ const AdminWelcomeEmailScreen = lazy(() => import("./pages/admin/AdminWelcomeEma
 const AdminHomeCarouselScreen = lazy(() => import("./pages/admin/AdminHomeCarouselScreen"));
 const AdminVetNotificationsScreen = lazy(() => import("./pages/admin/AdminVetNotificationsScreen"));
 const FlappyPetGame = lazy(() => import("./pages/FlappyPetGame"));
+const DinofyScreen = lazy(() => import("./pages/DinofyScreen"));
 const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
 const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
 const HubVetProfileScreen = lazy(() => import("./pages/hub/VetProfileScreen"));
@@ -214,6 +215,7 @@ const App = () => (
             <Route path="/mypet/book-a-vet/success/:bookingId" element={<ProtectedRoute><BookingSuccessScreen /></ProtectedRoute>} />
             <Route path="/mypet/pet-recommender" element={<RecommenderScreen />} />
             <Route path="/game/flappy-pet" element={<FlappyPetGame />} />
+            <Route path="/dinofy" element={<DinofyScreen />} />
 
             {/* Other screens */}
             <Route path="/profile" element={<RegularUserRoute><ProtectedRoute><ProfileScreen /></ProtectedRoute></RegularUserRoute>} />
