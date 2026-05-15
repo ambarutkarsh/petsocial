@@ -221,7 +221,52 @@ const DinofyScreen = () => {
     }
   };
 
-  const reset = () => {
+  const IG_CAPTION = "Meet my pet's Dino Twin 🦖🐾 Created with Petosauras DinoFy. Try it on petosauras.com #petosauras";
+  const WA_MESSAGE = "Look at my pet's Dino Twin 🦖🐾 I created this with Petosauras DinoFy. Try it on petosauras.com #petosauras";
+
+  const fetchDinoFile = async (): Promise<File | null> => {
+    if (!dinoUrl) return null;
+    try {
+      const r = await fetch(dinoUrl);
+      const blob = await r.blob();
+      return new File([blob], `dinofy-${detection?.dino.name || "dino"}.png`, { type: blob.type || "image/png" });
+    } catch { return null; }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+  };
+
+  const shareInstagram = async () => {
+    const file = await fetchDinoFile();
+    const shareData: any = { title: "My Petosauras Dino Twin", text: IG_CAPTION, url: "https://petosauras.com/dinofy" };
+    if (file && (navigator as any).canShare?.({ files: [file] })) shareData.files = [file];
+    const copied = await copyToClipboard(IG_CAPTION);
+    if (navigator.share && (shareData.files || true)) {
+      try {
+        await navigator.share(shareData);
+        if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+        return;
+      } catch (e: any) {
+        if (e?.name === "AbortError") return;
+      }
+    }
+    // Fallback: open Instagram
+    if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+    window.open("https://www.instagram.com/", "_blank");
+  };
+
+  const shareWhatsApp = async () => {
+    const file = await fetchDinoFile();
+    const shareData: any = { title: "My Petosauras Dino Twin", text: WA_MESSAGE, url: "https://petosauras.com/dinofy" };
+    if (file && (navigator as any).canShare?.({ files: [file] })) shareData.files = [file];
+    if (navigator.share) {
+      try { await navigator.share(shareData); return; }
+      catch (e: any) { if (e?.name === "AbortError") return; }
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(WA_MESSAGE)}`, "_blank");
+  };
+
     setError(null); setDinoUrl(null); setDetection(null); setPetPhoto(null); setStep(1);
   };
 
