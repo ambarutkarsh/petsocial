@@ -511,12 +511,20 @@ const DinofyScreen = () => {
               Generated as: <strong style={{ color: C.primary }}>{dino.name}</strong> · {detection.confidence < 0.75 ? "Likely " : ""}{detection.breed} (AI detected)
             </div>
 
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <button onClick={shareInstagram}
+                style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)", color: "#fff", fontWeight: 800, fontSize: 14, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(221,42,123,0.35)" }}>
+                <Instagram size={18} /> Instagram
+              </button>
+              <button onClick={shareWhatsApp}
+                style={{ background: "#25D366", color: "#fff", fontWeight: 800, fontSize: 14, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(37,211,102,0.35)" }}>
+                <MessageCircle size={18} /> WhatsApp
+              </button>
+            </div>
+
             <button onClick={downloadDino}
-              style={{ background: C.primary, color: "#fff", fontWeight: 800, fontSize: 15, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = C.primaryHover)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = C.primary)}
-            >
-              <Download size={18} /> Download Dino Portrait
+              style={{ background: "transparent", color: C.textMid, fontWeight: 600, fontSize: 13, padding: 10, borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6, border: `1px solid ${C.border}` }}>
+              <Download size={15} /> Save to Gallery
             </button>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
