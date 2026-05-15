@@ -143,12 +143,18 @@ const DinofyScreen = () => {
         @keyframes dfPop { from { opacity:0; transform: scale(0.6);} to { opacity:1; transform: scale(1);} }
         @keyframes dfRevealLeft { from { clip-path: inset(0 100% 0 0);} to { clip-path: inset(0 0 0 0);} }
         @keyframes dfRevealRight { from { clip-path: inset(0 0 0 100%);} to { clip-path: inset(0 0 0 0);} }
+        @keyframes dfFloat { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
+        @keyframes dfScaleBounce { 0% { opacity:0; transform: scale(0.7);} 60% { opacity:1; transform: scale(1.05);} 100% { transform: scale(1);} }
+        @keyframes dfSparkle { 0% { opacity:0; transform: scale(0) rotate(0deg);} 50% { opacity:1; transform: scale(1) rotate(180deg);} 100% { opacity:0; transform: scale(0) rotate(360deg);} }
         .df-fade-up { animation: dfFadeUp 0.4s ease both; }
         .df-bounce { animation: dfBounce 2s ease infinite; }
         .df-spin { animation: dfSpin 1.2s linear infinite; }
         .df-pop { animation: dfPop 0.4s cubic-bezier(.5,1.6,.4,1) both; }
         .df-reveal-l { animation: dfRevealLeft 0.7s cubic-bezier(.6,0,.2,1) both; }
         .df-reveal-r { animation: dfRevealRight 0.7s cubic-bezier(.6,0,.2,1) both; }
+        .df-float { animation: dfFloat 3.5s ease-in-out infinite; }
+        .df-scale-bounce { animation: dfScaleBounce 0.6s cubic-bezier(.5,1.6,.4,1) both; }
+        .df-sparkle { animation: dfSparkle 1.6s ease-out both; }
       `}</style>
 
       {/* App bar */}
