@@ -83,6 +83,7 @@ const AdminWelcomeEmailScreen = lazy(() => import("./pages/admin/AdminWelcomeEma
 const AdminHomeCarouselScreen = lazy(() => import("./pages/admin/AdminHomeCarouselScreen"));
 const AdminVetNotificationsScreen = lazy(() => import("./pages/admin/AdminVetNotificationsScreen"));
 const FlappyPetGame = lazy(() => import("./pages/FlappyPetGame"));
+const DinofyScreen = lazy(() => import("./pages/DinofyScreen"));
 const BookAVetScreen = lazy(() => import("./pages/hub/BookAVetScreen"));
 const BookAVetComingSoon = lazy(() => import("./pages/hub/BookAVetComingSoon"));
 const HubVetProfileScreen = lazy(() => import("./pages/hub/VetProfileScreen"));
