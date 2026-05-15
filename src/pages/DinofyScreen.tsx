@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles } from "lucide-react";
+import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles, Instagram, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { lookupDinoByDetection, type Dino, type Species } from "@/lib/dinofyData";
