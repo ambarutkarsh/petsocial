@@ -483,6 +483,48 @@ const DinofyScreen = () => {
           </section>
         )}
       </main>
+
+      {/* Guest limit popup */}
+      {showGuestLimit && (
+        <div onClick={() => setShowGuestLimit(false)}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", display: "grid", placeItems: "center", zIndex: 3000, padding: 20 }}>
+          <div onClick={(e) => e.stopPropagation()} className="df-fade-up"
+            style={{ background: C.white, borderRadius: 24, padding: 24, maxWidth: 360, width: "100%", textAlign: "center", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+            <div style={{ fontSize: 44, marginBottom: 8 }}>🦖</div>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: C.textDark }}>Login to DinoFy more pets 🦖</h2>
+            <p style={{ fontSize: 14, color: C.textMid, marginTop: 8, lineHeight: 1.5 }}>
+              You've used your free DinoFy generation. Login to generate up to 5 Dino portraits.
+            </p>
+            <button onClick={() => navigate("/auth")}
+              style={{ width: "100%", background: C.primary, color: "#fff", fontWeight: 800, padding: 13, borderRadius: 999, marginTop: 18, fontSize: 15, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}>
+              Login / Sign up
+            </button>
+            <button onClick={() => setShowGuestLimit(false)}
+              style={{ marginTop: 10, fontSize: 13, fontWeight: 700, color: C.textMuted }}>
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Logged-in user limit popup */}
+      {showUserLimit && (
+        <div onClick={() => setShowUserLimit(false)}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", display: "grid", placeItems: "center", zIndex: 3000, padding: 20 }}>
+          <div onClick={(e) => e.stopPropagation()} className="df-fade-up"
+            style={{ background: C.white, borderRadius: 24, padding: 24, maxWidth: 360, width: "100%", textAlign: "center", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+            <div style={{ fontSize: 44, marginBottom: 8 }}>🦖</div>
+            <h2 style={{ fontSize: 20, fontWeight: 800, color: C.textDark }}>DinoFy limit reached</h2>
+            <p style={{ fontSize: 14, color: C.textMid, marginTop: 8, lineHeight: 1.5 }}>
+              You've used your 5 free DinoFy generations. More DinoFy credits are coming soon.
+            </p>
+            <button onClick={() => setShowUserLimit(false)}
+              style={{ width: "100%", background: C.primary, color: "#fff", fontWeight: 800, padding: 13, borderRadius: 999, marginTop: 18, fontSize: 15, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}>
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
