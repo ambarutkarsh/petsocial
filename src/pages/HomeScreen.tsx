@@ -301,27 +301,50 @@ const HomeScreen = () => {
         {/* Quick Tip of the Day */}
         <QuickTipOfTheDay />
 
-        {/* Flappy Pet game banner */}
-        <button
-          onClick={() => navigate("/game/flappy-pet")}
-          className="w-full rounded-2xl overflow-hidden text-left relative"
-          style={{ background: "linear-gradient(135deg, #1E3A5F 0%, #0F2A4A 100%)" }}
-        >
-          <div className="flex items-center gap-4 px-5 py-4">
-            <div className="flex shrink-0 -space-x-2">
-              {["🐶","🐱","🐦","🐰"].map((e, i) => (
-                <span key={i} className="text-3xl" style={{ zIndex: 4 - i }}>{e}</span>
-              ))}
+        {/* Flappy Pet + DinoFy banners */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => navigate("/game/flappy-pet")}
+            className="rounded-2xl overflow-hidden text-left relative h-[88px]"
+            style={{ background: "linear-gradient(135deg, #1E3A5F 0%, #0F2A4A 100%)" }}
+          >
+            <div className="flex flex-col justify-between h-full px-3 py-2.5">
+              <div className="flex items-center gap-1">
+                {["🐶","🐱","🐦"].map((e, i) => (
+                  <span key={i} className="text-xl">{e}</span>
+                ))}
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-white font-black text-[13px] leading-tight truncate">Flappy Pet</p>
+                  <p className="text-white/60 text-[10px] truncate">Beat the leaderboard</p>
+                </div>
+                <span className="shrink-0 bg-yellow-400 text-gray-900 font-black text-[10px] px-2 py-0.5 rounded-full">PLAY</span>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-black text-base leading-tight">Flappy Pet</p>
-              <p className="text-white/60 text-xs mt-0.5">Fly your pet, beat the leaderboard!</p>
+          </button>
+
+          <button
+            onClick={() => navigate("/dinofy")}
+            className="rounded-2xl overflow-hidden text-left relative h-[88px]"
+            style={{ background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 100%)" }}
+          >
+            <div className="flex flex-col justify-between h-full px-3 py-2.5">
+              <div className="flex items-center gap-1">
+                <span className="text-xl">🦖</span>
+                <span className="text-xl">🦕</span>
+                <span className="text-xl">🦅</span>
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-white font-black text-[13px] leading-tight truncate">DinoFy 🦖</p>
+                  <p className="text-white/70 text-[10px] truncate">Pet → dino twin</p>
+                </div>
+                <span className="shrink-0 bg-white text-[#7B55C8] font-black text-[10px] px-2 py-0.5 rounded-full">TRY</span>
+              </div>
             </div>
-            <div className="shrink-0 bg-yellow-400 text-gray-900 font-black text-xs px-3 py-1.5 rounded-full">
-              PLAY
-            </div>
-          </div>
-        </button>
+          </button>
+        </div>
 
         {/* Near You */}
         <section>
