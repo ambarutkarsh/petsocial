@@ -2,7 +2,19 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { lookupDinoByDetection, type Dino, type Species } from "@/lib/dinofyData";
+
+const ADMIN_EMAIL = "ambarutkarsh@gmail.com";
+const GUEST_KEY = "dinofy_guest_generation_count";
+const GUEST_LIMIT = 1;
+const USER_LIMIT = 5;
+const getGuestCount = () => {
+  try { return parseInt(localStorage.getItem(GUEST_KEY) || "0", 10) || 0; } catch { return 0; }
+};
+const incGuestCount = () => {
+  try { localStorage.setItem(GUEST_KEY, String(getGuestCount() + 1)); } catch {}
+};
 
 const C = {
   bg: "#F2EEE9",
