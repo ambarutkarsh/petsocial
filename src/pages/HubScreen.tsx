@@ -8,10 +8,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getCoinBalance } from "@/lib/coins";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, Folder } from "lucide-react";
+import { ChevronRight, Folder, BookOpen } from "lucide-react";
 import { BudgetIcon, HeartIcon, LocationPinIcon, SettingsIcon, WeightIcon } from "@/components/icons/PetosauraIcons";
 
 const utilityCards = [
+  { icon: BookOpen, title: "Knowledge Base", desc: "Vet-aligned guides", path: "/hub/learn/knowledge-base", color: "secondary" },
   { icon: Folder, title: "Digital Locker", desc: "Documents & records", path: "/care/locker", color: "primary" },
   { icon: HeartIcon, title: "Adoption / Mating", desc: "Find a friend", path: "/shop", color: "secondary" },
   { icon: BudgetIcon, title: "Budget Calculator", desc: "Plan pet costs", path: "/health/budget", color: "accent" },
