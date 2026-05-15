@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles } from "lucide-react";
+import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles, Instagram, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { lookupDinoByDetection, type Dino, type Species } from "@/lib/dinofyData";
@@ -218,6 +219,52 @@ const DinofyScreen = () => {
     } catch {
       window.open(dinoUrl, "_blank");
     }
+  };
+
+  const IG_CAPTION = "Meet my pet's Dino Twin 🦖🐾 Created with Petosauras DinoFy. Try it on petosauras.com #petosauras";
+  const WA_MESSAGE = "Look at my pet's Dino Twin 🦖🐾 I created this with Petosauras DinoFy. Try it on petosauras.com #petosauras";
+
+  const fetchDinoFile = async (): Promise<File | null> => {
+    if (!dinoUrl) return null;
+    try {
+      const r = await fetch(dinoUrl);
+      const blob = await r.blob();
+      return new File([blob], `dinofy-${detection?.dino.name || "dino"}.png`, { type: blob.type || "image/png" });
+    } catch { return null; }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+  };
+
+  const shareInstagram = async () => {
+    const file = await fetchDinoFile();
+    const shareData: any = { title: "My Petosauras Dino Twin", text: IG_CAPTION, url: "https://petosauras.com/dinofy" };
+    if (file && (navigator as any).canShare?.({ files: [file] })) shareData.files = [file];
+    const copied = await copyToClipboard(IG_CAPTION);
+    if (navigator.share && (shareData.files || true)) {
+      try {
+        await navigator.share(shareData);
+        if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+        return;
+      } catch (e: any) {
+        if (e?.name === "AbortError") return;
+      }
+    }
+    // Fallback: open Instagram
+    if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+    window.open("https://www.instagram.com/", "_blank");
+  };
+
+  const shareWhatsApp = async () => {
+    const file = await fetchDinoFile();
+    const shareData: any = { title: "My Petosauras Dino Twin", text: WA_MESSAGE, url: "https://petosauras.com/dinofy" };
+    if (file && (navigator as any).canShare?.({ files: [file] })) shareData.files = [file];
+    if (navigator.share) {
+      try { await navigator.share(shareData); return; }
+      catch (e: any) { if (e?.name === "AbortError") return; }
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(WA_MESSAGE)}`, "_blank");
   };
 
   const reset = () => {
@@ -464,12 +511,20 @@ const DinofyScreen = () => {
               Generated as: <strong style={{ color: C.primary }}>{dino.name}</strong> · {detection.confidence < 0.75 ? "Likely " : ""}{detection.breed} (AI detected)
             </div>
 
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <button onClick={shareInstagram}
+                style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)", color: "#fff", fontWeight: 800, fontSize: 14, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(221,42,123,0.35)" }}>
+                <Instagram size={18} /> Instagram
+              </button>
+              <button onClick={shareWhatsApp}
+                style={{ background: "#25D366", color: "#fff", fontWeight: 800, fontSize: 14, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(37,211,102,0.35)" }}>
+                <MessageCircle size={18} /> WhatsApp
+              </button>
+            </div>
+
             <button onClick={downloadDino}
-              style={{ background: C.primary, color: "#fff", fontWeight: 800, fontSize: 15, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = C.primaryHover)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = C.primary)}
-            >
-              <Download size={18} /> Download Dino Portrait
+              style={{ background: "transparent", color: C.textMid, fontWeight: 600, fontSize: 13, padding: 10, borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6, border: `1px solid ${C.border}` }}>
+              <Download size={15} /> Save to Gallery
             </button>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
