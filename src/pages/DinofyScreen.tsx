@@ -324,29 +324,62 @@ const DinofyScreen = () => {
         {/* STEP 4 — RESULT */}
         {step === 4 && dino && dinoUrl && petPhoto && (
           <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, position: "relative" }}>
+              <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }}>
+                {[
+                  { top: "8%", left: "48%", size: 16, delay: 0.2 },
+                  { top: "20%", left: "92%", size: 12, delay: 0.4 },
+                  { top: "55%", left: "55%", size: 20, delay: 0.6 },
+                  { top: "78%", left: "88%", size: 14, delay: 0.8 },
+                  { top: "35%", left: "70%", size: 10, delay: 1.0 },
+                ].map((s, i) => (
+                  <span key={i} className="df-sparkle" style={{ position: "absolute", top: s.top, left: s.left, fontSize: s.size, animationDelay: `${s.delay}s`, color: C.primary }}>✦</span>
+                ))}
+              </div>
+
               <div>
-                <img src={petPhoto} alt="Your pet" className="df-reveal-l" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: 16, border: `3px solid ${C.border}` }} />
+                <img src={petPhoto} alt="Your pet" className="df-reveal-l" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: 20, border: `3px solid ${C.border}`, background: C.white }} />
                 <div style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: C.textMid, marginTop: 6 }}>Your Pet</div>
               </div>
               <div>
-                <img src={dinoUrl} alt={dino.name} className="df-reveal-r" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: 16, border: `3px solid ${C.primary}` }} />
-                <div style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: C.primary, marginTop: 6 }}>Dino Twin</div>
+                <div className="df-scale-bounce" style={{
+                  position: "relative",
+                  borderRadius: 24,
+                  padding: 3,
+                  background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 50%, #DDD4F5 100%)",
+                  boxShadow: "0 18px 40px -10px rgba(123,85,200,0.45), 0 6px 14px -4px rgba(26,25,48,0.15)",
+                }}>
+                  <div style={{ borderRadius: 21, overflow: "hidden", background: C.white }}>
+                    <img src={dinoUrl} alt={dino.name} className="df-float" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", display: "block" }} />
+                  </div>
+                </div>
+                <div style={{ textAlign: "center", fontSize: 12, fontWeight: 800, color: C.primary, marginTop: 8, letterSpacing: 0.3 }}>✨ Animated Dino Twin</div>
               </div>
             </div>
 
-            <div style={{ background: C.white, borderRadius: 18, padding: 18, border: `1px solid ${C.border}` }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ fontSize: 40 }}>{dino.emoji}</div>
+            <div className="df-scale-bounce" style={{
+              background: `linear-gradient(180deg, ${C.white} 0%, ${C.lavLight} 100%)`,
+              borderRadius: 24,
+              padding: 20,
+              border: `1px solid ${C.lavDeep}`,
+              boxShadow: "0 10px 30px -12px rgba(123,85,200,0.25)",
+              animationDelay: "0.2s",
+              position: "relative",
+              overflow: "hidden",
+            }}>
+              <span aria-hidden className="df-sparkle" style={{ position: "absolute", top: 10, right: 14, fontSize: 14, color: C.primary, animationDelay: "1.2s" }}>✦</span>
+              <span aria-hidden className="df-sparkle" style={{ position: "absolute", bottom: 16, left: 18, fontSize: 10, color: C.primary, animationDelay: "1.5s" }}>✦</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div className="df-float" style={{ fontSize: 46, lineHeight: 1, filter: "drop-shadow(0 4px 8px rgba(123,85,200,0.3))" }}>{dino.emoji}</div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: 0.5 }}>Prehistoric Personality</div>
-                  <div style={{ fontSize: 20, fontWeight: 800 }}>{dino.name}</div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: C.primary, textTransform: "uppercase", letterSpacing: 0.8 }}>Your Animated Dino Twin</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, marginTop: 2 }}>{dino.name}</div>
                 </div>
               </div>
-              <p style={{ fontSize: 14, color: C.textMid, marginTop: 12, lineHeight: 1.5 }}>{dino.description}</p>
+              <p style={{ fontSize: 14, color: C.textMid, marginTop: 12, lineHeight: 1.5, fontStyle: "italic" }}>"{dino.description}"</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 14 }}>
                 {dino.traits.map((t, i) => (
-                  <span key={t} className="df-pop" style={{ animationDelay: `${0.6 + i * 0.15}s`, background: C.lavLight, color: C.primary, fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999 }}>{t}</span>
+                  <span key={t} className="df-pop" style={{ animationDelay: `${0.6 + i * 0.15}s`, background: C.white, color: C.primary, fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, border: `1px solid ${C.lavDeep}`, boxShadow: "0 2px 6px rgba(123,85,200,0.1)" }}>{t}</span>
                 ))}
               </div>
             </div>
