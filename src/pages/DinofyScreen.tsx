@@ -267,6 +267,7 @@ const DinofyScreen = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(WA_MESSAGE)}`, "_blank");
   };
 
+  const reset = () => {
     setError(null); setDinoUrl(null); setDetection(null); setPetPhoto(null); setStep(1);
   };
 
