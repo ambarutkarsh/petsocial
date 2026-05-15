@@ -54,6 +54,94 @@ interface Detection {
   dino: Dino;
 }
 
+function loadImg(src: string, crossOrigin = true): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    if (crossOrigin) img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+// Compose Petosauras branding (logo bottom-right + footer pill) onto a generated dino image.
+async function brandDinoImage(srcUrl: string): Promise<string> {
+  try {
+    const [base, logo] = await Promise.all([
+      loadImg(srcUrl, true),
+      loadImg("/petosauras-logo.png", false).catch(() => loadImg("/petosauras-icon.png", false)),
+    ]);
+    const w = base.naturalWidth || base.width;
+    const h = base.naturalHeight || base.height;
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(base, 0, 0, w, h);
+
+    // Logo bottom-right, ~10% width, with soft shadow + slight opacity
+    const logoW = Math.round(w * 0.10);
+    const ratio = logo.naturalHeight / logo.naturalWidth || 1;
+    const logoH = Math.round(logoW * ratio);
+    const pad = Math.round(w * 0.03); // ~24-32px depending on size
+    const lx = w - logoW - pad;
+    const ly = h - logoH - pad - Math.round(h * 0.07); // sit above footer pill
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.shadowColor = "rgba(0,0,0,0.35)";
+    ctx.shadowBlur = Math.max(8, Math.round(w * 0.012));
+    ctx.shadowOffsetY = 2;
+    ctx.drawImage(logo, lx, ly, logoW, logoH);
+    ctx.restore();
+
+    // Footer pill: "🦖 Created with Petosauras DinoFy · petosauras.com"
+    const text = "🦖 Created with Petosauras DinoFy · petosauras.com";
+    const fontSize = Math.max(14, Math.round(w * 0.022));
+    ctx.font = `600 ${fontSize}px "Plus Jakarta Sans", system-ui, sans-serif`;
+    const textW = ctx.measureText(text).width;
+    const pillPadX = Math.round(fontSize * 1.1);
+    const pillPadY = Math.round(fontSize * 0.6);
+    const pillW = Math.round(textW + pillPadX * 2);
+    const pillH = Math.round(fontSize + pillPadY * 2);
+    const px = Math.round((w - pillW) / 2);
+    const py = h - pillH - pad;
+    const r = pillH / 2;
+
+    ctx.save();
+    // translucent purple glass
+    ctx.fillStyle = "rgba(123,85,200,0.55)";
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.moveTo(px + r, py);
+    ctx.lineTo(px + pillW - r, py);
+    ctx.quadraticCurveTo(px + pillW, py, px + pillW, py + r);
+    ctx.lineTo(px + pillW, py + pillH - r);
+    ctx.quadraticCurveTo(px + pillW, py + pillH, px + pillW - r, py + pillH);
+    ctx.lineTo(px + r, py + pillH);
+    ctx.quadraticCurveTo(px, py + pillH, px, py + pillH - r);
+    ctx.lineTo(px, py + r);
+    ctx.quadraticCurveTo(px, py, px + r, py);
+    ctx.closePath();
+    ctx.fill();
+    // subtle border highlight
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.35)";
+    ctx.stroke();
+    // text
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillText(text, px + pillW / 2, py + pillH / 2 + 1);
+    ctx.restore();
+
+    return canvas.toDataURL("image/png");
+  } catch (e) {
+    console.warn("brandDinoImage failed, returning original", e);
+    return srcUrl;
+  }
+}
+
 async function compressImage(file: File, maxSize = 1024): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
