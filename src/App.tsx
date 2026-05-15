@@ -215,6 +215,7 @@ const App = () => (
             <Route path="/mypet/book-a-vet/success/:bookingId" element={<ProtectedRoute><BookingSuccessScreen /></ProtectedRoute>} />
             <Route path="/mypet/pet-recommender" element={<RecommenderScreen />} />
             <Route path="/game/flappy-pet" element={<FlappyPetGame />} />
+            <Route path="/dinofy" element={<DinofyScreen />} />
 
             {/* Other screens */}
             <Route path="/profile" element={<RegularUserRoute><ProtectedRoute><ProfileScreen /></ProtectedRoute></RegularUserRoute>} />
