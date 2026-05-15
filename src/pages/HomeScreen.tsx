@@ -305,7 +305,7 @@ const HomeScreen = () => {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => navigate("/game/flappy-pet")}
-            className="rounded-2xl overflow-hidden text-left relative h-[88px]"
+            className="rounded-lg overflow-hidden text-left relative h-[88px] border border-border shadow-sm"
             style={{ background: "linear-gradient(135deg, #1E3A5F 0%, #0F2A4A 100%)" }}
           >
             <div className="flex flex-col justify-between h-full px-3 py-2.5">
@@ -326,7 +326,7 @@ const HomeScreen = () => {
 
           <button
             onClick={() => navigate("/dinofy")}
-            className="rounded-2xl overflow-hidden text-left relative h-[88px]"
+            className="rounded-lg overflow-hidden text-left relative h-[88px] border border-border shadow-sm"
             style={{ background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 100%)" }}
           >
             <div className="flex flex-col justify-between h-full px-3 py-2.5">
