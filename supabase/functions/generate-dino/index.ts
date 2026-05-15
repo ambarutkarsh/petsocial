@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
 
     // ---- Increment usage on success ----
     let newCount = 0;
-    if (!isAdmin) {
+    if (userId && !isAdmin) {
       const { data: existing } = await admin
         .from('dinofy_usage')
         .select('generation_count')
