@@ -326,22 +326,55 @@ const DinofyScreen = () => {
     try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
   };
 
+  const downloadDinoFile = async (file: File) => {
+    try {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a");
+      a.href = url; a.download = file.name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch {}
+  };
+
+  const isMobile = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   const shareInstagram = async () => {
     const file = await fetchDinoFile();
-    const shareData: any = { title: "My Petosauras Dino Twin", text: IG_CAPTION, url: "https://petosauras.com/dinofy" };
-    if (file && (navigator as any).canShare?.({ files: [file] })) shareData.files = [file];
     const copied = await copyToClipboard(IG_CAPTION);
-    if (navigator.share && (shareData.files || true)) {
+
+    // Mobile: native share sheet with image — user picks Instagram → opens IG composer with image attached
+    if (file && navigator.share && (navigator as any).canShare?.({ files: [file] })) {
       try {
-        await navigator.share(shareData);
-        if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+        await navigator.share({
+          files: [file],
+          title: "My Petosauras Dino Twin",
+          text: IG_CAPTION,
+        });
+        if (copied) toast("Caption copied — paste it in Instagram ✨");
         return;
       } catch (e: any) {
         if (e?.name === "AbortError") return;
       }
     }
-    // Fallback: open Instagram
-    if (copied) toast("Caption copied. Paste it on Instagram while posting.");
+
+    // Mobile fallback: download image + try to deep-link Instagram
+    if (isMobile()) {
+      if (file) await downloadDinoFile(file);
+      if (copied) toast("Image saved & caption copied — open Instagram to post 🦖");
+      // iOS: instagram:// scheme; Android: intent
+      const deepLink = isIOS()
+        ? "instagram://library"
+        : "intent://library#Intent;package=com.instagram.android;scheme=instagram;end";
+      const t = setTimeout(() => window.open("https://www.instagram.com/", "_blank"), 800);
+      window.location.href = deepLink;
+      void t;
+      return;
+    }
+
+    // Desktop fallback: auto-download branded image, copy caption, open Instagram web
+    if (file) await downloadDinoFile(file);
+    if (copied) toast("Image downloaded & caption copied — paste on Instagram ✨");
+    else toast("Image downloaded — open Instagram to post 🦖");
     window.open("https://www.instagram.com/", "_blank");
   };
 
