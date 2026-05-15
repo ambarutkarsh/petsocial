@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     }
 
     const createRes = await fetch(
-      'https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions',
+      'https://api.replicate.com/v1/models/black-forest-labs/flux-dev/predictions',
       {
         method: 'POST',
         headers: {
@@ -30,11 +30,11 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           input: {
             prompt,
-            go_fast: true,
+            go_fast: false,
             num_outputs: 1,
             aspect_ratio: '1:1',
-            output_format: 'jpg',
-            output_quality: 90,
+            output_format: 'png',
+            output_quality: 100,
           },
         }),
       }

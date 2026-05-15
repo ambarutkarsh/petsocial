@@ -108,5 +108,6 @@ export function lookupDino(species: Species, breed: string): Dino | null {
 }
 
 export function buildPrompt(dino: Dino, breedName: string): string {
-  return `A photorealistic ${dino.name} dinosaur, ${dino.promptSuffix}, embodies the personality of a ${breedName}, hyperrealistic wildlife photography, dramatic cinematic lighting, 8k resolution, National Geographic cover quality, shallow depth of field, solo subject, no humans, no text`;
+  const traits = dino.traits.slice(0, 4).join(', ');
+  return `A premium Pixar-style 3D animated dinosaur-pet hybrid character using the uploaded pet image as identity reference. Preserve the exact facial identity of the uploaded ${breedName} pet including eyes, nose, ears, muzzle, markings, fur colour, proportions, and expression. Transform only the body into a cute cartoon ${dino.name} hybrid. Style: Pixar animated movie quality, DreamWorks expressive character design, premium 3D rendering, cinematic warm lighting, glossy textures, adorable baby dinosaur proportions, oversized expressive eyes, high-end family animation aesthetic, collectible figurine quality, studio poster quality. Character personality: ${dino.description} Traits: ${traits}. Transparent background. Square composition. Single subject. No humans. No text. No watermark. Negative: realistic dinosaur, wildlife photography, horror, monster, aggressive, multiple animals, cropped face, mutated anatomy, text, logo, watermark, clutter, anime, 2D art, emoji sticker, pixel art.`;
 }
