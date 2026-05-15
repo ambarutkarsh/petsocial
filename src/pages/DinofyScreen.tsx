@@ -83,6 +83,7 @@ function buildPromptDynamic(dino: Dino, breedName: string): string {
 
 const DinofyScreen = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [step, setStep] = useState<Step>(1);
   const [petPhoto, setPetPhoto] = useState<string | null>(null);
   const [detection, setDetection] = useState<Detection | null>(null);
@@ -91,6 +92,8 @@ const DinofyScreen = () => {
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [showGuestLimit, setShowGuestLimit] = useState(false);
+  const [showUserLimit, setShowUserLimit] = useState(false);
 
   useEffect(() => {
     const link = document.createElement("link");
