@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Download, RotateCcw, Camera } from "lucide-react";
+import { ArrowLeft, Upload, Download, RotateCcw, Camera, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { SPECIES, BREEDS, lookupDino, buildPrompt, type Species, type Dino } from "@/lib/dinofyData";
+import { lookupDinoByDetection, type Dino, type Species } from "@/lib/dinofyData";
 
-// Brand tokens (per spec — page-scoped, not in global theme)
 const C = {
   bg: "#F2EEE9",
   primary: "#7B55C8",
@@ -16,7 +15,10 @@ const C = {
   textMuted: "#9B9BAE",
   white: "#FFFFFF",
   border: "#E8E2F2",
+  warn: "#B8860B",
 };
+
+const SUPPORTED = ["Dog","Cat","Bird","Rabbit","Hamster","Guinea Pig","Fish","Reptile","Tortoise","Ferret","Chinchilla","Hedgehog","Sugar Glider"];
 
 const LOADING_MESSAGES = [
   "🔬 Sequencing prehistoric DNA...",
@@ -27,7 +29,17 @@ const LOADING_MESSAGES = [
   "🪨 Chiselling through ancient amber...",
 ];
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5;
+// 1 upload, 2 detecting, 3 detected (confirm + dino twin), 4 generating, 5 result
+
+interface Detection {
+  species: string;
+  breed: string;
+  confidence: number;
+  matchedSpecies: Species;
+  matchedBreed: string;
+  dino: Dino;
+}
 
 async function compressImage(file: File, maxSize = 1024): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -52,12 +64,16 @@ async function compressImage(file: File, maxSize = 1024): Promise<string> {
   });
 }
 
+function buildPromptDynamic(dino: Dino, breedName: string): string {
+  const traits = dino.traits.slice(0, 4).join(", ");
+  return `A premium Pixar-style 3D animated dinosaur-pet hybrid using the uploaded pet photo as the exact identity reference. Preserve the exact facial identity of the uploaded ${breedName} pet: eyes, nose, muzzle, ears, fur colour, facial markings, breed identity, expression, proportions. Transform ONLY the body into a cute cartoon ${dino.name} dinosaur hybrid. Character personality: ${dino.description} Traits: ${traits}. Style: Pixar animated movie quality, DreamWorks expressive character design, premium 3D rendering, cinematic warm lighting, adorable chunky baby dinosaur anatomy, oversized expressive eyes, collectible figurine quality, transparent background, single subject, square composition. Do not alter pet face identity. Do not create generic cartoon animals. No text. No watermark.`;
+}
+
 const DinofyScreen = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>(1);
   const [petPhoto, setPetPhoto] = useState<string | null>(null);
-  const [species, setSpecies] = useState<Species | "">("");
-  const [breed, setBreed] = useState<string>("");
+  const [detection, setDetection] = useState<Detection | null>(null);
   const [dinoUrl, setDinoUrl] = useState<string | null>(null);
   const [loadingMsgIdx, setLoadingMsgIdx] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -73,13 +89,34 @@ const DinofyScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (step !== 3) return;
+    if (step !== 4) return;
     const t = setInterval(() => setLoadingMsgIdx((i) => (i + 1) % LOADING_MESSAGES.length), 2800);
     return () => clearInterval(t);
   }, [step]);
 
-  const dino = useMemo<Dino | null>(() => (species && breed ? lookupDino(species, breed) : null), [species, breed]);
-  const breedOptions = species ? BREEDS[species].map((b) => b.breed) : [];
+  const runDetection = async (photoDataUrl: string) => {
+    setStep(2);
+    setError(null);
+    setDetection(null);
+    try {
+      const { data, error: fnErr } = await supabase.functions.invoke("detect-pet", { body: { imageUrl: photoDataUrl } });
+      if (fnErr) throw fnErr;
+      const species = String(data?.species || "Unknown");
+      const breed = String(data?.breed || "Generic Pet");
+      const confidence = Number(data?.confidence) || 0;
+      const matched = lookupDinoByDetection(species, breed);
+      if (!matched) {
+        setError("We couldn't confidently identify your pet. Try a clearer front-facing image.");
+        setStep(1);
+        return;
+      }
+      setDetection({ species, breed, confidence, ...matched });
+      setStep(3);
+    } catch (e: any) {
+      setError(e?.message || "Detection failed. Try another photo.");
+      setStep(1);
+    }
+  };
 
   const handleFile = async (file: File) => {
     if (!file.type.match(/image\/(jpeg|png|webp|jpg)/)) {
@@ -89,25 +126,25 @@ const DinofyScreen = () => {
     setError(null);
     const compressed = await compressImage(file, 1024);
     setPetPhoto(compressed);
-    setStep(2);
+    runDetection(compressed);
   };
 
   const generate = async () => {
-    if (!dino || !breed) return;
+    if (!detection || !petPhoto) return;
     setError(null);
-    setStep(3);
+    setStep(4);
     setLoadingMsgIdx(0);
     setDinoUrl(null);
     try {
-      const prompt = buildPrompt(dino, breed);
-      const { data, error: fnErr } = await supabase.functions.invoke("generate-dino", { body: { prompt } });
+      const prompt = buildPromptDynamic(detection.dino, detection.matchedBreed);
+      const { data, error: fnErr } = await supabase.functions.invoke("generate-dino", { body: { prompt, imageUrl: petPhoto } });
       if (fnErr) throw fnErr;
       if (!data?.imageUrl) throw new Error("No image returned");
       setDinoUrl(data.imageUrl);
-      setStep(4);
+      setStep(5);
     } catch (e: any) {
       setError(e?.message || "Failed to generate. Please try again.");
-      setStep(2);
+      setStep(3);
     }
   };
 
@@ -119,7 +156,7 @@ const DinofyScreen = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `dinofy-${dino?.name || "dino"}.jpg`;
+      a.download = `dinofy-${detection?.dino.name || "dino"}.png`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
@@ -127,12 +164,11 @@ const DinofyScreen = () => {
     }
   };
 
-  const reset = (full: boolean) => {
-    setError(null);
-    setDinoUrl(null);
-    if (full) { setPetPhoto(null); setSpecies(""); setBreed(""); setStep(1); }
-    else { setStep(2); }
+  const reset = () => {
+    setError(null); setDinoUrl(null); setDetection(null); setPetPhoto(null); setStep(1);
   };
+
+  const dino = detection?.dino;
 
   return (
     <div style={{ background: C.bg, minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: C.textDark }}>
@@ -142,34 +178,33 @@ const DinofyScreen = () => {
         @keyframes dfSpin { to { transform: rotate(360deg);} }
         @keyframes dfPop { from { opacity:0; transform: scale(0.6);} to { opacity:1; transform: scale(1);} }
         @keyframes dfRevealLeft { from { clip-path: inset(0 100% 0 0);} to { clip-path: inset(0 0 0 0);} }
-        @keyframes dfRevealRight { from { clip-path: inset(0 0 0 100%);} to { clip-path: inset(0 0 0 0);} }
         @keyframes dfFloat { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
         @keyframes dfScaleBounce { 0% { opacity:0; transform: scale(0.7);} 60% { opacity:1; transform: scale(1.05);} 100% { transform: scale(1);} }
         @keyframes dfSparkle { 0% { opacity:0; transform: scale(0) rotate(0deg);} 50% { opacity:1; transform: scale(1) rotate(180deg);} 100% { opacity:0; transform: scale(0) rotate(360deg);} }
+        @keyframes dfShimmer { 0% { background-position: -200% 0;} 100% { background-position: 200% 0;} }
+        @keyframes dfScanLine { 0% { transform: translateY(-100%);} 100% { transform: translateY(100%);} }
+        @keyframes dfBorderPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(123,85,200,0.5);} 50% { box-shadow: 0 0 0 8px rgba(123,85,200,0);} }
         .df-fade-up { animation: dfFadeUp 0.4s ease both; }
         .df-bounce { animation: dfBounce 2s ease infinite; }
         .df-spin { animation: dfSpin 1.2s linear infinite; }
         .df-pop { animation: dfPop 0.4s cubic-bezier(.5,1.6,.4,1) both; }
         .df-reveal-l { animation: dfRevealLeft 0.7s cubic-bezier(.6,0,.2,1) both; }
-        .df-reveal-r { animation: dfRevealRight 0.7s cubic-bezier(.6,0,.2,1) both; }
         .df-float { animation: dfFloat 3.5s ease-in-out infinite; }
         .df-scale-bounce { animation: dfScaleBounce 0.6s cubic-bezier(.5,1.6,.4,1) both; }
         .df-sparkle { animation: dfSparkle 1.6s ease-out both; }
+        .df-shimmer { background: linear-gradient(90deg, transparent, rgba(123,85,200,0.25), transparent); background-size: 200% 100%; animation: dfShimmer 1.6s infinite linear; }
+        .df-scan-line { animation: dfScanLine 1.8s ease-in-out infinite; }
+        .df-border-pulse { animation: dfBorderPulse 2s infinite; }
       `}</style>
 
-      {/* App bar */}
       <header className="df-fade-up" style={{ background: C.white, borderBottom: `1px solid ${C.border}`, padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, position: "sticky", top: 0, zIndex: 10 }}>
         <button onClick={() => navigate(-1)} style={{ width: 36, height: 36, borderRadius: 999, background: C.lavLight, display: "grid", placeItems: "center" }} aria-label="Back">
           <ArrowLeft size={18} color={C.primary} />
         </button>
-        <div style={{
-          width: 36, height: 36, borderRadius: 999,
-          background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 100%)",
-          display: "grid", placeItems: "center", color: "#fff", fontSize: 16,
-        }}>🐾</div>
+        <div style={{ width: 36, height: 36, borderRadius: 999, background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 100%)", display: "grid", placeItems: "center", color: "#fff", fontSize: 16 }}>🐾</div>
         <div>
           <div style={{ fontWeight: 800, fontSize: 17, lineHeight: 1 }}>DinoFy <span aria-hidden>🦖</span></div>
-          <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>Step {step} of 4</div>
+          <div style={{ fontSize: 11, color: C.textMuted, marginTop: 2 }}>AI-powered • Step {step === 5 ? 4 : step > 1 ? Math.min(step,3) : 1} of 4</div>
         </div>
       </header>
 
@@ -183,7 +218,7 @@ const DinofyScreen = () => {
           <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
               <h1 style={{ fontSize: 24, fontWeight: 800, lineHeight: 1.2, color: C.textDark }}>Turn your pet into a dinosaur</h1>
-              <p style={{ color: C.textMid, fontSize: 14, marginTop: 6 }}>Upload your pet's photo. We'll match their breed personality to a prehistoric twin.</p>
+              <p style={{ color: C.textMid, fontSize: 14, marginTop: 6 }}>Upload your pet photo and DinoFy will detect your pet's breed/species automatically 🦖</p>
             </div>
 
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
@@ -212,95 +247,92 @@ const DinofyScreen = () => {
             </button>
 
             <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: C.textMid, marginBottom: 8 }}>Works with any species</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {SPECIES.map((s) => (
-                  <span key={s} style={{ background: C.white, border: `1px solid ${C.border}`, color: C.textMid, fontSize: 12, fontWeight: 600, padding: "6px 12px", borderRadius: 999 }}>{s}</span>
+              <div style={{ fontSize: 12, fontWeight: 600, color: C.textMid, marginBottom: 8 }}>Works with</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {SUPPORTED.map((s) => (
+                  <span key={s} style={{ background: C.white, border: `1px solid ${C.border}`, color: C.textMid, fontSize: 11, fontWeight: 600, padding: "5px 10px", borderRadius: 999 }}>{s}</span>
                 ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* STEP 2 — CONFIGURE */}
+        {/* STEP 2 — AI DETECTION */}
         {step === 2 && petPhoto && (
-          <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 18, alignItems: "center", padding: "12px 0" }}>
+            <div className="df-border-pulse" style={{ position: "relative", width: 220, height: 220, borderRadius: 24, overflow: "hidden", border: `3px solid ${C.primary}`, background: C.white }}>
+              <img src={petPhoto} alt="Your pet" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div className="df-scan-line" style={{ position: "absolute", left: 0, right: 0, height: 4, background: `linear-gradient(90deg, transparent, ${C.primary}, transparent)`, boxShadow: `0 0 12px ${C.primary}` }} />
+              <div className="df-shimmer" style={{ position: "absolute", inset: 0, mixBlendMode: "overlay" }} />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 16, color: C.textDark }}>
+                <Sparkles size={18} color={C.primary} className="df-spin" /> Analysing your pet DNA…
+              </div>
+              <p style={{ fontSize: 13, color: C.textMuted, marginTop: 6 }}>Detecting species, breed and personality</p>
+            </div>
+          </section>
+        )}
+
+        {/* STEP 3 — DETECTED */}
+        {step === 3 && detection && petPhoto && dino && (
+          <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
               <img src={petPhoto} alt="Your pet" style={{ width: 88, height: 88, borderRadius: 16, objectFit: "cover", border: `2px solid ${C.lavDeep}` }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, color: C.textMuted, fontWeight: 600 }}>Your pet</div>
-                <div style={{ fontSize: 17, fontWeight: 800, color: C.textDark, marginTop: 2 }}>Tell us about them</div>
-                <button onClick={() => fileRef.current?.click()} style={{ fontSize: 12, fontWeight: 700, color: C.primary, marginTop: 4 }}>Change photo</button>
-              </div>
-            </div>
-
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: C.textMid, display: "block", marginBottom: 6 }}>Species</label>
-              <select value={species} onChange={(e) => { setSpecies(e.target.value as Species); setBreed(""); }} style={{ width: "100%", background: C.white, border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", fontSize: 14, fontWeight: 600, color: C.textDark }}>
-                <option value="">Select species…</option>
-                {SPECIES.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: C.textMid, display: "block", marginBottom: 6 }}>Breed</label>
-              <select value={breed} onChange={(e) => setBreed(e.target.value)} disabled={!species} style={{ width: "100%", background: C.white, border: `1px solid ${C.border}`, borderRadius: 12, padding: "12px 14px", fontSize: 14, fontWeight: 600, color: species ? C.textDark : C.textMuted, opacity: species ? 1 : 0.6 }}>
-                <option value="">{species ? "Select breed…" : "Pick species first"}</option>
-                {breedOptions.map((b) => <option key={b} value={b}>{b}</option>)}
-              </select>
-            </div>
-
-            {dino && (
-              <div className="df-fade-up" style={{ background: C.lavLight, border: `1px solid ${C.lavDeep}`, borderRadius: 16, padding: 16 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ fontSize: 38, lineHeight: 1 }}>{dino.emoji}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: 0.5 }}>Your Dino Twin</div>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: C.textDark }}>{dino.name}</div>
-                  </div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: 0.5 }}>AI Detected</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: C.textDark, marginTop: 2 }}>
+                  {detection.confidence < 0.75 ? `Looks like ${detection.breed}` : detection.breed}
                 </div>
-                <p style={{ fontSize: 13, color: C.textMid, marginTop: 10, lineHeight: 1.4 }}>{dino.description}</p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
-                  {dino.traits.map((t, i) => (
-                    <span key={t} className="df-pop" style={{ animationDelay: `${0.1 + i * 0.08}s`, background: C.white, color: C.primary, fontSize: 11, fontWeight: 700, padding: "5px 10px", borderRadius: 999, border: `1px solid ${C.lavDeep}` }}>{t}</span>
-                  ))}
+                <div style={{ fontSize: 12, color: detection.confidence < 0.75 ? C.warn : C.textMid, fontWeight: 600, marginTop: 2 }}>
+                  {detection.species} · {Math.round(detection.confidence * 100)}% confidence
                 </div>
               </div>
-            )}
+            </div>
+
+            <button onClick={() => fileRef.current?.click()} style={{ alignSelf: "flex-start", fontSize: 12, fontWeight: 700, color: C.primary }}>
+              Wrong? Try another photo
+            </button>
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+
+            <div className="df-fade-up" style={{ background: C.lavLight, border: `1px solid ${C.lavDeep}`, borderRadius: 16, padding: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 38, lineHeight: 1 }}>{dino.emoji}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, textTransform: "uppercase", letterSpacing: 0.5 }}>Your Dino Twin</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: C.textDark }}>{dino.name}</div>
+                </div>
+              </div>
+              <p style={{ fontSize: 13, color: C.textMid, marginTop: 10, lineHeight: 1.4 }}>{dino.description}</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+                {dino.traits.map((t, i) => (
+                  <span key={t} className="df-pop" style={{ animationDelay: `${0.1 + i * 0.08}s`, background: C.white, color: C.primary, fontSize: 11, fontWeight: 700, padding: "5px 10px", borderRadius: 999, border: `1px solid ${C.lavDeep}` }}>{t}</span>
+                ))}
+              </div>
+            </div>
 
             <button
               onClick={generate}
-              disabled={!dino}
               style={{
-                width: "100%",
-                background: dino ? C.primary : C.lavDeep,
-                color: dino ? "#fff" : C.textMuted,
-                fontWeight: 800, fontSize: 16,
-                padding: "16px",
-                borderRadius: 14,
-                cursor: dino ? "pointer" : "not-allowed",
-                boxShadow: dino ? "0 6px 18px rgba(123,85,200,0.35)" : "none",
-                transition: "all .2s",
+                width: "100%", background: C.primary, color: "#fff",
+                fontWeight: 800, fontSize: 16, padding: 16, borderRadius: 14,
+                boxShadow: "0 6px 18px rgba(123,85,200,0.35)",
               }}
-              onMouseEnter={(e) => { if (dino) (e.currentTarget.style.background = C.primaryHover); }}
-              onMouseLeave={(e) => { if (dino) (e.currentTarget.style.background = C.primary); }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = C.primaryHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.background = C.primary)}
             >
               🦖 Dinofy My Pet!
             </button>
           </section>
         )}
 
-        {/* STEP 3 — GENERATING */}
-        {step === 3 && (
+        {/* STEP 4 — GENERATING */}
+        {step === 4 && (
           <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "24px 0" }}>
             <div style={{ position: "relative", width: 140, height: 140 }}>
-              <div className="df-spin" style={{
-                position: "absolute", inset: 0, borderRadius: "50%",
-                border: `6px solid ${C.lavLight}`, borderTopColor: C.primary,
-              }} />
+              <div className="df-spin" style={{ position: "absolute", inset: 0, borderRadius: "50%", border: `6px solid ${C.lavLight}`, borderTopColor: C.primary }} />
               <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", fontSize: 50 }}>{dino?.emoji || "🦖"}</div>
             </div>
-
             <div style={{ textAlign: "center", minHeight: 50 }}>
               <div key={loadingMsgIdx} className="df-fade-up" style={{ fontSize: 15, fontWeight: 700, color: C.textDark }}>
                 {LOADING_MESSAGES[loadingMsgIdx]}
@@ -311,7 +343,6 @@ const DinofyScreen = () => {
                 ))}
               </div>
             </div>
-
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, width: "100%", marginTop: 12 }}>
               {petPhoto && <img src={petPhoto} alt="" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: 16, filter: "grayscale(0.85)" }} />}
               <div style={{ aspectRatio: "1/1", borderRadius: 16, background: C.lavLight, display: "grid", placeItems: "center", fontSize: 56 }}>
@@ -321,8 +352,8 @@ const DinofyScreen = () => {
           </section>
         )}
 
-        {/* STEP 4 — RESULT */}
-        {step === 4 && dino && dinoUrl && petPhoto && (
+        {/* STEP 5 — RESULT */}
+        {step === 5 && detection && dino && dinoUrl && petPhoto && (
           <section className="df-fade-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, position: "relative" }}>
               <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }}>
@@ -331,21 +362,17 @@ const DinofyScreen = () => {
                   { top: "20%", left: "92%", size: 12, delay: 0.4 },
                   { top: "55%", left: "55%", size: 20, delay: 0.6 },
                   { top: "78%", left: "88%", size: 14, delay: 0.8 },
-                  { top: "35%", left: "70%", size: 10, delay: 1.0 },
                 ].map((s, i) => (
                   <span key={i} className="df-sparkle" style={{ position: "absolute", top: s.top, left: s.left, fontSize: s.size, animationDelay: `${s.delay}s`, color: C.primary }}>✦</span>
                 ))}
               </div>
-
               <div>
                 <img src={petPhoto} alt="Your pet" className="df-reveal-l" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: 20, border: `3px solid ${C.border}`, background: C.white }} />
                 <div style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: C.textMid, marginTop: 6 }}>Your Pet</div>
               </div>
               <div>
                 <div className="df-scale-bounce" style={{
-                  position: "relative",
-                  borderRadius: 24,
-                  padding: 3,
+                  position: "relative", borderRadius: 24, padding: 3,
                   background: "linear-gradient(135deg, #7B55C8 0%, #E255A8 50%, #DDD4F5 100%)",
                   boxShadow: "0 18px 40px -10px rgba(123,85,200,0.45), 0 6px 14px -4px rgba(26,25,48,0.15)",
                 }}>
@@ -353,44 +380,36 @@ const DinofyScreen = () => {
                     <img src={dinoUrl} alt={dino.name} className="df-float" style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", display: "block" }} />
                   </div>
                 </div>
-                <div style={{ textAlign: "center", fontSize: 12, fontWeight: 800, color: C.primary, marginTop: 8, letterSpacing: 0.3 }}>✨ Animated Dino Twin</div>
+                <div style={{ textAlign: "center", fontSize: 12, fontWeight: 800, color: C.primary, marginTop: 8, letterSpacing: 0.3 }}>✨ Dino Twin</div>
               </div>
             </div>
 
             <div className="df-scale-bounce" style={{
               background: `linear-gradient(180deg, ${C.white} 0%, ${C.lavLight} 100%)`,
-              borderRadius: 24,
-              padding: 20,
-              border: `1px solid ${C.lavDeep}`,
-              boxShadow: "0 10px 30px -12px rgba(123,85,200,0.25)",
-              animationDelay: "0.2s",
-              position: "relative",
-              overflow: "hidden",
+              borderRadius: 24, padding: 20, border: `1px solid ${C.lavDeep}`,
+              boxShadow: "0 10px 30px -12px rgba(123,85,200,0.25)", animationDelay: "0.2s",
             }}>
-              <span aria-hidden className="df-sparkle" style={{ position: "absolute", top: 10, right: 14, fontSize: 14, color: C.primary, animationDelay: "1.2s" }}>✦</span>
-              <span aria-hidden className="df-sparkle" style={{ position: "absolute", bottom: 16, left: 18, fontSize: 10, color: C.primary, animationDelay: "1.5s" }}>✦</span>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div className="df-float" style={{ fontSize: 46, lineHeight: 1, filter: "drop-shadow(0 4px 8px rgba(123,85,200,0.3))" }}>{dino.emoji}</div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 800, color: C.primary, textTransform: "uppercase", letterSpacing: 0.8 }}>Your Animated Dino Twin</div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: C.primary, textTransform: "uppercase", letterSpacing: 0.8 }}>Your Dino Twin</div>
                   <div style={{ fontSize: 22, fontWeight: 800, marginTop: 2 }}>{dino.name}</div>
                 </div>
               </div>
               <p style={{ fontSize: 14, color: C.textMid, marginTop: 12, lineHeight: 1.5, fontStyle: "italic" }}>"{dino.description}"</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 14 }}>
                 {dino.traits.map((t, i) => (
-                  <span key={t} className="df-pop" style={{ animationDelay: `${0.6 + i * 0.15}s`, background: C.white, color: C.primary, fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, border: `1px solid ${C.lavDeep}`, boxShadow: "0 2px 6px rgba(123,85,200,0.1)" }}>{t}</span>
+                  <span key={t} className="df-pop" style={{ animationDelay: `${0.6 + i * 0.15}s`, background: C.white, color: C.primary, fontSize: 11, fontWeight: 700, padding: "6px 12px", borderRadius: 999, border: `1px solid ${C.lavDeep}` }}>{t}</span>
                 ))}
               </div>
             </div>
 
             <div style={{ background: C.lavLight, borderRadius: 999, padding: "8px 14px", fontSize: 12, fontWeight: 600, color: C.textMid, textAlign: "center" }}>
-              Generated as: <strong style={{ color: C.primary }}>{dino.name}</strong> · {breed}
+              Generated as: <strong style={{ color: C.primary }}>{dino.name}</strong> · {detection.confidence < 0.75 ? "Likely " : ""}{detection.breed} (AI detected)
             </div>
 
-            <button
-              onClick={downloadDino}
-              style={{ background: C.primary, color: "#fff", fontWeight: 800, fontSize: 15, padding: "14px", borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}
+            <button onClick={downloadDino}
+              style={{ background: C.primary, color: "#fff", fontWeight: 800, fontSize: 15, padding: 14, borderRadius: 14, display: "flex", justifyContent: "center", alignItems: "center", gap: 8, boxShadow: "0 6px 18px rgba(123,85,200,0.35)" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = C.primaryHover)}
               onMouseLeave={(e) => (e.currentTarget.style.background = C.primary)}
             >
@@ -398,10 +417,10 @@ const DinofyScreen = () => {
             </button>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <button onClick={generate} style={{ background: C.white, border: `1px solid ${C.lavDeep}`, color: C.primary, fontWeight: 700, padding: "12px", borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6 }}>
+              <button onClick={generate} style={{ background: C.white, border: `1px solid ${C.lavDeep}`, color: C.primary, fontWeight: 700, padding: 12, borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6 }}>
                 <RotateCcw size={15} /> Try again
               </button>
-              <button onClick={() => reset(true)} style={{ background: C.white, border: `1px solid ${C.lavDeep}`, color: C.primary, fontWeight: 700, padding: "12px", borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6 }}>
+              <button onClick={reset} style={{ background: C.white, border: `1px solid ${C.lavDeep}`, color: C.primary, fontWeight: 700, padding: 12, borderRadius: 12, display: "flex", justifyContent: "center", alignItems: "center", gap: 6 }}>
                 <Camera size={15} /> New pet
               </button>
             </div>
