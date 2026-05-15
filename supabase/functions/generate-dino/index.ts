@@ -42,16 +42,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (!userId) {
-      return new Response(JSON.stringify({ error: 'auth_required', message: 'Login required to generate' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
     const admin = createClient(supaUrl, serviceKey);
     const isAdmin = userEmail?.toLowerCase() === ADMIN_EMAIL;
 
-    if (!isAdmin) {
+    // Server-side limit applies only to authenticated non-admin users.
+    // Guests are limited client-side via localStorage (MVP per spec).
+    if (userId && !isAdmin) {
       const { data: usage } = await admin
         .from('dinofy_usage')
         .select('generation_count')
