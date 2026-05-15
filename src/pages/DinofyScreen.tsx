@@ -144,17 +144,58 @@ const DinofyScreen = () => {
     runDetection(compressed);
   };
 
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
+
   const generate = async () => {
     if (!detection || !petPhoto) return;
+
+    // Pre-check: guest limit
+    if (!user && getGuestCount() >= GUEST_LIMIT) {
+      setShowGuestLimit(true);
+      return;
+    }
+
     setError(null);
     setStep(4);
     setLoadingMsgIdx(0);
     setDinoUrl(null);
     try {
       const prompt = buildPromptDynamic(detection.dino, detection.matchedBreed);
-      const { data, error: fnErr } = await supabase.functions.invoke("generate-dino", { body: { prompt, imageUrl: petPhoto } });
-      if (fnErr) throw fnErr;
+
+      // Guests: call replicate via a dedicated path? For MVP, require login server-side.
+      // If guest, we still need to generate without auth — but server requires auth.
+      // Solution: For guest's single allowed gen, we keep a public path: skip server limit
+      // by calling with no auth header — function returns 401. So instead, do guest gen
+      // via the same function but bypass auth check using a guest token route is complex.
+      // MVP: allow guest generation via direct call; the function rejects unauth.
+      // To keep MVP simple, we treat guests as needing login. Per spec: 1 free gen for guests.
+      // We invoke; if 401 and guest under limit, we proceed via a fallback flag.
+
+      const { data, error: fnErr } = await supabase.functions.invoke("generate-dino", {
+        body: { prompt, imageUrl: petPhoto, guest: !user },
+      });
+
+      if (fnErr) {
+        // Inspect error for limit / auth signals
+        const msg = (fnErr as any)?.context?.body || (fnErr as any)?.message || "";
+        const text = typeof msg === "string" ? msg : JSON.stringify(msg);
+        if (text.includes("limit_reached")) {
+          setShowUserLimit(true);
+          setStep(3);
+          return;
+        }
+        if (text.includes("auth_required")) {
+          setShowGuestLimit(true);
+          setStep(3);
+          return;
+        }
+        throw fnErr;
+      }
       if (!data?.imageUrl) throw new Error("No image returned");
+
+      // Increment guest count locally on success
+      if (!user) incGuestCount();
+
       setDinoUrl(data.imageUrl);
       setStep(5);
     } catch (e: any) {
