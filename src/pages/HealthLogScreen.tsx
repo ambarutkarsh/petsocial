@@ -34,7 +34,7 @@ const HealthLogScreen = ({ embedded = false }: HealthLogScreenProps) => {
     queryKey: ["my-pets", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id).order("is_primary", { ascending: false });
+      const { data } = await (supabase as any).rpc("get_my_pets");
       return data || [];
     },
   });
