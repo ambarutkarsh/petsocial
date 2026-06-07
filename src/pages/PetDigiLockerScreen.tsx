@@ -54,7 +54,7 @@ const PetDigiLockerScreen = ({ embedded = false, activeTab, petId }: PetDigiLock
   const { data: pets = [] } = useQuery({
     queryKey: ["my-pets", user?.id], enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id).order("is_primary", { ascending: false });
+      const { data } = await (supabase as any).rpc("get_my_pets");
       return data || [];
     },
   });

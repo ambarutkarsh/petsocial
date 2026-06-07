@@ -52,8 +52,8 @@ const ProfileScreen = () => {
     queryKey: ["profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).single();
-      return data;
+      const { data } = await (supabase as any).rpc("get_my_profile");
+      return Array.isArray(data) ? data[0] : data;
     },
   });
 
@@ -61,7 +61,7 @@ const ProfileScreen = () => {
     queryKey: ["all-pets", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("pets").select("*").eq("owner_id", user!.id);
+      const { data } = await (supabase as any).rpc("get_my_pets");
       return data || [];
     },
   });

@@ -49,7 +49,8 @@ const AuthScreen = () => {
     }
 
     const checkProfile = async () => {
-      const { data } = await supabase.from("profiles").select("full_name, phone").eq("id", user.id).single();
+      const { data: rpcData } = await (supabase as any).rpc("get_my_profile");
+      const data = Array.isArray(rpcData) ? rpcData[0] : rpcData;
       if (!data?.full_name || data.full_name === "PawSocial User") {
         // Check if Google user needing registration
         const provider = user.app_metadata?.provider;

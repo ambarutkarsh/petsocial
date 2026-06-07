@@ -44,7 +44,7 @@ const ConfirmBookingScreen = () => {
   const { data: pets = [] } = useQuery({
     queryKey: ["pets", user?.id],
     enabled: !!user,
-    queryFn: async () => (await supabase.from("pets").select("*").eq("owner_id", user!.id)).data ?? [],
+    queryFn: async () => (await (supabase as any).rpc("get_my_pets")).data ?? [],
   });
 
   useEffect(() => {

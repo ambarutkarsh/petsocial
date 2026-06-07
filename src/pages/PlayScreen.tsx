@@ -299,7 +299,7 @@ const FeedScreen = () => {
       const { data: myPets } = await supabase.from("pets").select("species, pet_type").eq("owner_id", user!.id).eq("is_primary", true).maybeSingle();
       const species = myPets?.species || myPets?.pet_type;
       // Get candidates
-      let q = supabase.from("pets").select("*").neq("owner_id", user!.id).limit(30);
+      let q = supabase.from("pets").select("id, owner_id, name, pet_type, species, gender, age_years, date_of_birth, is_primary, avatar_emoji, notes, created_at, avatar_url, height_cm").neq("owner_id", user!.id).limit(30);
       if (species) q = q.or(`species.eq.${species},pet_type.eq.${species}`);
       const { data } = await q;
       const withProfiles = await attachProfiles(data || [], "owner_id" as any);
