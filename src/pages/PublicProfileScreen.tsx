@@ -34,7 +34,7 @@ const PublicProfileScreen = () => {
     queryKey: ["public-pets", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data } = await supabase.from("pets").select("*").eq("owner_id", userId!);
+      const { data } = await supabase.from("pets").select("id, owner_id, name, pet_type, species, gender, age_years, date_of_birth, is_primary, avatar_emoji, notes, created_at, avatar_url, height_cm").eq("owner_id", userId!);
       return data || [];
     },
   });
