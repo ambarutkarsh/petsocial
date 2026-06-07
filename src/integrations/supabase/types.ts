@@ -3569,6 +3569,68 @@ export type Database = {
         Args: { _object_name: string; _user_id: string }
         Returns: boolean
       }
+      get_my_pets: {
+        Args: never
+        Returns: {
+          age_years: number | null
+          avatar_emoji: string | null
+          avatar_url: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          gender: string | null
+          height_cm: number | null
+          id: string
+          is_primary: boolean | null
+          microchip_number: string | null
+          microchip_registered_date: string | null
+          microchip_registered_status: string | null
+          name: string
+          notes: string | null
+          owner_id: string
+          pet_type: string
+          species: string | null
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "pets"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      get_my_profile: {
+        Args: never
+        Returns: {
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          community_default_tab: string | null
+          created_at: string | null
+          email: string | null
+          feed_preferences: string[] | null
+          follower_count: number | null
+          following_count: number | null
+          full_name: string | null
+          id: string
+          is_seed_user: boolean | null
+          location: string | null
+          pet_parent_since: number | null
+          phone: string | null
+          pin_code: string | null
+          post_count: number | null
+          state: string | null
+          updated_at: string | null
+          username: string | null
+          welcome_email_sent: boolean | null
+          welcome_email_sent_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_my_vet_profile: {
         Args: never
         Returns: {
