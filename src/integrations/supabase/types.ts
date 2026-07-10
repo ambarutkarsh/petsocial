@@ -3680,6 +3680,102 @@ export type Database = {
           verification_status: string
         }[]
       }
+      retention_os_add_member: {
+        Args: { p_by: string; p_email: string; p_role: string; p_uid: string }
+        Returns: undefined
+      }
+      retention_os_agents: { Args: never; Returns: Json }
+      retention_os_campaign_delete: {
+        Args: { p_key: string; p_tenant?: string }
+        Returns: Json
+      }
+      retention_os_campaign_set: {
+        Args: {
+          p_action?: string
+          p_body?: string
+          p_channel?: string
+          p_cohort?: string
+          p_custom?: boolean
+          p_image_prompt?: string
+          p_image_url?: string
+          p_key: string
+          p_link?: string
+          p_name?: string
+          p_offset_days?: number
+          p_status?: string
+          p_tenant?: string
+        }
+        Returns: Json
+      }
+      retention_os_campaigns: { Args: never; Returns: Json }
+      retention_os_campaigns_state: {
+        Args: { p_tenant?: string }
+        Returns: Json
+      }
+      retention_os_cases: { Args: { p_view?: string }; Returns: Json }
+      retention_os_contact_list: { Args: never; Returns: Json }
+      retention_os_contact_submit: {
+        Args: {
+          p_company?: string
+          p_email: string
+          p_message: string
+          p_name: string
+        }
+        Returns: Json
+      }
+      retention_os_conversations: { Args: never; Returns: Json }
+      retention_os_decision: { Args: { p_policy_id: string }; Returns: Json }
+      retention_os_get_config: { Args: { p_tenant?: string }; Returns: Json }
+      retention_os_headline: { Args: never; Returns: Json }
+      retention_os_list: { Args: never; Returns: Json }
+      retention_os_list_members: { Args: never; Returns: Json }
+      retention_os_log_interaction: {
+        Args: {
+          p_agent?: string
+          p_channel: string
+          p_disposition?: string
+          p_note?: string
+          p_policy_id: string
+          p_tenant?: string
+        }
+        Returns: Json
+      }
+      retention_os_member_role: { Args: { p_uid: string }; Returns: string }
+      retention_os_my_access: { Args: never; Returns: Json }
+      retention_os_overrides_all: { Args: { p_tenant?: string }; Returns: Json }
+      retention_os_pipeline: { Args: never; Returns: Json }
+      retention_os_policy_interactions: {
+        Args: { p_policy_id: string; p_tenant?: string }
+        Returns: Json
+      }
+      retention_os_raw_list: { Args: never; Returns: Json }
+      retention_os_remove_member: {
+        Args: { p_uid: string }
+        Returns: undefined
+      }
+      retention_os_rollup: { Args: never; Returns: Json }
+      retention_os_score_overrides: {
+        Args: { p_policy_id: string; p_tenant?: string }
+        Returns: Json
+      }
+      retention_os_secret: { Args: { p_name: string }; Returns: string }
+      retention_os_set_config: {
+        Args: { p_payload: Json; p_tenant?: string }
+        Returns: Json
+      }
+      retention_os_set_score_override: {
+        Args: {
+          p_old?: number
+          p_policy_id: string
+          p_reason?: string
+          p_score: string
+          p_tenant?: string
+          p_value: number
+        }
+        Returns: Json
+      }
+      retention_os_sources: { Args: { p_tenant?: string }; Returns: Json }
+      retention_os_ui: { Args: { p_name?: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
