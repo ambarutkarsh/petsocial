@@ -71,6 +71,7 @@ const VetTodayInner = () => {
   const savePrescription = async () => {
     if (!rxFor || !user || !vet) return;
     let docUrl: string | null = null;
+    let docPath: string | null = null;
     if (rxFile) {
       const path = `${vet.id}/${rxFor.id}-${Date.now()}-${rxFile.name}`;
       const { error: upErr } = await supabase.storage.from("prescriptions").upload(path, rxFile, { upsert: false });
@@ -80,6 +81,7 @@ const VetTodayInner = () => {
       }
       const { data: signed } = await supabase.storage.from("prescriptions").createSignedUrl(path, 60 * 60 * 24 * 365);
       docUrl = signed?.signedUrl ?? null;
+      docPath = path;
     }
     const { error } = await supabase.from("vet_prescriptions").insert({
       booking_id: rxFor.id,
@@ -92,7 +94,9 @@ const VetTodayInner = () => {
       follow_up_date: followUp ? followDate : null,
       follow_up_notes: followUp ? followNotes : null,
       document_url: docUrl,
-    });
+      document_path: docPath,
+    } as any);
+
     if (error) {
       toast.error(error.message);
       return;
