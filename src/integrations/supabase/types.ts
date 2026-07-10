@@ -3051,6 +3051,7 @@ export type Database = {
           booking_id: string
           created_at: string | null
           diagnosis: string | null
+          document_path: string | null
           document_url: string | null
           follow_up_date: string | null
           follow_up_notes: string | null
@@ -3065,6 +3066,7 @@ export type Database = {
           booking_id: string
           created_at?: string | null
           diagnosis?: string | null
+          document_path?: string | null
           document_url?: string | null
           follow_up_date?: string | null
           follow_up_notes?: string | null
@@ -3079,6 +3081,7 @@ export type Database = {
           booking_id?: string
           created_at?: string | null
           diagnosis?: string | null
+          document_path?: string | null
           document_url?: string | null
           follow_up_date?: string | null
           follow_up_notes?: string | null
